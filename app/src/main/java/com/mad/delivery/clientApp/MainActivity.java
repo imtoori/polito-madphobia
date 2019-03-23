@@ -1,46 +1,53 @@
-package com.mad;
+package com.mad.delivery.clientApp;
 
-import android.app.AlertDialog;
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import java.io.File;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.io.ByteArrayOutputStream;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
+    Menu menu;
     TextInputEditText name;
     TextInputEditText emailAddress;
     TextInputEditText description;
     TextInputEditText deliveryAddress;
     ImageView imgProfile;
-    boolean editMode = false;
+    String imageProfileString;
     final int galleryCode = 1;
     final int cameraCode = 2;
+    final int READ_EXTERNAL_STORAGE_PERMISSION = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         name = (TextInputEditText) findViewById(R.id.name);
         emailAddress = (TextInputEditText) findViewById(R.id.emailAddress);
         description = (TextInputEditText) findViewById(R.id.description);
@@ -53,25 +60,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         imgProfile.setClickable(false);
-
-        name.setText(sharedPref.getString("name", ""));
-        emailAddress.setText(sharedPref.getString("emailAddress", ""));
-        description.setText(sharedPref.getString("description", ""));
-        deliveryAddress.setText(sharedPref.getString("deliveryAddress", ""));
-        String imageURIString = sharedPref.getString("imageSrc", null);
-        if (imageURIString == null)
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_avatar));
-        else {
-            Bitmap bitmapImage = StringToBitMap(imageURIString);
-            imgProfile.setImageBitmap(bitmapImage);
-        }
-
+        getProfileData();
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //super.onCreateOptionsMenu(menu);
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.profile_menu, menu);
         return true;
     }
@@ -80,17 +76,43 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_option:
-                editMode = !editMode;
-                name.setEnabled(editMode);
-                emailAddress.setEnabled(editMode);
-                description.setEnabled(editMode);
-                deliveryAddress.setEnabled(editMode);
-                imgProfile.setClickable(editMode);
-                if (editMode) item.setIcon(R.drawable.ic_done);
-                else item.setIcon(R.drawable.ic_edit_profile);
+                enableProfileData(true);
+                item.setVisible(false);
+                MenuItem itemDone = menu.findItem(R.id.edit_profile_done);
+                itemDone.setVisible(true);
+
                 return true;
+            case R.id.edit_profile_done:
+                enableProfileData(false);
+                MenuItem itemEdit = menu.findItem(R.id.edit_profile_option);
+                itemEdit.setVisible(true); // edit button is visible again
+                item.setVisible(false); // done button is hidden
+                setProfileData();
+                Toast.makeText(MainActivity.this, "Your profile has saved", Toast.LENGTH_SHORT).show();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case READ_EXTERNAL_STORAGE_PERMISSION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    imgProfile.setImageBitmap(BitmapFactory.decodeFile(imageProfileString));
+                } else {
+                    // permission denied
+                    imgProfile.setImageDrawable(getDrawable(R.drawable.user_avatar));
+                }
+                return;
+            }
+            default:
+                // do nothing
+                break;
         }
     }
 
@@ -100,9 +122,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case cameraCode:
                 if (resultCode == RESULT_OK && data != null) {
-                    Bitmap selectedImage = (Bitmap) data.getExtras().get("data");
-
-                    imgProfile.setImageBitmap(selectedImage);
+                    imgProfile.setImageBitmap((Bitmap) data.getExtras().get("data"));
                 }
 
                 break;
@@ -117,8 +137,16 @@ public class MainActivity extends AppCompatActivity {
                             cursor.moveToFirst();
 
                             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                            String picturePath = cursor.getString(columnIndex);
-                            imgProfile.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                            imageProfileString = cursor.getString(columnIndex);
+
+                            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                                    != PackageManager.PERMISSION_GRANTED) {
+
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_STORAGE_PERMISSION
+                                );
+                            } else
+                                imgProfile.setImageBitmap(BitmapFactory.decodeFile(imageProfileString));
                             cursor.close();
                         }
                     }
@@ -164,26 +192,62 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void saveUserProfile() {
+    public void getProfileData() {
+        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        name.setText(sharedPref.getString("name", ""));
+        emailAddress.setText(sharedPref.getString("emailAddress", ""));
+        description.setText(sharedPref.getString("description", ""));
+        deliveryAddress.setText(sharedPref.getString("deliveryAddress", ""));
+        String encodedImage = sharedPref.getString("imageSrc", "");
+        if (encodedImage.equals("") || encodedImage == null) {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_avatar));
+        } else {
+            imgProfile.setImageBitmap(decodeToBase64(encodedImage));
+        }
+    }
+
+    public void setProfileData() {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("name", name.getText().toString());
         editor.putString("emailAddress", emailAddress.getText().toString());
         editor.putString("description", description.getText().toString());
         editor.putString("deliveryAddress", deliveryAddress.getText().toString());
-        String imageBitMap = ((BitmapDrawable) imgProfile.getDrawable()).getBitmap().toString();
-        editor.putString("imageSrc", imageBitMap);
+        Bitmap imageBitmap = ((BitmapDrawable) imgProfile.getDrawable()).getBitmap();
+        String encodedImage;
+        if (imageBitmap == null) encodedImage = "";
+        else encodedImage = encodeToBase64(((BitmapDrawable) imgProfile.getDrawable()).getBitmap());
+        editor.putString("imageSrc", encodedImage);
         editor.commit();
     }
 
-    public Bitmap StringToBitMap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
+    public void enableProfileData(boolean editMode) {
+        name.setEnabled(editMode);
+        emailAddress.setEnabled(editMode);
+        description.setEnabled(editMode);
+        deliveryAddress.setEnabled(editMode);
+        imgProfile.setClickable(editMode);
+    }
+
+    public static String encodeToBase64(Bitmap image) {
+        Bitmap immage = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+        return imageEncoded;
+    }
+
+    public static Bitmap decodeToBase64(String input) {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    }
+
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
         }
+        return false;
     }
 
 }
