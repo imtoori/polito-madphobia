@@ -1,1 +1,3 @@
-include ':app'
+include ':restaurant_app'
+include ':consumer_app'
+include ':biker_app'
