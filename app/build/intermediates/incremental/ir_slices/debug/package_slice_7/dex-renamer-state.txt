@@ -1,0 +1,4 @@
+#Sat Mar 23 17:04:28 CET 2019
+base.0=/Users/vito/Documents/AndroidProjects/FoodApp/app/build/intermediates/transforms/dexMerger/debug/7
+path.0=classes.dex
+renamed.0=classes.dex

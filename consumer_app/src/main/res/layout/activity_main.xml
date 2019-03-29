@@ -4,21 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mad.delivery.bikerApp.MainActivity">
+    tools:context="com.mad.delivery.consumerApp.MainActivity">
+
+    <ImageView
+        android:id="@+id/gradientImage"
+        android:layout_width="0dp"
+        android:layout_height="212dp"
+        android:adjustViewBounds="true"
+        android:elevation="3dp"
+        android:src="@drawable/gradient"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_profile"
         android:layout_width="161dp"
         android:layout_height="153dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="32dp"
+
         android:layout_marginEnd="8dp"
         android:clickable="false"
+        android:elevation="5dp"
         android:src="@drawable/user_avatar"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/gradientImage"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="@+id/gradientImage"
+        app:layout_constraintTop_toTopOf="@+id/gradientImage" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -128,7 +142,7 @@
         android:paddingBottom="10dp"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_profile"
+        app:layout_constraintTop_toBottomOf="@+id/gradientImage"
         app:srcCompat="@drawable/ic_user" />
 
 
@@ -167,6 +181,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
         app:srcCompat="@drawable/ic_location" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

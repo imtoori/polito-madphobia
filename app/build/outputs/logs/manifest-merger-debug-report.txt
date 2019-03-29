@@ -1,0 +1,188 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+MERGED from [com.google.android.material:material:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/material-1.0.0-beta01.aar/1ecb8be244af6c771af983a8a64df521/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0-beta01.aar/ca2d11dbb7f41b1cda03756d61bd74ce/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /Users/vito/.gradle/caches/transforms-1/files-1.1/constraintlayout-1.1.3.aar/bae524c5aed3cad67ecc2a0e28771877/AndroidManifest.xml:2:1-11:12
+MERGED from [de.hdodenhof:circleimageview:2.1.0] /Users/vito/.gradle/caches/transforms-1/files-1.1/jetified-circleimageview-2.1.0.aar/ace340aa493367d0e7223aa3cf763293/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.fragment:fragment:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/fragment-1.0.0-beta01.aar/305c05b2a1494e82b507473eb083a271/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/vectordrawable-animated-1.0.0-beta01.aar/6e1b2d3d8b8a2e4ae56a8edc05ca7b6e/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.recyclerview:recyclerview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/recyclerview-1.0.0-beta01.aar/ab3ac77b23c2509f0e44e9b0ae1ae350/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/legacy-support-core-ui-1.0.0-beta01.aar/ed616ffaccc2b167ddce52057c3c8f99/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/legacy-support-core-utils-1.0.0-beta01.aar/1339f7823af6d424b718103b7179aeda/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/vectordrawable-1.0.0-beta01.aar/19b28b6b4ecbd5944edac68d47b40c7b/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.transition:transition:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/transition-1.0.0-beta01.aar/572bf78a2dfbd44287d6fb16cf052e02/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/loader-1.0.0-beta01.aar/ef28e67d7473c51fa9dd07d15b43174f/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.viewpager:viewpager:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/viewpager-1.0.0-beta01.aar/d38919cb3dfb9b38c8263aafbbc9d883/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-1.0.0-beta01.aar/1c75072d060652b0dd71c746dca50c6a/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/drawerlayout-1.0.0-beta01.aar/5b7d3309937a33047b25b92329c7cc53/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-1.0.0-beta01.aar/21f4bea15feffed2539e3a5575ee4aad/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.customview:customview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/customview-1.0.0-beta01.aar/de03d401575d94fac0acc14052dd1b9d/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-1.0.0-beta01.aar/30dcbc7e4bb374ff56177a24fda956a2/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-1.0.0-beta01.aar/7a9880ee3a095133c56e165fa11abb95/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-1.0.0-beta01.aar/3b53a789f363f46b5fd21dbc63d56bbe/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/cursoradapter-1.0.0-beta01.aar/44b2062ac77313a66045567f1a45946c/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cardview:cardview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/cardview-1.0.0-beta01.aar/f3c6e1c80bbce1c35ebc71fbc3e4cf10/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0-beta01.aar/5f9074317b09df51c51688225f1ae38d/AndroidManifest.xml:17:1-25:12
+MERGED from [androidx.documentfile:documentfile:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/documentfile-1.0.0-beta01.aar/2eca4c643e6eded2c630e44d50dacac6/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-1.0.0-beta01.aar/a70db5f3611cfd6c3ff87271cf8d5550/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.print:print:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/print-1.0.0-beta01.aar/35f5d1f1f086f4f5fbc63fa576dfd087/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.interpolator:interpolator:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/interpolator-1.0.0-beta01.aar/36886cd3c1b29b80679fbf4e69c87657/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-runtime-2.0.0-beta01.aar/37dbb74ebda0a96fafa1c80a55703eb9/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-viewmodel-2.0.0-beta01.aar/b16cff27dc6939da686777b0d6df7459/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-core-2.0.0-beta01.aar/4a162a7473eca5cdc4429fafc4965f31/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-runtime-2.0.0-beta01.aar/72c7bf8b4dbb35c925e8c783fefd5ec1/AndroidManifest.xml:17:1-22:12
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+	package
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:4:5-41
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+	xmlns:tools
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:3:5-51
+	android:versionCode
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:1-25:12
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:2:11-69
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:5:5-79
+	android:name
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:5:22-77
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:6:5-81
+	android:name
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:6:22-78
+uses-permission-sdk-23#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:7:5-87
+	android:name
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:7:29-84
+uses-permission-sdk-23#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:8:5-88
+	android:name
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:8:29-85
+application
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:9:5-23:19
+MERGED from [com.google.android.material:material:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/material-1.0.0-beta01.aar/1ecb8be244af6c771af983a8a64df521/AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/material-1.0.0-beta01.aar/1ecb8be244af6c771af983a8a64df521/AndroidManifest.xml:22:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /Users/vito/.gradle/caches/transforms-1/files-1.1/constraintlayout-1.1.3.aar/bae524c5aed3cad67ecc2a0e28771877/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /Users/vito/.gradle/caches/transforms-1/files-1.1/constraintlayout-1.1.3.aar/bae524c5aed3cad67ecc2a0e28771877/AndroidManifest.xml:9:5-20
+MERGED from [de.hdodenhof:circleimageview:2.1.0] /Users/vito/.gradle/caches/transforms-1/files-1.1/jetified-circleimageview-2.1.0.aar/ace340aa493367d0e7223aa3cf763293/AndroidManifest.xml:9:5-20
+MERGED from [de.hdodenhof:circleimageview:2.1.0] /Users/vito/.gradle/caches/transforms-1/files-1.1/jetified-circleimageview-2.1.0.aar/ace340aa493367d0e7223aa3cf763293/AndroidManifest.xml:9:5-20
+MERGED from [androidx.core:core:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-1.0.0-beta01.aar/3b53a789f363f46b5fd21dbc63d56bbe/AndroidManifest.xml:22:5-89
+MERGED from [androidx.core:core:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-1.0.0-beta01.aar/3b53a789f363f46b5fd21dbc63d56bbe/AndroidManifest.xml:22:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0-beta01.aar/5f9074317b09df51c51688225f1ae38d/AndroidManifest.xml:22:5-23:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0-beta01.aar/5f9074317b09df51c51688225f1ae38d/AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-1.0.0-beta01.aar/3b53a789f363f46b5fd21dbc63d56bbe/AndroidManifest.xml:22:18-86
+	android:supportsRtl
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:14:9-35
+	android:label
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:12:9-41
+	android:roundIcon
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:13:9-54
+	android:icon
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:11:9-43
+	android:allowBackup
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:10:9-35
+	android:theme
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:15:9-40
+activity#com.mad.delivery.clientApp.MainActivity
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:16:9-22:20
+	android:name
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:16:19-73
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:17:13-21:29
+action#android.intent.action.MAIN
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:18:17-69
+	android:name
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:18:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:20:17-77
+	android:name
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml:20:27-74
+uses-sdk
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+MERGED from [com.google.android.material:material:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/material-1.0.0-beta01.aar/1ecb8be244af6c771af983a8a64df521/AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/material-1.0.0-beta01.aar/1ecb8be244af6c771af983a8a64df521/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0-beta01.aar/ca2d11dbb7f41b1cda03756d61bd74ce/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0-beta01.aar/ca2d11dbb7f41b1cda03756d61bd74ce/AndroidManifest.xml:20:5-44
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /Users/vito/.gradle/caches/transforms-1/files-1.1/constraintlayout-1.1.3.aar/bae524c5aed3cad67ecc2a0e28771877/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:1.1.3] /Users/vito/.gradle/caches/transforms-1/files-1.1/constraintlayout-1.1.3.aar/bae524c5aed3cad67ecc2a0e28771877/AndroidManifest.xml:5:5-7:41
+MERGED from [de.hdodenhof:circleimageview:2.1.0] /Users/vito/.gradle/caches/transforms-1/files-1.1/jetified-circleimageview-2.1.0.aar/ace340aa493367d0e7223aa3cf763293/AndroidManifest.xml:5:5-7:41
+MERGED from [de.hdodenhof:circleimageview:2.1.0] /Users/vito/.gradle/caches/transforms-1/files-1.1/jetified-circleimageview-2.1.0.aar/ace340aa493367d0e7223aa3cf763293/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.fragment:fragment:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/fragment-1.0.0-beta01.aar/305c05b2a1494e82b507473eb083a271/AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/fragment-1.0.0-beta01.aar/305c05b2a1494e82b507473eb083a271/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/vectordrawable-animated-1.0.0-beta01.aar/6e1b2d3d8b8a2e4ae56a8edc05ca7b6e/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/vectordrawable-animated-1.0.0-beta01.aar/6e1b2d3d8b8a2e4ae56a8edc05ca7b6e/AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/recyclerview-1.0.0-beta01.aar/ab3ac77b23c2509f0e44e9b0ae1ae350/AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/recyclerview-1.0.0-beta01.aar/ab3ac77b23c2509f0e44e9b0ae1ae350/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/legacy-support-core-ui-1.0.0-beta01.aar/ed616ffaccc2b167ddce52057c3c8f99/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-ui:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/legacy-support-core-ui-1.0.0-beta01.aar/ed616ffaccc2b167ddce52057c3c8f99/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/legacy-support-core-utils-1.0.0-beta01.aar/1339f7823af6d424b718103b7179aeda/AndroidManifest.xml:20:5-44
+MERGED from [androidx.legacy:legacy-support-core-utils:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/legacy-support-core-utils-1.0.0-beta01.aar/1339f7823af6d424b718103b7179aeda/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/vectordrawable-1.0.0-beta01.aar/19b28b6b4ecbd5944edac68d47b40c7b/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/vectordrawable-1.0.0-beta01.aar/19b28b6b4ecbd5944edac68d47b40c7b/AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/transition-1.0.0-beta01.aar/572bf78a2dfbd44287d6fb16cf052e02/AndroidManifest.xml:20:5-44
+MERGED from [androidx.transition:transition:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/transition-1.0.0-beta01.aar/572bf78a2dfbd44287d6fb16cf052e02/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/loader-1.0.0-beta01.aar/ef28e67d7473c51fa9dd07d15b43174f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/loader-1.0.0-beta01.aar/ef28e67d7473c51fa9dd07d15b43174f/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/viewpager-1.0.0-beta01.aar/d38919cb3dfb9b38c8263aafbbc9d883/AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/viewpager-1.0.0-beta01.aar/d38919cb3dfb9b38c8263aafbbc9d883/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-1.0.0-beta01.aar/1c75072d060652b0dd71c746dca50c6a/AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-1.0.0-beta01.aar/1c75072d060652b0dd71c746dca50c6a/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/drawerlayout-1.0.0-beta01.aar/5b7d3309937a33047b25b92329c7cc53/AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/drawerlayout-1.0.0-beta01.aar/5b7d3309937a33047b25b92329c7cc53/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-1.0.0-beta01.aar/21f4bea15feffed2539e3a5575ee4aad/AndroidManifest.xml:20:5-44
+MERGED from [androidx.slidingpanelayout:slidingpanelayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-1.0.0-beta01.aar/21f4bea15feffed2539e3a5575ee4aad/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/customview-1.0.0-beta01.aar/de03d401575d94fac0acc14052dd1b9d/AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/customview-1.0.0-beta01.aar/de03d401575d94fac0acc14052dd1b9d/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-1.0.0-beta01.aar/30dcbc7e4bb374ff56177a24fda956a2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-1.0.0-beta01.aar/30dcbc7e4bb374ff56177a24fda956a2/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-1.0.0-beta01.aar/7a9880ee3a095133c56e165fa11abb95/AndroidManifest.xml:20:5-44
+MERGED from [androidx.asynclayoutinflater:asynclayoutinflater:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-1.0.0-beta01.aar/7a9880ee3a095133c56e165fa11abb95/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-1.0.0-beta01.aar/3b53a789f363f46b5fd21dbc63d56bbe/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-1.0.0-beta01.aar/3b53a789f363f46b5fd21dbc63d56bbe/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/cursoradapter-1.0.0-beta01.aar/44b2062ac77313a66045567f1a45946c/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/cursoradapter-1.0.0-beta01.aar/44b2062ac77313a66045567f1a45946c/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/cardview-1.0.0-beta01.aar/f3c6e1c80bbce1c35ebc71fbc3e4cf10/AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/cardview-1.0.0-beta01.aar/f3c6e1c80bbce1c35ebc71fbc3e4cf10/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0-beta01.aar/5f9074317b09df51c51688225f1ae38d/AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0-beta01.aar/5f9074317b09df51c51688225f1ae38d/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/documentfile-1.0.0-beta01.aar/2eca4c643e6eded2c630e44d50dacac6/AndroidManifest.xml:20:5-44
+MERGED from [androidx.documentfile:documentfile:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/documentfile-1.0.0-beta01.aar/2eca4c643e6eded2c630e44d50dacac6/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-1.0.0-beta01.aar/a70db5f3611cfd6c3ff87271cf8d5550/AndroidManifest.xml:20:5-44
+MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-1.0.0-beta01.aar/a70db5f3611cfd6c3ff87271cf8d5550/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/print-1.0.0-beta01.aar/35f5d1f1f086f4f5fbc63fa576dfd087/AndroidManifest.xml:20:5-44
+MERGED from [androidx.print:print:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/print-1.0.0-beta01.aar/35f5d1f1f086f4f5fbc63fa576dfd087/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/interpolator-1.0.0-beta01.aar/36886cd3c1b29b80679fbf4e69c87657/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/interpolator-1.0.0-beta01.aar/36886cd3c1b29b80679fbf4e69c87657/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-runtime-2.0.0-beta01.aar/37dbb74ebda0a96fafa1c80a55703eb9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-runtime-2.0.0-beta01.aar/37dbb74ebda0a96fafa1c80a55703eb9/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-viewmodel-2.0.0-beta01.aar/b16cff27dc6939da686777b0d6df7459/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-viewmodel-2.0.0-beta01.aar/b16cff27dc6939da686777b0d6df7459/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-core-2.0.0-beta01.aar/4a162a7473eca5cdc4429fafc4965f31/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-core-2.0.0-beta01.aar/4a162a7473eca5cdc4429fafc4965f31/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-runtime-2.0.0-beta01.aar/72c7bf8b4dbb35c925e8c783fefd5ec1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0-beta01] /Users/vito/.gradle/caches/transforms-1/files-1.1/core-runtime-2.0.0-beta01.aar/72c7bf8b4dbb35c925e8c783fefd5ec1/AndroidManifest.xml:20:5-44
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+		ADDED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/vito/Documents/AndroidProjects/FoodApp/app/src/main/AndroidManifest.xml
