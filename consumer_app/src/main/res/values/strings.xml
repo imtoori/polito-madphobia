@@ -1,7 +1,29 @@
 <resources>
+
     <string name="app_name">Consumer app</string>
-    <string name="profile_name">Name</string>
-    <string name="profile_description">Description</string>
-    <string name="profile_email">Email Address</string>
-    <string name="profile_delivery">Delivery Address</string>
+    <string name="profile_toolbar">My Profile</string>
+    <string name="editprofile_toolbar">Edit Profile</string>
+    <string name="photo_toolbar">Photo Profile</string>
+
+
+
+    <string name="imageprofile_desc">Image Profile</string>
+    <string name="your_name">Your name</string>
+    <string name="name">Name</string>
+
+    <string name="default_phone">+00 000 000 0000</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="your_email">Your Email Address</string>
+    <string name="email">Email Address</string>
+
+    <string name="delivery_desc">Your order will be delivered here</string>
+    <string name="delivery">Delivery Address</string>
+
+    <string name="desc_desc">A short description about you</string>
+    <string name="description">Description</string>
+
+    <string name="max_length_line">60</string>
+    <string name="max_length_description">180</string>
+    <string name="max_length_phone">15</string>
+    <string name="transition_zoom">transition_zoom</string>
 </resources>

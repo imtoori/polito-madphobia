@@ -21,8 +21,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.572"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +35,7 @@
             <ImageView
                 android:id="@+id/image_profile"
                 android:layout_width="match_parent"
-                android:layout_height="248dp"
+                android:layout_height="315dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/imageprofile_desc"
                 android:scaleType="centerCrop"
@@ -69,8 +68,8 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="30dp"
-                    android:contentDescription="@string/name"
-                    app:srcCompat="@drawable/ic_user" />
+                    app:srcCompat="@drawable/ic_user"
+                    android:contentDescription="@string/name" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,8 +115,8 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="30dp"
-                    android:contentDescription="@string/phone_number"
-                    app:srcCompat="@drawable/ic_phone" />
+                    app:srcCompat="@drawable/ic_phone"
+                    android:contentDescription="@string/phone_number" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -163,8 +162,8 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="30dp"
-                    android:contentDescription="@string/email"
-                    app:srcCompat="@drawable/ic_email" />
+                    app:srcCompat="@drawable/ic_email"
+                    android:contentDescription="@string/email" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -209,8 +208,8 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="30dp"
-                    android:contentDescription="@string/delivery"
-                    app:srcCompat="@drawable/ic_location" />
+                    app:srcCompat="@drawable/ic_location"
+                    android:contentDescription="@string/delivery" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -265,8 +264,8 @@
                     android:layout_height="45dp"
                     android:layout_marginEnd="30dp"
                     android:layout_gravity="top"
-                    android:contentDescription="@string/description"
-                    app:srcCompat="@drawable/ic_description" />
+                    app:srcCompat="@drawable/ic_description"
+                    android:contentDescription="@string/description" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -278,9 +277,9 @@
                         android:id="@+id/description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ellipsize="end"
                         android:hint="@string/desc_desc"
                         android:maxLines="20"
+                        android:ellipsize="end"
                         android:textColor="@color/colorText"
                         android:textSize="@dimen/normalText" />
 
@@ -288,7 +287,6 @@
                         android:id="@+id/description_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
                         android:text="@string/description"
                         android:textColor="@color/colorSecondaryText"
                         android:textSize="@dimen/description" />

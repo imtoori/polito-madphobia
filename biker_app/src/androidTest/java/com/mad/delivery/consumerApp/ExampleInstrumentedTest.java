@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp;
+package com.mad.delivery.consumerApp;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;

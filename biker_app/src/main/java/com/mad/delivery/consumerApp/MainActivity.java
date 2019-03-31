@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp;
+package com.mad.delivery.consumerApp;
 
 import android.Manifest;
 import android.content.Context;
@@ -250,4 +250,6 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    public void zoomImage(View view) {
+    }
 }
