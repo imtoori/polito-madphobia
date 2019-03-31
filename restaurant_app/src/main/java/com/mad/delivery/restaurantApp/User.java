@@ -1,4 +1,4 @@
-package com.mad.delivery.consumerApp;
+package com.mad.delivery.restaurantApp;
 
 import java.io.Serializable;
 

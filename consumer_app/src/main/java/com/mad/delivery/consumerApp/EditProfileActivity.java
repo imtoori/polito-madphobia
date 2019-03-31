@@ -1,52 +1,42 @@
 package com.mad.delivery.consumerApp;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
-
-import com.mad.delivery.clientApp.BuildConfig;
-import com.mad.delivery.clientApp.R;
-
-
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.mad.delivery.clientApp.BuildConfig;
+import com.mad.delivery.clientApp.R;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
     // Hold a reference to the current animator,
@@ -54,8 +44,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     SharedPreferences sharedPref;
     Menu menu;
-    User mUser, temp;
-    Button btnCamera;
+    User mUser;
+    FloatingActionButton btnCamera;
     EditText name;
     EditText phoneNumber;
     EditText emailAddress;
@@ -72,22 +62,10 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d("MADAPP", "onCreate()");
-        if (savedInstanceState != null) {
-            Log.d("MADAPP", "SavedInstanceState contains data");
-            mUser.name = savedInstanceState.getString("name");
-            mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
-            mUser.email = savedInstanceState.getString("emailAddress");
-            mUser.description = savedInstanceState.getString("description");
-            mUser.deliveryAddress = savedInstanceState.getString("deliveryAddress");
-            mUser.imageUri = savedInstanceState.getString("imageUri");
-            updateFields(mUser);
-        } else Log.d("MADAPP", "SavedInstanceState is null");
         setContentView(R.layout.activity_edit_profile);
 
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
-        setTitle(R.string.editprofile_toolbar);
+        setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -104,12 +82,19 @@ public class EditProfileActivity extends AppCompatActivity {
                 selectImage(EditProfileActivity.this);
             }
         });
-        imgProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                zoomImage();
-            }
-        });
+
+        if (savedInstanceState != null) {
+            Log.d("MADAPP", "SavedInstanceState contains data");
+            mUser.name = savedInstanceState.getString("name");
+            mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
+            mUser.email = savedInstanceState.getString("emailAddress");
+            mUser.description = savedInstanceState.getString("description");
+            mUser.deliveryAddress = savedInstanceState.getString("deliveryAddress");
+            mUser.imageUri = savedInstanceState.getString("imageUri");
+            updateFields(mUser);
+        } else {
+            getProfileData();
+        }
     }
 
     @Override
@@ -121,19 +106,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        setProfileData();
-        Log.d("MADAPP", "Profile data are saved");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getProfileData();
-        Log.d("MADAPP", "Profile data are restored");
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,7 +118,12 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
+            case R.id.edit_profile_done:
+                setProfileData();
+                Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -180,7 +157,6 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.deliveryAddress = savedInstanceState.getString("deliveryAddress");
         mUser.imageUri = savedInstanceState.getString("imageUri");
         updateFields(mUser);
-
     }
 
     @Override
@@ -192,7 +168,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (imageProfileUri != null)
                         imgProfile.setImageURI(imageProfileUri);
                 }
-
                 break;
             case GALLERY_CODE:
                 if (resultCode == RESULT_OK && data != null) {
@@ -332,29 +307,6 @@ public class EditProfileActivity extends AppCompatActivity {
             return null;
         }
         return fileUri;
-    }
-
-    public void zoomImage() {
-        // Ordinary Intent for launching a new activity
-        Intent intent = new Intent(this, PhotoZoomActivity.class);
-        Log.d("MADAPP", mUser.imageUri);
-        intent.putExtra("imageUri", mUser.imageUri);
-        intent.putExtra("className", this.getClass().getName());
-        // Get the transition name from the string
-        String transitionName = getString(R.string.transition_zoom);
-
-        // Define the view that the animation will start from
-        View viewStart = findViewById(R.id.editprofile_imgprofile);
-
-        ActivityOptions options =
-
-                ActivityOptions.makeSceneTransitionAnimation(this,
-                        viewStart,   // Starting view
-                        transitionName    // The String
-                );
-        //Start the Intent
-        startActivity(intent, options.toBundle());
-        //Activity.startActivity(this, intent,  options.toBundle());
     }
 
 }

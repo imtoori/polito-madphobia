@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         myToolBar = findViewById(R.id.mainActivityToolbar);
 
         setSupportActionBar(myToolBar);
-        setTitle(R.string.profile_toolbar);
+        setTitle(getResources().getString(R.string.profile_toolbar));
         name = findViewById(R.id.name);
         phoneNumber = findViewById(R.id.phoneNumber);
         emailAddress = findViewById(R.id.email);

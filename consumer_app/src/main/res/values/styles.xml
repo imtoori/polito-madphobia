@@ -18,10 +18,25 @@
     </style>
 
     <style name="AppTheme.ToolBar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary" >
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:background">@drawable/gradient</item>
         <item name="android:textColor">@color/colorTextIcon</item>
         <item name="android:subtitleTextColor" > @color/colorTextIcon</item>
         <item name="android:homeAsUpIndicator">@color/colorTextIcon</item>
+    </style>
+
+    <style name="AppTheme.TextInputEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textAppearance"> @style/AppTheme.InputText</item>
+        <item name="android:dropDownHintAppearance"> @style/AppTheme.HintText</item>
+    </style>
+    <style name="AppTheme.InputText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textSize">@dimen/normalText</item>
+    </style>
+    <style name="AppTheme.HintText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textSize">@dimen/description</item>
+    </style>
+    <style name="EditText.Login" parent="Widget.AppCompat.EditText">
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

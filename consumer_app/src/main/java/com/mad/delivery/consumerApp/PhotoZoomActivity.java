@@ -31,7 +31,7 @@ public class PhotoZoomActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_zoom);
         toolbar = (Toolbar) findViewById(R.id.photoProfileToolbar);
-        setTitle(R.string.photo_toolbar);
+        setTitle(getResources().getString(R.string.photo_toolbar));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
