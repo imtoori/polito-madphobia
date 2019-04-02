@@ -154,7 +154,9 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
+                    Log.d("MADAPP", "imageProfileUri on ActivityResult: "+imageProfileUri.toString());
                     if (imageProfileUri != null)
+                        Log.d("MADAPP", "i am here");
                         imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
                         imgProfile.setImageURI(imageProfileUri);
                 }

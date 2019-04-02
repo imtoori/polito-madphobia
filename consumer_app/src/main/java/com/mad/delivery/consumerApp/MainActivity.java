@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        intent.putExtra("imageUri", mUser.imageUri);
+        intent.putExtra("imageUri", mUser.imageUri.toString());
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);
