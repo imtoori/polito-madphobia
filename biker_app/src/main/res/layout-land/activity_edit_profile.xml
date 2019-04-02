@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mad.delivery.consumerApp.com.mad.delivery.bikerApp.EditProfileActivity">
+    tools:context="com.mad.delivery.consumerApp.EditProfileActivity">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -21,13 +21,13 @@
 
     <ImageView
         android:id="@+id/editprofile_imgprofile"
-        android:layout_width="match_parent"
-        android:layout_height="248dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/imageprofile_desc"
         android:scaleType="centerCrop"
         android:src="@drawable/user_default"
         android:visibility="visible"
-        android:contentDescription="@string/imageprofile_desc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
         <include
             android:id="@+id/include"
             layout="@layout/input_edit_profile"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
 
@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="338dp" />
+        app:layout_constraintGuide_begin="290dp" />
 
 
 

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBlack"
     android:transitionName="@string/transition_zoom"
-    tools:context="com.mad.delivery.consumerApp.com.mad.delivery.bikerApp.PhotoZoomActivity">
+    tools:context="com.mad.delivery.consumerApp.PhotoZoomActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/photoProfileToolbar"
         android:layout_width="match_parent"
