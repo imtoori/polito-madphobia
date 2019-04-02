@@ -1,4 +1,4 @@
-package com.mad.delivery.clientApp;
+package com.mad.delivery.bikerApp;
 
 import org.junit.Test;
 

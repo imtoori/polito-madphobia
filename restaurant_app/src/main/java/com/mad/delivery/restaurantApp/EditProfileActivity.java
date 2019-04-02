@@ -21,9 +21,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mad.delivery.clientApp.BuildConfig;
-import com.mad.delivery.clientApp.R;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,9 +32,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
-    // Hold a reference to the current animator,
-    // so that it can be canceled mid-way.
-
     SharedPreferences sharedPref;
     Menu menu;
     User mUser;
@@ -59,7 +53,7 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
+        imageProfileUri = Uri.EMPTY;
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
@@ -80,13 +74,14 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         if (savedInstanceState != null) {
+            mUser = new User();
             Log.d("MADAPP", "SavedInstanceState contains data");
             mUser.name = savedInstanceState.getString("name");
             mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
             mUser.email = savedInstanceState.getString("emailAddress");
             mUser.description = savedInstanceState.getString("description");
             mUser.deliveryAddress = savedInstanceState.getString("deliveryAddress");
-            mUser.imageUri = savedInstanceState.getString("imageUri");
+            mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
             updateFields(mUser);
         } else {
             getProfileData();
@@ -99,9 +94,7 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,7 +127,7 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("emailAddress", emailAddress.getText().toString());
         outState.putString("description", description.getText().toString());
         outState.putString("deliveryAddress", description.getText().toString());
-        if (imageProfileUri != null)
+        if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
             outState.putString("imageUri", "");
@@ -151,7 +144,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
         mUser.deliveryAddress = savedInstanceState.getString("deliveryAddress");
-        mUser.imageUri = savedInstanceState.getString("imageUri");
+        mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
         updateFields(mUser);
     }
 
@@ -162,6 +155,7 @@ public class EditProfileActivity extends AppCompatActivity {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
                     if (imageProfileUri != null)
+                        imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
                         imgProfile.setImageURI(imageProfileUri);
                 }
                 break;
@@ -169,6 +163,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK && data != null) {
                     imageProfileUri = data.getData();
                     if (imageProfileUri != null) {
+                        imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
                         imgProfile.setImageURI(imageProfileUri);
                     } else {
                         imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
@@ -186,8 +181,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("deliveryAddress", ""),
                 sharedPref.getString("description", ""),
-                sharedPref.getString("imageUri", "")
+                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
+        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
     }
 
@@ -198,13 +194,18 @@ public class EditProfileActivity extends AppCompatActivity {
         editor.putString("emailAddress", emailAddress.getText().toString());
         editor.putString("description", description.getText().toString());
         editor.putString("deliveryAddress", deliveryAddress.getText().toString());
+
         try {
-            if (imageProfileUri != null || !imageProfileUri.toString().equals("")) {
-                imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
+            Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
+            if (imageProfileUri != Uri.EMPTY) {
                 editor.putString("imageUri", imageProfileUri.toString());
+            } else {
+                Log.d("MADAPP", "added empty");
+                editor.putString("imageUri", Uri.EMPTY.toString());
             }
-        } catch (Exception e) {
-            editor.putString("imageUri", "");
+
+        } catch (NullPointerException e) {
+            editor.putString("imageUri", Uri.EMPTY.toString());
         }
 
         editor.apply();
@@ -252,6 +253,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     photoFile);
                             takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
+
                         }
                     }
 
@@ -273,10 +275,14 @@ public class EditProfileActivity extends AppCompatActivity {
         emailAddress.setText(u.email);
         description.setText(u.description);
         deliveryAddress.setText(u.deliveryAddress);
-        if (u.imageUri.toString().equals("")) {
+        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+            Log.d("MADAPP", "Setting user default image");
+            imageProfileUri = Uri.EMPTY;
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
-            imgProfile.setImageURI(Uri.parse(u.imageUri));
+            Log.d("MADAPP", "Setting custom user image");
+            imageProfileUri = u.imageUri;
+            imgProfile.setImageURI(u.imageUri);
         }
     }
 
@@ -284,10 +290,10 @@ public class EditProfileActivity extends AppCompatActivity {
     This function copy a file given its URI and the Activity into the app internal storage and returns the new URI
      */
     private Uri saveImage(Uri uriFrom, Activity activity) {
-        File outFile = null;
-        FileOutputStream out = null;
-        Bitmap bitmap = null;
-        Uri fileUri = null;
+        File outFile;
+        FileOutputStream out;
+        Bitmap bitmap;
+        Uri fileUri;
         try {
             outFile = createImageFile();
             InputStream image_stream = activity.getContentResolver().openInputStream(uriFrom);

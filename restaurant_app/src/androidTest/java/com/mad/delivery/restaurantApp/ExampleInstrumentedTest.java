@@ -1,4 +1,4 @@
-package com.mad.delivery.clientApp;
+package com.mad.delivery.restaurantApp;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;

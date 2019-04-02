@@ -1,4 +1,4 @@
-package com.mad.delivery.consumerApp;
+package com.mad.delivery.bikerApp;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 

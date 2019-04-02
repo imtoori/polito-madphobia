@@ -1,4 +1,6 @@
-package com.mad.delivery.consumerApp;
+package com.mad.delivery.bikerApp;
+
+import android.net.Uri;
 
 import java.io.Serializable;
 
@@ -8,9 +10,10 @@ public class User implements Serializable {
     protected String email;
     protected String deliveryAddress;
     protected String description;
-    protected String imageUri;
+    protected Uri imageUri;
 
-    public User(String name, String phoneNumber, String email, String deliveryAddress, String description, String imageUri) {
+    public User() {}
+    public User(String name, String phoneNumber, String email, String deliveryAddress, String description, Uri imageUri) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;

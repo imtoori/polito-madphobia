@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.mad.delivery.clientApp.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                          sharedPref.getString("emailAddress", ""),
                          sharedPref.getString("deliveryAddress", ""),
                          sharedPref.getString("description", ""),
-                         sharedPref.getString("imageUri", "")
+                         Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
                         );
         updateFields();
     }
@@ -83,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
         emailAddress.setText(mUser.email);
         description.setText(mUser.description);
         deliveryAddress.setText(mUser.deliveryAddress);
-        if(mUser.imageUri.toString().equals("")) {
+        if(mUser.imageUri.toString().equals(Uri.EMPTY.toString())) {
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
-            imgProfile.setImageURI(Uri.parse(mUser.imageUri));
+            imgProfile.setImageURI(mUser.imageUri);
         }
     }
 
