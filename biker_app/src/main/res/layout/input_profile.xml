@@ -1,236 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clipChildren="false"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        card_view:cardUseCompatPadding="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        card_view:cardElevation="4dp">
 
-        <ImageView
-            android:id="@+id/user_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="30dp"
-            android:contentDescription="@string/name"
-            app:srcCompat="@drawable/ic_user" />
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
+                android:id="@+id/personal_data_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/your_name"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/persona_data"
+                android:textSize="@dimen/subtitle"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/main_user_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="6dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/photo_toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/personal_data_tv"
+                app:srcCompat="@drawable/ic_user" />
+
+            <TextView
+                android:id="@+id/main_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/name"
+                android:padding="8dp"
+                android:maxLength="46"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/normalText" />
+                android:textSize="@dimen/normalText"
+                app:layout_constraintBottom_toBottomOf="@+id/main_user_image"
+                app:layout_constraintStart_toEndOf="@+id/main_user_image"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/personal_data_tv" />
 
             <TextView
-                android:id="@+id/name_desc"
-                android:layout_width="match_parent"
+                android:id="@+id/main_lastname"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/name"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="@dimen/description" />
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_marginTop="8dp"
+                android:hint="@string/lastname"
+                android:maxLength="46"
+                android:padding="8dp"
+                android:textColor="@color/colorText"
+                android:textSize="@dimen/normalText"
+                card_view:layout_constraintEnd_toEndOf="@+id/main_name"
+                card_view:layout_constraintHorizontal_bias="0.0"
+                card_view:layout_constraintStart_toStartOf="@+id/main_name"
+                card_view:layout_constraintTop_toBottomOf="@+id/main_name" />
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <ImageView
-            android:id="@+id/phone_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="30dp"
-            android:contentDescription="@string/phone_number"
-            app:srcCompat="@drawable/ic_phone" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+            <ImageView
+                android:id="@+id/main_phone_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="6dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/phone_number"
+                app:srcCompat="@drawable/ic_phone"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/main_lastname" />
 
             <TextView
-                android:id="@+id/phoneNumber"
-                android:layout_width="match_parent"
+                android:id="@+id/mainprofile_phone"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:hint="@string/default_phone"
+                android:padding="8dp"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/normalText" />
+                android:textSize="@dimen/normalText"
+                card_view:layout_constraintEnd_toEndOf="@+id/main_lastname"
+                card_view:layout_constraintStart_toStartOf="@+id/main_lastname"
+                card_view:layout_constraintTop_toBottomOf="@+id/main_lastname" />
+
+
+            <ImageView
+                android:id="@+id/main_email_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="6dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/email"
+                app:srcCompat="@drawable/ic_email"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/mainprofile_phone" />
 
             <TextView
-                android:id="@+id/phoneNumber_desc"
-                android:layout_width="match_parent"
+                android:id="@+id/main_email"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/phone_number"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="@dimen/description" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-        <ImageView
-            android:id="@+id/email_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="30dp"
-            android:contentDescription="@string/email"
-            app:srcCompat="@drawable/ic_email" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/your_email"
-                android:textColor="@color/colorText"
-                android:textSize="@dimen/normalText" />
-
-            <TextView
-                android:id="@+id/email_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/email"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="@dimen/description" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-
-        <ImageView
-            android:id="@+id/location_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginEnd="30dp"
-            android:contentDescription="@string/delivery"
-            app:srcCompat="@drawable/ic_location" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/deliveryAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/delivery_desc"
-                android:textColor="@color/colorText"
-                android:textSize="@dimen/normalText" />
-
-            <TextView
-                android:id="@+id/deliveryAddress_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/delivery"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="@dimen/description" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/description_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_gravity="top"
-            android:layout_marginEnd="30dp"
-            android:contentDescription="@string/description"
-            app:srcCompat="@drawable/ic_description" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:ellipsize="end"
-                android:hint="@string/desc_desc"
-                android:maxLines="20"
+                android:padding="8dp"
+                android:hint="@string/email"
+                android:maxLength="45"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/normalText" />
+                android:textSize="@dimen/normalText"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="@+id/mainprofile_phone"
+                card_view:layout_constraintStart_toStartOf="@+id/mainprofile_phone"
+                card_view:layout_constraintTop_toBottomOf="@+id/mainprofile_phone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        card_view:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/description_desc"
-                android:layout_width="match_parent"
+                android:id="@+id/address_tv"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+
+                android:text="@string/delivery"
+                android:textSize="@dimen/subtitle"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/main_location_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="6dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="@string/delivery_desc"
+                app:srcCompat="@drawable/ic_location"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/address_tv" />
+
+            <TextView
+                android:id="@+id/main_road"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:hint="@string/road"
+                android:maxLength="150"
+                android:maxLines="3"
+                android:padding="8dp"
+                android:textColor="@color/colorText"
+                android:textSize="@dimen/normalText"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/main_location_image"
+                card_view:layout_constraintTop_toBottomOf="@+id/address_tv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        card_view:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/desc_tv"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/description"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="@dimen/description" />
-        </LinearLayout>
-    </LinearLayout>
+                android:textSize="@dimen/subtitle"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/main_description_image"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="top"
+                android:layout_margin="6dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/description"
+                app:srcCompat="@drawable/ic_description"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/desc_tv" />
+
+            <TextView
+                android:id="@+id/main_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:layout_marginBottom="16dp"
+                android:hint="@string/description"
+                android:textColor="@color/colorText"
+                android:textSize="@dimen/normalText"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.51"
+                card_view:layout_constraintStart_toEndOf="@+id/main_description_image"
+                card_view:layout_constraintTop_toBottomOf="@+id/desc_tv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
 </LinearLayout>

@@ -1,5 +1,7 @@
 package com.mad.delivery.restaurantApp;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,9 +10,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 public class PhotoZoomActivity extends AppCompatActivity  {
     final String DEBUG_TAG = "MAD-APP";
     private GestureDetector gestureDetector;

@@ -1,10 +1,10 @@
 package com.mad.delivery.restaurantApp;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,10 +20,11 @@ public class MainActivity extends AppCompatActivity {
     Toolbar myToolBar;
     Menu menu;
     TextView name;
+    TextView lastName;
     TextView phoneNumber;
     TextView emailAddress;
     TextView description;
-    TextView deliveryAddress;
+    TextView road;
     ImageView imgProfile;
     User mUser;
 
@@ -35,11 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.profile_toolbar));
-        name = findViewById(R.id.name);
-        phoneNumber = findViewById(R.id.phoneNumber);
-        emailAddress = findViewById(R.id.email);
-        description = findViewById(R.id.description);
-        deliveryAddress = findViewById(R.id.deliveryAddress);
+        name = findViewById(R.id.main_name);
+        lastName = findViewById(R.id.main_lastname);
+        phoneNumber = findViewById(R.id.mainprofile_phone);
+        emailAddress = findViewById(R.id.main_email);
+        description = findViewById(R.id.main_description);
+        road = findViewById(R.id.main_road);
+
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
     }
@@ -69,24 +72,34 @@ public class MainActivity extends AppCompatActivity {
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         mUser = new User(sharedPref.getString("name", ""),
-                         sharedPref.getString("phoneNumber", ""),
-                         sharedPref.getString("emailAddress", ""),
-                         sharedPref.getString("deliveryAddress", ""),
-                         sharedPref.getString("description", ""),
-                         Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
-                        );
-        updateFields();
+                sharedPref.getString("lastName", ""),
+                sharedPref.getString("phoneNumber", ""),
+                sharedPref.getString("emailAddress", ""),
+                sharedPref.getString("description", ""),
+                sharedPref.getString("road", ""),
+                sharedPref.getString("houseNumber", ""),
+                sharedPref.getString("doorPhone", ""),
+                sharedPref.getString("postCode", ""),
+                sharedPref.getString("city", ""),
+                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
+        );
+        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
+        updateFields(mUser);
     }
-    private void updateFields() {
-        name.setText(mUser.name);
-        phoneNumber.setText(mUser.phoneNumber);
-        emailAddress.setText(mUser.email);
-        description.setText(mUser.description);
-        deliveryAddress.setText(mUser.deliveryAddress);
-        if(mUser.imageUri.toString().equals(Uri.EMPTY.toString())) {
+    private void updateFields(User u) {
+        name.setText(u.name);
+        phoneNumber.setText(u.phoneNumber);
+        emailAddress.setText(u.email);
+        description.setText(u.description);
+        if(!u.road.equals("")) {
+            road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
+        }
+        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+            Log.d("MADAPP", "Setting user default image");
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
-            imgProfile.setImageURI(mUser.imageUri);
+            Log.d("MADAPP", "Setting custom user image");
+            imgProfile.setImageURI(u.imageUri);
         }
     }
 

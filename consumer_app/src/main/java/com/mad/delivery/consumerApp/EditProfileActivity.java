@@ -37,17 +37,21 @@ public class EditProfileActivity extends AppCompatActivity {
     User mUser;
     FloatingActionButton btnCamera;
     EditText name;
+    EditText lastName;
     EditText phoneNumber;
     EditText emailAddress;
     EditText description;
-    EditText deliveryAddress;
+    EditText road;
+    EditText houseNumber;
+    EditText doorPhone;
+    EditText postCode;
+    EditText city;
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
-    final int SHOW_IMAGE_FULL = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +64,15 @@ public class EditProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         name = findViewById(R.id.editprofile_name);
+        lastName = findViewById(R.id.editprofile_lastname);
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);
         description = findViewById(R.id.editprofile_description);
-        deliveryAddress = findViewById(R.id.editprofile_deliveryAddress);
+        road = findViewById(R.id.editprofile_road);
+        houseNumber = findViewById(R.id.editprofile_housenumber);
+        doorPhone = findViewById(R.id.editprofile_doorphone);
+        postCode = findViewById(R.id.editprofile_postalcode);
+        city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
@@ -74,15 +83,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         if (savedInstanceState != null) {
-            mUser = new User();
-            Log.d("MADAPP", "SavedInstanceState contains data");
-            mUser.name = savedInstanceState.getString("name");
-            mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
-            mUser.email = savedInstanceState.getString("emailAddress");
-            mUser.description = savedInstanceState.getString("description");
-            mUser.deliveryAddress = savedInstanceState.getString("deliveryAddress");
-            mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
-            updateFields(mUser);
+            onRestoreInstanceState(savedInstanceState);
         } else {
             getProfileData();
         }
@@ -123,10 +124,16 @@ public class EditProfileActivity extends AppCompatActivity {
         // invoked when the activity may be temporarily destroyed, save the instance state here
         super.onSaveInstanceState(outState);
         outState.putString("name", name.getText().toString());
+        outState.putString("lastName", lastName.getText().toString());
         outState.putString("phoneNumber", phoneNumber.getText().toString());
         outState.putString("emailAddress", emailAddress.getText().toString());
         outState.putString("description", description.getText().toString());
-        outState.putString("deliveryAddress", description.getText().toString());
+        outState.putString("road", road.getText().toString());
+        outState.putString("houseNumber", houseNumber.getText().toString());
+        outState.putString("doorPhone", doorPhone.getText().toString());
+        outState.putString("postCode", postCode.getText().toString());
+        outState.putString("city", city.getText().toString());
+
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -139,11 +146,18 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
+        mUser = new User();
+        Log.d("MADAPP", "SavedInstanceState contains data");
         mUser.name = savedInstanceState.getString("name");
+        mUser.lastName = savedInstanceState.getString("lastName");
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
-        mUser.deliveryAddress = savedInstanceState.getString("deliveryAddress");
+        mUser.road = savedInstanceState.getString("road");
+        mUser.houseNumber = savedInstanceState.getString("houseNumber");
+        mUser.doorPhone = savedInstanceState.getString("doorPhone");
+        mUser.postCode = savedInstanceState.getString("postCode");
+        mUser.city = savedInstanceState.getString("city");
         mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
         updateFields(mUser);
     }
@@ -179,10 +193,15 @@ public class EditProfileActivity extends AppCompatActivity {
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         mUser = new User(sharedPref.getString("name", ""),
+                sharedPref.getString("lastName", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
-                sharedPref.getString("deliveryAddress", ""),
                 sharedPref.getString("description", ""),
+                sharedPref.getString("road", ""),
+                sharedPref.getString("houseNumber", ""),
+                sharedPref.getString("doorPhone", ""),
+                sharedPref.getString("postCode", ""),
+                sharedPref.getString("city", ""),
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
@@ -192,10 +211,15 @@ public class EditProfileActivity extends AppCompatActivity {
     private void setProfileData() {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("name", name.getText().toString());
+        editor.putString("lastName", lastName.getText().toString());
         editor.putString("phoneNumber", phoneNumber.getText().toString());
         editor.putString("emailAddress", emailAddress.getText().toString());
         editor.putString("description", description.getText().toString());
-        editor.putString("deliveryAddress", deliveryAddress.getText().toString());
+        editor.putString("road", road.getText().toString());
+        editor.putString("houseNumber", houseNumber.getText().toString());
+        editor.putString("doorPhone", doorPhone.getText().toString());
+        editor.putString("postCode", postCode.getText().toString());
+        editor.putString("city", city.getText().toString());
 
         try {
             Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
@@ -276,7 +300,12 @@ public class EditProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-        deliveryAddress.setText(u.deliveryAddress);
+        road.setText(u.road);
+        houseNumber.setText(u.houseNumber);
+        doorPhone.setText(u.doorPhone);
+        postCode.setText(String.valueOf(u.postCode));
+        city.setText(u.city);
+
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
