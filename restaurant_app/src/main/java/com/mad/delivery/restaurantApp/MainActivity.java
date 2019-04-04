@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     Toolbar myToolBar;
     Menu menu;
     TextView name;
-    TextView lastName;
     TextView phoneNumber;
     TextView emailAddress;
     TextView description;
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.profile_toolbar));
         name = findViewById(R.id.main_name);
-        lastName = findViewById(R.id.main_lastname);
         phoneNumber = findViewById(R.id.mainprofile_phone);
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
@@ -87,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
         updateFields(mUser);
     }
     private void updateFields(User u) {
-        name.setText(u.name);
+        if(!u.name.equals("") || !u.lastName.equals(""))
+            name.setText(u.name + " " + u.lastName);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);

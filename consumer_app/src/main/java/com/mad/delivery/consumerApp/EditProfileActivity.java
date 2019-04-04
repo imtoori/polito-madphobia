@@ -209,6 +209,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void setProfileData() {
+        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("name", name.getText().toString());
         editor.putString("lastName", lastName.getText().toString());
@@ -297,6 +298,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateFields(User u) {
         name.setText(u.name);
+        lastName.setText(u.lastName);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);

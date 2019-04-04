@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -209,6 +210,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void setProfileData() {
+        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("name", name.getText().toString());
         editor.putString("lastName", lastName.getText().toString());
@@ -263,7 +265,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Take Photo")) {
-                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePicture.resolveActivity(getPackageManager()) != null) {
                         // Create the File where the photo should go
                         File photoFile = null;
@@ -284,7 +286,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
 
                 } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(pickPhoto, GALLERY_CODE);
 
                 } else if (options[item].equals("Cancel")) {
@@ -297,6 +299,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateFields(User u) {
         name.setText(u.name);
+        lastName.setText(u.lastName);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
