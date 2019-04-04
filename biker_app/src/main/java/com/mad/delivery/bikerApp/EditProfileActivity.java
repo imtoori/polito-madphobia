@@ -368,10 +368,10 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean checkConstrain(){
         boolean rexult = true;
         String nameString =  "[A-Z][a-z]*";
-        String lastNameString = "[A-Z]+([ '-][a-zA-Z]+)*";
-        String phoneNumberString = "^\\+(?:[0-9] ?){6,14}[0-9]$";
+        String lastNameString = "([A-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
+        String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString= "[0-9]{5}";
-        String numberString = "[1-9][0-9]?";
+        String numberString = "[1-9][0-9]*";
 
         if(!name.getText().toString().matches(nameString)){
             name.setError("Nome non valido");
@@ -406,13 +406,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
         if(!phoneNumber.getText().toString().matches(phoneNumberString)){
-            phoneNumber.setError("Numero di telefono non valido; necessita del prefisso +39");
+            phoneNumber.setError("Numero di telefono non valido");
             rexult = false;
 
         }
 
         if(!doorPhone.getText().toString().matches(numberString)){
-            doorPhone.setError("Numero civico non valido");
+            doorPhone.setError("Numero di porta non valido");
             rexult = false;
 
         }
@@ -425,7 +425,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         if(!houseNumber.getText().toString().matches(numberString)){
-            houseNumber.setError("Codice postale non valido");
+            houseNumber.setError("Numero civico non valido");
             rexult = false;
 
         }
