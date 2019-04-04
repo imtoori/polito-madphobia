@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -110,11 +112,13 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                setProfileData();
-                Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                if(checkConstrain()) {
+                    setProfileData();
+                    Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -344,5 +348,75 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return fileUri;
     }
+    public boolean checkConstrain(){
+        boolean rexult = true;
+        String nameString =  "[A-Z][a-z]*";
+        String lastNameString = "[A-Z]+([ '-][a-zA-Z]+)*";
+        String phoneNumberString = "^\\+(?:[0-9] ?){6,14}[0-9]$";
+        String postalCodeString= "[0-9]{5}";
+        String numberString = "[1-9]([0-9])?";
 
+        if(!name.getText().toString().matches(nameString)){
+            name.setError("Nome non valido");
+            rexult = false;
+
+        }
+
+        if(!road.getText().toString().matches("([A-Z]?[a-z]* )*([A-Z]?[a-z]*)")){
+            road.setError("Strada non valida");
+            rexult = false;
+
+        }
+
+        if(description.getText().toString().length()<0){
+            description.setError("Descrizione non valida");
+            rexult = false;
+
+        }
+
+        if(!city.getText().toString().matches("([A-Z]?[a-z]* )*([A-Z]?[a-z]*)")){
+            city.setError("Nome città non valido");
+            rexult = false;
+
+        }
+
+
+        if(!lastName.getText().toString().matches(lastNameString)){
+            lastName.setError("Cognome non valido");
+            rexult = false;
+
+        }
+
+
+        if(!phoneNumber.getText().toString().matches(phoneNumberString)){
+            phoneNumber.setError("Numero di telefono non valido; necessita del prefisso +39");
+            rexult = false;
+
+        }
+
+        if(!doorPhone.getText().toString().matches(numberString)){
+            doorPhone.setError("Numero di porta non valido");
+            rexult = false;
+
+        }
+
+
+        if(!postCode.getText().toString().matches(postalCodeString)){
+            postCode.setError("Codice postale non valido");
+            rexult = false;
+
+        }
+
+        if(!houseNumber.getText().toString().matches(numberString)){
+            houseNumber.setError("Numero civico non valido");
+            rexult = false;
+
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress.getText().toString()).matches()) {
+            emailAddress.setError("Email non valida");
+            rexult = false;
+        }
+        return rexult;
+    }
 }
