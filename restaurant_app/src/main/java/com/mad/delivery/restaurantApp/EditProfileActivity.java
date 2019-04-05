@@ -350,11 +350,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public boolean checkConstrain(){
         boolean rexult = true;
-        String nameString =  "[A-Z][a-z]*";
-        String lastNameString = "([A-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
+        String nameString =  "[a-zA-Z]?[a-z]*";
+        String lastNameString = "([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString= "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
+        String doorphoneString = "((([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*))*|([0-9])*)*";
+
 
         if(!name.getText().toString().matches(nameString)){
             name.setError("Nome non valido");
@@ -394,7 +396,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         }
 
-        if(!doorPhone.getText().toString().matches(numberString)){
+        if(!doorPhone.getText().toString().matches(doorphoneString)){
             doorPhone.setError("Numero di porta non valido");
             rexult = false;
 
