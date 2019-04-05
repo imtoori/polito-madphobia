@@ -20,7 +20,7 @@
     <string name="profile_saved">Your profile has been saved!</string>
 
     <string name="delivery_desc">Your order will be delivered here</string>
-    <string name="delivery">Delivery Address</string>
+    <string name="delivery">Restaurant Address</string>
     <string name="road">Road</string>
     <string name="house_number">Number</string>
     <string name="doorphone">Doorphone</string>

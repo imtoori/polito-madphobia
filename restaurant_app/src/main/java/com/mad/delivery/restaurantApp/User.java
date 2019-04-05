@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     protected String name;
-    protected String lastName;
     protected String  phoneNumber;
     protected String  email;
     protected String  description;
@@ -16,9 +15,8 @@ public class User implements Serializable {
     protected String city;
     protected Uri imageUri;
 
-    public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
+    public User(String name, String lastName, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;
-        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.description = description;
