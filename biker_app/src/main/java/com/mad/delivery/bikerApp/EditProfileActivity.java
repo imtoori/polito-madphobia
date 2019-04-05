@@ -103,7 +103,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstrain()) {
+                if(checkConstraints()) {
                     setProfileData();
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -316,50 +316,31 @@ public class EditProfileActivity extends AppCompatActivity {
         return fileUri;
     }
 
-
-
-
-
-    public boolean checkConstrain(){
-        boolean rexult = true;
-        String nameString =  "[a-zA-Z]?[a-z]*";
+    public boolean checkConstraints(){
+        boolean result = true;
+        String nameString =  "[a-zA-Z]+";
         String lastNameString = "([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
 
         if(!name.getText().toString().matches(nameString)){
-            name.setError("Nome non valido");
-            rexult = false;
-
+            name.setError(getResources().getString(R.string.check_name));
+            result = false;
         }
-
-
-        if(description.getText().toString().length()<0){
-            description.setError("Descrizione non valida");
-            rexult = false;
-
-        }
-
-
-
 
         if(!lastName.getText().toString().matches(lastNameString)){
-            lastName.setError("Cognome non valido");
-            rexult = false;
-
+            lastName.setError(getResources().getString(R.string.check_lastName));
+            result = false;
         }
-
 
         if(!phoneNumber.getText().toString().matches(phoneNumberString)){
-            phoneNumber.setError("Numero di telefono non valido");
-            rexult = false;
-
+            phoneNumber.setError(getResources().getString(R.string.check_phone));
+            result = false;
         }
-
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress.getText().toString()).matches()) {
-            emailAddress.setError("Email non valida");
-            rexult = false;
+            emailAddress.setError(getResources().getString(R.string.check_email));
+            result = false;
         }
-        return rexult;
+        return result;
     }
 }

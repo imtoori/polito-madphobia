@@ -112,7 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstrain()) {
+                if(checkConstraints()) {
                     setProfileData();
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -348,77 +348,64 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return fileUri;
     }
-    public boolean checkConstrain(){
-        boolean rexult = true;
-        String nameString =  "[a-zA-Z]?[a-z]*";
+
+    public boolean checkConstraints(){
+        boolean result = true;
+        String nameString =  "[a-zA-Z]+";
         String lastNameString = "([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString= "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
-        String doorphoneString = "((([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*))*|([0-9])*)*";
-
+        String roadString = "([A-Za-z0-9'-_\\s])+";
+        String cityString = "([A-Za-z\'\\s-])+";
+        String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
 
         if(!name.getText().toString().matches(nameString)){
-            name.setError("Nome non valido");
-            rexult = false;
-
+            name.setError(getResources().getString(R.string.check_name));
+            result = false;
         }
 
-        if(!road.getText().toString().matches("([A-Z]?[a-z]* )*([A-Z]?[a-z]*)")){
-            road.setError("Strada non valida");
-            rexult = false;
-
+        if(!road.getText().toString().matches(roadString)) {
+            road.setError(getResources().getString(R.string.check_road));
+            result = false;
         }
 
-        if(description.getText().toString().length()<0){
-            description.setError("Descrizione non valida");
-            rexult = false;
-
+        if(!city.getText().toString().matches(cityString)){
+            city.setError(getResources().getString(R.string.check_city));
+            result = false;
         }
-
-        if(!city.getText().toString().matches("([A-Z]?[a-z]* )*([A-Z]?[a-z]*)")){
-            city.setError("Nome città non valido");
-            rexult = false;
-
-        }
-
 
         if(!lastName.getText().toString().matches(lastNameString)){
-            lastName.setError("Cognome non valido");
-            rexult = false;
-
+            lastName.setError(getResources().getString(R.string.check_lastName));
+            result = false;
         }
 
 
         if(!phoneNumber.getText().toString().matches(phoneNumberString)){
-            phoneNumber.setError("Numero di telefono non valido");
-            rexult = false;
-
+            phoneNumber.setError(getResources().getString(R.string.check_phone));
+            result = false;
         }
 
-        if(!doorPhone.getText().toString().matches(doorphoneString)){
-            doorPhone.setError("Numero di porta non valido");
-            rexult = false;
+        if(!doorPhone.getText().toString().matches(doorPhoneString)){
+            doorPhone.setError(getResources().getString(R.string.check_doorphone));
+            result = false;
 
         }
-
 
         if(!postCode.getText().toString().matches(postalCodeString)){
-            postCode.setError("Codice postale non valido");
-            rexult = false;
-
+            postCode.setError(getResources().getString(R.string.check_postCode));
+            result = false;
         }
 
         if(!houseNumber.getText().toString().matches(numberString)){
-            houseNumber.setError("Numero civico non valido");
-            rexult = false;
-
+            houseNumber.setError(getResources().getString(R.string.house_number));
+            result = false;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress.getText().toString()).matches()) {
-            emailAddress.setError("Email non valida");
-            rexult = false;
+            emailAddress.setError(getResources().getString(R.string.email));
+            result = false;
         }
-        return rexult;
+        return result;
     }
 }

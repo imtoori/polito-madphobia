@@ -33,4 +33,14 @@
     <string name="max_length_description">180</string>
     <string name="max_length_phone">15</string>
     <string name="transition_zoom">transition_zoom</string>
+
+    <string name="check_name">First Name not valid</string>
+    <string name="check_lastName">Last Name not valid</string>
+    <string name="check_phone">Phone Number not valid</string>
+    <string name="check_email">Email Address not valid</string>
+    <string name="check_road">Street name not valid</string>
+    <string name="check_city">City name not valid</string>
+    <string name="check_doorphone">Doorphone not valid</string>
+    <string name="check_postCode">Postal Code not valid</string>
+    <string name="check_houseNumber">House Number not valid</string>
 </resources>
