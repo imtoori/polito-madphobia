@@ -62,23 +62,6 @@
                 app:layout_constraintStart_toEndOf="@+id/editprofile_userimage"
                 card_view:layout_constraintEnd_toEndOf="parent" />
 
-            <EditText
-                android:id="@+id/editprofile_lastname"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:autofillHints="@string/lastname"
-                android:gravity="center_vertical"
-                android:hint="@string/lastname"
-                android:inputType="textPersonName"
-                android:maxLength="46"
-                android:textColor="@color/colorText"
-                android:textSize="@dimen/normalText"
-                card_view:layout_constraintEnd_toEndOf="@+id/editprofile_name"
-                card_view:layout_constraintHorizontal_bias="0.0"
-                card_view:layout_constraintStart_toStartOf="@+id/editprofile_name"
-                card_view:layout_constraintTop_toBottomOf="@+id/editprofile_name" />
-
             <ImageView
                 android:id="@+id/editprofile_phone_image"
                 android:layout_width="45dp"
@@ -89,7 +72,7 @@
                 android:contentDescription="@string/phone_number"
                 app:srcCompat="@drawable/ic_phone"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/editprofile_lastname" />
+                card_view:layout_constraintTop_toBottomOf="@+id/editprofile_userimage" />
 
             <EditText
                 android:id="@+id/editprofile_phone"
@@ -103,9 +86,9 @@
                 android:maxLength="20"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
-                card_view:layout_constraintEnd_toEndOf="@+id/editprofile_lastname"
-                card_view:layout_constraintStart_toStartOf="@+id/editprofile_lastname"
-                card_view:layout_constraintTop_toBottomOf="@+id/editprofile_lastname" />
+                card_view:layout_constraintEnd_toEndOf="@+id/editprofile_name"
+                card_view:layout_constraintStart_toStartOf="@+id/editprofile_name"
+                card_view:layout_constraintTop_toBottomOf="@+id/editprofile_name" />
 
 
             <ImageView

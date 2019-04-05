@@ -39,7 +39,6 @@ public class EditProfileActivity extends AppCompatActivity {
     User mUser;
     FloatingActionButton btnCamera;
     EditText name;
-    EditText lastName;
     EditText phoneNumber;
     EditText emailAddress;
     EditText description;
@@ -66,7 +65,6 @@ public class EditProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         name = findViewById(R.id.editprofile_name);
-        lastName = findViewById(R.id.editprofile_lastname);
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);
         description = findViewById(R.id.editprofile_description);
@@ -128,7 +126,6 @@ public class EditProfileActivity extends AppCompatActivity {
         // invoked when the activity may be temporarily destroyed, save the instance state here
         super.onSaveInstanceState(outState);
         outState.putString("name", name.getText().toString());
-        outState.putString("lastName", lastName.getText().toString());
         outState.putString("phoneNumber", phoneNumber.getText().toString());
         outState.putString("emailAddress", emailAddress.getText().toString());
         outState.putString("description", description.getText().toString());
@@ -153,7 +150,6 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser = new User();
         Log.d("MADAPP", "SavedInstanceState contains data");
         mUser.name = savedInstanceState.getString("name");
-        mUser.lastName = savedInstanceState.getString("lastName");
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
@@ -197,7 +193,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("lastName", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
@@ -216,7 +211,6 @@ public class EditProfileActivity extends AppCompatActivity {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("name", name.getText().toString());
-        editor.putString("lastName", lastName.getText().toString());
         editor.putString("phoneNumber", phoneNumber.getText().toString());
         editor.putString("emailAddress", emailAddress.getText().toString());
         editor.putString("description", description.getText().toString());
@@ -302,7 +296,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateFields(User u) {
         name.setText(u.name);
-        lastName.setText(u.lastName);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
@@ -351,7 +344,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean checkConstrain(){
         boolean rexult = true;
         String nameString =  "[a-zA-Z]?[a-z]*";
-        String lastNameString = "([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
+
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString= "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
@@ -382,12 +375,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         }
 
-
-        if(!lastName.getText().toString().matches(lastNameString)){
-            lastName.setError("Cognome non valido");
-            rexult = false;
-
-        }
 
 
         if(!phoneNumber.getText().toString().matches(phoneNumberString)){

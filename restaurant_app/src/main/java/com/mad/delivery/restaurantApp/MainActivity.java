@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("lastName", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
@@ -85,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         updateFields(mUser);
     }
     private void updateFields(User u) {
-        if(!u.name.equals("") || !u.lastName.equals(""))
-            name.setText(u.name + " " + u.lastName);
+        if(!u.name.equals("") )
+            name.setText(u.name );
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
