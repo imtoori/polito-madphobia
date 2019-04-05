@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     TextView phoneNumber;
     TextView emailAddress;
     TextView description;
-    TextView road;
+
     ImageView imgProfile;
     User mUser;
 
@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.mainprofile_phone);
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
-        road = findViewById(R.id.main_road);
-
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
     }
@@ -74,11 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
-                sharedPref.getString("road", ""),
-                sharedPref.getString("houseNumber", ""),
-                sharedPref.getString("doorPhone", ""),
-                sharedPref.getString("postCode", ""),
-                sharedPref.getString("city", ""),
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
@@ -90,9 +83,7 @@ public class MainActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-        if(!u.road.equals("")) {
-            road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
-        }
+
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));

@@ -44,11 +44,7 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText phoneNumber;
     EditText emailAddress;
     EditText description;
-    EditText road;
-    EditText houseNumber;
-    EditText doorPhone;
-    EditText postCode;
-    EditText city;
+
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
@@ -71,11 +67,6 @@ public class EditProfileActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);
         description = findViewById(R.id.editprofile_description);
-        road = findViewById(R.id.editprofile_road);
-        houseNumber = findViewById(R.id.editprofile_housenumber);
-        doorPhone = findViewById(R.id.editprofile_doorphone);
-        postCode = findViewById(R.id.editprofile_postalcode);
-        city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
@@ -133,11 +124,6 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("phoneNumber", phoneNumber.getText().toString());
         outState.putString("emailAddress", emailAddress.getText().toString());
         outState.putString("description", description.getText().toString());
-        outState.putString("road", road.getText().toString());
-        outState.putString("houseNumber", houseNumber.getText().toString());
-        outState.putString("doorPhone", doorPhone.getText().toString());
-        outState.putString("postCode", postCode.getText().toString());
-        outState.putString("city", city.getText().toString());
 
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
@@ -158,11 +144,6 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
-        mUser.road = savedInstanceState.getString("road");
-        mUser.houseNumber = savedInstanceState.getString("houseNumber");
-        mUser.doorPhone = savedInstanceState.getString("doorPhone");
-        mUser.postCode = savedInstanceState.getString("postCode");
-        mUser.city = savedInstanceState.getString("city");
         mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
         updateFields(mUser);
     }
@@ -202,12 +183,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
-                sharedPref.getString("road", ""),
-                sharedPref.getString("houseNumber", ""),
-                sharedPref.getString("doorPhone", ""),
-                sharedPref.getString("postCode", ""),
-                sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
+               Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
@@ -221,11 +197,6 @@ public class EditProfileActivity extends AppCompatActivity {
         editor.putString("phoneNumber", phoneNumber.getText().toString());
         editor.putString("emailAddress", emailAddress.getText().toString());
         editor.putString("description", description.getText().toString());
-        editor.putString("road", road.getText().toString());
-        editor.putString("houseNumber", houseNumber.getText().toString());
-        editor.putString("doorPhone", doorPhone.getText().toString());
-        editor.putString("postCode", postCode.getText().toString());
-        editor.putString("city", city.getText().toString());
 
         try {
             Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
@@ -307,11 +278,7 @@ public class EditProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-        road.setText(u.road);
-        houseNumber.setText(u.houseNumber);
-        doorPhone.setText(u.doorPhone);
-        postCode.setText(String.valueOf(u.postCode));
-        city.setText(u.city);
+
 
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
@@ -352,27 +319,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
 
-    public  boolean isHouseNumberValid(String houseNumbert) {
-        String expression = "[1-9][0-9]*";
-        Pattern pattern = Pattern.compile(expression);
-        Matcher matcher = pattern.matcher(houseNumbert);
-        if( matcher.matches()){
-            return true;
-        }
-        else
-        {
-            houseNumber.setError("Codice postale inserito non valido");
-            return false;
-        }
-    }
+
     public boolean checkConstrain(){
         boolean rexult = true;
         String nameString =  "[a-zA-Z]?[a-z]*";
         String lastNameString = "([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
-        String postalCodeString= "[0-9]{5}";
-        String numberString = "[1-9][0-9]*";
-        String doorphoneString = "((([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*))*|([0-9])*)*";
 
         if(!name.getText().toString().matches(nameString)){
             name.setError("Nome non valido");
@@ -380,11 +332,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         }
 
-        if(!road.getText().toString().matches("([A-Z]?[a-z]* )*([A-Z]?[a-z]*)")){
-            road.setError("Strada non valida");
-            rexult = false;
-
-        }
 
         if(description.getText().toString().length()<0){
             description.setError("Descrizione non valida");
@@ -392,11 +339,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         }
 
-        if(!city.getText().toString().matches("([A-Z]?[a-z]* )*([A-Z]?[a-z]*)")){
-            city.setError("Nome città non valido");
-            rexult = false;
 
-        }
 
 
         if(!lastName.getText().toString().matches(lastNameString)){
@@ -412,24 +355,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         }
 
-        if(!doorPhone.getText().toString().matches(doorphoneString)){
-            doorPhone.setError("Citofono non valido");
-            rexult = false;
-
-        }
-
-
-        if(!postCode.getText().toString().matches(postalCodeString)){
-            postCode.setError("Codice postale non valido");
-            rexult = false;
-
-        }
-
-        if(!houseNumber.getText().toString().matches(numberString)){
-            houseNumber.setError("Numero civico non valido");
-            rexult = false;
-
-        }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress.getText().toString()).matches()) {
             emailAddress.setError("Email non valida");
