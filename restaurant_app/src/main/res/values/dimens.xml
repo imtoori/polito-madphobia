@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bigTitle">26sp</dimen>
+    <dimen name="title">22sp</dimen>
+    <dimen name="subtitle">21sp</dimen>
+    <dimen name="normalText">20sp</dimen>
+    <dimen name="description">14sp</dimen>
+    <integer name="max">20</integer>
+    <dimen name="text_margin">16dp</dimen>
+
+</resources>

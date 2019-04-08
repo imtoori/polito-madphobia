@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <color name="colorPrimary">#F44336</color>
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorAccent">#F44336</color>
@@ -8,8 +8,11 @@
     <color name="colorText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
-
-
+    <color name="colorPendingOrder">#D32F2F</color>
+    <color name="colorPreparingOrder">#E78128</color>
+    <color name="colorReadyOrder">#0BD626</color>
+    <color name="colorCanceledOrder">#A39797</color>
+    <color name="colorCompletedOrder">#2B2B2B</color>
     <color name="colorUserInputNoFocus">#FF4E4E4E</color>
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorRed">#FA0000</color>

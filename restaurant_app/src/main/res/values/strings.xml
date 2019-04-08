@@ -1,10 +1,10 @@
 <resources>
-
     <string name="app_name">Restaurant app</string>
+
+    <!-- Profile Data -->
     <string name="profile_toolbar">My Profile</string>
     <string name="editprofile_toolbar">Edit Profile</string>
     <string name="photo_toolbar">Photo Profile</string>
-
     <string name="save">save</string>
     <string name="persona_data">Personal Data</string>
 
@@ -20,7 +20,7 @@
     <string name="profile_saved">Your profile has been saved!</string>
 
     <string name="delivery_desc">Your order will be delivered here</string>
-    <string name="delivery">Restaurant Address</string>
+    <string name="delivery">Delivery Address</string>
     <string name="road">Road</string>
     <string name="house_number">Number</string>
     <string name="doorphone">Doorphone</string>
@@ -43,4 +43,33 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
+
+    <!-- Navigation -->
+    <string name="nav_menu">Menu</string>
+    <string name="nav_orders">Orders</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Orders Fragment -->
+    <string name="pending_orders">Pending</string>
+    <string name="preparing_orders">In Preparation</string>
+    <string name="completed_orders">Completed</string>
+    <string name="order_number">Order </string>
+    <string name="order_requested_at">Delivery: </string>
+    <string name="order_from">From: </string>
+    <string name="order_pieces_count">Items: </string>
+    <string name="order_list">List: </string>
+    <string name="order_status">Status: </string>
+
+    <!-- Detail Order Fragment -->
+    <string name="user_info_order">Customer</string>
+    <string name="detail_order_info">Order Info</string>
+    <string name="arrived_at">Arrived:</string>
+    <string name="requested_at">Requested for:</string>
+    <string name="client_note">Client Notes</string>
+    <string name="products">Products</string>
+    <string name="additions">Additions:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>
