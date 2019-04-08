@@ -8,7 +8,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowContentTransitions">true</item>
 
-        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/colorTextIcon</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -19,7 +19,10 @@
         <item name="android:textColor">@color/colorTextIcon</item>
         <item name="android:subtitleTextColor" > @color/colorTextIcon</item>
         <item name="android:homeAsUpIndicator">@color/colorTextIcon</item>
+        <item name="actionMenuTextColor">@color/colorTextIcon</item>
+        <item name="android:actionMenuTextColor">@color/colorTextIcon</item>
     </style>
+
 
     <style name="AppTheme.TextInputEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
         <item name="android:textAppearance"> @style/AppTheme.InputText</item>

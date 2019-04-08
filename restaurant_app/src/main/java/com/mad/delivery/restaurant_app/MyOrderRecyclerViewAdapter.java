@@ -33,17 +33,13 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
-
         holder.mItem = orders.get(position);
         holder.id.setText(holder.mItem.id);
         holder.orderFrom.setText(holder.mItem.client.name);
         holder.requestedDelivery.setText(dateFormat.parse(holder.mItem.orderFor));
         holder.status.setTextColor(getColor(holder.mItem.status));
         holder.orderDate.setText(dateFormat.parse(holder.mItem.orderFor));
-        for(Product p : holder.mItem.products) {
-            holder.products.append(p.name + "(" + p.quantity+")\n");
-        }
+        holder.products.setText(view.getResources().getString(R.string.prefix_products) + " " + holder.mItem.products.size() + " " + view.getResources().getString(R.string.suffix_products));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +92,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
             orderFrom = mView.findViewById(R.id.tv_orderFromValue);
             requestedDelivery = mView.findViewById(R.id.tv_orderRequestedAtValue);
             orderDate =  mView.findViewById(R.id.tv_dateOrderForValue);
-            products = mView.findViewById(R.id.tv_productsValue);
+            products = mView.findViewById(R.id.tv_products);
             status = mView.findViewById(R.id.tv_orderStatusValue);
         }
 

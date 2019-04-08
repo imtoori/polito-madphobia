@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
                     MenuFragment menuFragment = new MenuFragment();
                     ft = fm.beginTransaction();
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.addToBackStack(MenuFragment.MENU_FRAGMENT_TAG);
+                    ft.addToBackStack(null);
                     ft.replace(R.id.frag_container, menuFragment);
                     ft.commit();
                     return true;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
                     OrderFragment orderFragment = new OrderFragment();
                     ft = fm.beginTransaction();
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    ft.addToBackStack(OrderFragment.ORDER_FRAGMENT_TAG);
+                    ft.addToBackStack(null);
                     ft.replace(R.id.frag_container, orderFragment);
                     ft.commit();
                     return true;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
                     setTitle(getString(R.string.nav_settings));
                     SettingFragment settingFragment = new SettingFragment();
                     ft = fm.beginTransaction();
-                    ft.addToBackStack(SettingFragment.SETTINGS_FRAGMENT_TAG);
+                    ft.addToBackStack(null);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(R.id.frag_container, settingFragment);
                     ft.commit();
@@ -78,5 +78,6 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
         Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
         intent.putExtra("order", order);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

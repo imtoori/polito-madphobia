@@ -2,10 +2,6 @@ package com.mad.delivery.restaurant_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,37 +9,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.tabs.TabLayout;
-
-public class DetailOrderActivity extends AppCompatActivity {
-    Toolbar myToolBar;
-    private ViewPager mPager;
-    private PagerAdapter pagerAdapter;
-    private TabLayout tabLayout;
+public class CompletingOrderActivity extends AppCompatActivity {
+    private Toolbar myToolBar;
     private Order order;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_order);
+        setContentView(R.layout.activity_completing_order);
         myToolBar = findViewById(R.id.detailToolbar);
         setSupportActionBar(myToolBar);
 
-        Bundle bundle = getIntent().getExtras();
-        order  = bundle.getParcelable("order");
-        setTitle(getResources().getString(R.string.order) + " " + order.id);
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = findViewById(R.id.detail_order_pager);
-        pagerAdapter = new DetailOrderPageAdapter(getSupportFragmentManager(), this, order);
-        mPager.setAdapter(pagerAdapter);
-        // Give the TabLayout the ViewPager
-        tabLayout = findViewById(R.id.detail_header);
-        tabLayout.setupWithViewPager(mPager);
+        order = getIntent().getParcelableExtra("order");
+        setTitle(getResources().getString(R.string.completing_order) + " " + order.id);
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
+        intent.putExtra("order", order);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
@@ -51,13 +34,12 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.order_detail_menu, menu);
+        getMenuInflater().inflate(R.menu.order_completing_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch(item.getItemId()) {
             case R.id.save_order_option:
                 Log.d("MADAPP", "Save option selected");

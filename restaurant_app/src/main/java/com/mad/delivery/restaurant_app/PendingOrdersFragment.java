@@ -46,6 +46,7 @@ public class PendingOrdersFragment extends Fragment {
             }
         });
 
+        recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new MyOrderRecyclerViewAdapter(orders, mListener));
 
