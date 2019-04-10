@@ -1,6 +1,7 @@
 package com.mad.delivery.restaurant_app;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,12 @@ import java.util.List;
  */
 public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Order> orders;
+    private List<Order> orders;
     private View view;
     private final PendingOrdersFragment.OnPendingOrderListener mListener;
-    private MyDateFormat dateFormat;
     public MyOrderRecyclerViewAdapter(List<Order> items, PendingOrdersFragment.OnPendingOrderListener listener) {
         orders = items;
         mListener = listener;
-        dateFormat = new MyDateFormat("dd/MM/yy HH:mm");
     }
 
     @Override
@@ -36,9 +35,10 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
         holder.mItem = orders.get(position);
         holder.id.setText(holder.mItem.id);
         holder.orderFrom.setText(holder.mItem.client.name);
-        holder.requestedDelivery.setText(dateFormat.parse(holder.mItem.orderFor));
+        holder.requestedDelivery.setText(MyDateFormat.parse(holder.mItem.orderFor));
         holder.status.setTextColor(getColor(holder.mItem.status));
-        holder.orderDate.setText(dateFormat.parse(holder.mItem.orderFor));
+        holder.status.setText(holder.mItem.status.toString());
+        holder.orderDate.setText(MyDateFormat.parse(holder.mItem.orderFor));
         holder.products.setText(view.getResources().getString(R.string.prefix_products) + " " + holder.mItem.products.size() + " " + view.getResources().getString(R.string.suffix_products));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -51,13 +51,15 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
                 }
             }
         });
+
     }
+
 
     private int getColor(OrderStatus st) {
         switch(st) {
             case PENDING:
                 return view.getResources().getColor(R.color.colorPendingOrder, null);
-            case IN_PREPARATION:
+            case PREPARING:
                 return view.getResources().getColor(R.color.colorPreparingOrder, null);
             case READY:
                 return view.getResources().getColor(R.color.colorReadyOrder, null);
@@ -104,7 +106,5 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
                     ", products=" + products +
                     '}';
         }
-
-
     }
 }

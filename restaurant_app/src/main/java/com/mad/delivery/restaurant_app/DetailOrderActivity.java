@@ -1,5 +1,6 @@
 package com.mad.delivery.restaurant_app;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -7,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,7 +69,23 @@ public class DetailOrderActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             case R.id.reject_order_option:
-                Log.d("MADAPP", "Reject option selected");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.rejecting_order_message_dialog)
+                        .setTitle(R.string.completing_order_title_dialog);
+
+                builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        order.status = OrderStatus.CANCELED;
+                        Database.update(order);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

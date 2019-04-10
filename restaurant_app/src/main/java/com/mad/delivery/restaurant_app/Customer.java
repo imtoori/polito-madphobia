@@ -30,6 +30,19 @@ public class Customer implements Parcelable {
         this.city = city;
         this.imageUri = imageUri;
     }
+    public Customer(Customer other) {
+        this.name = new String(other.name);
+        this.lastName = new String(other.lastName);
+        this.phoneNumber = new String(other.phoneNumber);
+        this.email = new String(other.email);
+        this.description = new String(other.description);
+        this.road = new String(other.road);
+        this.houseNumber = new String(other.houseNumber);
+        this.doorPhone = new String(other.doorPhone);
+        this.postCode = new String(other.postCode);
+        this.city = new String(other.city);
+        this.imageUri = other.imageUri;
+    }
 
     public Customer(String name) {
         this.name = name;

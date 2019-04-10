@@ -54,7 +54,7 @@
 
     <!-- Orders Fragment -->
     <string name="pending_orders">Pending</string>
-    <string name="preparing_orders">In Preparation</string>
+    <string name="preparing_orders">Preparing</string>
     <string name="completed_orders">Completed</string>
     <string name="order_number">Order </string>
     <string name="order_requested_at">Delivery: </string>
@@ -77,7 +77,7 @@
 
     <!-- Completing Order Activity -->
     <string name="delivery_options">Delivery Options</string>
-    <string name="delivery_opt_sentence">The customer requested the order to be delivered at </string>
+    <string name="delivery_opt_sentence">The customer requested the order to be delivered at %1$s</string>
     <string name="confirm">Confirm</string>
     <string name="change">Change</string>
     <string name="admin_notes">Admin Notes</string>
@@ -85,7 +85,17 @@
     <string name="changing_status">Change Order Status</string>
     <string name="current_status">Current: </string>
     <string name="changing_status_sentence">Next: </string>
+    <string name="confirmed_order">Confirmed: %1$s</string>
+    <string name="undo_confirm_order">Undo</string>
+    <string name="no_orders">Empty Folder</string>
+    no_completed_orders
+    <!-- Alert Dialog for "send order" -->
+    <string name="completing_order_title_dialog">Confirm Order</string>
+    <string name="completing_order_message_dialog">Do you want to confirm the order?</string>
+    <string name="rejecting_order_message_dialog">Do you want to REJECT the order?</string>
 
+    <string name="send">Yes</string>
+    <string name="cancel">Cancel</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

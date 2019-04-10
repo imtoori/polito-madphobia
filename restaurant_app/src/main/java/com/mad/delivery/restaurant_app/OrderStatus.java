@@ -6,9 +6,8 @@ import java.io.Serializable;
 
 public enum OrderStatus implements Serializable {
     PENDING,
-    ACCEPTED,
     CANCELED,
-    IN_PREPARATION,
+    PREPARING,
     READY,
     COMPLETED
 }

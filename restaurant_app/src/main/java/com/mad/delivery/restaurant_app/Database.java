@@ -2,20 +2,25 @@ package com.mad.delivery.restaurant_app;
 
 import android.util.Log;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import io.bloco.faker.Faker;
 
 public final class Database {
     private static Database instance;
-    private static List<Order> orders;
+    private static Map<String, Order> orders;
 
     private Database() {
         int randForProducts;
-        orders = new ArrayList<>();
+        orders = new HashMap<>();
         Random r = new Random();
         for (int i = 0; i < 10; i++) {
             Faker fakeProd = new Faker();
@@ -38,24 +43,68 @@ public final class Database {
             u.houseNumber = fakeProd.address.buildingNumber();
             u.postCode = fakeProd.address.postcode();
             u.doorPhone = u.name;
-            Date from = new Date(119, 3, 1, 19, 20, 30);
-            Date to = new Date();
-            Order o = new Order(u, products, fakeProd.date.between(from, to));
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy hh:mm");
+            DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
+            DateTime to = DateTime.now();
+            Order o = new Order(u, products, new DateTime(fakeProd.date.between(from.toDate(), to.toDate())));
             o.id = fakeProd.number.number(7).toString();
             o.status = OrderStatus.PENDING;
-            o.orderDate = fakeProd.date.backward();
-            o.estimatedDelivery = fakeProd.date.forward(1);
+            o.orderDate = new DateTime(fakeProd.date.backward());
+            o.estimatedDelivery = new DateTime(fakeProd.date.forward(1));
             o.clientNotes = fakeProd.lorem.paragraph(1);
-            orders.add(o);
+            orders.put(o.id, o);
 
-            Log.d("MADAPP", "Orders generated." + from.toString());
+            Log.d("MADAPP", "Order generated : " + dtf.print(o.orderFor));
+        }
+    }
+
+    public static void update(Order o) {
+        Order old = orders.get(o.id);
+        if(old != null) {
+            Log.d("MADAPP", "Order with ID " + o.id + " has been updated.");
+            old.update(o);
         }
     }
 
 
     public static List<Order> getPendingOrders() {
-        if (instance == null) instance = new Database();
-        return orders;
+        if (instance == null) {
+            Log.d("MADAPP", "#### Database instance created");
+            instance = new Database();
+        }
+        List<Order> pendings = new ArrayList<>();
+        for(Order o : orders.values()) {
+            if(o.status.equals(OrderStatus.PENDING)) pendings.add(o);
+        }
+        Log.d("MADAPP", "requested getPendingOrders()");
+        return pendings;
     }
+
+    public static List<Order> getPreparingOrders() {
+        if (instance == null) {
+            Log.d("MADAPP", "#### Database instance created");
+            instance = new Database();
+        }
+        List<Order> preparing = new ArrayList<>();
+        for(Order o : orders.values()) {
+            if(o.status.equals(OrderStatus.PREPARING) || o.status.equals(OrderStatus.READY)) preparing.add(o);
+        }
+        Log.d("MADAPP", "requested getPreparingOrders()");
+        return preparing;
+    }
+
+    public static List<Order> getCompletedOrders() {
+        if (instance == null) {
+            Log.d("MADAPP", "#### Database instance created");
+            instance = new Database();
+        }
+        List<Order> completed = new ArrayList<>();
+        for(Order o : orders.values()) {
+            if(o.status.equals(OrderStatus.COMPLETED) || o.status.equals(OrderStatus.CANCELED)) completed.add(o);
+        }
+        Log.d("MADAPP", "requested getCompletedOrders(), size is "  + completed.size());
+        return completed;
+    }
+
 }
 

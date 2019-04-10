@@ -31,7 +31,6 @@ public class DetailOrderFragment extends Fragment {
     TextView status;
     TextView clientNotes;
     ImageView statusIcon;
-    MyDateFormat dateFormat;
     List<Product> products;
     private RecyclerView recyclerView;
     public DetailOrderFragment() {
@@ -44,15 +43,14 @@ public class DetailOrderFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_detail_order, container, false);
-        dateFormat = new MyDateFormat("dd/MM/yyyy hh:mm");
         arrived = view.findViewById(R.id.detail_arrived);
         requested = view.findViewById(R.id.detail_requested);
         status = view.findViewById(R.id.detail_status);
         statusIcon = view.findViewById(R.id.status_icon);
         clientNotes = view.findViewById(R.id.client_notes_tv);
         Order order = getArguments().getParcelable("order");
-        arrived.setText(dateFormat.parse(order.orderDate));
-        requested.setText(dateFormat.parse(order.orderFor));
+        arrived.setText(MyDateFormat.parse(order.orderDate));
+        requested.setText(MyDateFormat.parse(order.orderFor));
         status.setText(order.status.toString().toLowerCase());
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
@@ -69,7 +67,7 @@ public class DetailOrderFragment extends Fragment {
         switch(st) {
             case PENDING:
                 return view.getResources().getColor(R.color.colorPendingOrder, null);
-            case IN_PREPARATION:
+            case PREPARING:
                 return view.getResources().getColor(R.color.colorPreparingOrder, null);
             case READY:
                 return view.getResources().getColor(R.color.colorReadyOrder, null);

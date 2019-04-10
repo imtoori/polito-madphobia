@@ -1,6 +1,10 @@
 package com.mad.delivery.restaurant_app;
 
 import android.content.Context;
+import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -9,9 +13,11 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class OrdersTabsPageAdapter extends FragmentPagerAdapter {
     private Context context;
+
     public OrdersTabsPageAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
+
     }
 
     @NonNull
@@ -19,11 +25,17 @@ public class OrdersTabsPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return new PendingOrdersFragment();
+                PendingOrdersFragment pendingFragment = new PendingOrdersFragment();
+
+                return pendingFragment;
             case 1:
-                return new PreparingOrdersFragment();
+                PreparingOrdersFragment preparingFragment = new PreparingOrdersFragment();
+
+                return preparingFragment;
             case 2:
-                return new CompletedOrdersFragment();
+                CompletedOrdersFragment completedFragment = new CompletedOrdersFragment();
+
+                return completedFragment;
             default:
                 return null;
         }
