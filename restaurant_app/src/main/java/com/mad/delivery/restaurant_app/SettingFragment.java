@@ -24,7 +24,7 @@ public class SettingFragment extends Fragment {
     private RecyclerView rw;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
