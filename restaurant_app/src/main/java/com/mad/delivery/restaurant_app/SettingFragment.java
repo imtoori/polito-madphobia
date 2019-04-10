@@ -16,16 +16,18 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
-import static com.mad.delivery.restaurant_app.R.id.orders_pager;
+
 
 public class SettingFragment extends Fragment {
-    public static final String ORDER_FRAGMENT_TAG = "order_fragment";
 
     private RecyclerView rw;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private OnSettingListener mListener;
 
-
+    public SettingFragment() {
+        // Required empty public constructor
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,11 +40,33 @@ public class SettingFragment extends Fragment {
 
     private void setUpRecyclerView(View view) {
         rw= (RecyclerView) view.findViewById(R.id.rl_setting);
-        MySettingRecyclerViewAdapter adapter= new MySettingRecyclerViewAdapter(getActivity(), SettingItem.getData());
+        MySettingRecyclerViewAdapter adapter= new MySettingRecyclerViewAdapter(SettingItem.getData(), mListener);
         mAdapter=adapter;
-        rw.setAdapter(adapter);
+        rw.setAdapter(mAdapter);
         layoutManager=new LinearLayoutManager(getActivity());
         rw.setLayoutManager(layoutManager);
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SettingFragment.OnSettingListener) {
+            mListener = (SettingFragment.OnSettingListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnSettingListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnSettingListener {
+        void openProfile();
     }
 
 

@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity  implements PendingOrdersFragment.OnPendingOrderListener {
+public class MainActivity extends AppCompatActivity  implements PendingOrdersFragment.OnPendingOrderListener, SettingFragment.OnSettingListener {
     Toolbar myToolBar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -77,6 +77,12 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
     public void openOrder(Order order) {
         Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
         intent.putExtra("order", order);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+    @Override
+    public void openProfile() {
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

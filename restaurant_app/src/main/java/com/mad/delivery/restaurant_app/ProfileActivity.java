@@ -26,12 +26,12 @@ public class ProfileActivity extends AppCompatActivity {
     TextView description;
     TextView road;
     ImageView imgProfile;
-    User mUser;
+    User mUser=new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_profile);
         myToolBar = findViewById(R.id.mainActivityToolbar);
 
         setSupportActionBar(myToolBar);
@@ -41,7 +41,6 @@ public class ProfileActivity extends AppCompatActivity {
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
         road = findViewById(R.id.main_road);
-
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
     }
@@ -82,7 +81,12 @@ public class ProfileActivity extends AppCompatActivity {
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        updateFields(mUser);
+        if(mUser!=null) {
+            Log.i("AAA", mUser.name + "-" + mUser.phoneNumber + "-" + mUser.email + "-" + mUser.description + "-" + mUser.road + "-" + mUser.houseNumber + "-" + mUser.doorPhone + "-" + mUser.postCode + "-" + mUser.city);
+            updateFields(mUser);
+        }
+        else
+            Log.i("AAA", "---------------------------------------------------------");
     }
     private void updateFields(User u) {
         if(!u.name.equals("") )

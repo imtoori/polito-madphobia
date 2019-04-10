@@ -86,6 +86,11 @@
     <string name="current_status">Current: </string>
     <string name="changing_status_sentence">Next: </string>
 
+    <!--Setting Menu-->
+    <string name="setting_profile">Profile </string>
+    <string name="setting_privacy">Privacy </string>
+    <string name="setting_language">Language </string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

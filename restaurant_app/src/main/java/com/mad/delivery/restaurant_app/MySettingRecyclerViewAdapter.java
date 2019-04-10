@@ -2,6 +2,7 @@ package com.mad.delivery.restaurant_app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,22 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MySettingRecyclerViewAdapter extends RecyclerView.Adapter<MySettingRecyclerViewAdapter.ViewHolder> {
 
     private List<SettingItem> mDataList = Collections.emptyList();
-    private LayoutInflater inflater;
-    private Context context;
+    private View view;
+    private final SettingFragment.OnSettingListener mListener;
 
-
-    public MySettingRecyclerViewAdapter(Context context, List<SettingItem> data){
-        this.context=context;
-        inflater=LayoutInflater.from(context);
+    public MySettingRecyclerViewAdapter(List<SettingItem> data, SettingFragment.OnSettingListener listener){
         this.mDataList=data;
-
+        mListener=listener;
 
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View view= inflater.inflate(R.layout.setting_item_view, parent, false);
+        view= LayoutInflater.from(parent.getContext()).inflate(R.layout.setting_item_view, parent, false);
         ViewHolder holder= new ViewHolder(view);
         return holder;
+
     }
 
     @Override
@@ -40,9 +39,21 @@ public class MySettingRecyclerViewAdapter extends RecyclerView.Adapter<MySetting
         SettingItem current= mDataList.get(position);
         holder.icon.setImageResource(current.getImageId());
         holder.title.setText(current.getTitle());
-        holder.itemView.setOnClickListener((v)->{
-            Toast.makeText(context, holder.title.getText().toString(), Toast.LENGTH_SHORT).show();
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    switch (holder.title.getText().toString()){
+                        case "Profile":
+                            mListener.openProfile();
+                            break;
+                        default:
 
+                    }
+                }
+            }
         });
 
     }
