@@ -35,8 +35,12 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         MenuItem mItem = menuItems.get(position);
-        holder.titleView.setText(mItem.name);
+
         holder.mView.setOnClickListener(mListener);
+        holder.price.setText(mItem.price.toString());
+        holder.description.setText(mItem.description);
+        holder.name.setText(mItem.name);
+
     }
 
     @Override
@@ -46,12 +50,20 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        final TextView titleView;
+       // final TextView titleView;
+        public final TextView name;
+        public final TextView description;
+        public final TextView price;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            titleView = view.findViewById(R.id.menu_item_title);
+        //   titleView = mView.findViewById(R.id.menuItem).
+            name = mView.findViewById(R.id.tv_menuItemsName);
+            description = mView.findViewById(R.id.tv_menuItemsDescription);
+            price = mView.findViewById(R.id.tv_menuItemsPrice);
+
+
         }
     }
 }
