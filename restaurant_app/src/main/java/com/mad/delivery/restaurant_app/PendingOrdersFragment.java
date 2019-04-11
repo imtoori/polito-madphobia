@@ -38,7 +38,7 @@ public class PendingOrdersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pending_orders, container, false);
         recyclerView = view.findViewById(R.id.rl_pending);
         // TODO remove items here when persistence is implemented
-        orders = Database.getPendingOrders();
+        orders = Database.getInstance().getPendingOrders();
         Collections.sort(orders, new Comparator<Order>() {
             @Override
             public int compare(Order first, Order second) {

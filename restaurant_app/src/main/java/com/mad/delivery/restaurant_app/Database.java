@@ -9,9 +9,17 @@ import java.util.Random;
 
 import io.bloco.faker.Faker;
 
-public final class Database {
+final class Database {
     private static Database instance;
     private static List<Order> orders;
+    private static List<MenuItem> menuItems;
+
+    public static Database getInstance() {
+        if (instance == null) {
+            instance = new Database();
+        }
+        return instance;
+    }
 
     private Database() {
         int randForProducts;
@@ -50,12 +58,24 @@ public final class Database {
 
             Log.d("MADAPP", "Orders generated." + from.toString());
         }
+
+        menuItems = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Faker faker = new Faker();
+            MenuItem menuItem = new MenuItem(faker.name.name(), faker.lorem.sentence(), faker.commerce.price(), faker.number.between(10, 40), faker.avatar.image());
+            menuItems.add(menuItem);
+
+            Log.d("MADAPP", "Menu items generated.");
+        }
     }
 
 
-    public static List<Order> getPendingOrders() {
-        if (instance == null) instance = new Database();
+    public List<Order> getPendingOrders() {
         return orders;
+    }
+
+    public List<MenuItem> getMenuItems() {
+        return menuItems;
     }
 }
 
