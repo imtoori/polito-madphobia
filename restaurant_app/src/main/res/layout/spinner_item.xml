@@ -6,5 +6,5 @@
     android:layout_height="wrap_content"
     android:textSize="@dimen/subtitle"
     android:gravity="center"
-
+    android:padding="10dp"
     />

@@ -31,8 +31,8 @@ public class CompletedOrdersFragment extends Fragment {
     private RecyclerView recyclerView;
     private ImageView noOrderImg;
     private TextView noOrderTv;
-    List<Order> orders;
-    MyOrderRecyclerViewAdapter ordersAdapter;
+    private List<Order> orders;
+    private MyOrderRecyclerViewAdapter ordersAdapter;
     public CompletedOrdersFragment() {
         // Required empty public constructor
     }
@@ -77,8 +77,6 @@ public class CompletedOrdersFragment extends Fragment {
         }
         return view;
     }
-
-
 
     @Override
     public void onDetach() {

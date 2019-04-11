@@ -31,16 +31,16 @@ public class Customer implements Parcelable {
         this.imageUri = imageUri;
     }
     public Customer(Customer other) {
-        this.name = new String(other.name);
-        this.lastName = new String(other.lastName);
-        this.phoneNumber = new String(other.phoneNumber);
-        this.email = new String(other.email);
-        this.description = new String(other.description);
-        this.road = new String(other.road);
-        this.houseNumber = new String(other.houseNumber);
-        this.doorPhone = new String(other.doorPhone);
-        this.postCode = new String(other.postCode);
-        this.city = new String(other.city);
+        this.name = other.name;
+        this.lastName = other.lastName;
+        this.phoneNumber = other.phoneNumber;
+        this.email = other.email;
+        this.description = other.description;
+        this.road = other.road;
+        this.houseNumber = other.houseNumber;
+        this.doorPhone = other.doorPhone;
+        this.postCode = other.postCode;
+        this.city = other.city;
         this.imageUri = other.imageUri;
     }
 

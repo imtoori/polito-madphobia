@@ -63,6 +63,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         switch(item.getItemId()) {
             case R.id.save_order_option:
                 Log.d("MADAPP", "Save option selected");
+                item.setTitle("SEND");
                 Intent intent = new Intent(getApplicationContext(), CompletingOrderActivity.class);
                 intent.putExtra("order", order);
                 startActivity(intent);
@@ -75,7 +76,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
                 builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        order.status = OrderStatus.CANCELED;
+                        order.status = OrderStatus.canceled;
                         Database.update(order);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);

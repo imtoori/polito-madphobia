@@ -23,7 +23,7 @@ class Order  implements Parcelable {
     public Order(Customer u, List<Product> products, DateTime orderFor) {
         this.client = u;
         this.products = products;
-        status = OrderStatus.PENDING;
+        status = OrderStatus.pending;
         orderDate = new DateTime();
         this.orderFor = orderFor;
     }

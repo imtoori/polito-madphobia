@@ -48,7 +48,7 @@ public final class Database {
             DateTime to = DateTime.now();
             Order o = new Order(u, products, new DateTime(fakeProd.date.between(from.toDate(), to.toDate())));
             o.id = fakeProd.number.number(7).toString();
-            o.status = OrderStatus.PENDING;
+            o.status = OrderStatus.pending;
             o.orderDate = new DateTime(fakeProd.date.backward());
             o.estimatedDelivery = new DateTime(fakeProd.date.forward(1));
             o.clientNotes = fakeProd.lorem.paragraph(1);
@@ -74,7 +74,7 @@ public final class Database {
         }
         List<Order> pendings = new ArrayList<>();
         for(Order o : orders.values()) {
-            if(o.status.equals(OrderStatus.PENDING)) pendings.add(o);
+            if(o.status.equals(OrderStatus.pending)) pendings.add(o);
         }
         Log.d("MADAPP", "requested getPendingOrders()");
         return pendings;
@@ -87,7 +87,7 @@ public final class Database {
         }
         List<Order> preparing = new ArrayList<>();
         for(Order o : orders.values()) {
-            if(o.status.equals(OrderStatus.PREPARING) || o.status.equals(OrderStatus.READY)) preparing.add(o);
+            if(o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready)) preparing.add(o);
         }
         Log.d("MADAPP", "requested getPreparingOrders()");
         return preparing;
@@ -100,7 +100,7 @@ public final class Database {
         }
         List<Order> completed = new ArrayList<>();
         for(Order o : orders.values()) {
-            if(o.status.equals(OrderStatus.COMPLETED) || o.status.equals(OrderStatus.CANCELED)) completed.add(o);
+            if(o.status.equals(OrderStatus.completed) || o.status.equals(OrderStatus.canceled)) completed.add(o);
         }
         Log.d("MADAPP", "requested getCompletedOrders(), size is "  + completed.size());
         return completed;

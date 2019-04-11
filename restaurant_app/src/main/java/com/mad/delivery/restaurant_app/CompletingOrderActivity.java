@@ -30,15 +30,15 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener {
+public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener {
     private Toolbar myToolBar;
     private Order modifiedOrder;
     private DateTime oldDateTime;
     private EditText adminNotes;
-    private Spinner statusSpinner;
+    private TextView newStatus;
     CardView cvDeliveryOptions;
     TextView requestedDeliveryTime, currentStatus;
-    Button btnDeliveryTimeChange, btnConfirm, btnAdd, btnUndoDelivery;
+    Button btnDeliveryTimeChange, btnConfirm, btnAdd, btnUndoDelivery, btnChangeStatus;
     private Order order;
     private List<OrderStatus> statusList;
     private ArrayAdapter<OrderStatus> spinnerAdapter;
@@ -53,25 +53,23 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         order = getIntent().getParcelableExtra("order");
         modifiedOrder = new Order(order);
         setTitle(getResources().getString(R.string.completing_order) + " " + modifiedOrder.id);
-        statusList = getStatusAsList(modifiedOrder.status);
         requestedDeliveryTime = findViewById(R.id.tv_delivery_options_sentence);
         btnDeliveryTimeChange = findViewById(R.id.delivery_opt_change);
         btnConfirm = findViewById(R.id.delivery_opt_confirm);
         btnAdd = findViewById(R.id.delivery_admin_notes);
         currentStatus = findViewById(R.id.tv_current_statusValue);
-        statusSpinner = findViewById(R.id.status_spinner);
-        spinnerAdapter = new ArrayAdapter<OrderStatus>(this, R.layout.spinner_item, statusList);
-        statusSpinner.setAdapter(spinnerAdapter);
-        statusSpinner.setSelection(0, true);
-        View v = statusSpinner.getSelectedView();
-        ((TextView)v).setTextColor(getColor(OrderStatus.valueOf(((TextView)v).getText().toString())));
-        ((TextView)v).setText(((TextView)v).getText().toString().toLowerCase());
+        newStatus = findViewById(R.id.tv_new_status);
+        String newStatusAsString = ListDialog.getStatusAsList(modifiedOrder.status).get(0);
+
+        newStatus.setText(newStatusAsString);
+        newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
         btnUndoDelivery = findViewById(R.id.btn_undo_delivery);
         requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(modifiedOrder.orderFor)));
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
         adminNotes = findViewById(R.id.et_admin_notes);
+        btnChangeStatus = findViewById(R.id.btn_change_status);
 /*        LayoutTransition deliveryLt = ((ViewGroup) cvDeliveryOptions).getLayoutTransition();
         deliveryLt.setDuration(500);
         deliveryLt.enableTransitionType(LayoutTransition.CHANGING);*/
@@ -108,22 +106,17 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             }
         });
 
-        statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnChangeStatus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                OrderStatus selected = (OrderStatus) adapterView.getSelectedItem();
-                modifiedOrder.status = selected;
-                TextView selectedTextView = ((TextView)adapterView.getChildAt(0));
-                selectedTextView.setTextColor(getColor(selected));
-                selectedTextView.setText(selectedTextView.getText().toString().toLowerCase());
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                DialogFragment newFragment = new ListDialog();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("currentStatus", modifiedOrder.status);
+                newFragment.setArguments(bundle);
+                newFragment.show(getSupportFragmentManager(), "listStatus");
             }
         });
+
     }
 
     @Override
@@ -157,15 +150,15 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     private int getColor(OrderStatus st) {
         switch (st) {
-            case PENDING:
+            case pending:
                 return getResources().getColor(R.color.colorPendingOrder, null);
-            case PREPARING:
+            case preparing:
                 return getResources().getColor(R.color.colorPreparingOrder, null);
-            case READY:
+            case ready:
                 return getResources().getColor(R.color.colorReadyOrder, null);
-            case CANCELED:
+            case canceled:
                 return getResources().getColor(R.color.colorCanceledOrder, null);
-            case COMPLETED:
+            case completed:
                 return getResources().getColor(R.color.colorCompletedOrder, null);
             default:
                 return getResources().getColor(R.color.colorCanceledOrder, null);
@@ -189,7 +182,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void onTimePicked(int h, int m) {
-
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy hh:mm");
         modifiedOrder.orderFor = modifiedOrder.orderFor.hourOfDay().setCopy(h);
         modifiedOrder.orderFor = modifiedOrder.orderFor.minuteOfHour().setCopy(m);
@@ -205,7 +197,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 modifiedOrder.serverNotes = adminNotes.getText().toString();
-                modifiedOrder.status = (OrderStatus) statusSpinner.getSelectedItem();
+                modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                 order = modifiedOrder;
                 Database.update(order);
@@ -216,32 +208,13 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
-
         AlertDialog dialog = builder.create();
         return dialog;
     }
 
-    public List<OrderStatus> getStatusAsList(OrderStatus initial) {
-        List<OrderStatus> list = new ArrayList<>();
-        switch(initial) {
-            case PENDING:
-                list.addAll(Arrays.asList(OrderStatus.PREPARING, OrderStatus.READY, OrderStatus.COMPLETED, OrderStatus.CANCELED));
-                break;
-            case PREPARING:
-                list.addAll(Arrays.asList(OrderStatus.READY, OrderStatus.COMPLETED, OrderStatus.CANCELED));
-                break;
-            case READY:
-                list.addAll(Arrays.asList(OrderStatus.COMPLETED));
-                break;
-            case COMPLETED:
-                list.add(OrderStatus.COMPLETED);
-                break;
-            case CANCELED:
-                list.add(OrderStatus.PENDING);
-                break;
-            default:
-                list.addAll(Arrays.asList(OrderStatus.PENDING, OrderStatus.PREPARING, OrderStatus.READY, OrderStatus.COMPLETED, OrderStatus.CANCELED));
-        }
-        return list;
+    @Override
+    public void onElementChoosen(OrderStatus s) {
+        newStatus.setTextColor(getColor(s));
+        newStatus.setText(s.toString());
     }
 }

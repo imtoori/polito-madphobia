@@ -57,15 +57,15 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
 
     private int getColor(OrderStatus st) {
         switch(st) {
-            case PENDING:
+            case pending:
                 return view.getResources().getColor(R.color.colorPendingOrder, null);
-            case PREPARING:
+            case preparing:
                 return view.getResources().getColor(R.color.colorPreparingOrder, null);
-            case READY:
+            case ready:
                 return view.getResources().getColor(R.color.colorReadyOrder, null);
-            case CANCELED:
+            case canceled:
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);
-            case COMPLETED:
+            case completed:
                 return view.getResources().getColor(R.color.colorCompletedOrder, null);
             default:
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);

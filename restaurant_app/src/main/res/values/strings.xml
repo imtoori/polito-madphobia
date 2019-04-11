@@ -76,8 +76,8 @@
     <string name="completing_order">Completing Order</string>
 
     <!-- Completing Order Activity -->
-    <string name="delivery_options">Delivery Options</string>
-    <string name="delivery_opt_sentence">The customer requested the order to be delivered at %1$s</string>
+    <string name="delivery_options">Delivery</string>
+    <string name="delivery_opt_sentence">The customer requested the order to be delivered on %1$s</string>
     <string name="confirm">Confirm</string>
     <string name="change">Change</string>
     <string name="admin_notes">Admin Notes</string>
@@ -85,9 +85,10 @@
     <string name="changing_status">Change Order Status</string>
     <string name="current_status">Current: </string>
     <string name="changing_status_sentence">Next: </string>
-    <string name="confirmed_order">Confirmed: %1$s</string>
+    <string name="confirmed_order">OK: %1$s</string>
     <string name="undo_confirm_order">Undo</string>
     <string name="no_orders">Empty Folder</string>
+    <string name="change_status_button">Change Status</string>
     no_completed_orders
     <!-- Alert Dialog for "send order" -->
     <string name="completing_order_title_dialog">Confirm Order</string>

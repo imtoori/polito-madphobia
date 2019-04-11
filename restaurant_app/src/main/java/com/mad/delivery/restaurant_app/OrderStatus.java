@@ -5,9 +5,9 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 public enum OrderStatus implements Serializable {
-    PENDING,
-    CANCELED,
-    PREPARING,
-    READY,
-    COMPLETED
+    pending,
+    canceled,
+    preparing,
+    ready,
+    completed
 }

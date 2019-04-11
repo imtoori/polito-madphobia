@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,8 @@ public class DetailOrderFragment extends Fragment {
     TextView status;
     TextView clientNotes;
     ImageView statusIcon;
+    CardView cvAdminNotes;
+    TextView serverNotes;
     List<Product> products;
     private RecyclerView recyclerView;
     public DetailOrderFragment() {
@@ -60,20 +63,28 @@ public class DetailOrderFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new ProductRecyclerViewAdapter(products));
         recyclerView.setNestedScrollingEnabled(false);
+        cvAdminNotes = view.findViewById(R.id.cv_admin_notes_detail);
+        serverNotes = view.findViewById(R.id.admin_notes_tv);
+        if(order.serverNotes != null) {
+            cvAdminNotes.setVisibility(View.VISIBLE);
+            serverNotes.setText(order.serverNotes);
+        } else {
+            cvAdminNotes.setVisibility(View.GONE);
+        }
         return view;
     }
 
     private int getColor(OrderStatus st) {
         switch(st) {
-            case PENDING:
+            case pending:
                 return view.getResources().getColor(R.color.colorPendingOrder, null);
-            case PREPARING:
+            case preparing:
                 return view.getResources().getColor(R.color.colorPreparingOrder, null);
-            case READY:
+            case ready:
                 return view.getResources().getColor(R.color.colorReadyOrder, null);
-            case CANCELED:
+            case canceled:
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);
-            case COMPLETED:
+            case completed:
                 return view.getResources().getColor(R.color.colorCompletedOrder, null);
             default:
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);

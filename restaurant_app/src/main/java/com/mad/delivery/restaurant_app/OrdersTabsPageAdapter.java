@@ -25,19 +25,13 @@ public class OrdersTabsPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                PendingOrdersFragment pendingFragment = new PendingOrdersFragment();
-
-                return pendingFragment;
+                return new PendingOrdersFragment();
             case 1:
-                PreparingOrdersFragment preparingFragment = new PreparingOrdersFragment();
-
-                return preparingFragment;
+                return new PreparingOrdersFragment();
             case 2:
-                CompletedOrdersFragment completedFragment = new CompletedOrdersFragment();
-
-                return completedFragment;
+                return new CompletedOrdersFragment();
             default:
-                return null;
+                return new PendingOrdersFragment();
         }
     }
 
