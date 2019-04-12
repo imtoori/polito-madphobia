@@ -2,6 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mad.delivery.restaurant_app">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -10,12 +20,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CompletingOrderActivity"></activity>
-        <activity android:name=".PhotoZoomActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".Password" />
-        <activity android:name=".Language" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".CompletingOrderActivity"></activity>
+        <activity
+            android:name=".PhotoZoomActivity"
+            android:parentActivityName=".ProfileActivity" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:parentActivityName=".ProfileActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".PasswordActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".LanguageActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".DetailOrderActivity"
             android:parentActivityName=".MainActivity" />

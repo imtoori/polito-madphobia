@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class Password extends AppCompatActivity {
+public class PasswordActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     Menu menu;
     EditText currentP;
@@ -31,7 +31,6 @@ public class Password extends AppCompatActivity {
         currentP = findViewById(R.id.old_pssw);
         newP = findViewById(R.id.new_pssw);
         repeatnewP = findViewById(R.id.new_pssw1);
-
     }
 
     @Override
@@ -56,7 +55,7 @@ public class Password extends AppCompatActivity {
             case R.id.edit_profile_done:
                 if(checkConstraints()) {
                     setPassword();
-                    sharedPref = this.getSharedPreferences("passwProfile", Context.MODE_PRIVATE);
+                    sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
                     String p=sharedPref.getString("password", "");
                     Toast.makeText(this, "Your password: "+p, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -70,10 +69,11 @@ public class Password extends AppCompatActivity {
 
 
     private void setPassword() {
-        sharedPref = this.getSharedPreferences("passwProfile", Context.MODE_PRIVATE);
+        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         String p= newP.getText().toString();
         editor.putString("password", p);
+        editor.commit();
     }
 
 
@@ -82,14 +82,14 @@ public class Password extends AppCompatActivity {
         boolean result = true;
         String psswString = "([A-Za-z0-9\'\\s-])+";
 
-        sharedPref = this.getSharedPreferences("passwProfile", Context.MODE_PRIVATE);
+        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         String p=sharedPref.getString("password", "");
         if(p!=currentP.getText().toString() && p!=""){
             currentP.setError(getResources().getString(R.string.check_current_password)+" :"+p+".");
             result = false;
         }
         else
-            currentP.setError("Password:"+p+".");
+            currentP.setError("PasswordActivity:"+p+".");
 
         //CHECK CURRENT PASSWORD
 

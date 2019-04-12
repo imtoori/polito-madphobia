@@ -1,5 +1,7 @@
 package com.mad.delivery.restaurant_app;
 
+import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +26,11 @@ public class SettingItem {
         this.imageId = imageId;
     }
 
-    public static List<SettingItem> getData() {
+    public static List<SettingItem> getData(View view) {
         List<SettingItem> dataList =new ArrayList<>();
 
         int[] imageIds = getImages();
-        String[] titles = getTitles();
+        String[] titles = getTitles(view);
 
         for(int i=0; i< titles.length; i++){
             SettingItem sI= new SettingItem();
@@ -39,8 +41,11 @@ public class SettingItem {
         return dataList;
     }
 
-    private static String[] getTitles() {
-        return new String[]{"Profile","Password","Language"};
+    private static String[] getTitles(View view) {
+        return new String[]{view.getResources().getString(R.string.setting_profile),
+                view.getResources().getString(R.string.setting_privacy),
+                view.getResources().getString(R.string.setting_language)
+        };
     }
 
     private static int[] getImages() {

@@ -103,17 +103,17 @@
     <string name="cancel">Cancel</string>
 
     <!--Setting Menu-->
-    <string name="setting_profile">Profile </string>
-    <string name="setting_privacy">Privacy </string>
-    <string name="setting_language">Language </string>
+    <string name="setting_profile">My Profile</string>
+    <string name="setting_privacy">Privacy</string>
+    <string name="setting_language">Language</string>
 
-    <!--Password-->
+    <!--PasswordActivity-->
     <string name="current_pssw">Current password </string>
     <string name="new_pssw">New password </string>
     <string name="repeat_new_pssw">Repeat new password </string>
     <string name="password_toolbar">Password</string>
 
-    <!--Language-->
+    <!--LanguageActivity-->
     <string name="language_toolbar">Language</string>
 
 >>>>>>> a4dcbcd84794b724670a4870d676f4eae78061d4

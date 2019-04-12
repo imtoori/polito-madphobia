@@ -1,6 +1,5 @@
 package com.mad.delivery.restaurant_app;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
-public class Language extends AppCompatActivity {
+public class LanguageActivity extends AppCompatActivity {
 
     Menu menu;
     Toolbar myToolbar;
@@ -49,12 +48,12 @@ public class Language extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Language.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LanguageActivity.this);
         switch (item.getItemId()) {
             case R.id.language_it:
                 findViewById(R.id.language_it).setBackgroundColor(0xffff0000);
                 Log.i("MAD", "ITALIANO");
-                /*alertDialog.setTitle("Change Language in Italiano?");
+                /*alertDialog.setTitle("Change LanguageActivity in Italiano?");
                 alertDialog.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         LanguageHelper.changeLocale(getResources(), "it");
@@ -69,7 +68,7 @@ public class Language extends AppCompatActivity {
             case R.id.language_en:
                 findViewById(R.id.language_it).setBackgroundColor(0xffff0000);
                 Log.i("MAD", "Inglese");
-                /*alertDialog.setTitle("Change Language in English?");
+                /*alertDialog.setTitle("Change LanguageActivity in English?");
                 alertDialog.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         LanguageHelper.changeLocale(getResources(), "en");

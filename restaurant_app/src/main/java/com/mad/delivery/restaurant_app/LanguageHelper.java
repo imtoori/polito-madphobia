@@ -8,10 +8,10 @@ import java.util.Locale;
 
 public class LanguageHelper {
 
-    public  static void changeLocale(Resources res, String locale){
+    public  static void changeLocale(Context context, Resources res, String locale){
         Configuration config;
         config= new Configuration(res.getConfiguration());
-
+        Locale local  = new Locale(locale);
         switch (locale){
             case "en":
                 config.setLocale(Locale.ENGLISH);
@@ -23,8 +23,9 @@ public class LanguageHelper {
                 config.setLocale(Locale.ENGLISH);
                 break;
         }
+        config.setLayoutDirection(local);
         //res.updateConfiguration(config, res.getDisplayMetrics());
-
+        Context ctxt = context.createConfigurationContext(config);
 
     }
 }

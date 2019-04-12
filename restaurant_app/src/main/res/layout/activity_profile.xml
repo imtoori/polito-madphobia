@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainActivityToolbar"
         style="@style/AppTheme.ToolBar"
+        app:navigationIcon="@drawable/ic_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
@@ -38,6 +38,7 @@
                 android:layout_height="248dp"
                 android:adjustViewBounds="true"
                 android:clickable="true"
+                android:focusable="true"
                 android:contentDescription="@string/imageprofile_desc"
                 android:onClick="zoomImage"
                 android:scaleType="centerCrop"
@@ -48,12 +49,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mainActivityToolbar" />
-
             <include layout="@layout/input_profile" />
-
-
         </LinearLayout>
     </ScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
