@@ -25,8 +25,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -73,7 +71,7 @@ public class EditProfileActivity extends AppCompatActivity {
         doorPhone = findViewById(R.id.editprofile_doorphone);
         postCode = findViewById(R.id.editprofile_postalcode);
         city = findViewById(R.id.editprofile_city);
-        imgProfile = findViewById(R.id.editprofile_imgprofile);
+        imgProfile = findViewById(R.id.newMenuItem_imgprofile);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override

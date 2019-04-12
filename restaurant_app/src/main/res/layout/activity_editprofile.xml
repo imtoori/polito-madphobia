@@ -34,7 +34,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/editprofile_imgprofile"
+                android:id="@+id/newMenuItem_imgprofile"
                 android:layout_width="match_parent"
                 android:layout_height="248dp"
                 android:adjustViewBounds="true"
@@ -59,8 +59,8 @@
                 app:useCompatPadding="true"
                 app:elevation="4dp"
                 app:maxImageSize="35dp"
-                app:layout_constraintBottom_toBottomOf="@+id/editprofile_imgprofile"
-                app:layout_constraintEnd_toEndOf="@+id/editprofile_imgprofile" />
+                app:layout_constraintBottom_toBottomOf="@+id/newMenuItem_imgprofile"
+                app:layout_constraintEnd_toEndOf="@+id/newMenuItem_imgprofile" />
 
             <include
                 android:id="@+id/include"
@@ -71,7 +71,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editprofile_imgprofile" />
+                app:layout_constraintTop_toBottomOf="@+id/newMenuItem_imgprofile" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
