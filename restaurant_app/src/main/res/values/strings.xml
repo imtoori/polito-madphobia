@@ -46,6 +46,9 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
+    <string name="check_password">Password not valid</string>
+    <string name="check_password_repeat">Repeat same password</string>
+    <string name="check_current_password">Invalid current password</string>
 
     <!-- Navigation -->
     <string name="nav_menu">Menu</string>
@@ -98,6 +101,22 @@
 
     <string name="send">Yes</string>
     <string name="cancel">Cancel</string>
+
+    <!--Setting Menu-->
+    <string name="setting_profile">Profile </string>
+    <string name="setting_privacy">Privacy </string>
+    <string name="setting_language">Language </string>
+
+    <!--Password-->
+    <string name="current_pssw">Current password </string>
+    <string name="new_pssw">New password </string>
+    <string name="repeat_new_pssw">Repeat new password </string>
+    <string name="password_toolbar">Password</string>
+
+    <!--Language-->
+    <string name="language_toolbar">Language</string>
+
+>>>>>>> a4dcbcd84794b724670a4870d676f4eae78061d4
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

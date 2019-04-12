@@ -15,7 +15,7 @@ public class User implements Serializable {
     protected String city;
     protected Uri imageUri;
 
-    public User(String name, String lastName, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
+    public User(String name,String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
