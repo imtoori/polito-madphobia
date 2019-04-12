@@ -89,6 +89,7 @@
     <string name="undo_confirm_order">Undo</string>
     <string name="no_orders">Empty Folder</string>
     <string name="change_status_button">Change Status</string>
+    <string name="delivery_confirm_error">Confirm or change the delivery time!</string>
     no_completed_orders
     <!-- Alert Dialog for "send order" -->
     <string name="completing_order_title_dialog">Confirm Order</string>

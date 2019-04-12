@@ -3,10 +3,13 @@ package com.mad.delivery.restaurant_app;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +20,9 @@ import io.bloco.faker.Faker;
 public final class Database {
     private static Database instance;
     private static Map<String, Order> orders;
-
+    private static MyDateComparator myDateComparator;
     private Database() {
+        myDateComparator = new MyDateComparator();
         int randForProducts;
         orders = new HashMap<>();
         Random r = new Random();
@@ -66,6 +70,13 @@ public final class Database {
         }
     }
 
+    class MyDateComparator implements Comparator<Order> {
+        @Override
+        public int compare(Order first, Order second) {
+            return DateTimeComparator.getInstance().compare(second.orderFor, first.orderFor);
+        }
+    }
+
 
     public static List<Order> getPendingOrders() {
         if (instance == null) {
@@ -76,6 +87,8 @@ public final class Database {
         for(Order o : orders.values()) {
             if(o.status.equals(OrderStatus.pending)) pendings.add(o);
         }
+        Collections.sort(pendings, myDateComparator);
+
         Log.d("MADAPP", "requested getPendingOrders()");
         return pendings;
     }
@@ -89,6 +102,7 @@ public final class Database {
         for(Order o : orders.values()) {
             if(o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready)) preparing.add(o);
         }
+        Collections.sort(preparing, myDateComparator);
         Log.d("MADAPP", "requested getPreparingOrders()");
         return preparing;
     }
@@ -102,6 +116,7 @@ public final class Database {
         for(Order o : orders.values()) {
             if(o.status.equals(OrderStatus.completed) || o.status.equals(OrderStatus.canceled)) completed.add(o);
         }
+        Collections.sort(completed, myDateComparator);
         Log.d("MADAPP", "requested getCompletedOrders(), size is "  + completed.size());
         return completed;
     }

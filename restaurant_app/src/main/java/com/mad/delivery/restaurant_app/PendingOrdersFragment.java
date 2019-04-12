@@ -4,6 +4,7 @@ package com.mad.delivery.restaurant_app;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,20 +52,22 @@ public class PendingOrdersFragment extends Fragment {
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         Log.d("MADAPP", "Pending: onCreateView called");
-        orders = Database.getPendingOrders();
-        if(orders.size() == 0) {
-            noOrderImg.setVisibility(View.VISIBLE);
-            noOrderTv.setVisibility(View.VISIBLE);
-        } else {
-            noOrderImg.setVisibility(View.GONE);
-            noOrderTv.setVisibility(View.GONE);
-        }
+        orders = new ArrayList<>();
+        showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
 
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        orders.addAll(Database.getPendingOrders());
+        recyclerView.getAdapter().notifyDataSetChanged();
+        showEmptyFolder();
     }
 
     @Override
@@ -87,6 +90,16 @@ public class PendingOrdersFragment extends Fragment {
 
     public interface OnPendingOrderListener {
         void openOrder(Order order);
+    }
+
+    private void showEmptyFolder() {
+        if(orders.size() == 0) {
+            noOrderImg.setVisibility(View.VISIBLE);
+            noOrderTv.setVisibility(View.VISIBLE);
+        } else {
+            noOrderImg.setVisibility(View.GONE);
+            noOrderTv.setVisibility(View.GONE);
+        }
     }
 
 }

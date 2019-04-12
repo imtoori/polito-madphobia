@@ -44,6 +44,37 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp">
 
+                <ImageView
+                    android:id="@+id/img_confirm_delivery_error"
+                    android:layout_width="34dp"
+                    android:layout_height="33dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_err"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_confirm_delivery_error"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/delivery_opt_change" />
+
+                <TextView
+                    android:id="@+id/tv_confirm_delivery_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="16dp"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:text="@string/delivery_confirm_error"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorRed"
+                    android:textSize="@dimen/normalText"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_confirm_delivery_error"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/img_confirm_delivery_error"
+                    app:layout_constraintTop_toTopOf="@+id/img_confirm_delivery_error" />
+
                 <TextView
                     android:id="@+id/tv_delivery_options"
                     android:layout_width="0dp"
@@ -70,14 +101,12 @@
 
                 <Button
                     android:id="@+id/delivery_opt_change"
+                    style="@style/AppTheme.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    style="@style/AppTheme.Button"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
                     android:text="@string/change"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/delivery_opt_confirm"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -85,11 +114,11 @@
 
                 <Button
                     android:id="@+id/btn_undo_delivery"
+                    style="@style/AppTheme.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
-                    style="@style/AppTheme.Button"
                     android:text="@string/change"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -98,13 +127,12 @@
 
                 <Button
                     android:id="@+id/delivery_opt_confirm"
+                    style="@style/AppTheme.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
                     android:text="@string/confirm"
-                    style="@style/AppTheme.Button"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/delivery_opt_change"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/delivery_opt_change"
@@ -122,6 +150,7 @@
             android:layout_marginTop="8dp"
             app:cardElevation="4dp"
             app:cardUseCompatPadding="true"
+            android:animateLayoutChanges="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cv_delivery_options">
@@ -182,6 +211,7 @@
             android:layout_marginTop="8dp"
             app:cardElevation="4dp"
             app:cardUseCompatPadding="true"
+            android:animateLayoutChanges="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cv_admin_notes">

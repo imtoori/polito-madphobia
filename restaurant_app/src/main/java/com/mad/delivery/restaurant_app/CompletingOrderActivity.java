@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
-
+import android.animation.LayoutTransition;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,41 +13,34 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 
 public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener {
     private Toolbar myToolBar;
     private Order modifiedOrder;
     private DateTime oldDateTime;
     private EditText adminNotes;
-    private TextView newStatus;
-    CardView cvDeliveryOptions;
-    TextView requestedDeliveryTime, currentStatus;
+    CardView cvDeliveryOptions, cvAdminNotes, cvChangeStatus;
+    TextView requestedDeliveryTime, currentStatus, newStatus, confirmError;
+    ImageView imageConfirmError;
     Button btnDeliveryTimeChange, btnConfirm, btnAdd, btnUndoDelivery, btnChangeStatus;
     private Order order;
-    private List<OrderStatus> statusList;
-    private ArrayAdapter<OrderStatus> spinnerAdapter;
     private AlertDialog confirmOrderDialog;
+    private boolean orderIsConfirmed;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_completing_order);
-
+        orderIsConfirmed = false;
         myToolBar = findViewById(R.id.detailToolbar);
         setSupportActionBar(myToolBar);
         order = getIntent().getParcelableExtra("order");
@@ -59,8 +52,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         btnAdd = findViewById(R.id.delivery_admin_notes);
         currentStatus = findViewById(R.id.tv_current_statusValue);
         newStatus = findViewById(R.id.tv_new_status);
+        confirmError = findViewById(R.id.tv_confirm_delivery_error);
+        imageConfirmError = findViewById(R.id.img_confirm_delivery_error);
         String newStatusAsString = ListDialog.getStatusAsList(modifiedOrder.status).get(0);
-
         newStatus.setText(newStatusAsString);
         newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
         btnUndoDelivery = findViewById(R.id.btn_undo_delivery);
@@ -68,11 +62,21 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
+        cvAdminNotes  = findViewById(R.id.cv_admin_notes);
+        cvChangeStatus = findViewById(R.id.cv_status_change);
         adminNotes = findViewById(R.id.et_admin_notes);
         btnChangeStatus = findViewById(R.id.btn_change_status);
-/*        LayoutTransition deliveryLt = ((ViewGroup) cvDeliveryOptions).getLayoutTransition();
+        LayoutTransition adminNotesLt =  cvAdminNotes.getLayoutTransition();
+        adminNotesLt.setDuration(500);
+        adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
+
+        LayoutTransition deliveryLt =  cvDeliveryOptions.getLayoutTransition();
         deliveryLt.setDuration(500);
-        deliveryLt.enableTransitionType(LayoutTransition.CHANGING);*/
+        deliveryLt.enableTransitionType(LayoutTransition.CHANGING);
+
+        LayoutTransition changeStatusLt =  cvChangeStatus.getLayoutTransition();
+        changeStatusLt.setDuration(500);
+        changeStatusLt.enableTransitionType(LayoutTransition.CHANGING);
 
         oldDateTime = new DateTime(modifiedOrder.orderFor);
         confirmOrderDialog = createDialog(R.string.completing_order_title_dialog, R.string.completing_order_message_dialog);
@@ -90,6 +94,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 btnDeliveryTimeChange.setVisibility(View.VISIBLE);
                 btnConfirm.setVisibility(View.VISIBLE);
                 btnUndoDelivery.setVisibility(View.GONE);
+                orderIsConfirmed = false;
+
             }
         });
         btnDeliveryTimeChange.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +144,15 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.send_order:
-                confirmOrderDialog.show();
+                if(orderIsConfirmed) {
+                    confirmOrderDialog.show();
+                } else {
+                    confirmError.setVisibility(View.VISIBLE);
+                    imageConfirmError.setVisibility(View.VISIBLE);
+                    final Animation animShake = AnimationUtils.loadAnimation(this, R.anim.shake_effect);
+                    animShake.setInterpolator(new AccelerateDecelerateInterpolator());
+                    cvDeliveryOptions.startAnimation(animShake);
+                }
                 return true;
             case R.id.reject_order_option:
                 Log.d("MADAPP", "Reject option selected");
@@ -178,6 +192,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         btnDeliveryTimeChange.setVisibility(View.GONE);
         btnConfirm.setVisibility(View.GONE);
         btnUndoDelivery.setVisibility(View.VISIBLE);
+        confirmError.setVisibility(View.GONE);
+        imageConfirmError.setVisibility(View.GONE);
+        orderIsConfirmed = true;
     }
 
     @Override
@@ -190,10 +207,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     private AlertDialog createDialog(int titleResource, int messageResource) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setMessage(messageResource)
                 .setTitle(titleResource);
-
         builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 modifiedOrder.serverNotes = adminNotes.getText().toString();
