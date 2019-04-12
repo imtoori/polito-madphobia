@@ -3,6 +3,8 @@ package com.mad.delivery.restaurant_app;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -41,6 +43,8 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         holder.description.setText(mItem.description);
         holder.name.setText(mItem.name);
 
+
+
     }
 
     @Override
@@ -54,6 +58,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         public final TextView name;
         public final TextView description;
         public final TextView price;
+        public Button button;
 
         public ViewHolder(View view) {
             super(view);
@@ -62,6 +67,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
             name = mView.findViewById(R.id.tv_menuItemsName);
             description = mView.findViewById(R.id.tv_menuItemsDescription);
             price = mView.findViewById(R.id.tv_menuItemsPrice);
+            button = mView.findViewById(R.id.newMenuItem);
 
 
         }
