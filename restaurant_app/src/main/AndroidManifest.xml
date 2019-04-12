@@ -14,6 +14,8 @@
         <activity android:name=".PhotoZoomActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".Password" />
+        <activity android:name=".Language" />
         <activity
             android:name=".DetailOrderActivity"
             android:parentActivityName=".MainActivity" />

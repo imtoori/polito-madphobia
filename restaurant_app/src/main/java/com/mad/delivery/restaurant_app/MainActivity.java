@@ -86,4 +86,16 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
+    @Override
+    public void openPssw() {
+        Intent intent = new Intent(getApplicationContext(), Password.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+    @Override
+    public void openLanguage() {
+        Intent intent = new Intent(getApplicationContext(), Language.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
 }

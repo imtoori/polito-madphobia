@@ -40,7 +40,7 @@ public class SettingItem {
     }
 
     private static String[] getTitles() {
-        return new String[]{"Profile","Credentials","Language"};
+        return new String[]{"Profile","Password","Language"};
     }
 
     private static int[] getImages() {

@@ -49,6 +49,12 @@ public class MySettingRecyclerViewAdapter extends RecyclerView.Adapter<MySetting
                         case "Profile":
                             mListener.openProfile();
                             break;
+                        case "Password":
+                            mListener.openPssw();
+                            break;
+                        case "Language":
+                            mListener.openLanguage();
+                            break;
                         default:
 
                     }

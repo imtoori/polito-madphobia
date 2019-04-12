@@ -67,6 +67,8 @@ public class SettingFragment extends Fragment {
 
     public interface OnSettingListener {
         void openProfile();
+        void openPssw();
+        void openLanguage();
     }
 
 
