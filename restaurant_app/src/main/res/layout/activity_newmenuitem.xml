@@ -2,60 +2,77 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_container2"
+    android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditProfileActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/newMenuItemToolbar"
-        style="@style/AppTheme.ToolBar"
+        app:navigationIcon="@drawable/ic_back"
+        android:id="@+id/newmenuitem_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:titleTextColor="@color/colorTextIcon"
+        style="@style/AppTheme.ToolBar"
         android:elevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_back"
-        app:titleTextColor="@color/colorTextIcon" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="393dp"
-        android:layout_height="362dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newMenuItemToolbar"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/scrollView3"
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="297dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/newmenuitem_imgprofile"
+                android:layout_width="match_parent"
+                android:layout_height="248dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/user_default"
+                android:visibility="visible"
+                android:contentDescription="@string/imageprofile_desc"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/newmenu_btncamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                app:fabSize="normal"
+                android:src="@drawable/ic_camera"
+                app:rippleColor="@color/colorPrimary"
+                app:useCompatPadding="true"
+                app:elevation="4dp"
+                app:maxImageSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_imgprofile"
+                app:layout_constraintEnd_toEndOf="@+id/newmenuitem_imgprofile" />
+
             <include
+                android:id="@+id/include"
                 layout="@layout/input_new_menuitem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/newmenuitem_imgprofile" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

@@ -71,7 +71,7 @@ public class EditProfileActivity extends AppCompatActivity {
         doorPhone = findViewById(R.id.editprofile_doorphone);
         postCode = findViewById(R.id.editprofile_postalcode);
         city = findViewById(R.id.editprofile_city);
-        imgProfile = findViewById(R.id.newMenuItem_imgprofile);
+        imgProfile = findViewById(R.id.editprofile_imgprofile);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
