@@ -73,5 +73,6 @@
 
     <string name="name_menu_item">Name dish</string>
     <string name="time_to_preparation">Time needed</string>
+    <string name="price">Price</string>
 
 </resources>
