@@ -8,13 +8,14 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardUseCompatPadding="true"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        card_view:cardElevation="4dp">
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,7 +35,7 @@
 
             <ImageView
                 android:id="@+id/main_user_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="6dp"
@@ -53,8 +54,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:hint="@string/name"
-                android:padding="8dp"
                 android:maxLength="46"
+                android:padding="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/main_user_image"
@@ -64,26 +65,30 @@
 
             <ImageView
                 android:id="@+id/main_phone_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_margin="6dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="8dp"
                 android:contentDescription="@string/phone_number"
                 app:srcCompat="@drawable/ic_phone"
+                card_view:layout_constraintBottom_toBottomOf="@+id/mainprofile_phone"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/main_user_image" />
 
 
             <ImageView
                 android:id="@+id/main_email_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_margin="6dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="8dp"
                 android:contentDescription="@string/email"
                 app:srcCompat="@drawable/ic_email"
+                card_view:layout_constraintBottom_toBottomOf="@+id/main_email"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/main_phone_image" />
 
@@ -94,9 +99,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 android:ellipsize="end"
-                android:padding="8dp"
                 android:hint="@string/email"
                 android:maxLength="45"
+                android:padding="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
                 card_view:layout_constraintBottom_toBottomOf="parent"
@@ -147,15 +152,15 @@
 
             <ImageView
                 android:id="@+id/main_location_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="8dp"
                 android:contentDescription="@string/delivery_desc"
                 app:srcCompat="@drawable/ic_location"
-                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="@+id/main_road"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/address_tv" />
 
@@ -209,14 +214,15 @@
 
             <ImageView
                 android:id="@+id/main_description_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="top"
                 android:layout_margin="6dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="32dp"
                 android:contentDescription="@string/description"
                 app:srcCompat="@drawable/ic_description"
+                card_view:layout_constraintBottom_toBottomOf="@+id/main_description"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/desc_tv" />
 
@@ -227,9 +233,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:padding="8dp"
                 android:layout_marginBottom="16dp"
                 android:hint="@string/description"
+                android:padding="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
                 card_view:layout_constraintBottom_toBottomOf="parent"

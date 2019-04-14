@@ -46,7 +46,7 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
-    <string name="check_password">Password not valid</string>
+    <string name="check_password">The password must be at least 8 characters long and include a number, lowercase letter, uppercase letter and special character (e.g. @, &amp;, #, ?)</string>
     <string name="check_password_repeat">Repeat same password</string>
     <string name="check_current_password">Invalid current password</string>
 
@@ -115,8 +115,8 @@
 
     <!--LanguageActivity-->
     <string name="language_toolbar">Language</string>
+    <string name="choose_language">Choose language:</string>
 
->>>>>>> a4dcbcd84794b724670a4870d676f4eae78061d4
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

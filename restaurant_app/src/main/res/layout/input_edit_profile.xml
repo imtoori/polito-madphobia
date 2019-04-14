@@ -34,12 +34,12 @@
 
             <ImageView
                 android:id="@+id/editprofile_userimage"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="6dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="48dp"
                 android:contentDescription="@string/photo_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
@@ -64,7 +64,7 @@
 
             <ImageView
                 android:id="@+id/editprofile_phone_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_marginStart="8dp"
@@ -93,7 +93,7 @@
 
             <ImageView
                 android:id="@+id/editprofile_email_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_marginStart="8dp"
@@ -151,7 +151,7 @@
 
             <ImageView
                 android:id="@+id/editprofile_location_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_margin="6dp"
                 android:layout_marginStart="8dp"
@@ -279,7 +279,7 @@
 
             <ImageView
                 android:id="@+id/editprofile_description_image"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="top"
                 android:layout_margin="6dp"

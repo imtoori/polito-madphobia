@@ -37,7 +37,7 @@ public class SettingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         cvProfile = view.findViewById(R.id.cv_profile);
         cvPrivacy = view.findViewById(R.id.cv_privacy);
-        cvLanguage = view.findViewById(R.id.cv_language);
+        //cvLanguage = view.findViewById(R.id.cv_language);
         cvProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +54,7 @@ public class SettingFragment extends Fragment {
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
-        cvLanguage.setOnClickListener(new View.OnClickListener() {
+       /* cvLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LanguageDialog newFragment = new LanguageDialog();
@@ -62,7 +62,7 @@ public class SettingFragment extends Fragment {
                 newFragment.show(getActivity().getSupportFragmentManager(), "listStatus");
 
             }
-        });
+        });*/
         return view;
     }
 
