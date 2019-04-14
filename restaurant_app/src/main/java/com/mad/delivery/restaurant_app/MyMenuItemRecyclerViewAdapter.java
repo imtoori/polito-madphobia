@@ -2,6 +2,7 @@ package com.mad.delivery.restaurant_app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -44,7 +45,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         MenuItemRest mItem = menuItems.get(position);
         holder.price.setText(mItem.price.toString());
         holder.description.setText(mItem.description);
@@ -55,6 +56,9 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, NewMenuItemActivity.class);
+                Log.d("Sinistra", "indice: " + Integer.toString(position) );
+                intent.putExtra("id", position);
+
                 context.startActivity(intent);
 
             }

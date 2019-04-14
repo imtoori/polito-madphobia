@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +40,7 @@ public class NewMenuItemActivity  extends AppCompatActivity {
     SharedPreferences sharedPref;
     Menu menu;
     FloatingActionButton btnCamera;
-
+    MenuItemRest menuItem;
     EditText name;
     EditText price;
     EditText time;
@@ -47,10 +49,10 @@ public class NewMenuItemActivity  extends AppCompatActivity {
     Toolbar myToolbar;
     Uri imageProfileUri;
     String currentPhotoPath;
-    ScrollView scrollView;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
 
+    Integer index ;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,18 +68,71 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         price = findViewById(R.id.newmenuitem_price);
         time = findViewById(R.id.newmenuitem_time);
         description = findViewById(R.id.newmenuitem_description);
-
-
         imgProfile = findViewById(R.id.newmenuitem_imgprofile);
         btnCamera = findViewById(R.id.newmenu_btncamera);
+        index =  getIntent().getIntExtra("id",-1);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectImage(NewMenuItemActivity.this);
             }
         });
+        Log.d("destra", "indice: " + Integer.toString(index) );
 
+        if(index>0){
+            Log.d("INDICE",index.toString());
+            updateFields(Database.getInstance().getMenuItems().get(index));
 
+        }
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        super.onRestoreInstanceState(savedInstanceState);
+        menuItem = new MenuItemRest();
+         Log.d("MADAPP", "SavedInstanceState contains data");
+        menuItem.name = savedInstanceState.getString("name");
+        menuItem.description = savedInstanceState.getString("description");
+        menuItem.price = Double.parseDouble(savedInstanceState.getString("price"));
+        menuItem.ttl = Integer.parseInt( savedInstanceState.getString("time"));
+        menuItem.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
+        updateFields(menuItem);
+
+    }
+
+    protected void onSaveInstanceState(Bundle outState) {
+        // invoked when the activity may be temporarily destroyed, save the instance state here
+        super.onSaveInstanceState(outState);
+        outState.putString("name", name.getText().toString());
+        outState.putString("description", description.getText().toString());
+        outState.putString("price", price.getText().toString());
+        outState.putString("time", time.getText().toString());
+
+        if (imageProfileUri != Uri.EMPTY)
+            outState.putString("imageUri", imageProfileUri.toString());
+        else
+            outState.putString("imageUri", "");
+
+    }
+
+    private void updateFields(MenuItemRest u) {
+        Log.d("Update",u.name.toString());
+        name.setText(u.name);
+        description.setText(u.description);
+        time.setText(u.ttl.toString());
+        price.setText(u.price.toString());
+
+        /*if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+            Log.d("MADAPP", "Setting user default image");
+            imageProfileUri = Uri.EMPTY;
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+        } else {
+            Log.d("MADAPP", "Setting custom user image");
+            imageProfileUri = u.imageUri;
+            imgProfile.setImageURI(u.imageUri);
+        }*/
     }
 
     @Override
@@ -162,7 +217,21 @@ public class NewMenuItemActivity  extends AppCompatActivity {
             case R.id.edit_profile_done:
                 if (checkConstraints()) {
 
-                    Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), price.getText().toString(), time.getText().toString(), imageProfileUri.toString());
+                    if(index==-1) {
+                        Log.d("Save","Trovato meno uno");
+                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), price.getText().toString(), time.getText().toString(), imageProfileUri.toString());
+                        Log.d("Save"," Aggiunto alla lista");
+
+                    }
+                    else{
+
+                        Log.d("Save","Rimuovendo ed aggiungendo indice: "+ index.toString());
+
+                        Database.getInstance().setMenuItems(index,name.getText().toString(), description.getText().toString(), price.getText().toString(), time.getText().toString(), imageProfileUri.toString());
+                        Log.d("Save","Sostituito"+ index.toString());
+
+                    }
+                    Log.d("Save","Ripristinando");
 
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
