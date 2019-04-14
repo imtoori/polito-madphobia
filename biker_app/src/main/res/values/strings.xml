@@ -1,11 +1,14 @@
 <resources>
+    <string name="app_name">Bike app</string>
 
-    <string name="app_name">Biker app</string>
+    <!-- Profile Data -->
     <string name="profile_toolbar">My Profile</string>
     <string name="editprofile_toolbar">Edit Profile</string>
     <string name="photo_toolbar">Photo Profile</string>
-
     <string name="save">save</string>
+    <string name="next">Next</string>
+    <string name="reject">Reject</string>
+    <string name="order">Order</string>
     <string name="persona_data">Personal Data</string>
 
     <string name="imageprofile_desc">Image Profile</string>
@@ -38,4 +41,85 @@
     <string name="check_lastName">Last Name not valid</string>
     <string name="check_phone">Phone Number not valid</string>
     <string name="check_email">Email Address not valid</string>
+    <string name="check_road">Street name not valid</string>
+    <string name="check_city">City name not valid</string>
+    <string name="check_doorphone">Doorphone not valid</string>
+    <string name="check_postCode">Postal Code not valid</string>
+    <string name="check_houseNumber">House Number not valid</string>
+    <string name="check_password">The password must be at least 8 characters long and include a number, lowercase letter, uppercase letter and special character (e.g. @, &amp;, #, ?)</string>
+    <string name="check_password_repeat">Repeat same password</string>
+    <string name="check_current_password">Invalid current password</string>
+
+    <!-- Navigation -->
+    <string name="nav_menu">Menu</string>
+    <string name="nav_orders">Orders</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Orders Fragment -->
+    <string name="pending_orders">Pending</string>
+    <string name="preparing_orders">Preparing</string>
+    <string name="completed_orders">Completed</string>
+    <string name="order_number">Order </string>
+    <string name="order_requested_at">Delivery: </string>
+    <string name="order_from">From: </string>
+    <string name="order_pieces_count">Items: </string>
+    <string name="order_list">List: </string>
+    <string name="order_status">Status: </string>
+
+    <!-- Detail Order Fragment -->
+    <string name="user_info_order">Customer</string>
+    <string name="detail_order_info">Order Info</string>
+    <string name="arrived_at">Arrived:</string>
+    <string name="requested_at">Requested for:</string>
+    <string name="client_note">Client Notes</string>
+    <string name="products">Products</string>
+    <string name="additions">Additions:</string>
+    <string name="prefix_products">This order contains</string>
+    <string name="suffix_products">products.</string>
+    <string name="completing_order">Completing Order</string>
+
+    <!-- Completing Order Activity -->
+    <string name="delivery_options">Delivery</string>
+    <string name="delivery_opt_sentence">The customer requested the order to be delivered on %1$s</string>
+    <string name="confirm">Confirm</string>
+    <string name="change">Change</string>
+    <string name="admin_notes">Admin Notes</string>
+    <string name="add">Add</string>
+    <string name="changing_status">Change Order Status</string>
+    <string name="current_status">Current: </string>
+    <string name="changing_status_sentence">Next: </string>
+    <string name="confirmed_order">OK: %1$s</string>
+    <string name="undo_confirm_order">Undo</string>
+    <string name="no_orders">Empty Folder</string>
+    <string name="change_status_button">Change Status</string>
+    <string name="delivery_confirm_error">Confirm or change the delivery time!</string>
+    no_completed_orders
+    <!-- Alert Dialog for "send order" -->
+    <string name="completing_order_title_dialog">Confirm Order</string>
+    <string name="completing_order_message_dialog">Do you want to confirm the order?</string>
+    <string name="rejecting_order_message_dialog">Do you want to REJECT the order?</string>
+
+    <string name="send">Yes</string>
+    <string name="cancel">Cancel</string>
+
+    <!--Setting Menu-->
+    <string name="setting_profile">My Profile</string>
+    <string name="setting_privacy">Privacy</string>
+    <string name="setting_language">Language</string>
+
+    <!--PasswordActivity-->
+    <string name="current_pssw">Current password </string>
+    <string name="new_pssw">New password </string>
+    <string name="repeat_new_pssw">Repeat new password </string>
+    <string name="password_toolbar">Password</string>
+
+    <!--LanguageActivity-->
+    <string name="language_toolbar">Language</string>
+    <string name="choose_language">Choose language:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="detail_restaurant_info">Restaurant Info</string>
+
+
 </resources>

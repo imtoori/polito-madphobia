@@ -1,116 +1,87 @@
 package com.mad.delivery.bikerApp;
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
+import android.view.MenuItem;
+
+public class MainActivity extends AppCompatActivity  implements PendingOrdersFragment.OnPendingOrderListener{
     Toolbar myToolBar;
-    Menu menu;
-    TextView name;
-    TextView phoneNumber;
-    TextView emailAddress;
-    TextView description;
-
-    ImageView imgProfile;
-    User mUser;
+    private Order orderToBeUpdated;
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        if(getIntent().hasExtra("orderToBeUpdated")) {
+            Bundle bundle = getIntent().getExtras();
+            orderToBeUpdated = bundle.getParcelable("orderToBeUpdated");
+        }
         myToolBar = findViewById(R.id.mainActivityToolbar);
-
         setSupportActionBar(myToolBar);
-        setTitle(getResources().getString(R.string.profile_toolbar));
-        name = findViewById(R.id.main_name);
-        phoneNumber = findViewById(R.id.mainprofile_phone);
-        emailAddress = findViewById(R.id.main_email);
-        description = findViewById(R.id.main_description);
-        imgProfile = findViewById(R.id.image_profile);
-        getProfileData();
+        setTitle(getResources().getString(R.string.app_name));
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft;
+                switch (item.getItemId()) {
+                    case R.id.nav_menu:
+                        setTitle(getString(R.string.nav_menu));
+                        MenuFragment menuFragment = new MenuFragment();
+                        ft = fm.beginTransaction();
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.addToBackStack(null);
+                        ft.replace(R.id.frag_container, menuFragment);
+                        ft.commit();
+                        return true;
+                    case R.id.nav_orders:
+                        setTitle(getString(R.string.nav_orders));
+                        OrderFragment orderFragment = new OrderFragment();
+                        ft = fm.beginTransaction();
+                        Bundle bundle = new Bundle();
+                        if(orderToBeUpdated != null) bundle.putParcelable("orderToBeUpdated", orderToBeUpdated);
+                        orderFragment.setArguments(bundle);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.addToBackStack(null);
+                        ft.replace(R.id.frag_container, orderFragment);
+                        ft.commit();
+                        return true;
+                    case R.id.nav_settings:
+                        setTitle(getString(R.string.nav_settings));
+                        SettingFragment settingFragment = new SettingFragment();
+                        ft = fm.beginTransaction();
+                        ft.addToBackStack(null);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.frag_container, settingFragment);
+                        ft.commit();
+                        return true;
+                }
+                return false;
+            }
+        };
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.nav_orders);
+
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //super.onCreateOptionsMenu(menu);
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.profile_menu, menu);
-        return true;
+    public void openOrder(Order order) {
+        Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
+        intent.putExtra("order", order);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit_profile_option:
-                // start activity: EditProfileActivity
-                Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void getProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("lastName", ""),
-                sharedPref.getString("phoneNumber", ""),
-                sharedPref.getString("emailAddress", ""),
-                sharedPref.getString("description", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
-        );
-        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        updateFields(mUser);
-    }
-    private void updateFields(User u) {
-        if(!u.name.equals("") || !u.lastName.equals(""))
-            name.setText(u.name + " " + u.lastName);
-        phoneNumber.setText(u.phoneNumber);
-        emailAddress.setText(u.email);
-        description.setText(u.description);
-
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
-            Log.d("MADAPP", "Setting user default image");
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-        } else {
-            Log.d("MADAPP", "Setting custom user image");
-            imgProfile.setImageURI(u.imageUri);
-        }
-    }
-
-    public void zoomImage(View view) {
-        // Ordinary Intent for launching a new activity
-        Intent intent = new Intent(this, PhotoZoomActivity.class);
-        intent.putExtra("imageUri", mUser.imageUri.toString());
-        intent.putExtra("className", this.getClass().getName());
-        // Get the transition name from the string
-        String transitionName = getString(R.string.transition_zoom);
-
-        // Define the view that the animation will start from
-        View viewStart = findViewById(R.id.image_profile);
-
-        ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                        viewStart,   // Starting view
-                        transitionName    // The String
-                );
-        //Start the Intent
-        ActivityCompat.startActivity(this, intent, options.toBundle());
-    }
-
 }

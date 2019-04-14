@@ -20,7 +20,7 @@ public class PhotoZoomActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_photo_zoom);
+        setContentView(R.layout.activity_photozoom);
         toolbar = (Toolbar) findViewById(R.id.photoProfileToolbar);
         setTitle(getResources().getString(R.string.photo_toolbar));
         setSupportActionBar(toolbar);

@@ -14,13 +14,12 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -31,22 +30,31 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name="com.mad.delivery.bikerApp.PhotoZoomActivity"   android:parentActivityName="com.mad.delivery.bikerApp.EditProfileActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mad.delivery.bikerApp.EditProfileActivity" />
-        </activity>
-        <activity android:name="com.mad.delivery.bikerApp.EditProfileActivity" android:parentActivityName="com.mad.delivery.bikerApp.MainActivity">
 
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mad.delivery.bikerApp.MainActivity" />
-        </activity>
-        <activity android:name="com.mad.delivery.bikerApp.MainActivity">
+        <activity
+            android:name=".CompletingOrderActivity"></activity>
+        <activity
+            android:name=".PhotoZoomActivity"
+            android:parentActivityName=".ProfileActivity" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:parentActivityName=".ProfileActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".PasswordActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".DetailOrderActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
