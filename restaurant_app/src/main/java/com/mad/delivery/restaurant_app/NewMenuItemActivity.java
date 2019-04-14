@@ -12,8 +12,10 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 
@@ -27,6 +29,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 
 public class NewMenuItemActivity  extends AppCompatActivity {
@@ -43,6 +47,7 @@ public class NewMenuItemActivity  extends AppCompatActivity {
     Toolbar myToolbar;
     Uri imageProfileUri;
     String currentPhotoPath;
+    ScrollView scrollView;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
 
@@ -155,9 +160,9 @@ public class NewMenuItemActivity  extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstraints()) {
+                if (checkConstraints()) {
 
-                    Database.getInstance().addMenuItems(name.getText().toString(),description.getText().toString(),price.getText().toString(),time.getText().toString(),"Get Text");
+                    Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), price.getText().toString(), time.getText().toString(), imageProfileUri.toString());
 
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -169,9 +174,8 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         }
 
     }
-    public boolean checkConstraints(){
+
+    public boolean checkConstraints() {
         return true;
     }
-
-
 }

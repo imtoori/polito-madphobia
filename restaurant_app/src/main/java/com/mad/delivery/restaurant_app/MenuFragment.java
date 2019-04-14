@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ScrollView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -26,14 +28,6 @@ import java.util.List;
  */
 public class MenuFragment extends Fragment implements View.OnClickListener {
     static final String MENU_FRAGMENT_TAG = "menu_fragment";
-
-
-    private View.OnClickListener onMenuItemClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-        }
-    };
 
     public MenuFragment() {
 
@@ -53,7 +47,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(menuItems, onMenuItemClick));
+        recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(menuItems,getContext()));
 
 
         return v;
@@ -65,7 +59,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         initView(view);
     }
 
-    public void initView(View v){
+    public void initView(View v) {
 
         FloatingActionButton button = v.findViewById(R.id.newMenuItem);
         button.setOnClickListener(this);
@@ -80,5 +74,13 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
         }
+
+
+    }
+
+    void openMenuItem(MenuItem order) {
+        Intent intent = new Intent(getContext(), NewMenuItemActivity.class);
+        startActivity(intent);
     }
 }
+

@@ -38,29 +38,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="248dp"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/imageprofile_desc"
                 android:scaleType="centerCrop"
                 android:src="@drawable/user_default"
                 android:visibility="visible"
-                android:contentDescription="@string/imageprofile_desc"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/newmenu_btncamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                app:fabSize="normal"
                 android:src="@drawable/ic_camera"
-                app:rippleColor="@color/colorPrimary"
-                app:useCompatPadding="true"
                 app:elevation="4dp"
-                app:maxImageSize="35dp"
+                app:fabSize="normal"
                 app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_imgprofile"
-                app:layout_constraintEnd_toEndOf="@+id/newmenuitem_imgprofile" />
+                app:layout_constraintEnd_toEndOf="@+id/newmenuitem_imgprofile"
+                app:maxImageSize="35dp"
+                app:rippleColor="@color/colorPrimary"
+                app:useCompatPadding="true" />
 
             <include
                 android:id="@+id/include"

@@ -71,7 +71,7 @@ final class Database {
     }
     public void addMenuItems (String name, String description, String price, String time, String imgUri ){
 
-        MenuItemRest item = new MenuItemRest(name,description,Double.parseDouble(price),Integer.parseInt(time),"prova");
+        MenuItemRest item = new MenuItemRest(name,description,Double.parseDouble(price),Integer.parseInt(time),imgUri);
 
         menuItems.add(item);
 

@@ -18,6 +18,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
     private View view;
     private final PendingOrdersFragment.OnPendingOrderListener mListener;
     private MyDateFormat dateFormat;
+
     public MyOrderRecyclerViewAdapter(List<Order> items, PendingOrdersFragment.OnPendingOrderListener listener) {
         orders = items;
         mListener = listener;
@@ -51,7 +52,8 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.openOrder(holder.mItem);
+                   mListener.openOrder(holder.mItem);
+
                 }
             }
         });
