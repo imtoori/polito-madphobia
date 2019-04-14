@@ -10,9 +10,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -23,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+
 
 public class NewMenuItemActivity  extends AppCompatActivity {
 
@@ -113,6 +118,7 @@ public class NewMenuItemActivity  extends AppCompatActivity {
                             takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
 
+
                         }
                     }
 
@@ -142,6 +148,29 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_profile_done:
+                if(checkConstraints()) {
+
+                    Database.getInstance().addMenuItems(name.getText().toString(),description.getText().toString(),price.getText().toString(),time.getText().toString(),"Get Text");
+
+                    Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+    public boolean checkConstraints(){
+        return true;
     }
 
 

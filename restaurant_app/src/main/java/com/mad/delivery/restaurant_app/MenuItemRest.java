@@ -2,13 +2,13 @@ package com.mad.delivery.restaurant_app;
 
 import java.math.BigDecimal;
 
-public class MenuItem {
+public class MenuItemRest {
     final String name, description;
-    final BigDecimal price;
-    final int ttl;
+    final Double price;
+    final Integer ttl;
     final String imgUrl;
 
-    public MenuItem(String name, String description, BigDecimal price, int ttl, String imgUrl) {
+    public MenuItemRest(String name, String description, Double price, Integer ttl, String imgUrl) {
         this.name = name;
         this.description = description;
         this.price = price;

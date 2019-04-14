@@ -1,6 +1,7 @@
 package com.mad.delivery.restaurant_app;
 
 import android.util.Log;
+import android.view.Menu;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +13,7 @@ import io.bloco.faker.Faker;
 final class Database {
     private static Database instance;
     private static List<Order> orders;
-    private static List<MenuItem> menuItems;
+    private static List<MenuItemRest> menuItems;
 
     public static Database getInstance() {
         if (instance == null) {
@@ -62,19 +63,25 @@ final class Database {
         menuItems = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Faker faker = new Faker();
-            MenuItem menuItem = new MenuItem(faker.name.name(), faker.lorem.sentence(), faker.commerce.price(), faker.number.between(10, 40), faker.avatar.image());
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), faker.lorem.sentence(), faker.commerce.price().doubleValue(), faker.number.between(10, 40), faker.avatar.image());
             menuItems.add(menuItem);
 
             Log.d("MADAPP", "Menu items generated.");
         }
     }
+    public void addMenuItems (String name, String description, String price, String time, String imgUri ){
 
+        MenuItemRest item = new MenuItemRest(name,description,Double.parseDouble(price),Integer.parseInt(time),"prova");
+
+        menuItems.add(item);
+
+    }
 
     public List<Order> getPendingOrders() {
         return orders;
     }
 
-    public List<MenuItem> getMenuItems() {
+    public List<MenuItemRest> getMenuItems() {
         return menuItems;
     }
 }

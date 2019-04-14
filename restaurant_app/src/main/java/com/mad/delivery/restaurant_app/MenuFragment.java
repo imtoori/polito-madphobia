@@ -50,7 +50,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         RecyclerView recyclerView = v.findViewById(R.id.menu_list);
 
         // TODO remove items here when persistence is implemented
-        List<MenuItem> menuItems = Database.getInstance().getMenuItems();
+        List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(menuItems, onMenuItemClick));

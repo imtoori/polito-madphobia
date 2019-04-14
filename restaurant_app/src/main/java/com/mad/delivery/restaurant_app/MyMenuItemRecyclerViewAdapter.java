@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<MenuItem> menuItems;
+    private final List<MenuItemRest> menuItems;
     private View view;
     private final View.OnClickListener mListener;
 
-    public MyMenuItemRecyclerViewAdapter(List<MenuItem> menuItems, View.OnClickListener listener) {
+    public MyMenuItemRecyclerViewAdapter(List<MenuItemRest> menuItems, View.OnClickListener listener) {
         this.menuItems = menuItems;
         mListener = listener;
     }
@@ -36,7 +36,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        MenuItem mItem = menuItems.get(position);
+        MenuItemRest mItem = menuItems.get(position);
 
         holder.mView.setOnClickListener(mListener);
         holder.price.setText(mItem.price.toString());
