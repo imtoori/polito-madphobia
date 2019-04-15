@@ -8,16 +8,16 @@
     tools:context=".EditProfileActivity">
 
     <androidx.appcompat.widget.Toolbar
-        app:navigationIcon="@drawable/ic_back"
         android:id="@+id/editProfileToolbar"
+        style="@style/AppTheme.ToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:titleTextColor="@color/colorTextIcon"
-        style="@style/AppTheme.ToolBar"
         android:elevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back"
+        app:titleTextColor="@color/colorTextIcon" />
 
     <ScrollView
         android:id="@+id/scrollView2"

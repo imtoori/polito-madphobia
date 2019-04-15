@@ -15,7 +15,7 @@ public class MenuItemRest {
     protected Uri imageUri;
 
 
-    public MenuItemRest(String name, String category,String description, Double price, Integer availability, Integer ttl, String imgUrl, Integer id) {
+    public MenuItemRest(String name, String category,String description, Double price, Integer availability, Integer ttl, String imgUrl, Integer id, Uri url) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -24,6 +24,7 @@ public class MenuItemRest {
         this.id = id;
         this.category = category;
         this.availability = availability;
+        this.imageUri = url;
     }
 
     public MenuItemRest(){}

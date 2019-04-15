@@ -2,6 +2,7 @@ package com.mad.delivery.restaurant_app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,8 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         holder.price.setText(mItem.price.toString());
         holder.description.setText(mItem.description.toString());
         holder.name.setText(mItem.name);
-//        holder.image.setImageURI(Uri.parse("http://reflector.uindy.edu/wp-content/uploads/2019/03/weezer-black.jpg"));
+        if(mItem.imageUri!= Uri.EMPTY)
+            holder.image.setImageURI(mItem.imageUri);
 
         //holder.image.setImageDrawable(getDrawable(R.drawable.user_default));
 

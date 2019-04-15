@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
             switch (item.getItemId()) {
                 case R.id.nav_menu:
                     setTitle(getString(R.string.nav_menu));
+
                     MenuFragment menuFragment = new MenuFragment();
                     ft = fm.beginTransaction();
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

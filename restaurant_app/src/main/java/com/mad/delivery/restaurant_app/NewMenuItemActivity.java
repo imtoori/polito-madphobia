@@ -1,5 +1,6 @@
 package com.mad.delivery.restaurant_app;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,7 +28,9 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -111,6 +114,7 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         menuItem.category = savedInstanceState.getString("category");
         menuItem.availability = Integer.parseInt(savedInstanceState.getString("availability"));
         menuItem.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
+        menuItem.imageUri = Uri.EMPTY;
         try {
             updateFields(menuItem);
         } catch (IOException e) {
@@ -118,6 +122,56 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         }
 
     }
+
+    private Uri saveImage(Uri uriFrom, Activity activity) {
+        File outFile;
+        FileOutputStream out;
+        Bitmap bitmap;
+        Uri fileUri;
+        try {
+            outFile = createImageFile();
+            InputStream image_stream = activity.getContentResolver().openInputStream(uriFrom);
+            bitmap = BitmapFactory.decodeStream(image_stream);
+            out = new FileOutputStream(outFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.close();
+            fileUri = FileProvider.getUriForFile(activity,
+                    BuildConfig.APPLICATION_ID,
+                    outFile);
+        } catch (IOException ex) {
+            Log.d("MAD-APP", "IO Exception raised during File creation");
+            return null;
+        }
+        return fileUri;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case CAMERA_CODE:
+                if (resultCode == RESULT_OK && data != null) {
+                    Log.d("MADAPP", "imageProfileUri on ActivityResult: "+imageProfileUri.toString());
+                    if (imageProfileUri != null)
+                        Log.d("MADAPP", "i am here");
+                    imageProfileUri = saveImage(imageProfileUri, NewMenuItemActivity.this);
+                    imgProfile.setImageURI(imageProfileUri);
+                }
+                break;
+            case GALLERY_CODE:
+                if (resultCode == RESULT_OK && data != null) {
+                    imageProfileUri = data.getData();
+                    if (imageProfileUri != null) {
+                        imageProfileUri = saveImage(imageProfileUri, NewMenuItemActivity.this);
+                        imgProfile.setImageURI(imageProfileUri);
+                    } else {
+                        imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                    }
+
+                }
+        }
+    }
+
 
     protected void onSaveInstanceState(Bundle outState) {
         // invoked when the activity may be temporarily destroyed, save the instance state here
@@ -148,17 +202,16 @@ public class NewMenuItemActivity  extends AppCompatActivity {
 
         Log.d("TAG", u.category);
 
-        //   imgProfile.setImageURI(Uri.parse(u.imgUrl));
-        // imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-        /*if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+
+            imgProfile.setImageDrawable(getDrawable(R.drawable.dish_icon));
         } else {
             Log.d("MADAPP", "Setting custom user image");
             imageProfileUri = u.imageUri;
             imgProfile.setImageURI(u.imageUri);
-        }*/
+        }
     }
 
     @Override
@@ -189,6 +242,7 @@ public class NewMenuItemActivity  extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Take Photo")) {
+                    Log.d("PHOTO","scvcatto foto");
                     Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePicture.resolveActivity(getPackageManager()) != null) {
                         // Create the File where the photo should go
@@ -200,10 +254,15 @@ public class NewMenuItemActivity  extends AppCompatActivity {
                         }
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
-                            imageProfileUri = FileProvider.getUriForFile(NewMenuItemActivity.this, BuildConfig.APPLICATION_ID, photoFile);
+                            Log.d("PHOTO"," non null");
+
+                            imageProfileUri = FileProvider.getUriForFile(NewMenuItemActivity.this,
+                                    BuildConfig.APPLICATION_ID,
+                                    photoFile);
+                            Log.d("PHOTO"," CONTINUO");
+
                             takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
-
 
                         }
                     }
@@ -219,7 +278,6 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         });
         builder.show();
     }
-
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -244,11 +302,11 @@ public class NewMenuItemActivity  extends AppCompatActivity {
                 if (checkConstraints()) {
 
                     if(index==-1) {
-                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(),price.getText().toString(), availability.getText().toString(),time.getText().toString(), imageProfileUri.toString());
+                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(),price.getText().toString(), availability.getText().toString(),time.getText().toString(), imageProfileUri.toString(),imageProfileUri);
 
                     }
                     else{
-                        Database.getInstance().setMenuItems(index,name.getText().toString(), category.getText().toString(),description.getText().toString(), price.getText().toString(),availability.getText().toString(), time.getText().toString(), imageProfileUri.toString());
+                        Database.getInstance().setMenuItems(index,name.getText().toString(), category.getText().toString(),description.getText().toString(), price.getText().toString(),availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(),imageProfileUri);
 
                     }
 

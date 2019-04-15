@@ -1,5 +1,6 @@
 package com.mad.delivery.restaurant_app;
 
+import android.net.Uri;
 import android.util.Log;
 import android.view.Menu;
 
@@ -65,27 +66,27 @@ final class Database {
         menuItems = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"food", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i);
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"food", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
             menuItems.add(menuItem);
         }
 
         for (int i = 5; i < 10; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i);
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
             menuItems.add(menuItem);
         }
     }
-    public void addMenuItems (String name, String description,String category, String price, String availability, String time, String imgUri ){
+    public void addMenuItems (String name, String description,String category, String price, String availability, String time, String imgUri, Uri url ){
 
-        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,menuItems.size()+1);
+        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,menuItems.size()+1,url);
 
         menuItems.add(item);
 
     }
 
-    public void setMenuItems (Integer index,String name, String category, String description, String price, String availability, String time, String imgUri  ){
+    public void setMenuItems (Integer index, String name, String category, String description, String price, String availability, String time, String imgUri , Uri url){
 
-        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,index);
+        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,index, url);
 
         menuItems.set(index,item);
 
