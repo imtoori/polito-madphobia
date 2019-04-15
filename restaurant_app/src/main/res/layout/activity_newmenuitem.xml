@@ -40,7 +40,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/imageprofile_desc"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user_default"
+                android:src="@drawable/dish_icon"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

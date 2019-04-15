@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
@@ -26,6 +28,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,6 +68,7 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        imgProfile = findViewById(R.id.newmenuitem_imgprofile);
         name = findViewById(R.id.newmenuitem_name);
         price = findViewById(R.id.newmenuitem_price);
         time = findViewById(R.id.newmenuitem_time);
@@ -77,12 +82,13 @@ public class NewMenuItemActivity  extends AppCompatActivity {
                 selectImage(NewMenuItemActivity.this);
             }
         });
-        Log.d("destra", "indice: " + Integer.toString(index) );
 
         if(index>0){
-            Log.d("INDICE",index.toString());
-            updateFields(Database.getInstance().getMenuItems().get(index));
-
+            try {
+                updateFields(Database.getInstance().getMenuItems().get(index));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -92,13 +98,16 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
         super.onRestoreInstanceState(savedInstanceState);
         menuItem = new MenuItemRest();
-         Log.d("MADAPP", "SavedInstanceState contains data");
         menuItem.name = savedInstanceState.getString("name");
         menuItem.description = savedInstanceState.getString("description");
         menuItem.price = Double.parseDouble(savedInstanceState.getString("price"));
         menuItem.ttl = Integer.parseInt( savedInstanceState.getString("time"));
         menuItem.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
-        updateFields(menuItem);
+        try {
+            updateFields(menuItem);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -117,13 +126,26 @@ public class NewMenuItemActivity  extends AppCompatActivity {
 
     }
 
-    private void updateFields(MenuItemRest u) {
+    private void updateFields(MenuItemRest u) throws IOException {
         Log.d("Update",u.name.toString());
         name.setText(u.name);
         description.setText(u.description);
         time.setText(u.ttl.toString());
         price.setText(u.price.toString());
+        File imgFile = new  File("/home/matteo/Immagini/image.png");
 
+        if(imgFile.exists()){
+            Log.d("Immage","dskmdkasmsd");
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+
+            imgProfile.setImageBitmap(myBitmap);
+
+        }
+
+
+        //   imgProfile.setImageURI(Uri.parse(u.imgUrl));
+        // imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         /*if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;

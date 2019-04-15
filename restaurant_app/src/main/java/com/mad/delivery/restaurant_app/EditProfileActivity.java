@@ -306,6 +306,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
+
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
             Log.d("MADAPP", "Setting custom user image");

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Random;
 
 import io.bloco.faker.Faker;
+import io.bloco.faker.FakerComponent;
+import io.bloco.faker.FakerData;
 
 final class Database {
     private static Database instance;
@@ -63,7 +65,7 @@ final class Database {
         menuItems = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), faker.lorem.sentence(), faker.commerce.price().doubleValue(), faker.number.between(10, 40), faker.avatar.image(),i);
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), faker.lorem.sentence(), faker.commerce.price().doubleValue(), faker.number.between(10, 40), "/home/matteo/Immagini/icon",i);
             menuItems.add(menuItem);
 
             Log.d("MADAPP", "Menu items generated.");
