@@ -74,10 +74,13 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
 
+
             case R.id.newMenuItem:
                 Intent intent = new Intent(getContext(), NewMenuItemActivity.class);
                 startActivity(intent);
                 break;
+
+
         }
 
 

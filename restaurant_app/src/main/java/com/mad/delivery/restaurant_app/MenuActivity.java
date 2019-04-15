@@ -39,7 +39,6 @@ public class MenuActivity extends AppCompatActivity {
         List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();
         List<MenuItemRest> categoryItems = new ArrayList<MenuItemRest>();
 
-        String category = getIntent().getStringExtra("category");
         FloatingActionButton botton = findViewById(R.id.newMenuItem2);
         botton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,14 +49,22 @@ public class MenuActivity extends AppCompatActivity {
 
             }
         });
-        for (MenuItemRest i : menuItems){
-           if(i.category.compareTo(category)==0){
-                categoryItems.add(i);
+        String category = getIntent().getStringExtra("category");
+
+        if(category!=null) {
+            for (MenuItemRest i : menuItems) {
+                if (i.category.compareTo(category) == 0) {
+                    categoryItems.add(i);
+                }
             }
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(categoryItems, this));
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(categoryItems,this));
+        recyclerView.setAdapter(new MyMenuItemOffertRecyclerViewAdapter(menuItems, this));
+
 
     }
     @Override
@@ -68,13 +75,7 @@ public class MenuActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //super.onCreateOptionsMenu(menu);
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.editprofile_menu, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
