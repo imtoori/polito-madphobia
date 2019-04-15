@@ -20,10 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class MyMenuItemCategoryRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuItemCategoryRecyclerViewAdapter.ViewHolder> {
 
-    private final List<MenuItemRest> menuItems;
+    private final List<String> menuItems;
     private View view;
     private Context context;
-    public MyMenuItemCategoryRecyclerViewAdapter(List<MenuItemRest> menuItems,Context context) {
+    public MyMenuItemCategoryRecyclerViewAdapter(List<String> menuItems,Context context) {
         this.menuItems = menuItems;
         this.context = context;
     }
@@ -37,9 +37,9 @@ public class MyMenuItemCategoryRecyclerViewAdapter extends RecyclerView.Adapter<
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final MenuItemRest mItem = menuItems.get(position);
+        final String mItem = menuItems.get(position);
 
-        holder.name.setText(mItem.category);
+        holder.name.setText(mItem);
 //        holder.image.setImageURI(Uri.parse("http://reflector.uindy.edu/wp-content/uploads/2019/03/weezer-black.jpg"));
 
         //holder.image.setImageDrawable(getDrawable(R.drawable.user_default));
@@ -49,9 +49,7 @@ public class MyMenuItemCategoryRecyclerViewAdapter extends RecyclerView.Adapter<
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MenuActivity.class);
-                Log.d("category","prima"+mItem.category);
-                intent.putExtra("category", mItem.category);
-                Log.d("category","dopo"+mItem.category);
+                intent.putExtra("category", mItem);
                 context.startActivity(intent);
 
 

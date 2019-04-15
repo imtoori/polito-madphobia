@@ -48,6 +48,9 @@ public class NewMenuItemActivity  extends AppCompatActivity {
     EditText name;
     EditText price;
     EditText time;
+    EditText category;
+    EditText availability;
+
     EditText description;
     ImageView imgProfile;
     Toolbar myToolbar;
@@ -74,6 +77,8 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         time = findViewById(R.id.newmenuitem_time);
         description = findViewById(R.id.newmenuitem_description);
         imgProfile = findViewById(R.id.newmenuitem_imgprofile);
+        category = findViewById(R.id.newmenuitem_category);
+        availability = findViewById(R.id.newmenuitem_availability);
         btnCamera = findViewById(R.id.newmenu_btncamera);
         index =  getIntent().getIntExtra("id",-1);
         btnCamera.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +90,7 @@ public class NewMenuItemActivity  extends AppCompatActivity {
 
         if(index>0){
             try {
+                Log.d("rr",Database.getInstance().getMenuItems().get(index).category);
                 updateFields(Database.getInstance().getMenuItems().get(index));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -102,6 +108,8 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         menuItem.description = savedInstanceState.getString("description");
         menuItem.price = Double.parseDouble(savedInstanceState.getString("price"));
         menuItem.ttl = Integer.parseInt( savedInstanceState.getString("time"));
+        menuItem.category = savedInstanceState.getString("category");
+        menuItem.availability = Integer.parseInt(savedInstanceState.getString("availability"));
         menuItem.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
         try {
             updateFields(menuItem);
@@ -118,6 +126,8 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         outState.putString("description", description.getText().toString());
         outState.putString("price", price.getText().toString());
         outState.putString("time", time.getText().toString());
+        outState.putString("availability", availability.getText().toString());
+        outState.putString("category", category.getText().toString());
 
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
@@ -132,17 +142,11 @@ public class NewMenuItemActivity  extends AppCompatActivity {
         description.setText(u.description);
         time.setText(u.ttl.toString());
         price.setText(u.price.toString());
-        File imgFile = new  File("/home/matteo/Immagini/image.png");
+        availability.setText(u.availability.toString());
 
-        if(imgFile.exists()){
-            Log.d("Immage","dskmdkasmsd");
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+        category.setText(u.category.toString());
 
-
-            imgProfile.setImageBitmap(myBitmap);
-
-        }
-
+        Log.d("TAG", u.category);
 
         //   imgProfile.setImageURI(Uri.parse(u.imgUrl));
         // imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
@@ -240,20 +244,13 @@ public class NewMenuItemActivity  extends AppCompatActivity {
                 if (checkConstraints()) {
 
                     if(index==-1) {
-                        Log.d("Save","Trovato meno uno");
-                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), price.getText().toString(), time.getText().toString(), imageProfileUri.toString());
-                        Log.d("Save"," Aggiunto alla lista");
+                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(),price.getText().toString(), availability.getText().toString(),time.getText().toString(), imageProfileUri.toString());
 
                     }
                     else{
-
-                        Log.d("Save","Rimuovendo ed aggiungendo indice: "+ index.toString());
-
-                        Database.getInstance().setMenuItems(index,name.getText().toString(), description.getText().toString(), price.getText().toString(), time.getText().toString(), imageProfileUri.toString());
-                        Log.d("Save","Sostituito"+ index.toString());
+                        Database.getInstance().setMenuItems(index,name.getText().toString(), category.getText().toString(),description.getText().toString(), price.getText().toString(),availability.getText().toString(), time.getText().toString(), imageProfileUri.toString());
 
                     }
-                    Log.d("Save","Ripristinando");
 
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);

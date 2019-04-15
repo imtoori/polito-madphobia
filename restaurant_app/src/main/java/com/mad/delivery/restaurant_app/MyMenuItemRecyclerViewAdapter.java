@@ -38,7 +38,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        MenuItemRest mItem = menuItems.get(position);
+        final MenuItemRest mItem = menuItems.get(position);
         holder.price.setText(mItem.price.toString());
         holder.description.setText(mItem.description.toString());
         holder.name.setText(mItem.name);
@@ -51,7 +51,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, NewMenuItemActivity.class);
-                intent.putExtra("id", position);
+                intent.putExtra("id", mItem.id);
                 context.startActivity(intent);
 
             }
@@ -71,6 +71,8 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         public final TextView description;
         public final TextView price;
         public final ImageView image;
+    /*    public final TextView availability;
+        public final TextView category;*/
         public Button button;
 
 

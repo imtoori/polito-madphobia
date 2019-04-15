@@ -63,25 +63,29 @@ final class Database {
         }
 
         menuItems = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"food", faker.lorem.sentence(), faker.commerce.price().doubleValue(), faker.number.between(10, 40), "/home/matteo/Immagini/icon",i);
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"food", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i);
             menuItems.add(menuItem);
+        }
 
-            Log.d("MADAPP", "Menu items generated.");
+        for (int i = 5; i < 10; i++) {
+            Faker faker = new Faker();
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i);
+            menuItems.add(menuItem);
         }
     }
-    public void addMenuItems (String name, String description, String price, String time, String imgUri ){
+    public void addMenuItems (String name, String description,String category, String price, String availability, String time, String imgUri ){
 
-        MenuItemRest item = new MenuItemRest(name,"food",description,Double.parseDouble(price),Integer.parseInt(time),imgUri,menuItems.size()+1);
+        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,menuItems.size()+1);
 
         menuItems.add(item);
 
     }
 
-    public void setMenuItems (Integer index,String name, String description, String price, String time, String imgUri  ){
-        Log.d("DATABASE: ", "" + name + description + price + time +imgUri);
-        MenuItemRest item = new MenuItemRest(name,"food",description,Double.parseDouble(price),Integer.parseInt(time),imgUri,index);
+    public void setMenuItems (Integer index,String name, String category, String description, String price, String availability, String time, String imgUri  ){
+
+        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,index);
 
         menuItems.set(index,item);
 

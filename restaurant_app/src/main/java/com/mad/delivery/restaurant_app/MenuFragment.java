@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,9 +46,13 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
         // TODO remove items here when persistence is implemented
         List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();
-
+        List<String> categoryMenu = new ArrayList<String>();
+        for(MenuItemRest i : menuItems){
+            if(!categoryMenu.contains(i.category))
+                categoryMenu.add(i.category);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyMenuItemCategoryRecyclerViewAdapter(menuItems,getContext()));
+        recyclerView.setAdapter(new MyMenuItemCategoryRecyclerViewAdapter(categoryMenu,getContext()));
 
 
         return v;
