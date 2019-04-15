@@ -58,13 +58,15 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
 
+
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(categoryItems, this));
         }
+        else {
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new MyMenuItemOffertRecyclerViewAdapter(menuItems, this));
-
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(new MyMenuItemOffertRecyclerViewAdapter(menuItems, this));
+        }
 
     }
     @Override
