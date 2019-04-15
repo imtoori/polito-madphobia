@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +34,17 @@ public class MenuActivity extends AppCompatActivity {
         List<MenuItemRest> categoryItems = new ArrayList<MenuItemRest>();
 
         String category = getIntent().getStringExtra("category");
+        FloatingActionButton botton = findViewById(R.id.newMenuItem2);
+        botton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), NewMenuItemActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
+            }
+        });
         for (MenuItemRest i : menuItems){
-            Log.d("ciclo",i.category+" "+ category);
            if(i.category.compareTo(category)==0){
                 categoryItems.add(i);
             }
@@ -62,14 +73,14 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.newMenuItem:
-                Intent intent = new Intent(this, NewMenuItemActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                break;
+            case R.id.newMenuItem2:
+
+                    Intent intent = new Intent(getApplicationContext(), NewMenuItemActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
             default:
                 return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 }
