@@ -9,17 +9,19 @@ public class MenuItemRest {
     public Double price;
     public Integer ttl;
     public String imgUrl;
+    public String category;
     public Integer id;
     protected Uri imageUri;
 
 
-    public MenuItemRest(String name, String description, Double price, Integer ttl, String imgUrl, Integer id) {
+    public MenuItemRest(String name, String category,String description, Double price, Integer ttl, String imgUrl, Integer id) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.ttl = ttl;
         this.imgUrl = imgUrl;
         this.id = id;
+        this.category = category;
     }
 
     public MenuItemRest(){}

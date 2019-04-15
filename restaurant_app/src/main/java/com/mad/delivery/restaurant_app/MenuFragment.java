@@ -47,7 +47,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(menuItems,getContext()));
+        recyclerView.setAdapter(new MyMenuItemCategoryRecyclerViewAdapter(menuItems,getContext()));
 
 
         return v;

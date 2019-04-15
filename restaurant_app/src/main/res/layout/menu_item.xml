@@ -20,23 +20,28 @@
             android:id="@+id/tv_menuItemsName"
             android:layout_width="223dp"
             android:layout_height="30dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/name"
             android:textSize="@dimen/title"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_menuItemsDescription"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_menuItemsDescription"
             android:layout_width="199dp"
-            android:layout_height="53dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="28dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/description"
             android:textSize="@dimen/description"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_menuItemsName" />
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_menuItemsPrice"
@@ -72,7 +77,7 @@
             android:layout_height="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:text="Price:"
             android:textSize="@dimen/description"
             app:layout_constraintBottom_toBottomOf="parent"
