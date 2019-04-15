@@ -15,6 +15,8 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +29,11 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
+        Toolbar toolbar = findViewById(R.id.menuTool2);
+        setSupportActionBar(toolbar);
+        setTitle("Menu");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         RecyclerView recyclerView = findViewById(R.id.menu_list);
 
         List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();

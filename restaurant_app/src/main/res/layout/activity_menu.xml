@@ -9,7 +9,7 @@
 
     <androidx.appcompat.widget.Toolbar
         app:navigationIcon="@drawable/ic_back"
-        android:id="@+id/menuTool"
+        android:id="@+id/menuTool2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleTextColor="@color/colorTextIcon"
@@ -31,15 +31,7 @@
         android:focusable="true" />
 
 
-    <ScrollView
-        android:id="@+id/scrollView3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -63,7 +55,6 @@
             tools:itemCount="11" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
