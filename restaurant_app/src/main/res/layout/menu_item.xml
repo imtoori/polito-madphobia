@@ -18,37 +18,38 @@
 
         <TextView
             android:id="@+id/tv_menuItemsName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="120dp"
+            android:layout_width="223dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="4dp"
             android:text="@string/name"
+            android:textSize="@dimen/title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_menuItemsDescription"
-            android:layout_width="59dp"
-            android:layout_height="22dp"
+            android:layout_width="199dp"
+            android:layout_height="53dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="120dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="28dp"
             android:text="@string/description"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_menuItemsName" />
 
         <TextView
             android:id="@+id/tv_menuItemsPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="16dp"
+            android:layout_width="53dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
             android:text="price"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_menuItemsDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_menuItemsDescription"
+            app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -63,8 +64,21 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_bias="0.0"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="8dp"
+            android:text="Price:"
+            android:textSize="@dimen/description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_menuItemsPrice"
+            app:layout_constraintTop_toBottomOf="@+id/tv_menuItemsDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
