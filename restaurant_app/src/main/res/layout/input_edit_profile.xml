@@ -337,10 +337,9 @@
                 android:textSize="@dimen/subtitle"
                 android:textStyle="bold" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:padding="0dp">
 
                 <TextView
@@ -349,10 +348,14 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/day1"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editprofile_day1_input"
@@ -360,226 +363,325 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="0dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/opening_hours"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/editprofile_day1"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/editprofile_day1_edit"
                     android:layout_width="25dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_event" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:padding="0dp">
 
                 <TextView
                     android:id="@+id/editprofile_day2"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/day2"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editprofile_day2_input"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/opening_hours"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/editprofile_day2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/editprofile_day2_edit"
                     android:layout_width="25dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_event"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_event" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:padding="0dp">
 
                 <TextView
                     android:id="@+id/editprofile_day3"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/day3"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editprofile_day3_input"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/opening_hours"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/editprofile_day3"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/editprofile_day3_edit"
                     android:layout_width="25dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_event"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_event" />
 
-            </LinearLayout>
-
-            <LinearLayout
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:padding="0dp">
 
                 <TextView
                     android:id="@+id/editprofile_day4"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/day4"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editprofile_day4_input"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/opening_hours"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/editprofile_day4"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/editprofile_day4_edit"
                     android:layout_width="25dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_event"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_event" />
 
-            </LinearLayout>
-
-            <LinearLayout
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:padding="0dp">
 
                 <TextView
                     android:id="@+id/editprofile_day5"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/day5"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editprofile_day5_input"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/opening_hours"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/editprofile_day5"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/editprofile_day5_edit"
                     android:layout_width="25dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_event"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_event" />
 
-            </LinearLayout>
-
-            <LinearLayout
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:padding="0dp">
 
                 <TextView
                     android:id="@+id/editprofile_day6"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/day6"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editprofile_day6_input"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/opening_hours"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/editprofile_day6"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/editprofile_day6_edit"
                     android:layout_width="25dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_event"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_event" />
 
-            </LinearLayout>
-
-            <LinearLayout
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:padding="0dp">
 
                 <TextView
                     android:id="@+id/editprofile_day7"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:text="@string/day7"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/editprofile_day7_input"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/opening_hours"
                     android:textColor="@color/colorText"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/editprofile_day7"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/editprofile_day7_edit"
                     android:layout_width="25dp"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
-                    app:srcCompat="@drawable/ic_event"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_event" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

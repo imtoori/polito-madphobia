@@ -132,6 +132,7 @@
     <string name="day6">Saturday: </string>
     <string name="day7">Sunday: </string>
     <string name="check_time">Time not valid (hh:mm-hh:mm)</string>
+    <string name="list_openinghours">Opening hours</string>
 
 
 </resources>

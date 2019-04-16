@@ -134,6 +134,7 @@ no_completed_orders
     <string name="day6">Sabato:    </string>
     <string name="day7">Domenica:    </string>
     <string name="check_time">Time not valid (hh:mm-hh:mm)</string>
+    <string name="list_openinghours">Opening hours</string>
 
 
 </resources>
