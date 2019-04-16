@@ -2,21 +2,17 @@ package com.mad.delivery.restaurant_app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.view.MenuItem;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity  implements PendingOrdersFragment.OnPendingOrderListener {
+public class MainActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -28,7 +24,6 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
             switch (item.getItemId()) {
                 case R.id.nav_menu:
                     setTitle(getString(R.string.nav_menu));
-
                     MenuFragment menuFragment = new MenuFragment();
                     myToolBar.inflateMenu(R.menu.menu_menu);
                     ft = fm.beginTransaction();

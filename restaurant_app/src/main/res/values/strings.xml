@@ -76,7 +76,8 @@
     <string name="price">Price</string>
     <string name="category">Category</string>
     <string name="availability">Availability</string>
-
+    <string name="offer">offers</string>
+    <string name="items_in_the_offer">Items in the offer</string>
 
 
 </resources>

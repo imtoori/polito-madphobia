@@ -40,10 +40,6 @@ public class MyMenuItemCategoryRecyclerViewAdapter extends RecyclerView.Adapter<
         final String mItem = menuItems.get(position);
 
         holder.name.setText(mItem);
-//        holder.image.setImageURI(Uri.parse("http://reflector.uindy.edu/wp-content/uploads/2019/03/weezer-black.jpg"));
-
-        //holder.image.setImageDrawable(getDrawable(R.drawable.user_default));
-
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,8 +47,6 @@ public class MyMenuItemCategoryRecyclerViewAdapter extends RecyclerView.Adapter<
                 Intent intent = new Intent(context, MenuActivity.class);
                 intent.putExtra("category", mItem);
                 context.startActivity(intent);
-
-
             }
 
         });
@@ -65,17 +59,12 @@ public class MyMenuItemCategoryRecyclerViewAdapter extends RecyclerView.Adapter<
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        // final TextView titleView;
         public final TextView name;
-
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            //   titleView = mView.findViewById(R.id.menuItem).
             name = mView.findViewById(R.id.tv_menuItemsCategoryName);
-
-
         }
     }
 }

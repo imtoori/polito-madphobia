@@ -2,7 +2,6 @@ package com.mad.delivery.restaurant_app;
 
 import android.net.Uri;
 import android.util.Log;
-import android.view.Menu;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,8 +9,6 @@ import java.util.List;
 import java.util.Random;
 
 import io.bloco.faker.Faker;
-import io.bloco.faker.FakerComponent;
-import io.bloco.faker.FakerData;
 
 final class Database {
     private static Database instance;
@@ -66,29 +63,30 @@ final class Database {
         menuItems = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"food", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "food", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItem);
         }
 
         for (int i = 5; i < 10; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItem);
         }
     }
-    public void addMenuItems (String name, String description,String category, String price, String availability, String time, String imgUri, Uri url ){
 
-        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,menuItems.size()+1,url);
+    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
+
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, menuItems.size() + 1, url, subItems);
 
         menuItems.add(item);
 
     }
 
-    public void setMenuItems (Integer index, String name, String category, String description, String price, String availability, String time, String imgUri , Uri url){
+    public void setMenuItems(Integer index, String name, String category, String description, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
 
-        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,index, url);
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, index, url, subItems);
 
-        menuItems.set(index,item);
+        menuItems.set(index, item);
 
     }
 
@@ -98,6 +96,15 @@ final class Database {
 
     public List<MenuItemRest> getMenuItems() {
         return menuItems;
+    }
+
+    public MenuItemRest getMenuItem(int id) {
+        for (MenuItemRest menuItem : menuItems) {
+            if (menuItem.id == id) {
+                return menuItem;
+            }
+        }
+        return null;
     }
 }
 
