@@ -2,11 +2,8 @@ package com.mad.delivery.restaurant_app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -16,14 +13,12 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MenuActivity extends AppCompatActivity {
-
-
-    private Menu menu;
+    private List<Integer> selectedItems = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +32,7 @@ public class MenuActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.menu_list);
 
         List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();
-        List<MenuItemRest> categoryItems = new ArrayList<MenuItemRest>();
+        List<MenuItemRest> categoryItems = new ArrayList<>();
 
         FloatingActionButton botton = findViewById(R.id.newMenuItem2);
         botton.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +46,7 @@ public class MenuActivity extends AppCompatActivity {
         });
         String category = getIntent().getStringExtra("category");
 
-        if(category!=null) {
+        if (category != null) {
             for (MenuItemRest i : menuItems) {
                 if (i.category.compareTo(category) == 0) {
                     categoryItems.add(i);
@@ -61,14 +56,25 @@ public class MenuActivity extends AppCompatActivity {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(categoryItems, this));
-        }
-        else {
+        } else {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new MyMenuItemOffertRecyclerViewAdapter(menuItems, this));
+            recyclerView.setAdapter(new MyMenuItemOffertRecyclerViewAdapter(menuItems, this, new IOnMenuItemSelected() {
+                @Override
+                public void OnMenuItemSelected(Integer id) {
+                    if (selectedItems.contains(id)) {
+                        selectedItems.remove(id);
+                    } else {
+                        selectedItems.add(id);
+                    }
+                }
+            }));
         }
 
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) recyclerView.getLayoutParams();
+        layoutParams.setMargins(0, toolbar.getLayoutParams().height, 0, 0);
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -78,18 +84,21 @@ public class MenuActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.newMenuItem2:
 
-                    Intent intent = new Intent(getApplicationContext(), NewMenuItemActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                Intent intent = new Intent(getApplicationContext(), NewMenuItemActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+}
+
+interface IOnMenuItemSelected {
+    void OnMenuItemSelected(Integer id);
 }
