@@ -66,7 +66,7 @@ public class PhotoZoomActivity extends AppCompatActivity  {
         try {
             intent = new Intent(this, Class.forName(className));
         } catch(ClassNotFoundException e) {
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, ProfileActivity.class);
         }
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

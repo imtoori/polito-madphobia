@@ -67,7 +67,6 @@ public class PasswordActivity extends AppCompatActivity {
         }
     }
 
-
     private void setPassword() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

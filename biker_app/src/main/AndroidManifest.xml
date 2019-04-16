@@ -14,13 +14,19 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -31,24 +37,26 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name="com.mad.delivery.bikerApp.PhotoZoomActivity"   android:parentActivityName="com.mad.delivery.bikerApp.EditProfileActivity">
+
+        <activity
+            android:name=".PhotoZoomActivity"
+            android:parentActivityName=".EditProfileActivity">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mad.delivery.bikerApp.EditProfileActivity" />
         </activity>
-        <activity android:name="com.mad.delivery.bikerApp.EditProfileActivity" android:parentActivityName="com.mad.delivery.bikerApp.MainActivity">
+        <activity
+            android:name=".EditProfileActivity"
+            android:parentActivityName=".ProfileActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mad.delivery.bikerApp.MainActivity" />
+                android:value="com.mad.delivery.bikerApp.ProfileActivity" />
         </activity>
-        <activity android:name="com.mad.delivery.bikerApp.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".ProfileActivity">
         </activity>
     </application>
 

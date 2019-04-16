@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "593427983711",
+    "firebase_url": "https://madphobia-9233d.firebaseio.com",
+    "project_id": "madphobia-9233d",
+    "storage_bucket": "madphobia-9233d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593427983711:android:87564869a53ee989",
+        "android_client_info": {
+          "package_name": "com.mad.delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593427983711-gnrdjh3583vma0jqn9jkplff8uqdle1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD3wBFJ09JS7BS_Bp0TuT8pMjXC3oDC1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593427983711-gnrdjh3583vma0jqn9jkplff8uqdle1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593427983711:android:aba5d8c970190363",
+        "android_client_info": {
+          "package_name": "com.mad.delivery.bikerApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593427983711-3frsbgt26vbuv53pduqeb0sc387c2r4p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mad.delivery.bikerApp",
+            "certificate_hash": "9595e40f5f962a2fbb029a59322a43d22558ffb2"
+          }
+        },
+        {
+          "client_id": "593427983711-gnrdjh3583vma0jqn9jkplff8uqdle1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD3wBFJ09JS7BS_Bp0TuT8pMjXC3oDC1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593427983711-gnrdjh3583vma0jqn9jkplff8uqdle1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
