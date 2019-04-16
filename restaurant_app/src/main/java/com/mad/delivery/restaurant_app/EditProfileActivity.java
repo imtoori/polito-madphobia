@@ -18,9 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
 
 public class EditProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -50,6 +57,13 @@ public class EditProfileActivity extends AppCompatActivity {
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
+    EditText day1;
+    EditText day2;
+    EditText day3;
+    EditText day4;
+    EditText day5;
+    EditText day6;
+    EditText day7;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
@@ -74,6 +88,13 @@ public class EditProfileActivity extends AppCompatActivity {
         postCode = findViewById(R.id.editprofile_postalcode);
         city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
+        day1= findViewById(R.id.editprofile_day1_input);
+        day2= findViewById(R.id.editprofile_day2_input);
+        day3= findViewById(R.id.editprofile_day3_input);
+        day4= findViewById(R.id.editprofile_day4_input);
+        day5= findViewById(R.id.editprofile_day5_input);
+        day6= findViewById(R.id.editprofile_day6_input);
+        day7= findViewById(R.id.editprofile_day7_input);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +155,13 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("doorPhone", doorPhone.getText().toString());
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
-
+        outState.putString("day1", day1.getText().toString());
+        outState.putString("day2", day2.getText().toString());
+        outState.putString("day3", day3.getText().toString());
+        outState.putString("day4", day4.getText().toString());
+        outState.putString("day5", day5.getText().toString());
+        outState.putString("day6", day6.getText().toString());
+        outState.putString("day7", day7.getText().toString());
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -196,6 +223,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
+                sharedPref.getString("opening",""),
                 sharedPref.getString("road", ""),
                 sharedPref.getString("houseNumber", ""),
                 sharedPref.getString("doorPhone", ""),
@@ -203,6 +231,13 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("city", ""),
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
+        day1.setText(sharedPref.getString("day1",""));
+        day2.setText(sharedPref.getString("day2",""));
+        day3.setText(sharedPref.getString("day3",""));
+        day4.setText(sharedPref.getString("day4",""));
+        day5.setText(sharedPref.getString("day5",""));
+        day6.setText(sharedPref.getString("day6",""));
+        day7.setText(sharedPref.getString("day7",""));
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
     }
@@ -219,7 +254,13 @@ public class EditProfileActivity extends AppCompatActivity {
         editor.putString("doorPhone", doorPhone.getText().toString());
         editor.putString("postCode", postCode.getText().toString());
         editor.putString("city", city.getText().toString());
-
+        editor.putString("day1", day1.getText().toString());
+        editor.putString("day2", day2.getText().toString());
+        editor.putString("day3", day3.getText().toString());
+        editor.putString("day4", day4.getText().toString());
+        editor.putString("day5", day5.getText().toString());
+        editor.putString("day6", day6.getText().toString());
+        editor.putString("day7", day7.getText().toString());
         try {
             Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
             if (imageProfileUri != Uri.EMPTY) {
@@ -350,7 +391,42 @@ public class EditProfileActivity extends AppCompatActivity {
         String roadString = "([A-Za-z0-9'-_\\s])+";
         String cityString = "([A-Za-z\'\\s-])+";
         String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
-
+        Pattern p = Pattern.compile(".*([01]?[0-9]|2[0-3]):[0-5][0-9]-([01]?[0-9]|2[0-3]):[0-5][0-9].*");
+        Matcher m = p.matcher(day1.getText().toString());
+        if(!m.matches() || checkhours(day1.getText().toString())){
+            day1.setError(getResources().getString(R.string.check_time));
+            result= false;
+        }
+        m = p.matcher(day2.getText().toString());
+        if(!day2.getText().toString().equals("") && (!m.matches() || checkhours(day2.getText().toString()))){
+            day2.setError(getResources().getString(R.string.check_time));
+            result= false;
+        }
+        m = p.matcher(day3.getText().toString());
+        if(!m.matches()|| checkhours(day3.getText().toString())){
+            day3.setError(getResources().getString(R.string.check_time));
+            result= false;
+        }
+        m = p.matcher(day4.getText().toString());
+        if(!m.matches() || checkhours(day4.getText().toString())){
+            day4.setError(getResources().getString(R.string.check_time));
+            result= false;
+        }
+        m = p.matcher(day5.getText().toString());
+        if(!m.matches() || checkhours(day5.getText().toString())){
+            day5.setError(getResources().getString(R.string.check_time));
+            result= false;
+        }
+        m = p.matcher(day6.getText().toString());
+        if(!m.matches() || checkhours(day6.getText().toString())){
+            day6.setError(getResources().getString(R.string.check_time));
+            result= false;
+        }
+        m = p.matcher(day7.getText().toString() );
+        if(!m.matches() || checkhours(day7.getText().toString())){
+            day7.setError(getResources().getString(R.string.check_time));
+            result= false;
+        }
         if(!name.getText().toString().matches(nameString)){
             name.setError(getResources().getString(R.string.check_name));
             result = false;
@@ -393,4 +469,17 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return result;
     }
+
+    private boolean checkhours(String time) {
+        String[] s = time.split("-");
+        String[] start=s[0].split(":");
+        String[] end=s[1].split(":");
+        if(start[0].compareTo(end[0])<0)
+            return false;
+        if(start[0].compareTo(end[0])==0)
+            if(start[1].compareTo(end[1])<=0)
+                return false;
+        return true;
+    }
+
 }

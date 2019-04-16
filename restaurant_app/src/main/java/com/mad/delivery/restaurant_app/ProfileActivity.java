@@ -24,9 +24,11 @@ public class ProfileActivity extends AppCompatActivity {
     TextView phoneNumber;
     TextView emailAddress;
     TextView description;
+    TextView opening;
     TextView road;
     ImageView imgProfile;
     User mUser=new User();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.mainprofile_phone);
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
+        opening = findViewById(R.id.openinghourslist);
         road = findViewById(R.id.main_road);
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
@@ -69,10 +72,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
+        String open=getResources().getString( R.string.day1)+sharedPref.getString("day1", "")+"\n"+
+                getResources().getString( R.string.day2)+sharedPref.getString("day2", "")+"\n"+
+                getResources().getString( R.string.day3)+sharedPref.getString("day3", "")+"\n"+
+                getResources().getString( R.string.day4)+sharedPref.getString("day4", "")+"\n"+
+                getResources().getString( R.string.day5)+sharedPref.getString("day5", "")+"\n"+
+                getResources().getString( R.string.day6)+sharedPref.getString("day6", "")+"\n"+
+                getResources().getString( R.string.day7)+sharedPref.getString("day7", "");
         mUser = new User(sharedPref.getString("name", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
+                open,
                 sharedPref.getString("road", ""),
                 sharedPref.getString("houseNumber", ""),
                 sharedPref.getString("doorPhone", ""),
@@ -80,6 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
                 sharedPref.getString("city", ""),
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
+
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         if(mUser!=null) {
             Log.i("AAA", mUser.name + "-" + mUser.phoneNumber + "-" + mUser.email + "-" + mUser.description + "-" + mUser.road + "-" + mUser.houseNumber + "-" + mUser.doorPhone + "-" + mUser.postCode + "-" + mUser.city);
@@ -94,8 +106,12 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
+        opening.setText(u.openingHours);
         if(!u.road.equals("")) {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
+        }
+        if(!u.openingHours.equals("")) {
+            opening.setText(u.openingHours);
         }
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
