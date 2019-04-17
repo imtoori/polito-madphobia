@@ -199,7 +199,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void onTimePicked(int h, int m) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy hh:mm");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
         modifiedOrder.orderFor = modifiedOrder.orderFor.hourOfDay().setCopy(h);
         modifiedOrder.orderFor = modifiedOrder.orderFor.minuteOfHour().setCopy(m);
         confirmDeliveryTime();
