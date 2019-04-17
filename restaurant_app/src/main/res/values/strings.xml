@@ -104,9 +104,19 @@
 
     <!--Setting Menu-->
     <string name="setting_profile">My Profile</string>
-    <string name="setting_privacy">Privacy</string>
+    <string name="setting_privacy">Change Account Password</string>
+    <string name="setting_openinghours">Opening and Closing Time</string>
     <string name="setting_language">Language</string>
-
+    <string name="description_opening_hours">In this section you can add or change the opening/closing hours of your activity. If you want to add a new slot just be sure that it\'s not overlapped (or else you\'ll get an error.</string>
+    <string name="title_opening_hours">Instructions</string>
+    <string name="days_of_week">Days of the Week</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
     <!--PasswordActivity-->
     <string name="current_pssw">Current password </string>
     <string name="new_pssw">New password </string>
@@ -139,7 +149,6 @@
     <string name="price">Price</string>
     <string name="category">Category</string>
     <string name="availability">Availability</string>
-
 
 
 </resources>

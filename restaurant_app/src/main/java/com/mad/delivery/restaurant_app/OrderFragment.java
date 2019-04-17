@@ -37,8 +37,6 @@ public class OrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflator = inflater.inflate(R.layout.fragment_order, container, false);
-// TODO remove items here when persistence is implemented
-
         return inflator;
     }
 

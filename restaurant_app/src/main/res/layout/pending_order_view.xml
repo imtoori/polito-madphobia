@@ -43,14 +43,11 @@
             android:id="@+id/tv_orderStatusValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             android:text="Pending"
             android:textSize="@dimen/normalText"
-            app:layout_constraintEnd_toStartOf="@+id/tv_dateOrderForValue"
-            app:layout_constraintStart_toEndOf="@+id/tv_orderNumberValue"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dateOrderForValue" />
 
         <TextView
             android:id="@+id/tv_orderFrom"

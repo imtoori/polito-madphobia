@@ -72,14 +72,13 @@ final class Database {
             orders.put(o.id, o);
             menuItems = new ArrayList<>();
             for (int k = 0; k< 5; k++) {
-                Faker faker = new Faker();
-                MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"food", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+                MenuItemRest menuItem = new MenuItemRest(fakeProd.name.name(),"food", fakeProd.lorem.sentence(), fakeProd.commerce.price().doubleValue(),10, fakeProd.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
                 menuItems.add(menuItem);
             }
 
             for (int n = 5; n < 10; n++) {
                 Faker faker = new Faker();
-                MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+                MenuItemRest menuItem = new MenuItemRest(fakeProd.name.name(),"drink", fakeProd.lorem.sentence(), fakeProd.commerce.price().doubleValue(),10, fakeProd.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
                 menuItems.add(menuItem);
             }
             Log.d("MADAPP", "Order generated : " + dtf.print(o.orderFor));
@@ -114,7 +113,7 @@ final class Database {
         }
         Collections.sort(pendings, myDateComparator);
 
-        Log.d("MADAPP", "requested getPendingOrders()");
+        Log.d("MADAPP", "requested getPendingOrders() size=" + pendings.size());
         return pendings;
     }
 
@@ -128,7 +127,7 @@ final class Database {
             if(o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready)) preparing.add(o);
         }
         Collections.sort(preparing, myDateComparator);
-        Log.d("MADAPP", "requested getPreparingOrders()");
+        Log.d("MADAPP", "requested getPreparingOrders() ");
         return preparing;
     }
 
