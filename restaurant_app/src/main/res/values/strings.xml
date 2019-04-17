@@ -134,5 +134,12 @@
     <string name="check_time">Time not valid (hh:mm-hh:mm)</string>
     <string name="list_openinghours">Opening hours</string>
 
+    <string name="name_menu_item">Name dish</string>
+    <string name="time_to_preparation">Time needed</string>
+    <string name="price">Price</string>
+    <string name="category">Category</string>
+    <string name="availability">Availability</string>
+
+
 
 </resources>

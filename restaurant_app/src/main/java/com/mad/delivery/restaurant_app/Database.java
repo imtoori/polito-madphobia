@@ -1,6 +1,8 @@
 package com.mad.delivery.restaurant_app;
 
+import android.net.Uri;
 import android.util.Log;
+import android.view.Menu;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
@@ -16,11 +18,22 @@ import java.util.Map;
 import java.util.Random;
 
 import io.bloco.faker.Faker;
+import io.bloco.faker.FakerComponent;
+import io.bloco.faker.FakerData;
 
-public final class Database {
+final class Database {
     private static Database instance;
     private static Map<String, Order> orders;
     private static MyDateComparator myDateComparator;
+    private static List<MenuItemRest> menuItems;
+
+    public static Database getInstance() {
+        if (instance == null) {
+            instance = new Database();
+        }
+        return instance;
+    }
+
     private Database() {
         myDateComparator = new MyDateComparator();
         int randForProducts;
@@ -75,8 +88,23 @@ public final class Database {
         public int compare(Order first, Order second) {
             return DateTimeComparator.getInstance().compare(second.orderFor, first.orderFor);
         }
-    }
 
+        menuItems = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Faker faker = new Faker();
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"food", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+            menuItems.add(menuItem);
+        }
+
+        for (int i = 5; i < 10; i++) {
+            Faker faker = new Faker();
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(),"drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(),10, faker.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+            menuItems.add(menuItem);
+        }
+    }
+    public void addMenuItems (String name, String description,String category, String price, String availability, String time, String imgUri, Uri url ){
+
+        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,menuItems.size()+1,url);
 
     public static List<Order> getPendingOrders() {
         if (instance == null) {
@@ -120,6 +148,24 @@ public final class Database {
         Log.d("MADAPP", "requested getCompletedOrders(), size is "  + completed.size());
         return completed;
     }
+     menuItems.add(item);
 
+    }
+
+    public void setMenuItems (Integer index, String name, String category, String description, String price, String availability, String time, String imgUri , Uri url){
+
+        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,index, url);
+
+        menuItems.set(index,item);
+
+    }
+
+    public List<Order> getPendingOrders() {
+        return orders;
+    }
+
+    public List<MenuItemRest> getMenuItems() {
+        return menuItems;
+    }
 }
 

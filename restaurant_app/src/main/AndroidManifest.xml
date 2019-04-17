@@ -11,7 +11,6 @@
 
     <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -30,7 +29,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
         <activity
             android:name=".CompletingOrderActivity"></activity>
         <activity
@@ -48,6 +46,9 @@
         <activity
             android:name=".LanguageActivity"
             android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".NewMenuItemActivity"/>
         <activity
             android:name=".DetailOrderActivity"
             android:parentActivityName=".MainActivity" />
@@ -60,6 +61,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
     </application>
 
 </manifest>
