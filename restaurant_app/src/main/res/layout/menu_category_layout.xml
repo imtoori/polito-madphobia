@@ -18,20 +18,21 @@
 
         <TextView
             android:id="@+id/tv_menuItemsCategoryName"
-            android:layout_width="223dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="40dp"
+            android:layout_width="129dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="148dp"
             android:layout_marginBottom="12dp"
             android:text="@string/name"
-            android:textSize="@dimen/title"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="@dimen/bigTitle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.063"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.391" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

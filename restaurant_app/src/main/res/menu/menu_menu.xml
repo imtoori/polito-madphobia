@@ -2,9 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_new_offert"
-        android:icon="@drawable/ic_edit"
-        app:showAsAction="ifRoom"
-        android:title="newOffert" />
+    <item
+        android:id="@+id/menu_new_offert"
+        android:icon="@drawable/ic_star"
+        android:title="newOffert"
+        app:showAsAction="ifRoom" />
 
 </menu>

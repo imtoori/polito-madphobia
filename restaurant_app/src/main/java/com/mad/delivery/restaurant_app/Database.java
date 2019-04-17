@@ -63,13 +63,13 @@ final class Database {
         menuItems = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "food", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "Food", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItem);
         }
 
         for (int i = 5; i < 10; i++) {
             Faker faker = new Faker();
-            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "Drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItem);
         }
     }

@@ -42,6 +42,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         final MenuItemRest mItem = menuItems.get(position);
         holder.price.setText(mItem.price.toString());
         holder.description.setText(mItem.description.toString());
+        holder.availability.setText(mItem.availability.toString());
         holder.name.setText(mItem.name);
         if(mItem.imageUri!= Uri.EMPTY)
             holder.image.setImageURI(mItem.imageUri);
@@ -71,6 +72,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         // final TextView titleView;
         public final TextView name;
         public final TextView description;
+        public final TextView availability;
         public final TextView price;
         public final ImageView image;
     /*    public final TextView availability;
@@ -87,8 +89,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
             image = mView.findViewById(R.id.imageView2);
             price = mView.findViewById(R.id.tv_menuItemsPrice);
             button = mView.findViewById(R.id.newMenuItem);
-
-
+            availability = mView.findViewById(R.id.tv_menuItemsAvailability);
         }
     }
 }

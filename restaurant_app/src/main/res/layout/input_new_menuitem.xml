@@ -131,7 +131,7 @@
                 android:contentDescription="@string/photo_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3"
-                app:srcCompat="@drawable/ic_user" />
+                app:srcCompat="@drawable/ic_description" />
 
             <EditText
                 android:id="@+id/newmenuitem_description"
@@ -192,7 +192,7 @@
                 android:contentDescription="@string/photo_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView5"
-                app:srcCompat="@drawable/ic_user" />
+                app:srcCompat="@drawable/ic_timer" />
 
             <EditText
                 android:id="@+id/newmenuitem_time"
@@ -252,7 +252,7 @@
                 android:contentDescription="@string/photo_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:srcCompat="@drawable/ic_user" />
+                app:srcCompat="@drawable/ic_price" />
 
             <EditText
                 android:id="@+id/newmenuitem_price"
@@ -312,7 +312,7 @@
                 android:contentDescription="@string/photo_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6"
-                app:srcCompat="@drawable/ic_user" />
+                app:srcCompat="@drawable/ic_category" />
 
             <EditText
                 android:id="@+id/newmenuitem_category"
@@ -372,7 +372,7 @@
                 android:contentDescription="@string/photo_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView7"
-                app:srcCompat="@drawable/ic_user" />
+                app:srcCompat="@drawable/ic_availability" />
 
             <EditText
                 android:id="@+id/newmenuitem_availability"
