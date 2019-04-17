@@ -58,7 +58,7 @@ public class MyMenuItemOffertRecyclerViewAdapter extends RecyclerView.Adapter<My
                 holder.selected = !holder.selected;
 
                 if (holder.selected) {
-                    holder.itemView.setBackgroundColor(Color.RED);
+                    holder.itemView.setBackgroundColor(Color.rgb(188,209,130));
                 } else {
                     holder.itemView.setBackgroundColor(Color.WHITE);
                 }
