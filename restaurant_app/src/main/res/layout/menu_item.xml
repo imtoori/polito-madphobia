@@ -18,21 +18,20 @@
 
         <TextView
             android:id="@+id/tv_menuItemsName"
-            android:layout_width="223dp"
-            android:layout_height="30dp"
+            android:layout_width="193dp"
+            android:layout_height="31dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="@string/name"
             android:textSize="@dimen/title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.833"
-            app:layout_constraintStart_toStartOf="@+id/tv_menuItemsDescription"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_menuItemsDescription"
-            android:layout_width="199dp"
+            android:layout_width="193dp"
             android:layout_height="56dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="64dp"
@@ -74,15 +73,13 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="178dp"
-            android:layout_height="171dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/imageprofile_desc"
             android:scaleType="centerCrop"
             android:src="@drawable/dish_icon"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,6 +88,7 @@
             android:id="@+id/textView6"
             android:layout_width="39dp"
             android:layout_height="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="4dp"
@@ -98,6 +96,8 @@
             android:textSize="@dimen/description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_menuItemsPrice"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.783" />
 
@@ -105,7 +105,7 @@
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
@@ -113,8 +113,7 @@
             android:textSize="@dimen/description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.756"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/tv_menuItemsDescription"
             app:layout_constraintVertical_bias="1.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>

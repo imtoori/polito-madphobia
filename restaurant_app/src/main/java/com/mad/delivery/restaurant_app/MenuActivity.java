@@ -2,7 +2,10 @@ package com.mad.delivery.restaurant_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,7 +23,30 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MenuActivity extends AppCompatActivity {
     private List<Integer> selectedItems = new ArrayList<>();
     private FloatingActionButton button;
+    public static int LONG_PRESS_TIME = 500; // Time in miliseconds
 
+    final Handler _handler = new Handler();
+    Runnable _longPressed = new Runnable() {
+        public void run() {
+            Log.d("info","LongPress");
+        }
+    };
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                _handler.removeCallbacks(_longPressed);
+                break;
+            case MotionEvent.ACTION_UP:
+                _handler.removeCallbacks(_longPressed);
+                break;
+        }
+        return true;
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

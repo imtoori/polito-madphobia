@@ -24,8 +24,8 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
 
     private final List<MenuItemRest> menuItems;
     private View view;
-     private Context context;
-        public MyMenuItemRecyclerViewAdapter(List<MenuItemRest> menuItems,Context context) {
+    private Context context;
+    public MyMenuItemRecyclerViewAdapter(List<MenuItemRest> menuItems,Context context) {
         this.menuItems = menuItems;
         this.context = context;
     }
@@ -44,11 +44,9 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         holder.description.setText(mItem.description.toString());
         holder.availability.setText(mItem.availability.toString());
         holder.name.setText(mItem.name);
+
         if(mItem.imageUri!= Uri.EMPTY)
             holder.image.setImageURI(mItem.imageUri);
-
-        //holder.image.setImageDrawable(getDrawable(R.drawable.user_default));
-
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,4 +90,9 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
             availability = mView.findViewById(R.id.tv_menuItemsAvailability);
         }
     }
+
+    public static int LONG_PRESS_TIME = 500; // Time in miliseconds
+
+
+
 }
