@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,11 +11,11 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        card_view:cardElevation="4dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +36,7 @@
 
             <ImageView
                 android:id="@+id/newmenuitem_userimage2"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="6dp"
@@ -50,7 +51,8 @@
                 android:id="@+id/newmenuitem_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:autofillHints="@string/name"
                 android:gravity="center_vertical"
@@ -61,6 +63,7 @@
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_userimage2"
                 app:layout_constraintStart_toEndOf="@+id/newmenuitem_userimage2"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
                 card_view:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -72,11 +75,11 @@
         android:id="@+id/items_card"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        card_view:cardElevation="4dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -97,11 +100,11 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        card_view:cardElevation="4dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -122,7 +125,7 @@
 
             <ImageView
                 android:id="@+id/newmenuitem_userimage3"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="6dp"
@@ -138,17 +141,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="8dp"
                 android:autofillHints="@string/description"
                 android:gravity="center_vertical"
-                android:hint="@string/description"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine|textImeMultiLine|textLongMessage"
                 android:maxLength="46"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/newmenuitem_userimage3"
-                card_view:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -158,11 +162,11 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        card_view:cardElevation="4dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -183,12 +187,11 @@
 
             <ImageView
                 android:id="@+id/newmenuitem_userimage5"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="6dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="5dp"
                 android:contentDescription="@string/photo_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView5"
@@ -198,7 +201,8 @@
                 android:id="@+id/newmenuitem_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:autofillHints="@string/description"
                 android:gravity="center_vertical"
@@ -209,6 +213,7 @@
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_userimage5"
                 app:layout_constraintStart_toEndOf="@+id/newmenuitem_userimage5"
+                app:layout_constraintTop_toBottomOf="@+id/textView5"
                 card_view:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -218,11 +223,11 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        card_view:cardElevation="4dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -243,7 +248,7 @@
 
             <ImageView
                 android:id="@+id/newmenuitem_userimage4"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="6dp"
@@ -258,7 +263,8 @@
                 android:id="@+id/newmenuitem_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:autofillHints="@string/description"
                 android:gravity="center_vertical"
@@ -269,6 +275,7 @@
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_userimage4"
                 app:layout_constraintStart_toEndOf="@+id/newmenuitem_userimage4"
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
                 card_view:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -278,11 +285,11 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        card_view:cardElevation="4dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -303,7 +310,7 @@
 
             <ImageView
                 android:id="@+id/newmenuitem_userimage6"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="6dp"
@@ -318,7 +325,8 @@
                 android:id="@+id/newmenuitem_category"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:autofillHints="@string/description"
                 android:gravity="center_vertical"
@@ -329,6 +337,7 @@
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_userimage6"
                 app:layout_constraintStart_toEndOf="@+id/newmenuitem_userimage6"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
                 card_view:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -338,11 +347,11 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginRight="8dp"
-        card_view:cardElevation="4dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -363,7 +372,7 @@
 
             <ImageView
                 android:id="@+id/newmenuitem_userimage7"
-                android:layout_width="45dp"
+                android:layout_width="25dp"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="6dp"
@@ -378,7 +387,8 @@
                 android:id="@+id/newmenuitem_availability"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:autofillHints="@string/availability"
                 android:gravity="center_vertical"
@@ -389,6 +399,7 @@
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_userimage7"
                 app:layout_constraintStart_toEndOf="@+id/newmenuitem_userimage7"
+                app:layout_constraintTop_toBottomOf="@+id/textView7"
                 card_view:layout_constraintEnd_toEndOf="parent" />
 
 
