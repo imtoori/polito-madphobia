@@ -55,7 +55,7 @@ public class PendingOrdersFragment extends Fragment {
         orders = new ArrayList<>();
         showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
-
+        // TODO remove items here when persistence is implemented
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);

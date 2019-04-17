@@ -20,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".OpeningHoursActivity"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -31,8 +32,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity
-            android:name=".CompletingOrderActivity"></activity>
+        <activity android:name=".CompletingOrderActivity" />
         <activity
             android:name=".PhotoZoomActivity"
             android:parentActivityName=".ProfileActivity" />
@@ -48,6 +48,8 @@
         <activity
             android:name=".LanguageActivity"
             android:parentActivityName=".MainActivity" />
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".NewMenuItemActivity" />
         <activity
             android:name=".DetailOrderActivity"
             android:parentActivityName=".MainActivity" />

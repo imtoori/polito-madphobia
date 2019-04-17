@@ -18,6 +18,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@color/colorTextIcon" />
 
+
+
     <LinearLayout
         android:id="@+id/frag_container"
         android:layout_width="0dp"

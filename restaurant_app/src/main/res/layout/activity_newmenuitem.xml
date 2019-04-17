@@ -8,40 +8,39 @@
     tools:context=".EditProfileActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/editProfileToolbar"
-        style="@style/AppTheme.ToolBar"
+        app:navigationIcon="@drawable/ic_back"
+        android:id="@+id/newmenuitem_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:titleTextColor="@color/colorTextIcon"
+        style="@style/AppTheme.ToolBar"
         android:elevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_back"
-        app:titleTextColor="@color/colorTextIcon" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/editprofile_imgprofile"
+                android:id="@+id/newmenuitem_imgprofile"
                 android:layout_width="match_parent"
                 android:layout_height="248dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/imageprofile_desc"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user_default"
+                android:src="@drawable/dish_icon"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -49,29 +48,29 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/editprofile_btncamera"
+                android:id="@+id/newmenu_btncamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_camera"
                 app:elevation="4dp"
                 app:fabSize="normal"
-                app:layout_constraintBottom_toBottomOf="@+id/editprofile_imgprofile"
-                app:layout_constraintEnd_toEndOf="@+id/editprofile_imgprofile"
+                app:layout_constraintBottom_toBottomOf="@+id/newmenuitem_imgprofile"
+                app:layout_constraintEnd_toEndOf="@+id/newmenuitem_imgprofile"
                 app:maxImageSize="35dp"
                 app:rippleColor="@color/colorPrimary"
                 app:useCompatPadding="true" />
 
             <include
                 android:id="@+id/include"
-                layout="@layout/input_edit_profile"
+                layout="@layout/input_new_menuitem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editprofile_imgprofile" />
+                app:layout_constraintTop_toBottomOf="@+id/newmenuitem_imgprofile" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

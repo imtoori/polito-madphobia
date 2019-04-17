@@ -136,6 +136,7 @@
     <string name="check_time">Formato tempo non valido(hh:mm-hh:mm)</string>
     <string name="list_openinghours">Orari di apertura</string>
     <string name="saved_password">La tua password è stata salvata</string>
+    <string name="setting_openinghours">Orari Apertura e Chiusura</string>
 
 
 </resources>
