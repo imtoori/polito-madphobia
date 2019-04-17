@@ -95,11 +95,13 @@ public class NewMenuItemActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             int[] items = intent.getIntArrayExtra("menuitems");
-            List<Integer> integers = new ArrayList<>();
-            for (int item : items) {
-                integers.add(item);
+            if (items != null) {
+                List<Integer> integers = new ArrayList<>();
+                for (int item : items) {
+                    integers.add(item);
+                }
+                loadSubItems(integers);
             }
-            loadSubItems(integers);
         }
 
     }
