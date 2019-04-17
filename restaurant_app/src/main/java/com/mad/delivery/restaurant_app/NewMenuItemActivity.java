@@ -344,7 +344,46 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
     }
 
-    public boolean checkConstraints() {
-        return true;
+    public boolean checkConstraints(){
+        boolean result = true;
+        String nameString =  "[a-zA-Z]+";
+        String priceString = "([0-9][0-9]*)|([0-9][0-9]*\\.[0-9][0-9]*)";
+        String timeString = "([0-9][0-9]*)";
+
+        if(!name.getText().toString().matches(nameString)){
+            name.setError(getResources().getString(R.string.check_name));
+            result = false;
+        }
+
+        if(description.getText().toString().length()<=0) {
+            description.setError(getResources().getString(R.string.check_description));
+            result = false;
+        }
+
+        if(!price.getText().toString().matches(priceString)){
+            price.setError(getResources().getString(R.string.check_price));
+            result = false;
+        }
+
+        if(!time.getText().toString().matches(timeString)){
+            time.setError(getResources().getString(R.string.check_time));
+            result = false;
+        }
+
+        if(!category.getText().toString().matches(nameString)) {
+            category.setError(getResources().getString(R.string.check_category));
+            result = false;
+
+        }
+        if(!availability.getText().toString().matches(timeString)) {
+            availability.setError(getResources().getString(R.string.check_availability));
+            result = false;
+
+        }
+
+
+        return result;
     }
+
+
 }

@@ -43,6 +43,11 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
+    <string name="check_time">Time not valid</string>
+    <string name="check_availability">Availability not valid</string>
+    <string name="check_category">Catergory not valid</string>
+    <string name="check_description">Description not valid</string>
+    <string name="check_price">Price not valid</string>
 
     <!-- Navigation -->
     <string name="nav_menu">Menu</string>
