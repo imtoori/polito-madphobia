@@ -138,5 +138,23 @@
     <string name="saved_password">La tua password è stata salvata</string>
     <string name="setting_openinghours">Orari Apertura e Chiusura</string>
 
+    <!--menu-->
+    <string name="name_menu_item">Nome piatto</string>
+    <string name="time_to_preparation">Tempo necessario</string>
+    <string name="price">Prezzo</string>
+    <string name="category">Categoria</string>
+    <string name="availability">Disponibilità</string>
+
+    <!--setting menu-->
+    <string name="description_opening_hours">In questa sezione puoi aggiungere o cambiare gli orari di apertura della tua attività. Se vuoi aggiungere un nuovo slot assicurati che non si sovrapponga con i precedenti (in tal caso verrà segnalato un errore).</string>
+    <string name="title_opening_hours">Istruzioni</string>
+    <string name="days_of_week">Giorni della settimana</string>
+    <string name="monday">Lunedì</string>
+    <string name="tuesday">Martedì</string>
+    <string name="wednesday">Mercoledì</string>
+    <string name="thursday">Giovedì</string>
+    <string name="friday">Venerdì</string>
+    <string name="saturday">Sabato</string>
+    <string name="sunday">Domenica</string>
 
 </resources>
