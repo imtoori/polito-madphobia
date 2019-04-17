@@ -40,7 +40,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity implements TimePickerFragmentOpeningH.TimePickedOpeningHListener {
     SharedPreferences sharedPref;
     Menu menu;
     User mUser;
@@ -57,16 +57,12 @@ public class EditProfileActivity extends AppCompatActivity {
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
-    EditText day1;
-    EditText day2;
-    EditText day3;
-    EditText day4;
-    EditText day5;
-    EditText day6;
-    EditText day7;
+    EditText[] day=new EditText[7];
     String currentPhotoPath;
+    ImageView[] day_edit=new ImageView[7];
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
+    boolean[] flag=new boolean[7];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,18 +84,130 @@ public class EditProfileActivity extends AppCompatActivity {
         postCode = findViewById(R.id.editprofile_postalcode);
         city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
-        day1= findViewById(R.id.editprofile_day1_input);
-        day2= findViewById(R.id.editprofile_day2_input);
-        day3= findViewById(R.id.editprofile_day3_input);
-        day4= findViewById(R.id.editprofile_day4_input);
-        day5= findViewById(R.id.editprofile_day5_input);
-        day6= findViewById(R.id.editprofile_day6_input);
-        day7= findViewById(R.id.editprofile_day7_input);
+        day[0] = findViewById(R.id.editprofile_day1_input);
+        day_edit[0] = findViewById(R.id.editprofile_day1_edit);
+        flag[0] = false;
+        day[1] = findViewById(R.id.editprofile_day2_input);
+        day_edit[1] = findViewById(R.id.editprofile_day2_edit);
+        flag[1] = false;
+        day[2] = findViewById(R.id.editprofile_day3_input);
+        day_edit[2] = findViewById(R.id.editprofile_day3_edit);
+        flag[2] = false;
+        day[3]= findViewById(R.id.editprofile_day4_input);
+        day_edit[3] = findViewById(R.id.editprofile_day4_edit);
+        flag[3] = false;
+        day[4] = findViewById(R.id.editprofile_day5_input);
+        day_edit[4] = findViewById(R.id.editprofile_day5_edit);
+        flag[4] = false;
+        day[5] = findViewById(R.id.editprofile_day6_input);
+        day_edit[5] = findViewById(R.id.editprofile_day6_edit);
+        flag[5] = false;
+        day[6]= findViewById(R.id.editprofile_day7_input);
+        day_edit[6] = findViewById(R.id.editprofile_day7_edit);
+        flag[6] = false;
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectImage(EditProfileActivity.this);
+            }
+        });
+        day_edit[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+                Bundle bundle = new Bundle();
+                DateTime d = new DateTime();
+                bundle.putSerializable("datetime", d);
+                bundle.putInt("day", 0);
+                timeFragment.setArguments(bundle);
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
+
+
+            }
+        });
+        day_edit[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+                Bundle bundle = new Bundle();
+                DateTime d = new DateTime();
+                bundle.putSerializable("datetime", d);
+                bundle.putInt("day", 1);
+                timeFragment.setArguments(bundle);
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
+
+
+            }
+        });
+        day_edit[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+                Bundle bundle = new Bundle();
+                DateTime d = new DateTime();
+                bundle.putSerializable("datetime", d);
+                bundle.putInt("day", 2);
+                timeFragment.setArguments(bundle);
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
+
+
+            }
+        });
+        day_edit[3].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+                Bundle bundle = new Bundle();
+                DateTime d = new DateTime();
+                bundle.putSerializable("datetime", d);
+                bundle.putInt("day", 3);
+                timeFragment.setArguments(bundle);
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
+
+
+            }
+        });
+        day_edit[4].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+                Bundle bundle = new Bundle();
+                DateTime d = new DateTime();
+                bundle.putSerializable("datetime", d);
+                bundle.putInt("day", 4);
+                timeFragment.setArguments(bundle);
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
+
+
+            }
+        });
+        day_edit[5].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+                Bundle bundle = new Bundle();
+                DateTime d = new DateTime();
+                bundle.putSerializable("datetime", d);
+                bundle.putInt("day", 5);
+                timeFragment.setArguments(bundle);
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
+
+
+            }
+        });
+        day_edit[6].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+                Bundle bundle = new Bundle();
+                DateTime d = new DateTime();
+                bundle.putSerializable("datetime", d);
+                bundle.putInt("day", 6);
+                timeFragment.setArguments(bundle);
+                timeFragment.show(getSupportFragmentManager(), "timePicker");
+
+
             }
         });
 
@@ -130,7 +238,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstraints()) {
+                if (checkConstraints()) {
                     setProfileData();
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
@@ -155,13 +263,13 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("doorPhone", doorPhone.getText().toString());
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
-        outState.putString("day1", day1.getText().toString());
-        outState.putString("day2", day2.getText().toString());
-        outState.putString("day3", day3.getText().toString());
-        outState.putString("day4", day4.getText().toString());
-        outState.putString("day5", day5.getText().toString());
-        outState.putString("day6", day6.getText().toString());
-        outState.putString("day7", day7.getText().toString());
+        outState.putString("day1", day[0].getText().toString());
+        outState.putString("day2", day[1].getText().toString());
+        outState.putString("day3", day[2].getText().toString());
+        outState.putString("day4", day[3].getText().toString());
+        outState.putString("day5", day[4].getText().toString());
+        outState.putString("day6", day[5].getText().toString());
+        outState.putString("day7", day[6].getText().toString());
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -195,7 +303,7 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageProfileUri on ActivityResult: "+imageProfileUri.toString());
+                    Log.d("MADAPP", "imageProfileUri on ActivityResult: " + imageProfileUri.toString());
                     if (imageProfileUri != null)
                         Log.d("MADAPP", "i am here");
                     imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
@@ -223,7 +331,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
-                sharedPref.getString("opening",""),
+                sharedPref.getString("opening", ""),
                 sharedPref.getString("road", ""),
                 sharedPref.getString("houseNumber", ""),
                 sharedPref.getString("doorPhone", ""),
@@ -231,14 +339,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("city", ""),
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
-        day1.setText(sharedPref.getString("day1",""));
-        day2.setText(sharedPref.getString("day2",""));
-        day3.setText(sharedPref.getString("day3",""));
-        day4.setText(sharedPref.getString("day4",""));
-        day5.setText(sharedPref.getString("day5",""));
-        day6.setText(sharedPref.getString("day6",""));
-        day7.setText(sharedPref.getString("day7",""));
-        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
+        day[0].setText(sharedPref.getString("day1", ""));
+        day[1].setText(sharedPref.getString("day2", ""));
+        day[2].setText(sharedPref.getString("day3", ""));
+        day[3].setText(sharedPref.getString("day4", ""));
+        day[4].setText(sharedPref.getString("day5", ""));
+        day[5].setText(sharedPref.getString("day6", ""));
+        day[6].setText(sharedPref.getString("day7", ""));
+        Log.d("MADAPP", "GET Profile data = " + Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
     }
 
@@ -254,13 +362,13 @@ public class EditProfileActivity extends AppCompatActivity {
         editor.putString("doorPhone", doorPhone.getText().toString());
         editor.putString("postCode", postCode.getText().toString());
         editor.putString("city", city.getText().toString());
-        editor.putString("day1", day1.getText().toString());
-        editor.putString("day2", day2.getText().toString());
-        editor.putString("day3", day3.getText().toString());
-        editor.putString("day4", day4.getText().toString());
-        editor.putString("day5", day5.getText().toString());
-        editor.putString("day6", day6.getText().toString());
-        editor.putString("day7", day7.getText().toString());
+        editor.putString("day1", day[0].getText().toString());
+        editor.putString("day2", day[1].getText().toString());
+        editor.putString("day3", day[2].getText().toString());
+        editor.putString("day4", day[3].getText().toString());
+        editor.putString("day5", day[4].getText().toString());
+        editor.putString("day6", day[5].getText().toString());
+        editor.putString("day7", day[6].getText().toString());
         try {
             Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
             if (imageProfileUri != Uri.EMPTY) {
@@ -383,83 +491,58 @@ public class EditProfileActivity extends AppCompatActivity {
         return fileUri;
     }
 
-    public boolean checkConstraints(){
+    public boolean checkConstraints() {
         boolean result = true;
-        String nameString =  "[a-zA-Z]+";
+        String nameString = "[a-zA-Z]+";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
-        String postalCodeString= "[0-9]{5}";
+        String postalCodeString = "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
         String roadString = "([A-Za-z0-9'-_\\s])+";
         String cityString = "([A-Za-z\'\\s-])+";
         String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
         Pattern p = Pattern.compile(".*([01]?[0-9]|2[0-3]):[0-5][0-9]-([01]?[0-9]|2[0-3]):[0-5][0-9].*");
-        Matcher m = p.matcher(day1.getText().toString());
-        if(!m.matches() || checkhours(day1.getText().toString())){
-            day1.setError(getResources().getString(R.string.check_time));
-            result= false;
+
+        Matcher m;
+        for(int i=0; i<7; i++) {
+            m = p.matcher(day[i].getText().toString());
+            if (!day[i].getText().toString().equals("") && (!m.matches() || checkhours(day[i].getText().toString()))) {
+                day[i].setError(getResources().getString(R.string.check_time));
+                result = false;
+            }
         }
-        m = p.matcher(day2.getText().toString());
-        if(!day2.getText().toString().equals("") && (!m.matches() || checkhours(day2.getText().toString()))){
-            day2.setError(getResources().getString(R.string.check_time));
-            result= false;
-        }
-        m = p.matcher(day3.getText().toString());
-        if(!m.matches()|| checkhours(day3.getText().toString())){
-            day3.setError(getResources().getString(R.string.check_time));
-            result= false;
-        }
-        m = p.matcher(day4.getText().toString());
-        if(!m.matches() || checkhours(day4.getText().toString())){
-            day4.setError(getResources().getString(R.string.check_time));
-            result= false;
-        }
-        m = p.matcher(day5.getText().toString());
-        if(!m.matches() || checkhours(day5.getText().toString())){
-            day5.setError(getResources().getString(R.string.check_time));
-            result= false;
-        }
-        m = p.matcher(day6.getText().toString());
-        if(!m.matches() || checkhours(day6.getText().toString())){
-            day6.setError(getResources().getString(R.string.check_time));
-            result= false;
-        }
-        m = p.matcher(day7.getText().toString() );
-        if(!m.matches() || checkhours(day7.getText().toString())){
-            day7.setError(getResources().getString(R.string.check_time));
-            result= false;
-        }
-        if(!name.getText().toString().matches(nameString)){
+
+        if (!name.getText().toString().matches(nameString)) {
             name.setError(getResources().getString(R.string.check_name));
             result = false;
         }
 
-        if(!road.getText().toString().matches(roadString)) {
+        if (!road.getText().toString().matches(roadString)) {
             road.setError(getResources().getString(R.string.check_road));
             result = false;
         }
 
-        if(!city.getText().toString().matches(cityString)){
+        if (!city.getText().toString().matches(cityString)) {
             city.setError(getResources().getString(R.string.check_city));
             result = false;
         }
 
-        if(!phoneNumber.getText().toString().matches(phoneNumberString)){
+        if (!phoneNumber.getText().toString().matches(phoneNumberString)) {
             phoneNumber.setError(getResources().getString(R.string.check_phone));
             result = false;
         }
 
-        if(!doorPhone.getText().toString().matches(doorPhoneString)){
+        if (!doorPhone.getText().toString().matches(doorPhoneString)) {
             doorPhone.setError(getResources().getString(R.string.check_doorphone));
             result = false;
 
         }
 
-        if(!postCode.getText().toString().matches(postalCodeString)){
+        if (!postCode.getText().toString().matches(postalCodeString)) {
             postCode.setError(getResources().getString(R.string.check_postCode));
             result = false;
         }
 
-        if(!houseNumber.getText().toString().matches(numberString)){
+        if (!houseNumber.getText().toString().matches(numberString)) {
             houseNumber.setError(getResources().getString(R.string.house_number));
             result = false;
         }
@@ -473,14 +556,38 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private boolean checkhours(String time) {
         String[] s = time.split("-");
-        String[] start=s[0].split(":");
-        String[] end=s[1].split(":");
-        if(start[0].compareTo(end[0])<0)
+        String[] start = s[0].split(":");
+        String[] end = s[1].split(":");
+        if (start[0].compareTo(end[0]) < 0)
             return false;
-        if(start[0].compareTo(end[0])==0)
-            if(start[1].compareTo(end[1])<=0)
+        if (start[0].compareTo(end[0]) == 0)
+            if (start[1].compareTo(end[1]) <= 0)
                 return false;
         return true;
+    }
+
+
+    @Override
+    public void onTimePicked(int h, int m, int i) {
+
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
+        DateTime d = new DateTime();
+        d = d.hourOfDay().setCopy(h);
+        d = d.minuteOfHour().setCopy(m);
+        if (flag[i] == false) {
+            day[i].setText(d.toString(dtf));
+            flag[i] = true;
+            DialogFragment timeFragment = new TimePickerFragmentOpeningH();
+            Bundle bundle = new Bundle();
+            DateTime t = new DateTime();
+            bundle.putSerializable("datetime", t);
+            bundle.putInt("day",i);
+            timeFragment.setArguments(bundle);
+            timeFragment.show(getSupportFragmentManager(), "timePicker");
+        } else {
+            day[i].append("-" + d.toString(dtf));
+            flag[i] = false;
+        }
     }
 
 }
