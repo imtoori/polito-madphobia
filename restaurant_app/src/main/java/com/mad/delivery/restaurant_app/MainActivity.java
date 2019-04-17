@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
 
                     SettingFragment settingFragment = new SettingFragment();
                     ft = fm.beginTransaction();
-                    ft.addToBackStack(SettingFragment.SETTINGS_FRAGMENT_TAG);
+                    ft.addToBackStack(SettingFragment.SETTING_FRAGMENT_TAG);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.replace(R.id.frag_container, settingFragment);
                     ft.commit();

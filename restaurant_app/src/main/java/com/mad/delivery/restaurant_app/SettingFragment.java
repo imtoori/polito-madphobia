@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 
 
 public class SettingFragment extends Fragment {
+    public static final String SETTING_FRAGMENT_TAG = "settings_fragment";
 
     private CardView cvProfile, cvPrivacy, cvLanguage;
 
