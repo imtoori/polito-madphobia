@@ -66,13 +66,13 @@ final class Database {
             orders.put(o.id, o);
             menuItems = new ArrayList<>();
 
-            MenuItemRest menuItem1 = new MenuItemRest("Menu Item 1", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 1, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItem1 = new MenuItemRest("Menu Item 1", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 0, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItem1);
-            MenuItemRest menuItem2 = new MenuItemRest("Menu Item 2", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 2, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItem2 = new MenuItemRest("Menu Item 2", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 1, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItem2);
 
-            MenuItemRest menuItemRest = new MenuItemRest("Another Menu Item 1", "Drink", "This is a description", 10.30, 10, 21, "/home/matteo/Immagini/icon", 3, Uri.EMPTY, new ArrayList<Integer>());
-            MenuItemRest menuItemRest2 = new MenuItemRest("Another Menu Item 2", "Drink", "This is a description", 15.30, 13, 10, "/home/matteo/Immagini/icon", 4, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItemRest = new MenuItemRest("Another Menu Item 1", "Drink", "This is a description", 10.30, 10, 21, "/home/matteo/Immagini/icon", 2, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItemRest2 = new MenuItemRest("Another Menu Item 2", "Drink", "This is a description", 15.30, 13, 10, "/home/matteo/Immagini/icon", 3, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItemRest);
             menuItems.add(menuItemRest2);
 
@@ -95,7 +95,7 @@ final class Database {
     }
 
     public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, menuItems.size() + 1, url, subItems);
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, menuItems.size(), url, subItems);
         menuItems.add(item);
     }
 
@@ -148,7 +148,10 @@ final class Database {
 
     public void setMenuItems(Integer index, String name, String category, String description, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
         MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, index, url, subItems);
+       Log.d("INDICE: ", "L'indice è" + index);
         menuItems.set(index, item);
+        Log.d("INDICE: ", "L'indice è" + index);
+
     }
 
 

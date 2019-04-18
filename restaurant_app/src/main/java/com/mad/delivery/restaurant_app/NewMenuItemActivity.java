@@ -325,8 +325,10 @@ public class NewMenuItemActivity extends AppCompatActivity {
                 if (checkConstraints()) {
 
                     if (index == -1) {
-                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri, subItems);
+                        Log.d("INDEX1", "L'indice è:"+index.toString());
+                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri,subItems);
                     } else {
+                        Log.d("INDEX2", "L'indice è:"+index.toString() + "Nome: "+ name.toString());
                         Database.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri, subItems);
                     }
 
