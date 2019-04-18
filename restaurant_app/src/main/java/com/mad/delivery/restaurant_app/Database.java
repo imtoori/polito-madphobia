@@ -71,8 +71,8 @@ final class Database {
             MenuItemRest menuItem2 = new MenuItemRest("Menu Item 2", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 2, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItem2);
 
-            MenuItemRest menuItemRest = new MenuItemRest("Another Menu Item 1", "Drink", "This is a description", 10.30, 10, 21, "/home/matteo/Immagini/icon", 2, Uri.EMPTY, new ArrayList<Integer>());
-            MenuItemRest menuItemRest2 = new MenuItemRest("Another Menu Item 2", "Drink", "This is a description", 15.30, 13, 10, "/home/matteo/Immagini/icon", 3, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItemRest = new MenuItemRest("Another Menu Item 1", "Drink", "This is a description", 10.30, 10, 21, "/home/matteo/Immagini/icon", 3, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItemRest2 = new MenuItemRest("Another Menu Item 2", "Drink", "This is a description", 15.30, 13, 10, "/home/matteo/Immagini/icon", 4, Uri.EMPTY, new ArrayList<Integer>());
             menuItems.add(menuItemRest);
             menuItems.add(menuItemRest2);
 
