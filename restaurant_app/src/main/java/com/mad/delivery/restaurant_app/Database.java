@@ -60,7 +60,7 @@ final class Database {
             u.houseNumber = fakeProd.address.buildingNumber();
             u.postCode = fakeProd.address.postcode();
             u.doorPhone = u.name;
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy hh:mm");
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
             DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
             DateTime to = DateTime.now();
             Order o = new Order(u, products, new DateTime(fakeProd.date.between(from.toDate(), to.toDate())));

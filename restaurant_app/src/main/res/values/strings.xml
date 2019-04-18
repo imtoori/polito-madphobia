@@ -88,7 +88,7 @@
     <string name="changing_status">Change Order Status</string>
     <string name="current_status">Current: </string>
     <string name="changing_status_sentence">Next: </string>
-    <string name="confirmed_order">OK: %1$s</string>
+    <string name="confirmed_order">%1$s</string>
     <string name="undo_confirm_order">Undo</string>
     <string name="no_orders">Empty Folder</string>
     <string name="change_status_button">Change Status</string>
@@ -146,6 +146,7 @@
     <string name="day7">Sunday: </string>
     <string name="check_time">Time not valid (hh:mm-hh:mm)</string>
     <string name="list_openinghours">Opening hours</string>
+    <string name="saved_password">Your password has been saved</string>
 
     <string name="name_menu_item">Name dish</string>
     <string name="time_to_preparation">Time needed</string>
