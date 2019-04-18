@@ -86,7 +86,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
             }
         });
 
-        if (index > 0) {
+        if (index >= 0) {
             Log.d("rr", Database.getInstance().getMenuItem(index).category);
             updateFields(Database.getInstance().getMenuItem(index));
             return;
