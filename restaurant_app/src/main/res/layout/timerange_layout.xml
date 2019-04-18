@@ -9,6 +9,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Spinner
+            android:id="@+id/spinner_to2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/minutes"
+            app:layout_constraintBottom_toBottomOf="@+id/spinner_from2"
+            app:layout_constraintStart_toStartOf="@+id/spinner_to"
+            app:layout_constraintTop_toTopOf="@+id/spinner_from2" />
+
+        <Spinner
+            android:id="@+id/spinner_from2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/hour"
+            app:layout_constraintBottom_toBottomOf="@+id/textView11"
+            app:layout_constraintEnd_toEndOf="@+id/spinner_from"
+            app:layout_constraintStart_toStartOf="@+id/spinner_from"
+            app:layout_constraintTop_toTopOf="@+id/textView11" />
+
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
@@ -17,7 +36,7 @@
             android:layout_marginTop="16dp"
             android:text="Opening Time: "
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
         <Spinner
             android:id="@+id/spinner_from"
@@ -45,12 +64,31 @@
             android:id="@+id/spinner_to"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:entries="@array/minutes"
-            app:layout_constraintBottom_toBottomOf="@+id/textView11"
-            app:layout_constraintStart_toEndOf="@+id/textView11"
-            app:layout_constraintTop_toTopOf="@+id/textView11" />
+            app:layout_constraintBottom_toBottomOf="@+id/spinner_from"
+            app:layout_constraintStart_toEndOf="@+id/spinner_from"
+            app:layout_constraintTop_toTopOf="@+id/spinner_from" />
 
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="@+id/textView10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/textView12"
+            app:layout_constraintEnd_toEndOf="@+id/spinner_to"
+            app:layout_constraintStart_toStartOf="@+id/spinner_from"
+            app:layout_constraintTop_toTopOf="@+id/textView12" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

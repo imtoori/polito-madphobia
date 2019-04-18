@@ -30,6 +30,7 @@ public class OrderFragment extends Fragment {
 
     public OrderFragment() {
         // Required empty public constructor
+        setHasOptionsMenu(false);
     }
 
 
@@ -43,7 +44,7 @@ public class OrderFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+     //   setHasOptionsMenu(false);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = view.findViewById(R.id.orders_pager);
 
@@ -52,7 +53,6 @@ public class OrderFragment extends Fragment {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = view.findViewById(R.id.tab_header);
         tabLayout.setupWithViewPager(mPager);
-
     }
 
 

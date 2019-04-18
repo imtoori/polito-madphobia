@@ -50,6 +50,7 @@
             android:parentActivityName=".MainActivity" />
         <activity android:name=".MenuActivity" />
         <activity android:name=".NewMenuItemActivity" />
+
         <activity
             android:name=".DetailOrderActivity"
             android:parentActivityName=".MainActivity" />
@@ -62,6 +63,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
     </application>
 
 </manifest>

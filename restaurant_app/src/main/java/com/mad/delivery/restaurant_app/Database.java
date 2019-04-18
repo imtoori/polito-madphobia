@@ -71,14 +71,15 @@ final class Database {
             o.clientNotes = fakeProd.lorem.paragraph(1);
             orders.put(o.id, o);
             menuItems = new ArrayList<>();
-            for (int k = 0; k< 5; k++) {
-                MenuItemRest menuItem = new MenuItemRest(fakeProd.name.name(),"food", fakeProd.lorem.sentence(), fakeProd.commerce.price().doubleValue(),10, fakeProd.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+            for (int k = 0; k < 5; k++) {
+                Faker faker = new Faker();
+                MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "Food", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
                 menuItems.add(menuItem);
             }
 
-            for (int n = 5; n < 10; n++) {
+            for (int l = 5; l < 10; l++) {
                 Faker faker = new Faker();
-                MenuItemRest menuItem = new MenuItemRest(fakeProd.name.name(),"drink", fakeProd.lorem.sentence(), fakeProd.commerce.price().doubleValue(),10, fakeProd.number.between(10, 40), "/home/matteo/Immagini/icon",i,Uri.EMPTY);
+                MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "Drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
                 menuItems.add(menuItem);
             }
             Log.d("MADAPP", "Order generated : " + dtf.print(o.orderFor));
@@ -100,6 +101,10 @@ final class Database {
         }
     }
 
+    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, menuItems.size() + 1, url, subItems);
+        menuItems.add(item);
+    }
 
 
     public static List<Order> getPendingOrders() {
@@ -146,18 +151,27 @@ final class Database {
     }
 
 
-    public void setMenuItems (Integer index, String name, String category, String description, String price, String availability, String time, String imgUri , Uri url){
-        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,index, url);
-        menuItems.set(index,item);
+    public void setMenuItems(Integer index, String name, String category, String description, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, index, url, subItems);
+        menuItems.set(index, item);
     }
+
+
     public List<MenuItemRest> getMenuItems() {
         return menuItems;
     }
 
-    public void addMenuItems (String name, String description,String category, String price, String availability, String time, String imgUri, Uri url ){
-        MenuItemRest item = new MenuItemRest(name,category,description,Double.parseDouble(price),Integer.parseInt(availability),Integer.parseInt(time),imgUri,menuItems.size()+1,url);
-        menuItems.add(item);
+    boolean removeMenuItem(MenuItemRest menuItemRest) {
+        return menuItems.remove(menuItemRest);
     }
 
+    public MenuItemRest getMenuItem(int id) {
+        for (MenuItemRest menuItem : menuItems) {
+            if (menuItem.id == id) {
+                return menuItem;
+            }
+        }
+        return null;
+    }
 }
 

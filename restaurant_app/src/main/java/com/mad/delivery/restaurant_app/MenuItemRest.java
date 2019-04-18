@@ -2,7 +2,8 @@ package com.mad.delivery.restaurant_app;
 
 import android.net.Uri;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuItemRest {
     public String name, description;
@@ -13,9 +14,9 @@ public class MenuItemRest {
     public Integer id;
     public Integer availability;
     protected Uri imageUri;
+    List<Integer> subItems = new ArrayList<>();
 
-
-    public MenuItemRest(String name, String category,String description, Double price, Integer availability, Integer ttl, String imgUrl, Integer id, Uri url) {
+    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl, Integer id, Uri url, List<Integer> subItems) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -25,8 +26,10 @@ public class MenuItemRest {
         this.category = category;
         this.availability = availability;
         this.imageUri = url;
+        this.subItems = subItems;
     }
 
-    public MenuItemRest(){}
+    public MenuItemRest() {
+    }
 
 }

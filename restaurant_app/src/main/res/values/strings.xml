@@ -49,6 +49,14 @@
     <string name="check_password">The password must be at least 8 characters long and include a number, lowercase letter, uppercase letter and special character (e.g. @, &amp;, #, ?)</string>
     <string name="check_password_repeat">Repeat same password</string>
     <string name="check_current_password">Invalid current password</string>
+    <!--new Dish -->
+    <string name="check_name_dish"> Name dish not valid</string>
+
+    <string name="check_time">Time not valid</string>
+    <string name="check_availability">Availability not valid</string>
+    <string name="check_category">Catergory not valid</string>
+    <string name="check_description">Description not valid</string>
+    <string name="check_price">Price not valid</string>
 
     <!-- Navigation -->
     <string name="nav_menu">Menu</string>
@@ -144,15 +152,20 @@
     <string name="day5">Friday: </string>
     <string name="day6">Saturday: </string>
     <string name="day7">Sunday: </string>
-    <string name="check_time">Time not valid (hh:mm-hh:mm)</string>
     <string name="list_openinghours">Opening hours</string>
     <string name="saved_password">Your password has been saved</string>
 
     <string name="name_menu_item">Name dish</string>
     <string name="time_to_preparation">Time needed</string>
     <string name="price">Price</string>
+    <string name="priceLabel">Price: </string>
+
     <string name="category">Category</string>
     <string name="availability">Availability</string>
+    <string name="availabilityLabel">Availability:</string>
+
+    <string name="offer">Offers</string>
+    <string name="items_in_the_offer">Items in the offer</string>
 
 
 </resources>
