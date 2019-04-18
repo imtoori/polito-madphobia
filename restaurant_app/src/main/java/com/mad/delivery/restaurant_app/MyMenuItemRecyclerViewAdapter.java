@@ -1,6 +1,8 @@
 package com.mad.delivery.restaurant_app;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -48,6 +50,28 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         holder.description.setText(mItem.description.toString());
         holder.availability.setText(mItem.availability.toString());
         holder.name.setText(mItem.name);
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Do you want to delete the item?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Database.getInstance().removeMenuItem(mItem);
+                        menuItems.remove(mItem);
+                        notifyItemRemoved(position);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                builder.show();
+                return true;
+            }
+        });
 
         if(mItem.imageUri!= Uri.EMPTY)
             holder.image.setImageURI(mItem.imageUri);

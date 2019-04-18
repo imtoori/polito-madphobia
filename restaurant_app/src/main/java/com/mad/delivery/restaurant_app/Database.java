@@ -98,6 +98,10 @@ final class Database {
         return menuItems;
     }
 
+    boolean removeMenuItem(MenuItemRest menuItemRest) {
+        return menuItems.remove(menuItemRest);
+    }
+
     public MenuItemRest getMenuItem(int id) {
         for (MenuItemRest menuItem : menuItems) {
             if (menuItem.id == id) {
