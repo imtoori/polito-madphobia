@@ -45,8 +45,8 @@ public class OpeningHoursActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(OpeningHoursActivity.this);
-                builder.setMessage(R.string.rejecting_order_message_dialog)
-                        .setTitle(R.string.completing_order_title_dialog);
+                builder.setMessage(R.string.add_hour_dialog_message)
+                        .setTitle(R.string.add_hour_dialog_title);
 
                 builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

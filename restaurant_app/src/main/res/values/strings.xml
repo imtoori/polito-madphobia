@@ -117,6 +117,9 @@
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
+    <string name="add_hour_dialog_title">Add Opening Hour</string>
+    <string name="add_hour_dialog_message">Chose the day and time in order to add an opening hour</string>
+
     <!--PasswordActivity-->
     <string name="current_pssw">Current password </string>
     <string name="new_pssw">New password </string>
