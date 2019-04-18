@@ -43,6 +43,9 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
+    <!--new Dish -->
+    <string name="check_name_dish"> Name dish not valid</string>
+
     <string name="check_time">Time not valid</string>
     <string name="check_availability">Availability not valid</string>
     <string name="check_category">Catergory not valid</string>

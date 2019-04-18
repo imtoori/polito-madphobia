@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +42,9 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final MenuItemRest mItem = menuItems.get(position);
-        holder.price.setText(mItem.price.toString());
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.ITALY);
+        String currency = format.format(Double.parseDouble(mItem.price.toString()));
+        holder.price.setText(currency);
         holder.description.setText(mItem.description.toString());
         holder.availability.setText(mItem.availability.toString());
         holder.name.setText(mItem.name);

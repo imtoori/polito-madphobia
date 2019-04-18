@@ -55,9 +55,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
     List<Integer> subItems = new ArrayList<>();
-
     Integer index;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -262,13 +260,12 @@ public class NewMenuItemActivity extends AppCompatActivity {
         final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose your profile picture");
+        builder.setTitle("Choose dish picture");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Take Photo")) {
-                    Log.d("PHOTO", "scvcatto foto");
                     Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePicture.resolveActivity(getPackageManager()) != null) {
                         // Create the File where the photo should go
@@ -350,8 +347,8 @@ public class NewMenuItemActivity extends AppCompatActivity {
         String priceString = "([0-9][0-9]*)|([0-9][0-9]*\\.[0-9][0-9]*)";
         String timeString = "([0-9][0-9]*)";
 
-        if(!name.getText().toString().matches(nameString)){
-            name.setError(getResources().getString(R.string.check_name));
+        if(name.getText().toString().length()<=0){
+            name.setError(getResources().getString(R.string.check_name_dish));
             result = false;
         }
 
