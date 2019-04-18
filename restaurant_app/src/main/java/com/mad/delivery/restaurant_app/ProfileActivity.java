@@ -57,6 +57,15 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("open", 2);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_option:
@@ -73,24 +82,17 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        String open=getResources().getString( R.string.day1)+sharedPref.getString("day1", "")+"\n"+
-                getResources().getString( R.string.day2)+sharedPref.getString("day2", "")+"\n"+
-                getResources().getString( R.string.day3)+sharedPref.getString("day3", "")+"\n"+
-                getResources().getString( R.string.day4)+sharedPref.getString("day4", "")+"\n"+
-                getResources().getString( R.string.day5)+sharedPref.getString("day5", "")+"\n"+
-                getResources().getString( R.string.day6)+sharedPref.getString("day6", "")+"\n"+
-                getResources().getString( R.string.day7)+sharedPref.getString("day7", "");
         mUser = new User(sharedPref.getString("name", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
-                open,
                 sharedPref.getString("road", ""),
                 sharedPref.getString("houseNumber", ""),
                 sharedPref.getString("doorPhone", ""),
                 sharedPref.getString("postCode", ""),
                 sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
+                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())),
+                sharedPref.getString("openingTime", getResources().getString(R.string.opening_hours_full))
         );
 
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
@@ -107,13 +109,17 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-        opening.setText(u.openingHours);
+        Log.d("MADAPP", u.opening);
+        if(!u.opening.equals("")) {
+            opening.setText(u.opening);
+        } else {
+            opening.setText(getResources().getString(R.string.opening_hours_full));
+        }
+
         if(!u.road.equals("")) {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
-        if(!u.openingHours.equals("")) {
-            opening.setText(u.openingHours);
-        }
+
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));

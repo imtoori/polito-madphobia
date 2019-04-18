@@ -48,7 +48,7 @@
         <activity
             android:name=".LanguageActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".MenuActivity" />
+        <activity android:name=".MenuActivity" android:parentActivityName="" />
         <activity android:name=".NewMenuItemActivity" />
 
         <activity

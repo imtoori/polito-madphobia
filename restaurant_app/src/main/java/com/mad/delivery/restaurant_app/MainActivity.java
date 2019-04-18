@@ -3,6 +3,7 @@ package com.mad.delivery.restaurant_app;
 import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -19,14 +20,18 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainActivity extends AppCompatActivity  implements PendingOrdersFragment.OnPendingOrderListener{
     Toolbar myToolBar;
     private Order orderToBeUpdated;
-    MenuItem menuItem;
+    int open = 1;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if(getIntent().hasExtra("open")) {
+            open = getIntent().getIntExtra("open", 1);
+        } else {
+            Log.d("MADAPP", "NO open..");
+        }
 
         if(getIntent().hasExtra("orderToBeUpdated")) {
             Bundle bundle = getIntent().getExtras();
@@ -77,8 +82,20 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
             }
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.nav_orders);
-
+        Log.d("MADAPP", "Open=" + open);
+        switch(open) {
+            case 0:
+                navigation.setSelectedItemId(R.id.nav_menu);
+                break;
+            case 1:
+                navigation.setSelectedItemId(R.id.nav_orders);
+                break;
+            case 2:
+                navigation.setSelectedItemId(R.id.nav_settings);
+                break;
+            default:
+                navigation.setSelectedItemId(R.id.nav_menu);
+        }
 
     }
 

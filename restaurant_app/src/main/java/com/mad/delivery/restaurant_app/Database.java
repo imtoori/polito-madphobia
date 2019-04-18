@@ -17,9 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import io.bloco.faker.Faker;
-import io.bloco.faker.FakerComponent;
-import io.bloco.faker.FakerData;
 
 final class Database {
     private static Database instance;
@@ -36,59 +33,55 @@ final class Database {
 
     private Database() {
         myDateComparator = new MyDateComparator();
-        int randForProducts;
         orders = new HashMap<>();
         Random r = new Random();
         for (int i = 0; i < 10; i++) {
-            Faker fakeProd = new Faker();
             List<Product> products = new ArrayList<>();
-            randForProducts = r.nextInt(10) + 1;
             // create products for an order
-            for (int j = 0; j < randForProducts; j++) {
-                Product p = new Product(fakeProd.commerce.productName(), fakeProd.number.between(1, 20));
-                products.add(p);
+            Product p1 = new Product("Prodotto 1", 20);
+            Product p2 = new Product("Prodotto 2", 10);
+            products.add(p1);
+            products.add(p2);
 
-            }
             Customer u = new Customer();
-            u.name = fakeProd.name.firstName();
-            u.phoneNumber = fakeProd.phoneNumber.phoneNumber();
-            u.description = fakeProd.lorem.paragraph(1);
-            u.lastName = fakeProd.name.lastName();
-            u.email = fakeProd.internet.email();
-            u.city = fakeProd.address.city();
-            u.road = fakeProd.address.streetName();
-            u.houseNumber = fakeProd.address.buildingNumber();
-            u.postCode = fakeProd.address.postcode();
-            u.doorPhone = u.name;
+            u.name = "FirstName";
+            u.phoneNumber = "+393926282813";
+            u.description = "This is a description";
+            u.lastName = "Last Name";
+            u.email = "email@email.it";
+            u.city = "Turin";
+            u.road = "Street name";
+            u.houseNumber = "20";
+            u.postCode = "10126";
+            u.doorPhone = "doorphone";
             DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
             DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
             DateTime to = DateTime.now();
-            Order o = new Order(u, products, new DateTime(fakeProd.date.between(from.toDate(), to.toDate())));
-            o.id = fakeProd.number.number(7).toString();
+            Order o = new Order(u, products, from);
+            o.id = "1234";
             o.status = OrderStatus.pending;
-            o.orderDate = new DateTime(fakeProd.date.backward());
-            o.estimatedDelivery = new DateTime(fakeProd.date.forward(1));
-            o.clientNotes = fakeProd.lorem.paragraph(1);
+            o.orderDate = to;
+            o.estimatedDelivery = to;
+            o.clientNotes = "Notes added by client";
             orders.put(o.id, o);
             menuItems = new ArrayList<>();
-            for (int k = 0; k < 5; k++) {
-                Faker faker = new Faker();
-                MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "Food", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
-                menuItems.add(menuItem);
-            }
 
-            for (int l = 5; l < 10; l++) {
-                Faker faker = new Faker();
-                MenuItemRest menuItem = new MenuItemRest(faker.name.name(), "Drink", faker.lorem.sentence(), faker.commerce.price().doubleValue(), 10, faker.number.between(10, 40), "/home/matteo/Immagini/icon", i, Uri.EMPTY, new ArrayList<Integer>());
-                menuItems.add(menuItem);
-            }
-            Log.d("MADAPP", "Order generated : " + dtf.print(o.orderFor));
+            MenuItemRest menuItem1 = new MenuItemRest("Menu Item 1", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 1, Uri.EMPTY, new ArrayList<Integer>());
+            menuItems.add(menuItem1);
+            MenuItemRest menuItem2 = new MenuItemRest("Menu Item 2", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 2, Uri.EMPTY, new ArrayList<Integer>());
+            menuItems.add(menuItem2);
+
+            MenuItemRest menuItemRest = new MenuItemRest("Another Menu Item 1", "Drink", "This is a description", 10.30, 10, 21, "/home/matteo/Immagini/icon", 2, Uri.EMPTY, new ArrayList<Integer>());
+            MenuItemRest menuItemRest2 = new MenuItemRest("Another Menu Item 2", "Drink", "This is a description", 15.30, 13, 10, "/home/matteo/Immagini/icon", 3, Uri.EMPTY, new ArrayList<Integer>());
+            menuItems.add(menuItemRest);
+            menuItems.add(menuItemRest2);
+
         }
     }
 
     public static void update(Order o) {
         Order old = orders.get(o.id);
-        if(old != null) {
+        if (old != null) {
             Log.d("MADAPP", "Order with ID " + o.id + " has been updated.");
             old.update(o);
         }
@@ -113,8 +106,8 @@ final class Database {
             instance = new Database();
         }
         List<Order> pendings = new ArrayList<>();
-        for(Order o : orders.values()) {
-            if(o.status.equals(OrderStatus.pending)) pendings.add(o);
+        for (Order o : orders.values()) {
+            if (o.status.equals(OrderStatus.pending)) pendings.add(o);
         }
         Collections.sort(pendings, myDateComparator);
 
@@ -128,8 +121,9 @@ final class Database {
             instance = new Database();
         }
         List<Order> preparing = new ArrayList<>();
-        for(Order o : orders.values()) {
-            if(o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready)) preparing.add(o);
+        for (Order o : orders.values()) {
+            if (o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready))
+                preparing.add(o);
         }
         Collections.sort(preparing, myDateComparator);
         Log.d("MADAPP", "requested getPreparingOrders() ");
@@ -142,11 +136,12 @@ final class Database {
             instance = new Database();
         }
         List<Order> completed = new ArrayList<>();
-        for(Order o : orders.values()) {
-            if(o.status.equals(OrderStatus.completed) || o.status.equals(OrderStatus.canceled)) completed.add(o);
+        for (Order o : orders.values()) {
+            if (o.status.equals(OrderStatus.completed) || o.status.equals(OrderStatus.canceled))
+                completed.add(o);
         }
         Collections.sort(completed, myDateComparator);
-        Log.d("MADAPP", "requested getCompletedOrders(), size is "  + completed.size());
+        Log.d("MADAPP", "requested getCompletedOrders(), size is " + completed.size());
         return completed;
     }
 

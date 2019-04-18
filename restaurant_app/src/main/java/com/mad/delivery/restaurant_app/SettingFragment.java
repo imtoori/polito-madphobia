@@ -37,7 +37,7 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         cvProfile = view.findViewById(R.id.cv_profile);
-        cvHour = view.findViewById(R.id.cv_hours);
+        //cvHour = view.findViewById(R.id.cv_hours);
         cvPrivacy = view.findViewById(R.id.cv_privacy);
         //cvLanguage = view.findViewById(R.id.cv_language);
         cvProfile.setOnClickListener(new View.OnClickListener() {
@@ -56,14 +56,14 @@ public class SettingFragment extends Fragment {
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
-        cvHour.setOnClickListener(new View.OnClickListener() {
+/*        cvHour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), OpeningHoursActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
-        });
+        });*/
         return view;
     }
 

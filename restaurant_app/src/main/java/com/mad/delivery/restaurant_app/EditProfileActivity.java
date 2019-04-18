@@ -40,7 +40,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.DialogFragment;
 
-public class EditProfileActivity extends AppCompatActivity implements TimePickerFragmentOpeningH.TimePickedOpeningHListener {
+public class EditProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     Menu menu;
     User mUser;
@@ -54,15 +54,13 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
     EditText doorPhone;
     EditText postCode;
     EditText city;
+    EditText openingTime;
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
-    EditText[] day=new EditText[7];
     String currentPhotoPath;
-    ImageView[] day_edit=new ImageView[7];
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
-    boolean[] flag=new boolean[7];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,130 +82,12 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
         postCode = findViewById(R.id.editprofile_postalcode);
         city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
-        day[0] = findViewById(R.id.editprofile_day1_input);
-        day_edit[0] = findViewById(R.id.editprofile_day1_edit);
-        flag[0] = false;
-        day[1] = findViewById(R.id.editprofile_day2_input);
-        day_edit[1] = findViewById(R.id.editprofile_day2_edit);
-        flag[1] = false;
-        day[2] = findViewById(R.id.editprofile_day3_input);
-        day_edit[2] = findViewById(R.id.editprofile_day3_edit);
-        flag[2] = false;
-        day[3]= findViewById(R.id.editprofile_day4_input);
-        day_edit[3] = findViewById(R.id.editprofile_day4_edit);
-        flag[3] = false;
-        day[4] = findViewById(R.id.editprofile_day5_input);
-        day_edit[4] = findViewById(R.id.editprofile_day5_edit);
-        flag[4] = false;
-        day[5] = findViewById(R.id.editprofile_day6_input);
-        day_edit[5] = findViewById(R.id.editprofile_day6_edit);
-        flag[5] = false;
-        day[6]= findViewById(R.id.editprofile_day7_input);
-        day_edit[6] = findViewById(R.id.editprofile_day7_edit);
-        flag[6] = false;
+        openingTime = findViewById(R.id.openinghours_et);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectImage(EditProfileActivity.this);
-            }
-        });
-        day_edit[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-                Bundle bundle = new Bundle();
-                DateTime d = new DateTime();
-                bundle.putSerializable("datetime", d);
-                bundle.putInt("day", 0);
-                timeFragment.setArguments(bundle);
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-
-
-            }
-        });
-        day_edit[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-                Bundle bundle = new Bundle();
-                DateTime d = new DateTime();
-                bundle.putSerializable("datetime", d);
-                bundle.putInt("day", 1);
-                timeFragment.setArguments(bundle);
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-
-
-            }
-        });
-        day_edit[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-                Bundle bundle = new Bundle();
-                DateTime d = new DateTime();
-                bundle.putSerializable("datetime", d);
-                bundle.putInt("day", 2);
-                timeFragment.setArguments(bundle);
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-
-
-            }
-        });
-        day_edit[3].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-                Bundle bundle = new Bundle();
-                DateTime d = new DateTime();
-                bundle.putSerializable("datetime", d);
-                bundle.putInt("day", 3);
-                timeFragment.setArguments(bundle);
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-
-
-            }
-        });
-        day_edit[4].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-                Bundle bundle = new Bundle();
-                DateTime d = new DateTime();
-                bundle.putSerializable("datetime", d);
-                bundle.putInt("day", 4);
-                timeFragment.setArguments(bundle);
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-
-
-            }
-        });
-        day_edit[5].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-                Bundle bundle = new Bundle();
-                DateTime d = new DateTime();
-                bundle.putSerializable("datetime", d);
-                bundle.putInt("day", 5);
-                timeFragment.setArguments(bundle);
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-
-
-            }
-        });
-        day_edit[6].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-                Bundle bundle = new Bundle();
-                DateTime d = new DateTime();
-                bundle.putSerializable("datetime", d);
-                bundle.putInt("day", 6);
-                timeFragment.setArguments(bundle);
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-
-
             }
         });
 
@@ -263,13 +143,7 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
         outState.putString("doorPhone", doorPhone.getText().toString());
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
-        outState.putString("day1", day[0].getText().toString());
-        outState.putString("day2", day[1].getText().toString());
-        outState.putString("day3", day[2].getText().toString());
-        outState.putString("day4", day[3].getText().toString());
-        outState.putString("day5", day[4].getText().toString());
-        outState.putString("day6", day[5].getText().toString());
-        outState.putString("day7", day[6].getText().toString());
+        outState.putString("openingTime", openingTime.getText().toString());
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -289,6 +163,7 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
         mUser.road = savedInstanceState.getString("road");
+        mUser.opening = savedInstanceState.getString("openingTime");
         mUser.houseNumber = savedInstanceState.getString("houseNumber");
         mUser.doorPhone = savedInstanceState.getString("doorPhone");
         mUser.postCode = savedInstanceState.getString("postCode");
@@ -331,21 +206,15 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
-                sharedPref.getString("opening", ""),
                 sharedPref.getString("road", ""),
                 sharedPref.getString("houseNumber", ""),
                 sharedPref.getString("doorPhone", ""),
                 sharedPref.getString("postCode", ""),
                 sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
+                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())),
+                sharedPref.getString("openingTime", getResources().getString(R.string.opening_hours_full))
         );
-        day[0].setText(sharedPref.getString("day1", ""));
-        day[1].setText(sharedPref.getString("day2", ""));
-        day[2].setText(sharedPref.getString("day3", ""));
-        day[3].setText(sharedPref.getString("day4", ""));
-        day[4].setText(sharedPref.getString("day5", ""));
-        day[5].setText(sharedPref.getString("day6", ""));
-        day[6].setText(sharedPref.getString("day7", ""));
+
         Log.d("MADAPP", "GET Profile data = " + Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
     }
@@ -362,13 +231,8 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
         editor.putString("doorPhone", doorPhone.getText().toString());
         editor.putString("postCode", postCode.getText().toString());
         editor.putString("city", city.getText().toString());
-        editor.putString("day1", day[0].getText().toString());
-        editor.putString("day2", day[1].getText().toString());
-        editor.putString("day3", day[2].getText().toString());
-        editor.putString("day4", day[3].getText().toString());
-        editor.putString("day5", day[4].getText().toString());
-        editor.putString("day6", day[5].getText().toString());
-        editor.putString("day7", day[6].getText().toString());
+        editor.putString("openingTime", openingTime.getText().toString());
+
         try {
             Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
             if (imageProfileUri != Uri.EMPTY) {
@@ -449,6 +313,7 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
         emailAddress.setText(u.email);
         description.setText(u.description);
         road.setText(u.road);
+        openingTime.setText(u.opening);
         houseNumber.setText(u.houseNumber);
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
@@ -500,16 +365,6 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
         String roadString = "([A-Za-z0-9'-_\\s])+";
         String cityString = "([A-Za-z\'\\s-])+";
         String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
-        Pattern p = Pattern.compile(".*([01]?[0-9]|2[0-3]):[0-5][0-9]-([01]?[0-9]|2[0-3]):[0-5][0-9].*");
-
-        Matcher m;
-        for(int i=0; i<7; i++) {
-            m = p.matcher(day[i].getText().toString());
-            if (!day[i].getText().toString().equals("") && (!m.matches() || checkhours(day[i].getText().toString()))) {
-                day[i].setError(getResources().getString(R.string.check_time));
-                result = false;
-            }
-        }
 
         if (!name.getText().toString().matches(nameString)) {
             name.setError(getResources().getString(R.string.check_name));
@@ -554,40 +409,6 @@ public class EditProfileActivity extends AppCompatActivity implements TimePicker
         return result;
     }
 
-    private boolean checkhours(String time) {
-        String[] s = time.split("-");
-        String[] start = s[0].split(":");
-        String[] end = s[1].split(":");
-        if (start[0].compareTo(end[0]) < 0)
-            return false;
-        if (start[0].compareTo(end[0]) == 0)
-            if (start[1].compareTo(end[1]) <= 0)
-                return false;
-        return true;
-    }
 
-
-    @Override
-    public void onTimePicked(int h, int m, int i) {
-
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
-        DateTime d = new DateTime();
-        d = d.hourOfDay().setCopy(h);
-        d = d.minuteOfHour().setCopy(m);
-        if (flag[i] == false) {
-            day[i].setText(d.toString(dtf));
-            flag[i] = true;
-            DialogFragment timeFragment = new TimePickerFragmentOpeningH();
-            Bundle bundle = new Bundle();
-            DateTime t = new DateTime();
-            bundle.putSerializable("datetime", t);
-            bundle.putInt("day",i);
-            timeFragment.setArguments(bundle);
-            timeFragment.show(getSupportFragmentManager(), "timePicker");
-        } else {
-            day[i].append("-" + d.toString(dtf));
-            flag[i] = false;
-        }
-    }
 
 }

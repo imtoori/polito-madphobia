@@ -65,6 +65,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         cvAdminNotes  = findViewById(R.id.cv_admin_notes);
         cvChangeStatus = findViewById(R.id.cv_status_change);
         adminNotes = findViewById(R.id.et_admin_notes);
+        if(order.serverNotes != null || !order.serverNotes.equals("")) adminNotes.setText(order.serverNotes);
         btnChangeStatus = findViewById(R.id.btn_change_status);
         LayoutTransition adminNotesLt =  cvAdminNotes.getLayoutTransition();
         adminNotesLt.setDuration(500);
