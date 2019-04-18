@@ -1,10 +1,13 @@
 package com.mad.delivery.restaurant_app;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.jar.Attributes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
+    MenuItem menuItem;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -25,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                 case R.id.nav_menu:
                     setTitle(getString(R.string.nav_menu));
                     MenuFragment menuFragment = new MenuFragment();
-                    myToolBar.inflateMenu(R.menu.menu_menu);
                     ft = fm.beginTransaction();
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     ft.addToBackStack(MenuFragment.MENU_FRAGMENT_TAG);
@@ -34,8 +37,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                     return true;
                 case R.id.nav_orders:
                     setTitle(getString(R.string.nav_orders));
-                    myToolBar.inflateMenu(R.menu.profile_menu);
-
+                 //   myToolBar.inflateMenu(R.menu.profile_menu);
                     OrderFragment orderFragment = new OrderFragment();
                     ft = fm.beginTransaction();
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -45,8 +47,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                     return true;
                 case R.id.nav_settings:
                     setTitle(getString(R.string.nav_settings));
-                    myToolBar.inflateMenu(R.menu.profile_menu);
-
+                 //   myToolBar.inflateMenu(R.menu.profile_menu);
                     SettingFragment settingFragment = new SettingFragment();
                     ft = fm.beginTransaction();
                     ft.addToBackStack(SettingFragment.SETTINGS_FRAGMENT_TAG);

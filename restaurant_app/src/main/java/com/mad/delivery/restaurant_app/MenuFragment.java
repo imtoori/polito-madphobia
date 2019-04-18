@@ -4,6 +4,8 @@ package com.mad.delivery.restaurant_app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,7 +28,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
     static final String MENU_FRAGMENT_TAG = "menu_fragment";
 
     public MenuFragment() {
-
+        setHasOptionsMenu(true);
         // Required empty public constructor
     }
 
@@ -36,7 +38,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_menu, container, false);
-
+        setHasOptionsMenu(true);
         RecyclerView recyclerView = v.findViewById(R.id.menu_list);
 
         // TODO remove items here when persistence is implemented
@@ -71,6 +73,12 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_menu,menu);
     }
 }
 
