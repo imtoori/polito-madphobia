@@ -8,6 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -36,6 +40,7 @@ public class PasswordActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("open", 2);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
@@ -57,7 +62,7 @@ public class PasswordActivity extends AppCompatActivity {
                     setPassword();
                     sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
                     String p=sharedPref.getString("password", "");
-                    Toast.makeText(this, "Your password: "+p, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getResources().getString(R.string.saved_password), Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -78,21 +83,25 @@ public class PasswordActivity extends AppCompatActivity {
 
 
         public boolean checkConstraints(){
+        Pattern pattern;
+        Matcher matcher;
         boolean result = true;
-        String psswString = "([A-Za-z0-9\'\\s-])+";
+
+        final String psswString = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$";
+        //deve contenere 1 lettera minuscola, una maiuscola e un numero. min 8 caratteri
 
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         String p=sharedPref.getString("password", "");
-        if(p!=currentP.getText().toString() && p!=""){
-            currentP.setError(getResources().getString(R.string.check_current_password)+" :"+p+".");
+        if(!currentP.getText().toString().equals(p)){
+            currentP.setError(getResources().getString(R.string.check_current_password));
             result = false;
         }
-        else
-            currentP.setError("PasswordActivity:"+p+".");
 
         //CHECK CURRENT PASSWORD
+            pattern = Pattern.compile(psswString);
+            matcher = pattern.matcher(newP.getText().toString());
 
-        if(!newP.getText().toString().matches(psswString)){
+            if(!matcher.matches()){
             newP.setError(getResources().getString(R.string.check_password));
             result = false;
         }

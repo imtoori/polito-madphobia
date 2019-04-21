@@ -30,6 +30,7 @@ public class OrderFragment extends Fragment {
 
     public OrderFragment() {
         // Required empty public constructor
+        setHasOptionsMenu(false);
     }
 
 
@@ -37,15 +38,13 @@ public class OrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflator = inflater.inflate(R.layout.fragment_order, container, false);
-// TODO remove items here when persistence is implemented
-
         return inflator;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+     //   setHasOptionsMenu(false);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = view.findViewById(R.id.orders_pager);
 
@@ -54,7 +53,6 @@ public class OrderFragment extends Fragment {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = view.findViewById(R.id.tab_header);
         tabLayout.setupWithViewPager(mPager);
-
     }
 
 

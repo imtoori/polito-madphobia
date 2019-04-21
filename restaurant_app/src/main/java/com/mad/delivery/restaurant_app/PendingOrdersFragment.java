@@ -55,7 +55,6 @@ public class PendingOrdersFragment extends Fragment {
         orders = new ArrayList<>();
         showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
-
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);

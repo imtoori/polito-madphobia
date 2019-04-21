@@ -1,26 +1,37 @@
 package com.mad.delivery.restaurant_app;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.util.Log;
+import android.view.MenuItem;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.jar.Attributes;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity  implements PendingOrdersFragment.OnPendingOrderListener{
     Toolbar myToolBar;
     private Order orderToBeUpdated;
+    int open = 1;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if(getIntent().hasExtra("open")) {
+            open = getIntent().getIntExtra("open", 1);
+        } else {
+            Log.d("MADAPP", "NO open..");
+        }
 
         if(getIntent().hasExtra("orderToBeUpdated")) {
             Bundle bundle = getIntent().getExtras();
@@ -31,7 +42,6 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
         setTitle(getResources().getString(R.string.app_name));
         BottomNavigationView navigation = findViewById(R.id.navigation);
         mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentManager fm = getSupportFragmentManager();
@@ -72,8 +82,20 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
             }
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.nav_orders);
-
+        Log.d("MADAPP", "Open=" + open);
+        switch(open) {
+            case 0:
+                navigation.setSelectedItemId(R.id.nav_menu);
+                break;
+            case 1:
+                navigation.setSelectedItemId(R.id.nav_orders);
+                break;
+            case 2:
+                navigation.setSelectedItemId(R.id.nav_settings);
+                break;
+            default:
+                navigation.setSelectedItemId(R.id.nav_menu);
+        }
 
     }
 
@@ -84,4 +106,20 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_new_offert:
+
+                Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 }

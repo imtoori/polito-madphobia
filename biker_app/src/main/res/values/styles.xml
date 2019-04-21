@@ -7,7 +7,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowContentTransitions">true</item>
 
-        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/colorTextIcon</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -18,6 +18,26 @@
         <item name="android:textColor">@color/colorTextIcon</item>
         <item name="android:subtitleTextColor" > @color/colorTextIcon</item>
         <item name="android:homeAsUpIndicator">@color/colorTextIcon</item>
+        <item name="actionMenuTextColor">@color/colorTextIcon</item>
+        <item name="android:actionMenuTextColor">@color/colorTextIcon</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Base.Theme.MaterialComponents.Light.Dialog">
+        <item name="android:textSize">@dimen/subtitle</item>
+    </style>
+    <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/colorTextIcon</item>
+        <item name="android:textStyle">bold</item>
+        <item name="elevation">5dp</item>
+        <item name="android:textSize">@dimen/description</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+    <style name="AppTheme.EditText" parent="Base.V7.Widget.AppCompat.EditText">
+            <item name="android:background">@drawable/et_background</item>
+            <item name="android:textColor">@color/colorBlack</item>
+            <item name="android:textAlignment">textStart</item>
+            <item name="android:padding">10dp</item>
+            <item name="android:textCursorDrawable">@null</item>
     </style>
 
     <style name="AppTheme.TextInputEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">

@@ -24,9 +24,11 @@ public class ProfileActivity extends AppCompatActivity {
     TextView phoneNumber;
     TextView emailAddress;
     TextView description;
+    TextView opening;
     TextView road;
     ImageView imgProfile;
     User mUser=new User();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.mainprofile_phone);
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
+        opening = findViewById(R.id.openinghourslist);
         road = findViewById(R.id.main_road);
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
@@ -54,10 +57,20 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("open", 2);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_option:
                 // start activity: EditProfileActivity
+
                 Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -78,8 +91,10 @@ public class ProfileActivity extends AppCompatActivity {
                 sharedPref.getString("doorPhone", ""),
                 sharedPref.getString("postCode", ""),
                 sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
+                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())),
+                sharedPref.getString("openingTime", getResources().getString(R.string.opening_hours_full))
         );
+
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         if(mUser!=null) {
             Log.i("AAA", mUser.name + "-" + mUser.phoneNumber + "-" + mUser.email + "-" + mUser.description + "-" + mUser.road + "-" + mUser.houseNumber + "-" + mUser.doorPhone + "-" + mUser.postCode + "-" + mUser.city);
@@ -94,9 +109,17 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
+        Log.d("MADAPP", u.opening);
+        if(!u.opening.equals("")) {
+            opening.setText(u.opening);
+        } else {
+            opening.setText(getResources().getString(R.string.opening_hours_full));
+        }
+
         if(!u.road.equals("")) {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
+
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));

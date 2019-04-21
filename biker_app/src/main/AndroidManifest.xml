@@ -23,7 +23,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -56,8 +55,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mad.delivery.bikerApp.ProfileActivity" />
         </activity>
-        <activity android:name=".ProfileActivity">
-        </activity>
+        <activity android:name=".ProfileActivity" />
+
+        <activity
+            android:name=".CompletingOrderActivity"></activity>
+
+        <activity
+            android:name=".PasswordActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".DetailOrderActivity"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>

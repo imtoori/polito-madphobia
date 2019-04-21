@@ -30,9 +30,8 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.input_profile);
         myToolBar = findViewById(R.id.mainActivityToolbar);
-
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.profile_toolbar));
         name = findViewById(R.id.main_name);

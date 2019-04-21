@@ -20,13 +20,13 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch(position) {
-            case 0:
+            case 1:
                 UserInformationFragment uiFrag = new UserInformationFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("client", order.client);
                 uiFrag.setArguments(bundle);
                 return uiFrag;
-            case 1:
+            case 0:
                 DetailOrderFragment doFrag = new DetailOrderFragment();
                 Bundle doBundle = new Bundle();
                 doBundle.putParcelable("order", order);
@@ -41,9 +41,9 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
         switch(position) {
-            case 0:
-                return context.getString(R.string.user_info_order);
             case 1:
+                return context.getString(R.string.user_info_order);
+            case 0:
                 return context.getString(R.string.detail_order_info);
             default:
                 return null;

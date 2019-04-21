@@ -18,9 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +38,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
 
 public class EditProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -47,6 +54,7 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText doorPhone;
     EditText postCode;
     EditText city;
+    EditText openingTime;
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
@@ -74,6 +82,7 @@ public class EditProfileActivity extends AppCompatActivity {
         postCode = findViewById(R.id.editprofile_postalcode);
         city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
+        openingTime = findViewById(R.id.openinghours_et);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +118,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstraints()) {
+                if (checkConstraints()) {
                     setProfileData();
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
@@ -134,7 +143,7 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("doorPhone", doorPhone.getText().toString());
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
-
+        outState.putString("openingTime", openingTime.getText().toString());
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -154,6 +163,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
         mUser.road = savedInstanceState.getString("road");
+        mUser.opening = savedInstanceState.getString("openingTime");
         mUser.houseNumber = savedInstanceState.getString("houseNumber");
         mUser.doorPhone = savedInstanceState.getString("doorPhone");
         mUser.postCode = savedInstanceState.getString("postCode");
@@ -168,7 +178,7 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageProfileUri on ActivityResult: "+imageProfileUri.toString());
+                    Log.d("MADAPP", "imageProfileUri on ActivityResult: " + imageProfileUri.toString());
                     if (imageProfileUri != null)
                         Log.d("MADAPP", "i am here");
                     imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
@@ -201,9 +211,11 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("doorPhone", ""),
                 sharedPref.getString("postCode", ""),
                 sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
+                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())),
+                sharedPref.getString("openingTime", getResources().getString(R.string.opening_hours_full))
         );
-        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
+
+        Log.d("MADAPP", "GET Profile data = " + Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
     }
 
@@ -219,6 +231,7 @@ public class EditProfileActivity extends AppCompatActivity {
         editor.putString("doorPhone", doorPhone.getText().toString());
         editor.putString("postCode", postCode.getText().toString());
         editor.putString("city", city.getText().toString());
+        editor.putString("openingTime", openingTime.getText().toString());
 
         try {
             Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
@@ -300,6 +313,7 @@ public class EditProfileActivity extends AppCompatActivity {
         emailAddress.setText(u.email);
         description.setText(u.description);
         road.setText(u.road);
+        openingTime.setText(u.opening);
         houseNumber.setText(u.houseNumber);
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
@@ -308,6 +322,7 @@ public class EditProfileActivity extends AppCompatActivity {
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
+
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
             Log.d("MADAPP", "Setting custom user image");
@@ -341,48 +356,48 @@ public class EditProfileActivity extends AppCompatActivity {
         return fileUri;
     }
 
-    public boolean checkConstraints(){
+    public boolean checkConstraints() {
         boolean result = true;
-        String nameString =  "[a-zA-Z]+";
+        String nameString = "[a-zA-Z]+";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
-        String postalCodeString= "[0-9]{5}";
+        String postalCodeString = "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
         String roadString = "([A-Za-z0-9'-_\\s])+";
         String cityString = "([A-Za-z\'\\s-])+";
         String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
 
-        if(!name.getText().toString().matches(nameString)){
+        if (!name.getText().toString().matches(nameString)) {
             name.setError(getResources().getString(R.string.check_name));
             result = false;
         }
 
-        if(!road.getText().toString().matches(roadString)) {
+        if (!road.getText().toString().matches(roadString)) {
             road.setError(getResources().getString(R.string.check_road));
             result = false;
         }
 
-        if(!city.getText().toString().matches(cityString)){
+        if (!city.getText().toString().matches(cityString)) {
             city.setError(getResources().getString(R.string.check_city));
             result = false;
         }
 
-        if(!phoneNumber.getText().toString().matches(phoneNumberString)){
+        if (!phoneNumber.getText().toString().matches(phoneNumberString)) {
             phoneNumber.setError(getResources().getString(R.string.check_phone));
             result = false;
         }
 
-        if(!doorPhone.getText().toString().matches(doorPhoneString)){
+        if (!doorPhone.getText().toString().matches(doorPhoneString)) {
             doorPhone.setError(getResources().getString(R.string.check_doorphone));
             result = false;
 
         }
 
-        if(!postCode.getText().toString().matches(postalCodeString)){
+        if (!postCode.getText().toString().matches(postalCodeString)) {
             postCode.setError(getResources().getString(R.string.check_postCode));
             result = false;
         }
 
-        if(!houseNumber.getText().toString().matches(numberString)){
+        if (!houseNumber.getText().toString().matches(numberString)) {
             houseNumber.setError(getResources().getString(R.string.house_number));
             result = false;
         }
@@ -393,4 +408,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return result;
     }
+
+
+
 }

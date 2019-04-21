@@ -3,29 +3,40 @@ package com.mad.delivery.restaurant_app;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
+import android.util.Log;
 
 import java.util.Locale;
 
 public class LanguageHelper {
 
-    public  static void changeLocale(Context context, Resources res, String locale){
+    public  static Context changeLocale(Context context, Resources res, String locale){
         Configuration config;
         config= new Configuration(res.getConfiguration());
         Locale local  = new Locale(locale);
         switch (locale){
             case "en":
-                config.setLocale(Locale.ENGLISH);
+                local=Locale.ENGLISH;
                 break;
             case "it":
-                config.setLocale(Locale.ITALY);
+                local=Locale.ITALY;
                 break;
             default:
-                config.setLocale(Locale.ENGLISH);
+                local=Locale.ENGLISH;
                 break;
         }
-        config.setLayoutDirection(local);
+       /* if (Build.VERSION.SDK_INT >= 17) {
+            config.setLocale(local);
+            context = context.createConfigurationContext(config);
+            Log.i("MADD","versione >=17");
+        } else {
+            //config.locale = local;
+            res.updateConfiguration(config, res.getDisplayMetrics());
+            Log.i("MADD","versione <17");
+        }
+*/
+        return context;
         //res.updateConfiguration(config, res.getDisplayMetrics());
-        Context ctxt = context.createConfigurationContext(config);
 
     }
 }
