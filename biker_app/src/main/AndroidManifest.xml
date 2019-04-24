@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mad.delivery.bikerApp">
+    package="com.mad.delivery.biker_app">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -21,6 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}"
@@ -31,8 +32,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity
-            android:name=".CompletingOrderActivity"></activity>
+        <activity android:name=".CompletingOrderActivity" />
         <activity
             android:name=".PhotoZoomActivity"
             android:parentActivityName=".ProfileActivity" />
@@ -46,6 +46,7 @@
             android:name=".PasswordActivity"
             android:parentActivityName=".MainActivity" />
 
+
         <activity
             android:name=".DetailOrderActivity"
             android:parentActivityName=".MainActivity" />
@@ -58,6 +59,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+
     </application>
 
 </manifest>

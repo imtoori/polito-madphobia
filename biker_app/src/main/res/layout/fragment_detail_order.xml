@@ -62,39 +62,16 @@
                 card_view:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/title_date1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/arrived_at"
-                android:textSize="@dimen/normalText"
-                android:textStyle="bold"
-                card_view:layout_constraintStart_toStartOf="@+id/personal_data_tv"
-                card_view:layout_constraintTop_toBottomOf="@+id/personal_data_tv" />
-
-            <TextView
-                android:id="@+id/detail_arrived"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/arrived_at"
-                android:textSize="@dimen/normalText"
-                card_view:layout_constraintBottom_toBottomOf="@+id/title_date1"
-                card_view:layout_constraintStart_toEndOf="@+id/title_date1"
-                card_view:layout_constraintTop_toTopOf="@+id/title_date1" />
-
-            <TextView
                 android:id="@+id/title_requested"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/requested_at"
                 android:textSize="@dimen/normalText"
                 android:textStyle="bold"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintStart_toStartOf="@+id/title_date1"
-                card_view:layout_constraintTop_toBottomOf="@+id/title_date1" />
+                app:layout_constraintStart_toStartOf="@+id/personal_data_tv"
+                app:layout_constraintTop_toBottomOf="@+id/personal_data_tv"
+                 />
 
             <TextView
                 android:id="@+id/detail_requested"
@@ -106,6 +83,62 @@
                 card_view:layout_constraintBottom_toBottomOf="@+id/title_requested"
                 card_view:layout_constraintStart_toEndOf="@+id/title_requested"
                 card_view:layout_constraintTop_toTopOf="@+id/title_requested"
+                card_view:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/title_restaurantadd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/restaurant_address"
+                android:textSize="@dimen/normalText"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/title_requested"
+                app:layout_constraintTop_toBottomOf="@+id/title_requested" />
+
+            <TextView
+                android:id="@+id/detail_restaurantadd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+
+                android:text="@string/restaurant_address"
+                android:textSize="@dimen/normalText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_restaurantadd"
+                card_view:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/title_customeradd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/customer_address"
+                android:textSize="@dimen/normalText"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_restaurantadd" />
+
+            <TextView
+                android:id="@+id/detail_customeradd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+
+
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/customer_address"
+                android:textSize="@dimen/normalText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_customeradd"
                 card_view:layout_constraintVertical_bias="1.0" />
 
 
@@ -150,6 +183,49 @@
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/client_note_tv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/restaurant_note_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/restaurant_note"
+                android:textSize="@dimen/subtitle"
+                android:textStyle="bold"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/restaurant_notes_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:textSize="@dimen/normalText"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/restaurant_note_tv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -224,7 +300,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rl_products"
-                android:name="com.mad.delivery.restaurant_app.DetailOrderFragment"
+                android:name="com.mad.delivery.biker_app.DetailOrderFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
