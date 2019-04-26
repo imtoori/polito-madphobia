@@ -39,7 +39,8 @@ public class PasswordActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.putExtra("open", 1);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
@@ -61,8 +62,8 @@ public class PasswordActivity extends AppCompatActivity {
                     setPassword();
                     sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
                     String p=sharedPref.getString("password", "");
-                    Toast.makeText(this, "Your password: "+p, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Toast.makeText(this, getResources().getString(R.string.saved_password), Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }
@@ -93,7 +94,7 @@ public class PasswordActivity extends AppCompatActivity {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         String p=sharedPref.getString("password", "");
         if(!currentP.getText().toString().equals(p)){
-            currentP.setError(getResources().getString(R.string.check_current_password)+" :"+p+".");
+            currentP.setError(getResources().getString(R.string.check_current_password));
             result = false;
         }
 

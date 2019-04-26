@@ -1,10 +1,6 @@
 package com.mad.delivery.bikerApp;
 
 import android.content.Context;
-import android.os.Bundle;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

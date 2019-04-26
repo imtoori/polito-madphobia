@@ -9,14 +9,11 @@ import android.widget.TimePicker;
 
 import org.joda.time.DateTime;
 
-import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
 
 import androidx.fragment.app.DialogFragment;
 
-public class TimePickerFragment extends DialogFragment
-        implements TimePickerDialog.OnTimeSetListener {
+public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
     private TimePickedListener listener;
     private DateTime oldDate;
     @Override

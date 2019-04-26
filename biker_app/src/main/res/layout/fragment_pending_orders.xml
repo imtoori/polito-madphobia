@@ -39,16 +39,18 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rl_pending"
-        android:name="com.mad.delivery.restaurant_app.PendingOrdersFragment"
+        android:name="com.mad.delivery.biker_app.PendingOrdersFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:context=".PendingOrdersFragment"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:context=".PendingOrdersFragment"
         tools:listitem="@layout/pending_order_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,20 +1,16 @@
 package com.mad.delivery.bikerApp;
 
+import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.Intent;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity  {
+public class LoginActivity extends AppCompatActivity {
+
     private ImageView imgLogo;
     private RelativeLayout container;
     @Override
@@ -29,14 +25,12 @@ public class MainActivity extends AppCompatActivity  {
         animation.start();
         animation2.start();
 
-        FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         LoginFragment login = new LoginFragment();
         fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-        fragmentTransaction.replace(R.id.layout_container, login,"loginFragment");
+        fragmentTransaction.replace(R.id.layout_container, login, "loginFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-
     }
-
 }

@@ -7,17 +7,11 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.zip.Inflater;
 
 
 /**
@@ -30,6 +24,7 @@ public class OrderFragment extends Fragment {
 
     public OrderFragment() {
         // Required empty public constructor
+        setHasOptionsMenu(false);
     }
 
 
@@ -37,15 +32,13 @@ public class OrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View inflator = inflater.inflate(R.layout.fragment_order, container, false);
-// TODO remove items here when persistence is implemented
-
         return inflator;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+     //   setHasOptionsMenu(false);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = view.findViewById(R.id.orders_pager);
 
@@ -54,7 +47,6 @@ public class OrderFragment extends Fragment {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = view.findViewById(R.id.tab_header);
         tabLayout.setupWithViewPager(mPager);
-
     }
 
 

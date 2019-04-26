@@ -3,8 +3,6 @@ package com.mad.delivery.bikerApp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 class Product implements Parcelable {
     protected String name;
     protected int quantity;

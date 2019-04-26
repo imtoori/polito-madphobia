@@ -10,6 +10,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
 public class PhotoZoomActivity extends AppCompatActivity  {
     final String DEBUG_TAG = "MAD-APP";
     private GestureDetector gestureDetector;
@@ -46,7 +47,7 @@ public class PhotoZoomActivity extends AppCompatActivity  {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               getBack(className);
+                getBack(className);
             }
         });
     }

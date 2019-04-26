@@ -1,4 +1,5 @@
 package com.mad.delivery.bikerApp;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -23,9 +25,9 @@ public class ProfileActivity extends AppCompatActivity {
     TextView phoneNumber;
     TextView emailAddress;
     TextView description;
-
     ImageView imgProfile;
-    User mUser;
+    User mUser=new User();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,20 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.putExtra("open", 1);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_option:
                 // start activity: EditProfileActivity
+
                 Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -67,21 +79,29 @@ public class ProfileActivity extends AppCompatActivity {
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("lastName", ""),
+                sharedPref.getString("lastname", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
+
         Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        updateFields(mUser);
+        if(mUser!=null) {
+            Log.i("AAA", mUser.name + "-" + mUser.phoneNumber + "-" + mUser.email + "-" + mUser.description );
+            updateFields(mUser);
+        }
+        else
+            Log.i("AAA", "---------------------------------------------------------");
     }
     private void updateFields(User u) {
-        if(!u.name.equals("") || !u.lastName.equals(""))
-            name.setText(u.name + " " + u.lastName);
+        if(!u.name.equals("") )
+            name.setText(u.name+" "+u.lastname );
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
+
+
 
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");

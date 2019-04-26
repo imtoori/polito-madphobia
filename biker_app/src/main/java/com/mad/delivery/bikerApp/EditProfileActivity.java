@@ -38,11 +38,10 @@ public class EditProfileActivity extends AppCompatActivity {
     User mUser;
     FloatingActionButton btnCamera;
     EditText name;
-    EditText lastName;
+    EditText lastname;
     EditText phoneNumber;
     EditText emailAddress;
     EditText description;
-
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
@@ -61,11 +60,13 @@ public class EditProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         name = findViewById(R.id.editprofile_name);
-        lastName = findViewById(R.id.editprofile_lastname);
+        lastname = findViewById(R.id.editprofile_lastname);
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);
         description = findViewById(R.id.editprofile_description);
+
         imgProfile = findViewById(R.id.editprofile_imgprofile);
+
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +102,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstraints()) {
+                if (checkConstraints()) {
                     setProfileData();
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
@@ -118,11 +119,10 @@ public class EditProfileActivity extends AppCompatActivity {
         // invoked when the activity may be temporarily destroyed, save the instance state here
         super.onSaveInstanceState(outState);
         outState.putString("name", name.getText().toString());
-        outState.putString("lastName", lastName.getText().toString());
+        outState.putString("lastname", lastname.getText().toString());
         outState.putString("phoneNumber", phoneNumber.getText().toString());
         outState.putString("emailAddress", emailAddress.getText().toString());
         outState.putString("description", description.getText().toString());
-
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -138,7 +138,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser = new User();
         Log.d("MADAPP", "SavedInstanceState contains data");
         mUser.name = savedInstanceState.getString("name");
-        mUser.lastName = savedInstanceState.getString("lastName");
+        mUser.lastname = savedInstanceState.getString("lastname");
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
@@ -152,11 +152,11 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageProfileUri on ActivityResult: "+imageProfileUri.toString());
+                    Log.d("MADAPP", "imageProfileUri on ActivityResult: " + imageProfileUri.toString());
                     if (imageProfileUri != null)
                         Log.d("MADAPP", "i am here");
-                        imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                        imgProfile.setImageURI(imageProfileUri);
+                    imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
+                    imgProfile.setImageURI(imageProfileUri);
                 }
                 break;
             case GALLERY_CODE:
@@ -177,13 +177,14 @@ public class EditProfileActivity extends AppCompatActivity {
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("lastName", ""),
+                sharedPref.getString("lastname", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
                 sharedPref.getString("description", ""),
-               Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
+                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
-        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
+
+        Log.d("MADAPP", "GET Profile data = " + Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
     }
 
@@ -191,7 +192,7 @@ public class EditProfileActivity extends AppCompatActivity {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("name", name.getText().toString());
-        editor.putString("lastName", lastName.getText().toString());
+        editor.putString("lastname", lastname.getText().toString());
         editor.putString("phoneNumber", phoneNumber.getText().toString());
         editor.putString("emailAddress", emailAddress.getText().toString());
         editor.putString("description", description.getText().toString());
@@ -238,7 +239,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Take Photo")) {
-                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePicture.resolveActivity(getPackageManager()) != null) {
                         // Create the File where the photo should go
                         File photoFile = null;
@@ -259,7 +260,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
 
                 } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(pickPhoto, GALLERY_CODE);
 
                 } else if (options[item].equals("Cancel")) {
@@ -272,15 +273,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void updateFields(User u) {
         name.setText(u.name);
-        lastName.setText(u.lastName);
+        lastname.setText(u.lastname);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
 
-
         if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
+
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
             Log.d("MADAPP", "Setting custom user image");
@@ -314,31 +315,40 @@ public class EditProfileActivity extends AppCompatActivity {
         return fileUri;
     }
 
-    public boolean checkConstraints(){
+    public boolean checkConstraints() {
         boolean result = true;
-        String nameString =  "[a-zA-Z]+";
-        String lastNameString = "([a-zA-Z]+([ '-][a-zA-Z]+)*)|([A-Z][a-z]*)";
+        String nameString = "[a-zA-Z]+";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
+        String postalCodeString = "[0-9]{5}";
+        String numberString = "[1-9][0-9]*";
+        String roadString = "([A-Za-z0-9'-_\\s])+";
+        String cityString = "([A-Za-z\'\\s-])+";
+        String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
 
-        if(!name.getText().toString().matches(nameString)){
+        if (!name.getText().toString().matches(nameString)) {
             name.setError(getResources().getString(R.string.check_name));
             result = false;
         }
-
-        if(!lastName.getText().toString().matches(lastNameString)){
-            lastName.setError(getResources().getString(R.string.check_lastName));
+        if (!lastname.getText().toString().matches(nameString)) {
+            lastname.setError(getResources().getString(R.string.check_lastName));
             result = false;
         }
 
-        if(!phoneNumber.getText().toString().matches(phoneNumberString)){
+
+        if (!phoneNumber.getText().toString().matches(phoneNumberString)) {
             phoneNumber.setError(getResources().getString(R.string.check_phone));
             result = false;
         }
 
+
+
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress.getText().toString()).matches()) {
-            emailAddress.setError(getResources().getString(R.string.check_email));
+            emailAddress.setError(getResources().getString(R.string.email));
             result = false;
         }
         return result;
     }
+
+
+
 }

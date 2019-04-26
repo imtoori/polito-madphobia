@@ -43,14 +43,14 @@ public class SettingItem {
 
     private static String[] getTitles(View view) {
         return new String[]{view.getResources().getString(R.string.setting_profile),
-                view.getResources().getString(R.string.setting_privacy),
-                view.getResources().getString(R.string.setting_language)
+                view.getResources().getString(R.string.setting_openinghours),
+                view.getResources().getString(R.string.setting_privacy)
         };
     }
 
     private static int[] getImages() {
         return new int[]{
-                R.drawable.ic_user, R.drawable.ic_edit, R.drawable.ic_language
+                R.drawable.ic_user, R.drawable.ic_clock, R.drawable.ic_edit
         };
 
     }

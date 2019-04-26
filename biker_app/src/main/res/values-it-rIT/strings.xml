@@ -1,127 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<string name="app_name">Biker app</string>
+    <string name="app_name">App Fattorino</string>
 
-<!-- Profile Data -->
-<string name="profile_toolbar">Profilo</string>
-<string name="editprofile_toolbar">Modifica Profilo</string>
-<string name="photo_toolbar">Foto Profilo</string>
-<string name="save">salva</string>
-<string name="next">Nuovo</string>
-<string name="reject">Rifiuta</string>
-<string name="order">Ordine</string>
-<string name="persona_data">Dati Personali</string>
+    <!-- Profile Data -->
+    <string name="profile_toolbar">Profilo</string>
+    <string name="editprofile_toolbar">Modifica Profilo</string>
+    <string name="photo_toolbar">Foto Profilo</string>
+    <string name="save">Salva</string>
+    <string name="next">Nuovo</string>
+    <string name="reject">Rifiuta</string>
+    <string name="order">Ordine</string>
+    <string name="persona_data">Dati Personali</string>
 
-<string name="imageprofile_desc">Immagine profilo</string>
-<string name="your_name">Nome</string>
-<string name="name">Nome</string>
-<string name="lastname">Cognome</string>
+    <string name="imageprofile_desc">Immagine profilo</string>
+    <string name="your_name">Nome</string>
+    <string name="name">Nome</string>
+    <string name="lastname">Cognome</string>
 
-<string name="default_phone">+39 123 444 5555</string>
-<string name="phone_number">Numero di telefono</string>
-<string name="your_email">Indirizzo Email</string>
-<string name="email">Indirizzo Email</string>
-<string name="profile_saved">Il tuo profilo è stato salvato!</string>
+    <string name="default_phone">+39 123 444 5555</string>
+    <string name="phone_number">Numero di telefono</string>
+    <string name="your_email">Indirizzo Email</string>
+    <string name="email">Indirizzo Email</string>
+    <string name="profile_saved">Il tuo profilo è stato salvato!</string>
 
-<string name="delivery_desc">Your order will be delivered here</string>
-<string name="delivery">Indirizzo</string>
-<string name="road">Via</string>
-<string name="house_number">Numero</string>
-<string name="doorphone">Citofono</string>
-<string name="postalcode">Codice postale</string>
-<string name="city">Città</string>
-<string name="desc_desc">Descrizione</string>
-<string name="description">Descrizione</string>
+    <string name="delivery_desc">Your order will be delivered here</string>
+    <string name="delivery">Indirizzo</string>
+    <string name="road">Via</string>
+    <string name="house_number">Numero civico</string>
+    <string name="doorphone">Citofono</string>
+    <string name="postalcode">Codice postale</string>
+    <string name="city">Città</string>
+    <string name="desc_desc">Descrizione</string>
+    <string name="description">Descrizione</string>
 
-<string name="max_length_line">60</string>
-<string name="max_length_description">180</string>
-<string name="max_length_phone">15</string>
-<string name="transition_zoom">transition_zoom</string>
+    <string name="max_length_line">60</string>
+    <string name="max_length_description">180</string>
+    <string name="max_length_phone">15</string>
+    <string name="transition_zoom">transition_zoom</string>
 
-<string name="check_name">Nome non valido</string>
-<string name="check_lastName">Cognome non valido</string>
-<string name="check_phone">Numero di telefono non valido</string>
-<string name="check_email">Email non valida</string>
-<string name="check_road">Indirizzo non valido</string>
-<string name="check_city">Città City name not valia</string>
-<string name="check_doorphone">Citofono City name not valid</string>
-<string name="check_postCode">Codice postale City name not valid</string>
-<string name="check_houseNumber">Numero civico non valido</string>
-<string name="check_password">La password deve contenere almeno 8 caratteri ed includere un numero, lettera minuscola, lettera maiuscola e un carattere speciale(e.g. @, &amp;, #, ?)</string>
-<string name="check_password_repeat">Ripeti la stessa password</string>
-<string name="check_current_password">Password corrente non valida</string>
+    <string name="check_name">Nome non valido</string>
+    <string name="check_lastName">Cognome non valido</string>
+    <string name="check_phone">Numero di telefono non valido</string>
+    <string name="check_email">Email non valida</string>
+    <string name="check_road">Indirizzo non valido</string>
+    <string name="check_city">Città non valida</string>
+    <string name="check_doorphone">Citofono non valido</string>
+    <string name="check_postCode">Codice postale non valido</string>
+    <string name="check_houseNumber">Numero civico non valido</string>
+    <string name="check_password">La password deve contenere almeno 8 caratteri ed includere un numero, lettera minuscola, lettera maiuscola e un carattere speciale(e.g. @, &amp;, #, ?)</string>
+    <string name="check_password_repeat">Ripeti la stessa password</string>
+    <string name="check_current_password">Password corrente non valida</string>
 
-<!-- Navigation -->
-<string name="nav_menu">Menu</string>
-<string name="nav_orders">Ordini</string>
-<string name="nav_settings">Impostazioni</string>
+    <!-- Navigation -->
+    <string name="nav_menu">Menu</string>
+    <string name="nav_orders">Ordini</string>
+    <string name="nav_settings">Impostazioni</string>
 
-<!-- Orders Fragment -->
-<string name="pending_orders">Pending</string>
-<string name="preparing_orders">Preparing</string>
-<string name="completed_orders">Completi</string>
-<string name="order_number">Ordine </string>
-<string name="order_requested_at">Consegna: </string>
-<string name="order_from">From: </string>
-<string name="order_pieces_count">Items: </string>
-<string name="order_list">List: </string>
-<string name="order_status">Stato: </string>
+    <!-- Orders Fragment -->
+    <string name="pending_orders">In Attesa</string>
+    <string name="preparing_orders">In preparazione</string>
+    <string name="completed_orders">Completati</string>
+    <string name="order_number">Ordine </string>
+    <string name="order_requested_at">Consegna: </string>
+    <string name="order_from">Da: </string>
+    <string name="order_pieces_count">Items: </string>
+    <string name="order_list">List: </string>
+    <string name="order_status">Stato: </string>
 
-<!-- Detail Order Fragment -->
-<string name="user_info_order">Cliente</string>
-<string name="detail_order_info">Info ordine</string>
-<string name="arrived_at">Arrived:</string>
-<string name="requested_at">Requested for:</string>
-<string name="client_note">Client Notes</string>
-<string name="products">prodotti</string>
-<string name="additions">Aggiunte:</string>
-<string name="prefix_products">Questo ordine contiene</string>
-<string name="suffix_products">products.</string>
-<string name="completing_order">Completing Order</string>
+    <!-- Detail Order Fragment -->
+    <string name="user_info_order">Cliente</string>
+    <string name="detail_order_info">Info ordine</string>
+    <string name="arrived_at">Arrivato:</string>
+    <string name="requested_at">Richiesto per:</string>
+    <string name="client_note">Note cliente</string>
+    <string name="products">Prodotti</string>
+    <string name="additions">Aggiunte:</string>
+    <string name="prefix_products">Questo ordine contiene</string>
+    <string name="suffix_products">prodotti.</string>
+    <string name="completing_order">Completa l\'ordine</string>
 
-<!-- Completing Order Activity -->
-<string name="delivery_options">Delivery</string>
-<string name="delivery_opt_sentence">Il cliente ha richiesto che l\0rdine sia consegnato %1$s</string>
-<string name="confirm">Conferma</string>
-<string name="change">Cambia</string>
-<string name="admin_notes">Admin Notes</string>
-<string name="add">Aggiungi</string>
-<string name="changing_status">Cambia stato dell\'ordine</string>
-<string name="current_status">Corrente: </string>
-<string name="changing_status_sentence">Nuovo: </string>
-<string name="confirmed_order">OK: %1$s</string>
-<string name="undo_confirm_order">Undo</string>
-<string name="no_orders">Empty Folder</string>
-<string name="change_status_button">Cambia stato</string>
-<string name="delivery_confirm_error">Conferma o cambia l\0rario di consegna!</string>
-no_completed_orders
-<!-- Alert Dialog for "send order" -->
-<string name="completing_order_title_dialog">Conferma ordine</string>
-<string name="completing_order_message_dialog">Vuoi confermare l\'ordine?</string>
-<string name="rejecting_order_message_dialog">Vuoi rifiutare l\'ordine?</string>
+    <!-- Completing Order Activity -->
+    <string name="delivery_options">Consegna</string>
+    <string name="delivery_opt_sentence">Il cliente ha richiesto che l\'ordine sia consegnato %1$s</string>
+    <string name="confirm">Conferma</string>
+    <string name="change">Cambia</string>
+    <string name="admin_notes">Note Fattorino</string>
+    <string name="add">Aggiungi</string>
+    <string name="changing_status">Cambia stato dell\'ordine</string>
+    <string name="current_status">Attuale: </string>
+    <string name="changing_status_sentence">Nuovo: </string>
+    <string name="confirmed_order">%1$s</string>
+    <string name="undo_confirm_order">Undo</string>
+    <string name="no_orders">Empty Folder</string>
+    <string name="change_status_button">Cambia stato</string>
+    <string name="delivery_confirm_error">Conferma o cambia l\'orario di consegna!</string>
+    <string name="detail_restaurant_info">Ristorante</string>
+    <string name="restaurant_note">Note ristorante</string>
+    <string name="restaurant_address">Indirizzo ristorante:</string>
+    <string name="customer_address">Indirizzo cliente:</string>
 
-<string name="send">Si</string>
-<string name="cancel">Cancella</string>
+    <!-- Alert Dialog for "send order" -->
+    <string name="completing_order_title_dialog">Conferma l\'ordine</string>
+    <string name="completing_order_message_dialog">Vuoi confermare l\'ordine?</string>
+    <string name="rejecting_order_message_dialog">Vuoi rifiutare l\'ordine?</string>
 
-<!--Setting Menu-->
-<string name="setting_profile">Profilo</string>
-<string name="setting_privacy">Privacy</string>
-<string name="setting_language">Lingua</string>
+    <string name="send">Si</string>
+    <string name="cancel">Cancella</string>
 
-<!--PasswordActivity-->
-<string name="current_pssw">Password attuale </string>
-<string name="new_pssw">Nuova password </string>
-<string name="repeat_new_pssw">Ripeti nuova password </string>
-<string name="password_toolbar">Password</string>
+    <!--Setting Menu-->
+    <string name="setting_profile">Profilo</string>
+    <string name="setting_privacy">Privacy</string>
 
-<!--LanguageActivity-->
-<string name="language_toolbar">Lingua</string>
-<string name="choose_language">Cambia lingua:</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-<string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="detail_restaurant_info">Restaurant Info</string>
+    <!--PasswordActivity-->
+    <string name="current_pssw">Password attuale </string>
+    <string name="new_pssw">Nuova password </string>
+    <string name="repeat_new_pssw">Ripeti nuova password </string>
+    <string name="password_toolbar">Password</string>
 
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="closed">closed</string>
+    <string name="Delivery_time">Delivery time</string>
+    <string name="start_time">Start time</string>
+    <string name="Opening_hours">Orari di apertura</string>
+    <string name="opening_hours">Orari di apertura</string>
+    <string name="day1">Lunedi: </string>
+    <string name="day2">Martedi:    </string>
+    <string name="day3">Mercoledi:    </string>
+    <string name="day4">Giovedi:    </string>
+    <string name="day5">Venerdi:    </string>
+    <string name="day6">Sabato:    </string>
+    <string name="day7">Domenica:    </string>
+    <string name="check_time">Formato tempo non valido(hh:mm-hh:mm)</string>
+    <string name="list_openinghours">Orari di apertura</string>
+    <string name="saved_password">La tua password è stata salvata</string>
+    <string name="setting_openinghours">Orari Apertura e Chiusura</string>
+
+    <!--menu-->
+    <string name="name_menu_item">Nome piatto</string>
+    <string name="time_to_preparation">Tempo necessario</string>
+    <string name="price">Prezzo</string>
+    <string name="category">Categoria</string>
+    <string name="availability">Disponibilità</string>
+
+    <!--setting menu-->
+    <string name="description_opening_hours">In questa sezione puoi aggiungere o cambiare gli orari di apertura della tua attività. Se vuoi aggiungere un nuovo slot assicurati che non si sovrapponga con i precedenti (in tal caso verrà segnalato un errore).</string>
+    <string name="title_opening_hours">Istruzioni</string>
+    <string name="days_of_week">Giorni della settimana</string>
+    <string name="monday">Lunedì</string>
+    <string name="tuesday">Martedì</string>
+    <string name="wednesday">Mercoledì</string>
+    <string name="thursday">Giovedì</string>
+    <string name="friday">Venerdì</string>
+    <string name="saturday">Sabato</string>
+    <string name="sunday">Domenica</string>
 
 </resources>

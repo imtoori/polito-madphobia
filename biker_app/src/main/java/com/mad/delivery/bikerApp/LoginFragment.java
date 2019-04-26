@@ -133,7 +133,7 @@ public class LoginFragment extends Fragment {
 
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable("user", user);
-                                Intent intent = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                                Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
                                 intent.putExtra("user", bundle);
                                 startActivity(intent);
                                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

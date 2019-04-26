@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-class Order  implements Parcelable {
-    protected Restaurant restaurant;
+class Order implements Parcelable {
+    public Restaurant restaurant;
     protected String id;
     protected Customer client;
     protected List<Product> products;
@@ -20,15 +20,17 @@ class Order  implements Parcelable {
     protected DateTime estimatedDelivery;
     protected String clientNotes;
     protected String serverNotes;
+    protected String restNotes;
 
     public Order(Customer u, Restaurant r, List<Product> products, DateTime orderFor) {
         this.client = u;
-        this.products = products;
         this.restaurant=r;
+        this.products = products;
         status = OrderStatus.pending;
         orderDate = new DateTime();
         this.orderFor = orderFor;
     }
+
 
     public Order(Order other) {
         this.id = other.id;
@@ -40,6 +42,7 @@ class Order  implements Parcelable {
         orderFor = other.orderFor;
         estimatedDelivery = other.estimatedDelivery;
         clientNotes = other.clientNotes;
+        restNotes=other.restNotes;
         serverNotes = other.serverNotes;
     }
 
@@ -56,7 +59,7 @@ class Order  implements Parcelable {
             Product oldProduct = products.get(products.indexOf(p));
             if(oldProduct.quantity <= p.quantity)
                 products.remove(oldProduct);
-             else
+            else
                 oldProduct.quantity -= p.quantity;
         }
     }
@@ -72,6 +75,7 @@ class Order  implements Parcelable {
         estimatedDelivery = (DateTime) in.readSerializable();
         clientNotes = in.readString();
         serverNotes = in.readString();
+        restNotes= in.readString();
     }
 
     @Override
@@ -91,6 +95,7 @@ class Order  implements Parcelable {
         parcel.writeSerializable(estimatedDelivery);
         parcel.writeString(clientNotes);
         parcel.writeString(serverNotes);
+        parcel.writeString(restNotes);
     }
 
     public static final Parcelable.Creator<Order> CREATOR
@@ -107,13 +112,14 @@ class Order  implements Parcelable {
     public void update(Order other) {
         this.id = other.id;
         this.client = other.client;
-        this.restaurant=other.restaurant;
+        this.restaurant= other.restaurant;
         this.products = other.products;
         status = other.status;
         orderDate = other.orderDate;
         orderFor = other.orderFor;
         estimatedDelivery = other.estimatedDelivery;
         clientNotes = other.clientNotes;
+        restNotes= other.restNotes;
         serverNotes = other.serverNotes;
     }
 

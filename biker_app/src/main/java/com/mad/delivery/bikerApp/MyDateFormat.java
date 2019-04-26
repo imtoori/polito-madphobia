@@ -1,7 +1,5 @@
 package com.mad.delivery.bikerApp;
 
-import android.util.Log;
-
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
@@ -18,8 +16,8 @@ public class MyDateFormat {
         String dateString;
         DateTime today = new DateTime();
         DateTime yesterday = today.minus(Period.days(1));
-        DateTimeFormatter partial = DateTimeFormat.forPattern("hh:mm");
-        DateTimeFormatter complete = DateTimeFormat.forPattern("dd/MM/yy hh:mm");
+        DateTimeFormatter partial = DateTimeFormat.forPattern("HH:mm");
+        DateTimeFormatter complete = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
 
         if(date.getDayOfYear() == today.getDayOfYear() && date.getYear() == today.getYear()) return dateString = "Today, " + partial.print(date);
         else if(date.getDayOfYear() == yesterday.getDayOfYear() && date.getYear() == yesterday.getYear()) return dateString = "Yesterday, " + partial.print(date);

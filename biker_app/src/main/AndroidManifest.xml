@@ -20,9 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,6 +39,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity android:name=".CompletingOrderActivity" />
         <activity
             android:name=".PhotoZoomActivity"
             android:parentActivityName=".EditProfileActivity">
@@ -56,18 +59,12 @@
                 android:value="com.mad.delivery.bikerApp.ProfileActivity" />
         </activity>
         <activity android:name=".ProfileActivity" />
-
-        <activity
-            android:name=".CompletingOrderActivity"></activity>
-
         <activity
             android:name=".PasswordActivity"
-            android:parentActivityName=".MainActivity" />
-
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".DetailOrderActivity"
-            android:parentActivityName=".MainActivity" />
-
+            android:parentActivityName=".LoginActivity" />
     </application>
 
 </manifest>

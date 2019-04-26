@@ -17,12 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -55,7 +50,6 @@ public class PendingOrdersFragment extends Fragment {
         orders = new ArrayList<>();
         showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
-
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);

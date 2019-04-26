@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bike app</string>
+    <string name="app_name">Biker app</string>
 
     <!-- Profile Data -->
     <string name="profile_toolbar">My Profile</string>
@@ -116,7 +116,7 @@
     <string name="changing_status">Change Order Status</string>
     <string name="current_status">Current: </string>
     <string name="changing_status_sentence">Next: </string>
-    <string name="confirmed_order">OK: %1$s</string>
+    <string name="confirmed_order">%1$s</string>
     <string name="undo_confirm_order">Undo</string>
     <string name="no_orders">Empty Folder</string>
     <string name="change_status_button">Change Status</string>
@@ -132,22 +132,46 @@
 
     <!--Setting Menu-->
     <string name="setting_profile">My Profile</string>
-    <string name="setting_privacy">Privacy</string>
-    <string name="setting_language">Language</string>
+    <string name="setting_privacy">Change Account Password</string>
+    <string name="setting_openinghours">Opening and Closing Time</string>
+    <string name="description_opening_hours">In this section you can add or change the opening/closing hours of your activity. If you want to add a new slot just be sure that it\'s not overlapped (or else you\'ll get an error.</string>
+    <string name="title_opening_hours">Instructions</string>
+    <string name="days_of_week">Days of the Week</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
 
     <!--PasswordActivity-->
     <string name="current_pssw">Current password </string>
     <string name="new_pssw">New password </string>
     <string name="repeat_new_pssw">Repeat new password </string>
     <string name="password_toolbar">Password</string>
-
-    <!--LanguageActivity-->
-    <string name="language_toolbar">Language</string>
-    <string name="choose_language">Choose language:</string>
-
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="detail_restaurant_info">Restaurant Info</string>
+    <string name="closed">Closed</string>
+    <string name="day1">Monday:</string>
+    <string name="Delivery_time">Delivery time</string>
+    <string name="start_time">Start time</string>
+    <string name="Opening_hours">Opening hours</string>
+    <string name="opening_hours">Opening hours</string>
+    <string name="day2">Tuesday: </string>
+    <string name="day3">Wednesday: </string>
+    <string name="day4">Thursday: </string>
+    <string name="day5">Friday: </string>
+    <string name="day6">Saturday: </string>
+    <string name="day7">Sunday: </string>
+    <string name="list_openinghours">Opening hours</string>
+    <string name="saved_password">Your password has been saved</string>
 
+    <string name="name_menu_item">Name dish</string>
+    <string name="time_to_preparation">Time needed</string>
+    <string name="price">Price</string>
+    <string name="detail_restaurant_info">Restaurant</string>
+    <string name="restaurant_note">Resturant Notes</string>
+    <string name="restaurant_address">Restaurant Address:</string>
+    <string name="customer_address">Customer Address:</string>
 
->>>>>>> lab2
 </resources>

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -65,6 +66,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         cvAdminNotes  = findViewById(R.id.cv_admin_notes);
         cvChangeStatus = findViewById(R.id.cv_status_change);
         adminNotes = findViewById(R.id.et_admin_notes);
+        if(order.serverNotes != null && !order.serverNotes.equals("")) adminNotes.setText(order.serverNotes);
         btnChangeStatus = findViewById(R.id.btn_change_status);
         LayoutTransition adminNotesLt =  cvAdminNotes.getLayoutTransition();
         adminNotesLt.setDuration(500);
@@ -199,7 +201,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void onTimePicked(int h, int m) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy hh:mm");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
         modifiedOrder.orderFor = modifiedOrder.orderFor.hourOfDay().setCopy(h);
         modifiedOrder.orderFor = modifiedOrder.orderFor.minuteOfHour().setCopy(m);
         confirmDeliveryTime();
@@ -216,7 +218,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                 order = modifiedOrder;
                 Database.update(order);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
