@@ -31,6 +31,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.joda.time.DateTime;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -43,6 +50,9 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth mAuth;
     private TextView error;
     private Animation shakeAnim;
+    private FirebaseDatabase db;
+    private DatabaseReference myRef;
+
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -60,6 +70,7 @@ public class RegisterFragment extends Fragment {
         passwordConfirm = view.findViewById(R.id.et_register_pwd_c);
         shakeAnim = AnimationUtils.loadAnimation(getContext(), R.anim.shake_effect2);
         error = view.findViewById(R.id.tv_error);
+        db = FirebaseDatabase.getInstance();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +154,11 @@ public class RegisterFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("MADAPP", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            myRef = db.getReference();
+                            User registered = new User();
+                            registered.registrationDate = new DateTime().toString();
+                            registered.email = emailAddress.getText().toString();
+                            myRef.child("users").child("biker").push().setValue(registered);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("MADAPP", "createUserWithEmail:failure", task.getException());
