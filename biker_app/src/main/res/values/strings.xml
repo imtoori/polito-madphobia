@@ -51,6 +51,21 @@
     <string name="sign_up">Sign up</string>
     <string name="no_account_yet">Don\'t you have an account yet?\nCreate one for free!</string>
     <string name="already_account">Have you got an account already?</string>
+    <string name="login_error_nodata">Email and/or Password must not be empty</string>
+    <string name="login_error_password_not_equal">Password and Password confirm must be equal</string>
+    <string name="login_error_fail">Email and/or password are not correct</string>
+    <string name="login_error_email_empty">Email must not be empty</string>
+    <string name="login_error_password_empty">Password must not be empty</string>
+    <string name="register_email_empty">Email must not be empty</string>
+    <string name="register_pwd_empty">Password must not be empty</string>
+    <string name="register_pwdc_empty">Password Confirm must not be empty</string>
+    <string name="register_email_bad_formatted">Email Address is not valid</string>
+    <string name="register_pwd_too_weak">Password should be at least 6 characters</string>
+    <string name="register_email_already_used">This Email Address is already used</string>
+    <string name="register_generic_error">An error occurred. Retry in some minutes.</string>
+    <string name="wait">Loading...</string>
+    <string name="invalid_data">Please check your email and password</string>
+    <string name="passwords_does_not_match">The two passwords does not match</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
