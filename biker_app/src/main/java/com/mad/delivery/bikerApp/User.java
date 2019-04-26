@@ -7,17 +7,17 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    protected String name;
-    protected String lastname;
-    protected String  phoneNumber;
-    protected String  email;
-    protected String  description;
-    protected Uri imageUri;
-    protected String registrationDate;
+    public String name;
+    public String lastname;
+    public String phoneNumber;
+    public String email;
+    public String description;
+    public Uri imageUri;
+    public String registrationDate;
 
-    public User(String name, String lastname ,String phoneNumber, String emailAddress, String description, Uri imageUri) {
+    public User(String name, String lastname, String phoneNumber, String emailAddress, String description, Uri imageUri) {
         this.name = name;
-        this.lastname= lastname;
+        this.lastname = lastname;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.description = description;
@@ -26,6 +26,7 @@ public class User implements Serializable {
 
     }
 
-    public User() {}
+    public User() {
+    }
 
 }

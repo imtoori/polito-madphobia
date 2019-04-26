@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".RegisterFragment">
+    tools:context=".auth.RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -130,7 +130,7 @@
             app:layout_constraintTop_toBottomOf="@+id/et_register_pwd_c" />
 
         <include
-            android:id="@+id/pg_login"
+            android:id="@+id/pg_register"
             layout="@layout/progressbar_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

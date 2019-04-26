@@ -1,7 +1,9 @@
 package com.mad.delivery.bikerApp;
 
-import android.net.Uri;
 import android.util.Log;
+
+import com.mad.delivery.bikerApp.orders.Order;
+import com.mad.delivery.bikerApp.orders.OrderStatus;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
@@ -17,7 +19,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-final class Database {
+final public class Database {
     private static Database instance;
     private static Map<String, Order> orders;
     private static MyDateComparator myDateComparator;

@@ -5,17 +5,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Customer implements Parcelable {
-    protected String name;
-    protected String lastName;
-    protected String  phoneNumber;
-    protected String  email;
-    protected String  description;
-    protected String  road;
-    protected String  houseNumber;
-    protected String  doorPhone;
-    protected String  postCode;
-    protected String city;
-    protected Uri imageUri;
+    public String name;
+    public String lastName;
+    public String  phoneNumber;
+    public String  email;
+    public String  description;
+    public String  road;
+    public String  houseNumber;
+    public String  doorPhone;
+    public String  postCode;
+    public String city;
+    public Uri imageUri;
 
     public Customer(String name, String lastName, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;

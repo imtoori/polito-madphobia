@@ -3,9 +3,9 @@ package com.mad.delivery.bikerApp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-class Product implements Parcelable {
-    protected String name;
-    protected int quantity;
+public class Product implements Parcelable {
+    public String name;
+    public int quantity;
 
 
     public Product(String name, int quantity) {

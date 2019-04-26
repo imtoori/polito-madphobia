@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".auth.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,32 +39,32 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".CompletingOrderActivity" />
+        <activity android:name=".orders.CompletingOrderActivity" />
         <activity
-            android:name=".PhotoZoomActivity"
-            android:parentActivityName=".EditProfileActivity">
+            android:name=".settings.PhotoZoomActivity"
+            android:parentActivityName=".settings.EditProfileActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mad.delivery.bikerApp.EditProfileActivity" />
+                android:value="com.mad.delivery.bikerApp.settings.EditProfileActivity" />
         </activity>
         <activity
-            android:name=".EditProfileActivity"
-            android:parentActivityName=".ProfileActivity">
+            android:name=".settings.EditProfileActivity"
+            android:parentActivityName=".settings.ProfileActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mad.delivery.bikerApp.ProfileActivity" />
+                android:value="com.mad.delivery.bikerApp.settings.ProfileActivity" />
         </activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".settings.ProfileActivity" />
         <activity
-            android:name=".PasswordActivity"
-            android:parentActivityName=".LoginActivity" />
+            android:name=".settings.PasswordActivity"
+            android:parentActivityName=".auth.LoginActivity" />
         <activity
-            android:name=".DetailOrderActivity"
-            android:parentActivityName=".LoginActivity" />
+            android:name=".orders.DetailOrderActivity"
+            android:parentActivityName=".auth.LoginActivity" />
     </application>
 
 </manifest>

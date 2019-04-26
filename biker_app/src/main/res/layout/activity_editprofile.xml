@@ -5,7 +5,7 @@
     android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditProfileActivity">
+    tools:context=".settings.EditProfileActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/editProfileToolbar"

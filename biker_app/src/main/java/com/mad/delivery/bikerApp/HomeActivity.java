@@ -12,16 +12,28 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.bikerApp.auth.LoginActivity;
+import com.mad.delivery.bikerApp.orders.DetailOrderActivity;
+import com.mad.delivery.bikerApp.orders.Order;
+import com.mad.delivery.bikerApp.orders.OrderFragment;
+import com.mad.delivery.bikerApp.orders.PendingOrdersFragment;
+import com.mad.delivery.bikerApp.settings.SettingFragment;
 
 public class HomeActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
     private Order orderToBeUpdated;
     int open = 0;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        mAuth = FirebaseAuth.getInstance();
+
         if(getIntent().hasExtra("open")) {
             open = getIntent().getIntExtra("open", 0);
         } else {
@@ -83,6 +95,18 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
+    }
+
+    @Override
     public void openOrder(Order order) {
         Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
         intent.putExtra("order", order);
@@ -98,5 +122,6 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
 }

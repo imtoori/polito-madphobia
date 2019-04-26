@@ -5,18 +5,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Restaurant implements Parcelable {
-
-
-    protected String name;
-    protected String phoneNumber;
-    protected String email;
-    protected String description;
-    protected String road;
-    protected String houseNumber;
-    protected String doorPhone;
-    protected String postCode;
-    protected String city;
-    protected Uri imageUri;
+    public String name;
+    public String phoneNumber;
+    public String email;
+    public String description;
+    public String road;
+    public String houseNumber;
+    public String doorPhone;
+    public String postCode;
+    public String city;
+    public Uri imageUri;
 
     public Restaurant(String name,  String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;
@@ -32,7 +30,7 @@ public class Restaurant implements Parcelable {
         this.imageUri = imageUri;
     }
 
-    public Restaurant(com.mad.delivery.bikerApp.Restaurant other) {
+    public Restaurant(Restaurant other) {
         this.name = other.name;
         this.phoneNumber = other.phoneNumber;
         this.email = other.email;
@@ -85,14 +83,14 @@ public class Restaurant implements Parcelable {
 
     }
 
-    public static final Parcelable.Creator<com.mad.delivery.bikerApp.Restaurant> CREATOR
-            = new Parcelable.Creator<com.mad.delivery.bikerApp.Restaurant>() {
-        public com.mad.delivery.bikerApp.Restaurant createFromParcel(Parcel in) {
-            return new com.mad.delivery.bikerApp.Restaurant(in);
+    public static final Parcelable.Creator<Restaurant> CREATOR
+            = new Parcelable.Creator<Restaurant>() {
+        public Restaurant createFromParcel(Parcel in) {
+            return new Restaurant(in);
         }
 
-        public com.mad.delivery.bikerApp.Restaurant[] newArray(int size) {
-            return new com.mad.delivery.bikerApp.Restaurant[size];
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
         }
     };
 }
