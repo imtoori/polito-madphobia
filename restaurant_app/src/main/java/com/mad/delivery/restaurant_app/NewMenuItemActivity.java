@@ -202,7 +202,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
                     } else {
                         imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
                     }
-
                 }
         }
     }

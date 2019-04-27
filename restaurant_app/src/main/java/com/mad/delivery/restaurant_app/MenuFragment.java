@@ -26,13 +26,9 @@ import androidx.recyclerview.widget.RecyclerView;
  * A simple {@link Fragment} subclass.
  */
 public class MenuFragment extends Fragment implements View.OnClickListener {
-    static final String MENU_FRAGMENT_TAG = "menu_fragment";
-
     public MenuFragment() {
         setHasOptionsMenu(true);
-        // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

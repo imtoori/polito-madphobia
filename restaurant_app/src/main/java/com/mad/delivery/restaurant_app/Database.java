@@ -111,7 +111,7 @@ final class Database {
 
 
     void getMenuItems(OnDataFetched<List<MenuItemRest>, String> onDataFetched) {
-        menuItemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        menuItemsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<MenuItemRest> menuItemRests = new ArrayList<>();
@@ -140,7 +140,7 @@ final class Database {
         //TODO add callback
     }
 
-    public MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
+    MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
         menuItemsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
