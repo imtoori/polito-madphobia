@@ -2,12 +2,16 @@ package com.mad.delivery.restaurant_app;
 
 import android.net.Uri;
 import android.util.Log;
-import android.view.Menu;
 
-import org.joda.time.DateTime;
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import org.joda.time.DateTimeComparator;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,14 +19,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 final class Database {
     private static Database instance;
-    private static Map<String, Order> orders;
+    private static Map<String, Order> orders = new HashMap<>();
     private static MyDateComparator myDateComparator;
-    private static List<MenuItemRest> menuItems;
+    DatabaseReference restaurantRef;
+    DatabaseReference menuItemsRef;
 
     public static Database getInstance() {
         if (instance == null) {
@@ -32,51 +36,11 @@ final class Database {
     }
 
     private Database() {
-        myDateComparator = new MyDateComparator();
-        orders = new HashMap<>();
-        Random r = new Random();
-        for (int i = 0; i < 10; i++) {
-            List<Product> products = new ArrayList<>();
-            // create products for an order
-            Product p1 = new Product("Prodotto 1", 20);
-            Product p2 = new Product("Prodotto 2", 10);
-            products.add(p1);
-            products.add(p2);
-
-            Customer u = new Customer();
-            u.name = "FirstName";
-            u.phoneNumber = "+393926282813";
-            u.description = "This is a description";
-            u.lastName = "Last Name";
-            u.email = "email@email.it";
-            u.city = "Turin";
-            u.road = "Street name";
-            u.houseNumber = "20";
-            u.postCode = "10126";
-            u.doorPhone = "doorphone";
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
-            DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
-            DateTime to = DateTime.now();
-            Order o = new Order(u, products, from);
-            o.id = "1234";
-            o.status = OrderStatus.pending;
-            o.orderDate = to;
-            o.estimatedDelivery = to;
-            o.clientNotes = "Notes added by client";
-            orders.put(o.id, o);
-            menuItems = new ArrayList<>();
-
-            MenuItemRest menuItem1 = new MenuItemRest("Menu Item 1", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 0, Uri.EMPTY, new ArrayList<Integer>());
-            menuItems.add(menuItem1);
-            MenuItemRest menuItem2 = new MenuItemRest("Menu Item 2", "Food", "This is a description", 10.00, 10, 30, "/home/matteo/Immagini/icon", 1, Uri.EMPTY, new ArrayList<Integer>());
-            menuItems.add(menuItem2);
-
-            MenuItemRest menuItemRest = new MenuItemRest("Another Menu Item 1", "Drink", "This is a description", 10.30, 10, 21, "/home/matteo/Immagini/icon", 2, Uri.EMPTY, new ArrayList<Integer>());
-            MenuItemRest menuItemRest2 = new MenuItemRest("Another Menu Item 2", "Drink", "This is a description", 15.30, 13, 10, "/home/matteo/Immagini/icon", 3, Uri.EMPTY, new ArrayList<Integer>());
-            menuItems.add(menuItemRest);
-            menuItems.add(menuItemRest2);
-
-        }
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //TODO: after login implementation use current user
+        restaurantRef = database.getReference("users/restaurants/demoRestaurant");
+        menuItemsRef = database.getReference("users/restaurants/demoRestaurant/menuItems");
     }
 
     public static void update(Order o) {
@@ -94,17 +58,14 @@ final class Database {
         }
     }
 
-    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, menuItems.size(), url, subItems);
-        menuItems.add(item);
+    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, Uri url, List<String> subItems) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, url, subItems);
+        menuItemsRef.push().setValue(item);
+        //TODO: add callback may be useful
     }
 
 
     public static List<Order> getPendingOrders() {
-        if (instance == null) {
-            Log.d("MADAPP", "#### Database instance created");
-            instance = new Database();
-        }
         List<Order> pendings = new ArrayList<>();
         for (Order o : orders.values()) {
             if (o.status.equals(OrderStatus.pending)) pendings.add(o);
@@ -116,10 +77,6 @@ final class Database {
     }
 
     public static List<Order> getPreparingOrders() {
-        if (instance == null) {
-            Log.d("MADAPP", "#### Database instance created");
-            instance = new Database();
-        }
         List<Order> preparing = new ArrayList<>();
         for (Order o : orders.values()) {
             if (o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready))
@@ -146,30 +103,68 @@ final class Database {
     }
 
 
-    public void setMenuItems(Integer index, String name, String category, String description, String price, String availability, String time, String imgUri, Uri url, List<Integer> subItems) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, index, url, subItems);
-       Log.d("INDICE: ", "L'indice è" + index);
-        menuItems.set(index, item);
-        Log.d("INDICE: ", "L'indice è" + index);
-
+    public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, Uri url, List<String> subItems) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, url, subItems);
+        menuItemsRef.child(id).setValue(item);
+        //TODO add callback
     }
 
 
-    public List<MenuItemRest> getMenuItems() {
-        return menuItems;
-    }
-
-    boolean removeMenuItem(MenuItemRest menuItemRest) {
-        return menuItems.remove(menuItemRest);
-    }
-
-    public MenuItemRest getMenuItem(int id) {
-        for (MenuItemRest menuItem : menuItems) {
-            if (menuItem.id == id) {
-                return menuItem;
+    void getMenuItems(OnDataFetched<List<MenuItemRest>, String> onDataFetched) {
+        menuItemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<MenuItemRest> menuItemRests = new ArrayList<>();
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                for (DataSnapshot snapshot : iterator) {
+                    MenuItemRest item = snapshot.getValue(MenuItemRest.class);
+                    if (item != null) {
+                        item.id = snapshot.getKey();
+                        menuItemRests.add(item);
+                    } else {
+                        onDataFetched.onError("data not found");
+                    }
+                }
+                onDataFetched.onDataFetched(menuItemRests);
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                onDataFetched.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    void removeMenuItem(MenuItemRest menuItemRest) {
+        menuItemsRef.child(menuItemRest.id).removeValue();
+        //TODO add callback
+    }
+
+    public MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
+        menuItemsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                MenuItemRest item = dataSnapshot.getValue(MenuItemRest.class);
+                if (item != null) {
+                    item.id = dataSnapshot.getKey();
+                    onDataFetched.onDataFetched(item);
+                } else {
+                    onDataFetched.onError("data not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                onDataFetched.onError(databaseError.getMessage());
+            }
+        });
         return null;
     }
+}
+
+interface OnDataFetched<T, E> {
+    void onDataFetched(T data);
+
+    void onError(E error);
 }
 

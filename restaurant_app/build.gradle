@@ -33,6 +33,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.9.4'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-database:16.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

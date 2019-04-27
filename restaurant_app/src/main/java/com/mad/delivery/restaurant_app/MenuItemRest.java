@@ -11,12 +11,12 @@ public class MenuItemRest {
     public Integer ttl;
     public String imgUrl;
     public String category;
-    public Integer id;
+    public String id;
     public Integer availability;
     protected Uri imageUri;
-    List<Integer> subItems = new ArrayList<>();
+    List<String> subItems = new ArrayList<>();
 
-    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl, Integer id, Uri url, List<Integer> subItems) {
+    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl, Uri url, List<String> subItems) {
         this.name = name;
         this.description = description;
         this.price = price;

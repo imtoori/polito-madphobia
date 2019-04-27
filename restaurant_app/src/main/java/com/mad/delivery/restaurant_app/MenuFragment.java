@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -41,15 +42,29 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         setHasOptionsMenu(true);
         RecyclerView recyclerView = v.findViewById(R.id.menu_list);
 
-        // TODO remove items here when persistence is implemented
-        List<MenuItemRest> menuItems = Database.getInstance().getMenuItems();
-        List<String> categoryMenu = new ArrayList<>();
-        for (MenuItemRest i : menuItems) {
-            if (!categoryMenu.contains(i.category))
-                categoryMenu.add(i.category);
-        }
+        MyMenuItemCategoryRecyclerViewAdapter adapter = new MyMenuItemCategoryRecyclerViewAdapter(new ArrayList<>(), getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(new MyMenuItemCategoryRecyclerViewAdapter(categoryMenu, getContext()));
+        recyclerView.setAdapter(adapter);
+
+        // TODO remove items here when persistence is implemented
+        Database.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
+            @Override
+            public void onDataFetched(List<MenuItemRest> menuItems) {
+                List<String> categoryMenu = new ArrayList<>();
+                for (MenuItemRest i : menuItems) {
+                    if (!categoryMenu.contains(i.category))
+                        categoryMenu.add(i.category);
+                }
+                adapter.categories = categoryMenu;
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(getContext(), "Error reading data: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         return v;
     }

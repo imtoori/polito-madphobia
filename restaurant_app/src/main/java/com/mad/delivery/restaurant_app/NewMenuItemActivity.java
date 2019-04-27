@@ -21,6 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -28,13 +34,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.FileProvider;
 
 public class NewMenuItemActivity extends AppCompatActivity {
 
@@ -54,8 +55,9 @@ public class NewMenuItemActivity extends AppCompatActivity {
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
-    List<Integer> subItems = new ArrayList<>();
-    Integer index;
+    List<String> subItems = new ArrayList<>();
+    String index;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +78,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
         category = findViewById(R.id.newmenuitem_category);
         availability = findViewById(R.id.newmenuitem_availability);
         btnCamera = findViewById(R.id.newmenu_btncamera);
-        index = getIntent().getIntExtra("id", -1);
+        index = getIntent().getStringExtra("id");
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,27 +86,33 @@ public class NewMenuItemActivity extends AppCompatActivity {
             }
         });
 
-        if (index >= 0) {
-            Log.d("rr", Database.getInstance().getMenuItem(index).category);
-            updateFields(Database.getInstance().getMenuItem(index));
+        if (index != null) {
+            Database.getInstance().getMenuItem(index, new OnDataFetched<MenuItemRest, String>() {
+                @Override
+                public void onDataFetched(MenuItemRest data) {
+                    updateFields(data);
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(NewMenuItemActivity.this, "Error reading data: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
             return;
         }
 
         Intent intent = getIntent();
         if (intent != null) {
-            int[] items = intent.getIntArrayExtra("menuitems");
+            String[] items = intent.getStringArrayExtra("menuitems");
             if (items != null) {
-                List<Integer> integers = new ArrayList<>();
-                for (int item : items) {
-                    integers.add(item);
-                }
-                loadSubItems(integers);
+                List<String> strings = new ArrayList<>(Arrays.asList(items));
+                loadSubItems(strings);
             }
         }
 
     }
 
-    private void loadSubItems(List<Integer> items) {
+    private void loadSubItems(List<String> items) {
         if (items != null && items.size() > 0) {
             category.setText(R.string.offer);
             category.setEnabled(false);
@@ -113,17 +121,21 @@ public class NewMenuItemActivity extends AppCompatActivity {
             cardView.setVisibility(View.VISIBLE);
             LinearLayout linearLayout = findViewById(R.id.item_layout);
 
-            for (Integer item : items) {
+            for (String item : items) {
                 this.subItems.add(item);
-                MenuItemRest menuItemRest = Database.getInstance().getMenuItem(item);
+                Database.getInstance().getMenuItem(item, new OnDataFetched<MenuItemRest, String>() {
+                    @Override
+                    public void onDataFetched(MenuItemRest menuItemRest) {
+                        TextView textView = new TextView(NewMenuItemActivity.this);
+                        textView.setText(" - " + menuItemRest.name);
+                        linearLayout.addView(textView);
+                    }
 
-                if (menuItemRest == null) {
-                    continue;
-                }
-
-                TextView textView = new TextView(this);
-                textView.setText(" - " + menuItemRest.name);
-                linearLayout.addView(textView);
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(NewMenuItemActivity.this, "Error reading data: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
@@ -141,7 +153,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
         menuItem.availability = Integer.parseInt(savedInstanceState.getString("availability"));
         menuItem.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
         menuItem.imageUri = Uri.EMPTY;
-        menuItem.subItems = savedInstanceState.getIntegerArrayList("subitems");
+        menuItem.subItems = savedInstanceState.getStringArrayList("subitems");
         updateFields(menuItem);
 
     }
@@ -226,7 +238,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
         Log.d("TAG", u.category);
 
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+        if (u.imageUri == null || u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
 
@@ -324,11 +336,11 @@ public class NewMenuItemActivity extends AppCompatActivity {
             case R.id.edit_profile_done:
                 if (checkConstraints()) {
 
-                    if (index == -1) {
-                        Log.d("INDEX1", "L'indice è:"+index.toString());
-                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri,subItems);
+                    if (index == null) {
+                        Log.d("INDEX1", "L'indice è:" + index);
+                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri, subItems);
                     } else {
-                        Log.d("INDEX2", "L'indice è:"+index.toString() + "Nome: "+ name.toString());
+                        Log.d("INDEX2", "L'indice è:" + index + "Nome: " + name.toString());
                         Database.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri, subItems);
                     }
 
@@ -343,38 +355,38 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
     }
 
-    public boolean checkConstraints(){
+    public boolean checkConstraints() {
         boolean result = true;
-        String nameString =  "[a-zA-Z]+";
+        String nameString = "[a-zA-Z]+";
         String priceString = "([0-9][0-9]*)|([0-9][0-9]*\\.[0-9][0-9]*)";
         String timeString = "([0-9][0-9]*)";
 
-        if(name.getText().toString().length()<=0){
+        if (name.getText().toString().length() <= 0) {
             name.setError(getResources().getString(R.string.check_name_dish));
             result = false;
         }
 
-        if(description.getText().toString().length()<=0) {
+        if (description.getText().toString().length() <= 0) {
             description.setError(getResources().getString(R.string.check_description));
             result = false;
         }
 
-        if(!price.getText().toString().matches(priceString)){
+        if (!price.getText().toString().matches(priceString)) {
             price.setError(getResources().getString(R.string.check_price));
             result = false;
         }
 
-        if(!time.getText().toString().matches(timeString)){
+        if (!time.getText().toString().matches(timeString)) {
             time.setError(getResources().getString(R.string.check_time));
             result = false;
         }
 
-        if(!category.getText().toString().matches(nameString)) {
+        if (!category.getText().toString().matches(nameString)) {
             category.setError(getResources().getString(R.string.check_category));
             result = false;
 
         }
-        if(!availability.getText().toString().matches(timeString)) {
+        if (!availability.getText().toString().matches(timeString)) {
             availability.setError(getResources().getString(R.string.check_availability));
             result = false;
 
