@@ -1,0 +1,187 @@
+<resources>
+    <string name="app_restaurant_name">Restaurant app</string>
+    <string name="app_biker_name">Biker app</string>
+    <string name="app_customer_name">MAD Eat</string>
+
+    <!-- Profile Data -->
+    <string name="profile_toolbar">My Profile</string>
+    <string name="editprofile_toolbar">Edit Profile</string>
+    <string name="photo_toolbar">Photo Profile</string>
+    <string name="save">save</string>
+    <string name="next">Next</string>
+    <string name="reject">Reject</string>
+    <string name="order">Order</string>
+    <string name="persona_data">Personal Data</string>
+
+    <string name="imageprofile_desc">Image Profile</string>
+    <string name="your_name">Your name</string>
+    <string name="name">Name</string>
+    <string name="lastname">Last Name</string>
+
+    <string name="default_phone">+39 123 444 5555</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="your_email">Your Email Address</string>
+    <string name="email">Email Address</string>
+    <string name="profile_saved">Your profile has been saved!</string>
+
+    <string name="delivery_desc">Your order will be delivered here</string>
+    <string name="delivery">Delivery Address</string>
+    <string name="road">Road</string>
+    <string name="house_number">Number</string>
+    <string name="doorphone">Doorphone</string>
+    <string name="postalcode">Postal Code</string>
+    <string name="city">City</string>
+    <string name="desc_desc">A short description about you</string>
+    <string name="description">Description</string>
+
+    <string name="max_length_line">60</string>
+    <string name="max_length_description">180</string>
+    <string name="max_length_phone">15</string>
+    <string name="transition_zoom">transition_zoom</string>
+
+    <string name="check_name">First Name not valid</string>
+    <string name="check_lastName">Last Name not valid</string>
+    <string name="check_phone">Phone Number not valid</string>
+    <string name="check_email">Email Address not valid</string>
+
+    <!-- Login & Registration-->
+    <string name="login">Login</string>
+    <string name="registration">Registration</string>
+    <string name="password">Password</string>
+    <string name="password_confirm">Password Confirm</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="no_account_yet">Don\'t you have an account yet?\nCreate one for free!</string>
+    <string name="already_account">Have you got an account already?</string>
+    <string name="login_error_nodata">Email and/or Password must not be empty</string>
+    <string name="login_error_password_not_equal">Password and Password confirm must be equal</string>
+    <string name="login_error_fail">Email and/or password are not correct</string>
+    <string name="login_error_email_empty">Email must not be empty</string>
+    <string name="login_error_password_empty">Password must not be empty</string>
+    <string name="register_email_empty">Email must not be empty</string>
+    <string name="register_pwd_empty">Password must not be empty</string>
+    <string name="register_pwdc_empty">Password Confirm must not be empty</string>
+    <string name="register_email_bad_formatted">Email Address is not valid</string>
+    <string name="register_pwd_too_weak">Password should be at least 6 characters</string>
+    <string name="register_email_already_used">This Email Address is already used</string>
+    <string name="register_generic_error">An error occurred. Retry in some minutes.</string>
+    <string name="wait">Loading...</string>
+    <string name="invalid_data">Please check your email and password</string>
+    <string name="passwords_does_not_match">The two passwords does not match</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="check_road">Street name not valid</string>
+    <string name="check_city">City name not valid</string>
+    <string name="check_doorphone">Doorphone not valid</string>
+    <string name="check_postCode">Postal Code not valid</string>
+    <string name="check_houseNumber">House Number not valid</string>
+    <string name="check_password">The password must be at least 8 characters long and include a number, lowercase letter, uppercase letter and special character (e.g. @, &amp;, #, ?)</string>
+    <string name="check_password_repeat">Repeat same password</string>
+    <string name="check_current_password">Invalid current password</string>
+
+    <!-- Navigation -->
+    <string name="nav_menu">Menu</string>
+    <string name="nav_orders">Orders</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Orders Fragment -->
+    <string name="pending_orders">Pending</string>
+    <string name="preparing_orders">Preparing</string>
+    <string name="completed_orders">Completed</string>
+    <string name="order_number">Order </string>
+    <string name="order_requested_at">Delivery: </string>
+    <string name="order_from">From: </string>
+    <string name="order_pieces_count">Items: </string>
+    <string name="order_list">List: </string>
+    <string name="order_status">Status: </string>
+
+    <!-- Detail Order Fragment -->
+    <string name="user_info_order">Customer</string>
+    <string name="detail_order_info">Order Info</string>
+    <string name="arrived_at">Arrived:</string>
+    <string name="requested_at">Requested for:</string>
+    <string name="client_note">Client Notes</string>
+    <string name="products">Products</string>
+    <string name="additions">Additions:</string>
+    <string name="prefix_products">This order contains</string>
+    <string name="suffix_products">products.</string>
+    <string name="completing_order">Completing Order</string>
+
+    <!-- Completing Order Activity -->
+    <string name="delivery_options">Delivery</string>
+    <string name="delivery_opt_sentence">The customer requested the order to be delivered on %1$s</string>
+    <string name="confirm">Confirm</string>
+    <string name="change">Change</string>
+    <string name="admin_notes">Admin Notes</string>
+    <string name="add">Add</string>
+    <string name="changing_status">Change Order Status</string>
+    <string name="current_status">Current: </string>
+    <string name="changing_status_sentence">Next: </string>
+    <string name="confirmed_order">%1$s</string>
+    <string name="undo_confirm_order">Undo</string>
+    <string name="no_orders">Empty Folder</string>
+    <string name="change_status_button">Change Status</string>
+    <string name="delivery_confirm_error">Confirm or change the delivery time!</string>
+    no_completed_orders
+    <!-- Alert Dialog for "send order" -->
+    <string name="completing_order_title_dialog">Confirm Order</string>
+    <string name="completing_order_message_dialog">Do you want to confirm the order?</string>
+    <string name="rejecting_order_message_dialog">Do you want to REJECT the order?</string>
+
+    <string name="send">Yes</string>
+    <string name="cancel">Cancel</string>
+
+    <!--Setting Menu-->
+    <string name="setting_profile">My Profile</string>
+    <string name="setting_privacy">Change Account Password</string>
+    <string name="setting_openinghours">Opening and Closing Time</string>
+    <string name="description_opening_hours">In this section you can add or change the opening/closing hours of your activity. If you want to add a new slot just be sure that it\'s not overlapped (or else you\'ll get an error.</string>
+    <string name="title_opening_hours">Instructions</string>
+    <string name="days_of_week">Days of the Week</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    <!--PasswordActivity-->
+    <string name="current_pssw">Current password </string>
+    <string name="new_pssw">New password </string>
+    <string name="repeat_new_pssw">Repeat new password </string>
+    <string name="password_toolbar">Password</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="closed">Closed</string>
+    <string name="day1">Monday:</string>
+    <string name="Delivery_time">Delivery time</string>
+    <string name="start_time">Start time</string>
+    <string name="Opening_hours">Opening hours</string>
+    <string name="opening_hours">Opening hours</string>
+    <string name="day2">Tuesday: </string>
+    <string name="day3">Wednesday: </string>
+    <string name="day4">Thursday: </string>
+    <string name="day5">Friday: </string>
+    <string name="day6">Saturday: </string>
+    <string name="day7">Sunday: </string>
+    <string name="list_openinghours">Opening hours</string>
+    <string name="saved_password">Your password has been saved</string>
+
+    <string name="name_menu_item">Name dish</string>
+    <string name="time_to_preparation">Time needed</string>
+    <string name="price">Price</string>
+    <string name="detail_restaurant_info">Restaurant</string>
+    <string name="restaurant_note">Restaurant Notes</string>
+    <string name="restaurant_address">Restaurant Address:</string>
+    <string name="customer_address">Customer Address:</string>
+
+    <!-- Customer Strings -->
+    <string name="nav_wallet">My Wallet</string>
+    <string name="nav_search">Search</string>
+    <string name="location_hint">Enter your location</string>
+    <string name="title_category">Exploring our restaurants </string>
+    <string name="reviews">Reviews</string>
+    <string name="restaurant_info">Info</string>
+    <string name="restaurant_menu">Menu</string>
+</resources>
