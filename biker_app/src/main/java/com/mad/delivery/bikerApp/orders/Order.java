@@ -24,11 +24,15 @@ public class Order implements Parcelable {
     public String clientNotes;
     public String serverNotes;
     public String restNotes;
+    public Double price;
+    public Boolean method; //t=credit; f=cash
 
-    public Order(Customer u, Restaurant r, List<Product> products, DateTime orderFor) {
+    public Order(Customer u, Restaurant r, List<Product> products, DateTime orderFor, Double price, Boolean method) {
         this.client = u;
         this.restaurant=r;
         this.products = products;
+        this.price=price;
+        this.method=method;
         status = OrderStatus.pending;
         orderDate = new DateTime();
         this.orderFor = orderFor;
@@ -40,6 +44,8 @@ public class Order implements Parcelable {
         this.client = new Customer(other.client);
         this.restaurant=new Restaurant(other.restaurant);
         this.products = new ArrayList<>(other.products);
+        this.price=other.price;
+        this.method=other.method;
         status = other.status;
         orderDate = other.orderDate;
         orderFor = other.orderFor;
@@ -79,6 +85,9 @@ public class Order implements Parcelable {
         clientNotes = in.readString();
         serverNotes = in.readString();
         restNotes= in.readString();
+        price=in.readDouble();
+        method=(Boolean) in.readSerializable();
+
     }
 
     @Override
@@ -99,6 +108,8 @@ public class Order implements Parcelable {
         parcel.writeString(clientNotes);
         parcel.writeString(serverNotes);
         parcel.writeString(restNotes);
+        parcel.writeDouble(price);
+        parcel.writeSerializable(method);
     }
 
     public static final Parcelable.Creator<Order> CREATOR
@@ -124,6 +135,8 @@ public class Order implements Parcelable {
         clientNotes = other.clientNotes;
         restNotes= other.restNotes;
         serverNotes = other.serverNotes;
+        price=other.price;
+        method=other.method;
     }
 
     @Override
@@ -139,6 +152,7 @@ public class Order implements Parcelable {
                 ", estimatedDelivery=" + estimatedDelivery +
                 ", clientNotes='" + clientNotes + '\'' +
                 ", serverNotes='" + serverNotes + '\'' +
+                ", price= "+ price + "€"+
                 '}';
     }
 }

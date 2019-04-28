@@ -14,6 +14,7 @@ public class User implements Serializable {
     public String description;
     public Uri imageUri;
     public String registrationDate;
+    public Boolean status;
 
     public User(String name, String lastname, String phoneNumber, String emailAddress, String description, Uri imageUri) {
         this.name = name;
@@ -23,7 +24,7 @@ public class User implements Serializable {
         this.description = description;
         this.imageUri = imageUri;
         registrationDate = new DateTime().toString();
-
+        status=false;
     }
 
     public User() {

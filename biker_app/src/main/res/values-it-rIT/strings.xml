@@ -158,5 +158,12 @@
     <string name="saturday">Sabato</string>
     <string name="sunday">Domenica</string>
     <string name="address">Indirizzo</string>
+    <string name="payment">Payment</string>
+    <string name="payment_method">Payment method:</string>
+    <string name="payment_import">Payment import:</string>
+    <string name="nav_statistics">Statistics</string>
+    <string name="total_earnings">Total earnings:</string>
+    <string name="Orders">Orders:</string>
+    <string name="Status">Status</string>
 
 </resources>

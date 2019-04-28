@@ -32,6 +32,8 @@ public class DetailOrderFragment extends Fragment {
     TextView restAdd;
     TextView custAdd;
     TextView status;
+    TextView Pimport;
+    TextView Pmethod;
     TextView clientNotes;
     TextView restNotes;
     ImageView statusIcon;
@@ -63,6 +65,14 @@ public class DetailOrderFragment extends Fragment {
         status.setText(order.status.toString().toLowerCase());
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
+        Pimport=view.findViewById(R.id.payment_import);
+        Pimport.setText(getString(R.string.payment_import)+" "+ order.price +"€");
+        Pmethod=view.findViewById(R.id.payment_method);
+        if(order.method==true)
+            Pmethod.setText(getString(R.string.payment_method)+" credit" );
+        else
+            Pmethod.setText(getString(R.string.payment_method)+" cash" );
+
         clientNotes.setText(order.clientNotes);
         restNotes.setText(order.restNotes);
         products = order.products;

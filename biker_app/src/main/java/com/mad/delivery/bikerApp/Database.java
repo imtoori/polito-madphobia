@@ -69,7 +69,7 @@ final public class Database {
             DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
             DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
             DateTime to = DateTime.now();
-            Order o = new Order(u,rest, products, from);
+            Order o = new Order(u,rest, products, from, 20.05, true);
             o.id = "1234";
             o.status = OrderStatus.pending;
             o.orderDate = to;
