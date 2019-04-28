@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
         }
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> Database.getInstance().updateToken(instanceIdResult.getToken()));
-        FirebaseMessaging.getInstance().subscribeToTopic("demoRestaurant:order:new");
+        FirebaseMessaging.getInstance().subscribeToTopic("demoRestaurant.order.new");
     }
 
     @Override
