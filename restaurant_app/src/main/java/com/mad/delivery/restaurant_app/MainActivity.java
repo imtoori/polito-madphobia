@@ -1,14 +1,9 @@
 package com.mad.delivery.restaurant_app;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.jar.Attributes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +11,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
 
-public class MainActivity extends AppCompatActivity  implements PendingOrdersFragment.OnPendingOrderListener{
+
+public class MainActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
     private Order orderToBeUpdated;
     int open = 1;
@@ -27,13 +25,13 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(getIntent().hasExtra("open")) {
+        if (getIntent().hasExtra("open")) {
             open = getIntent().getIntExtra("open", 1);
         } else {
             Log.d("MADAPP", "NO open..");
         }
 
-        if(getIntent().hasExtra("orderToBeUpdated")) {
+        if (getIntent().hasExtra("orderToBeUpdated")) {
             Bundle bundle = getIntent().getExtras();
             orderToBeUpdated = bundle.getParcelable("orderToBeUpdated");
         }
@@ -61,7 +59,8 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
                         OrderFragment orderFragment = new OrderFragment();
                         ft = fm.beginTransaction();
                         Bundle bundle = new Bundle();
-                        if(orderToBeUpdated != null) bundle.putParcelable("orderToBeUpdated", orderToBeUpdated);
+                        if (orderToBeUpdated != null)
+                            bundle.putParcelable("orderToBeUpdated", orderToBeUpdated);
                         orderFragment.setArguments(bundle);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.addToBackStack(null);
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         Log.d("MADAPP", "Open=" + open);
-        switch(open) {
+        switch (open) {
             case 0:
                 navigation.setSelectedItemId(R.id.nav_menu);
                 break;
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity  implements PendingOrdersFra
                 navigation.setSelectedItemId(R.id.nav_menu);
         }
 
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> Database.getInstance().updateToken(instanceIdResult.getToken()));
     }
 
     @Override

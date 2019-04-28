@@ -5,11 +5,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.joda.time.DateTimeComparator;
 
@@ -38,9 +42,16 @@ final class Database {
     private Database() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //TODO: call this after login
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         //TODO: after login implementation use current user
         restaurantRef = database.getReference("users/restaurants/demoRestaurant");
         menuItemsRef = database.getReference("users/restaurants/demoRestaurant/menuItems");
+    }
+
+    void updateToken(String token) {
+        Log.d("TOKEN", token);
+        Database.getInstance().restaurantRef.child("token").setValue(token);
     }
 
     public static void update(Order o) {
