@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 class Order  implements Parcelable {

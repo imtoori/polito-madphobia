@@ -2,7 +2,6 @@ package com.mad.delivery.restaurant_app;
 
 import android.net.Uri;
 import android.util.Log;
-import android.view.Menu;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;

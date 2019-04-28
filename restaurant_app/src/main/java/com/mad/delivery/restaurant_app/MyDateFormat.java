@@ -1,7 +1,5 @@
 package com.mad.delivery.restaurant_app;
 
-import android.util.Log;
-
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;

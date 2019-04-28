@@ -1,14 +1,11 @@
 package com.mad.delivery.restaurant_app;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.jar.Attributes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

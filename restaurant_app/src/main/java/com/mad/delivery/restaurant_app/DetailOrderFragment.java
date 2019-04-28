@@ -1,12 +1,9 @@
 package com.mad.delivery.restaurant_app;
 
 
-import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;

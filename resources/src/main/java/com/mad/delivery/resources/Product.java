@@ -1,11 +1,11 @@
-package com.mad.delivery.restaurant_app;
+package com.mad.delivery.resources;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-class Product implements Parcelable {
-    protected String name;
-    protected int quantity;
+public class Product implements Parcelable {
+    public String name;
+    public int quantity;
 
 
     public Product(String name, int quantity) {
@@ -41,8 +41,8 @@ class Product implements Parcelable {
         parcel.writeInt(quantity);
     }
 
-    public static final Parcelable.Creator<Product> CREATOR
-            = new Parcelable.Creator<Product>() {
+    public static final Creator<Product> CREATOR
+            = new Creator<Product>() {
         public Product createFromParcel(Parcel in) {
             return new Product(in);
         }

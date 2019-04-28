@@ -7,17 +7,11 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.zip.Inflater;
 
 
 /**
