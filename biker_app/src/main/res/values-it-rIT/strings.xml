@@ -157,5 +157,6 @@
     <string name="friday">Venerdì</string>
     <string name="saturday">Sabato</string>
     <string name="sunday">Domenica</string>
+    <string name="address">Indirizzo</string>
 
 </resources>

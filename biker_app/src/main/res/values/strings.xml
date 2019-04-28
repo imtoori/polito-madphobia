@@ -173,5 +173,5 @@
     <string name="restaurant_note">Resturant Notes</string>
     <string name="restaurant_address">Restaurant Address:</string>
     <string name="customer_address">Customer Address:</string>
-
+     <string name="address">Address</string>
 </resources>
