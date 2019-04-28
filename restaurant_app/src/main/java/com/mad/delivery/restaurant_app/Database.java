@@ -58,8 +58,8 @@ final class Database {
         }
     }
 
-    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, Uri url, List<String> subItems) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, url, subItems);
+    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, subItems);
         menuItemsRef.push().setValue(item);
         //TODO: add callback may be useful
     }
@@ -103,8 +103,8 @@ final class Database {
     }
 
 
-    public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, Uri url, List<String> subItems) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, url, subItems);
+    public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri,  subItems);
         menuItemsRef.child(id).setValue(item);
         //TODO add callback
     }

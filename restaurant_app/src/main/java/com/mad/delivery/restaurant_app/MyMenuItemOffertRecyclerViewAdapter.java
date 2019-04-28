@@ -46,8 +46,7 @@ public class MyMenuItemOffertRecyclerViewAdapter extends RecyclerView.Adapter<My
         holder.description.setText(mItem.description);
         holder.availability.setText(mItem.availability.toString());
         holder.name.setText(mItem.name);
-        if (mItem.imageUri != Uri.EMPTY)
-            holder.image.setImageURI(mItem.imageUri);
+
 
         //holder.image.setImageDrawable(getDrawable(R.drawable.user_default));
 

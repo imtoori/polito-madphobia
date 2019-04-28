@@ -72,9 +72,10 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
                 return true;
             }
         });
+        Uri url = Uri.parse(mItem.imgUrl);
 
-        if(mItem.imageUri!= Uri.EMPTY)
-            holder.image.setImageURI(mItem.imageUri);
+        if(url!= Uri.EMPTY)
+            holder.image.setImageURI(url);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

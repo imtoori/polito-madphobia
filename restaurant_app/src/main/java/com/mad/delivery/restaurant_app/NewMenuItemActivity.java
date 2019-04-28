@@ -52,6 +52,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
+    String imgProfilUri;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
@@ -151,8 +152,8 @@ public class NewMenuItemActivity extends AppCompatActivity {
         menuItem.ttl = Integer.parseInt(savedInstanceState.getString("time"));
         menuItem.category = savedInstanceState.getString("category");
         menuItem.availability = Integer.parseInt(savedInstanceState.getString("availability"));
-        menuItem.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
-        menuItem.imageUri = Uri.EMPTY;
+        menuItem.imgUrl = savedInstanceState.getString("imageUri");
+        //  menuItem.imageUri = Uri.EMPTY;
         menuItem.subItems = savedInstanceState.getStringArrayList("subitems");
         updateFields(menuItem);
 
@@ -237,15 +238,16 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
         Log.d("TAG", u.category);
 
-        if (u.imageUri == null || u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+        if (u.imgUrl == null || u.imgUrl.isEmpty() ) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
 
             imgProfile.setImageDrawable(getDrawable(R.drawable.dish_icon));
         } else {
             Log.d("MADAPP", "Setting custom user image");
-            imageProfileUri = u.imageUri;
-            imgProfile.setImageURI(u.imageUri);
+            Uri url = Uri.parse(u.imgUrl);
+            imageProfileUri = url;
+            imgProfile.setImageURI(url);
         }
     }
 
@@ -337,10 +339,10 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
                     if (index == null) {
                         Log.d("INDEX1", "L'indice è:" + index);
-                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri, subItems);
+                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems);
                     } else {
                         Log.d("INDEX2", "L'indice è:" + index + "Nome: " + name.toString());
-                        Database.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), imageProfileUri, subItems);
+                        Database.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems);
                     }
 
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
