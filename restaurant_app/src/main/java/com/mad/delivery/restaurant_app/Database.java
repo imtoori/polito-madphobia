@@ -27,7 +27,6 @@ import java.util.Map;
 
 final class Database {
     private static Database instance;
-    private static Map<String, Order> orders = new HashMap<>();
     private static MyDateComparator myDateComparator;
     DatabaseReference restaurantRef;
     DatabaseReference menuItemsRef;
@@ -60,12 +59,10 @@ final class Database {
         Database.getInstance().restaurantRef.child("token").setValue(token);
     }
 
-    public static void update(Order o) {
-        Order old = orders.get(o.id);
-        if (old != null) {
-            Log.d("MADAPP", "Order with ID " + o.id + " has been updated.");
-            old.update(o);
-        }
+    public  void update(Order o) {
+
+            ordersRef.child(o.id).setValue(o);
+
     }
 
     class MyDateComparator implements Comparator<Order> {
@@ -92,7 +89,7 @@ final class Database {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
                         if(o!=null)
-                            Log.d("ORDER","size"+pendings.size());
+                            o.id = issue.getKey();
                             pendings.add(o);
                     }
                 }
@@ -117,29 +114,64 @@ final class Database {
    return pendings;
     }
 
-    public static List<Order> getPreparingOrders() {
+    public  List<Order> getPreparingOrders(FirebaseCallback firebaseCallback) {
         List<Order> preparing = new ArrayList<>();
-        for (Order o : orders.values()) {
-            if (o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready))
-                preparing.add(o);
-        }
-        Collections.sort(preparing, myDateComparator);
-        Log.d("MADAPP", "requested getPreparingOrders() ");
+        ordersRef.orderByChild("status").equalTo("preparing").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                        if(o!=null)
+                            Log.d("ORDER","size"+preparing.size());
+                        o.id= issue.getKey();
+                        preparing.add(o);
+                    }
+                }
+                firebaseCallback.onCallbak(preparing);
+                Log.d("QQQQQQ", "requested getPendingOrders() size=" + preparing.size());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         return preparing;
+
     }
 
-    public static List<Order> getCompletedOrders() {
+    public  List<Order> getCompletedOrders(FirebaseCallback firebaseCallback) {
         if (instance == null) {
             Log.d("MADAPP", "#### Database instance created");
             instance = new Database();
         }
         List<Order> completed = new ArrayList<>();
-        for (Order o : orders.values()) {
-            if (o.status.equals(OrderStatus.completed) || o.status.equals(OrderStatus.canceled))
-                completed.add(o);
-        }
-        Collections.sort(completed, myDateComparator);
-        Log.d("MADAPP", "requested getCompletedOrders(), size is " + completed.size());
+        ordersRef.orderByChild("status").equalTo("completed").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                        if(o!=null)
+                            Log.d("ORDER","size"+completed.size());
+                        o.id= issue.getKey();
+                        completed.add(o);
+                    }
+                }
+                firebaseCallback.onCallbak(completed);
+                Log.d("QQQQQQ", "requested getPendingOrders() size=" + completed.size());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         return completed;
     }
 

@@ -78,7 +78,6 @@ public class PendingOrdersFragment extends Fragment {
                 }
             }
         });
-        Log.d("QQQQQQ", "PENDING ORDER FRAGMENT SIZE: ");
 
         recyclerView.getAdapter().notifyDataSetChanged();
 

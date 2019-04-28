@@ -100,6 +100,7 @@ class Order  implements Parcelable {
     };
 
     public void update(Order other) {
+
         this.id = other.id;
         this.client = other.client;
         this.products = other.products;

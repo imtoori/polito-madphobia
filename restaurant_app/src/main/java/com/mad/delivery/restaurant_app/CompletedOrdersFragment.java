@@ -60,7 +60,7 @@ public class CompletedOrdersFragment extends Fragment {
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         Log.d("MADAPP", "Completed: onCreateView called");
         orders = new ArrayList<>();
-        showEmptyFolder();
+      //  showEmptyFolder();
         Log.d("MADAPP", "Completed: orders size = " + orders.size());
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
 
@@ -77,9 +77,20 @@ public class CompletedOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        orders.addAll(Database.getCompletedOrders());
+        Database.getInstance().getCompletedOrders(new FirebaseCallback() {
+            @Override
+            public void onCallbak(List<Order> list) {
+                if(list.isEmpty())
+                    showEmptyFolder();
+                else {
+                    Log.d("CALL", list.toString());
+                    orders.addAll(list);
+                    ordersAdapter.orders = orders;
+                    ordersAdapter.notifyDataSetChanged();
+                }
+            }
+        });
         recyclerView.getAdapter().notifyDataSetChanged();
-        showEmptyFolder();
     }
 
     @Override
