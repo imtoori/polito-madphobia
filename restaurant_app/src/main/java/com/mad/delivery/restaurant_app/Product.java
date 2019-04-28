@@ -14,7 +14,7 @@ class Product implements Parcelable {
         this.name = name;
         this.quantity = quantity;
     }
-
+    public Product(){}
     @Override
     public String toString() {
         return "Product{" +

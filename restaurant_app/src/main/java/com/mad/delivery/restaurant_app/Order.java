@@ -14,17 +14,17 @@ class Order  implements Parcelable {
     protected Customer client;
     protected List<Product> products;
     protected OrderStatus status;
-    protected DateTime orderDate;
-    protected DateTime orderFor;
-    protected DateTime estimatedDelivery;
+    protected String orderDate;
+    protected String orderFor;
+    protected String estimatedDelivery;
     protected String clientNotes;
     protected String serverNotes;
-
-    public Order(Customer u, List<Product> products, DateTime orderFor) {
+    public Order(){}
+    public Order(Customer u, List<Product> products, String orderFor) {
         this.client = u;
         this.products = products;
         status = OrderStatus.pending;
-        orderDate = new DateTime();
+        orderDate = new String();
         this.orderFor = orderFor;
     }
 
@@ -63,9 +63,9 @@ class Order  implements Parcelable {
             products = new ArrayList<Product>();
             in.readTypedList(products, Product.CREATOR);
         status = (OrderStatus) in.readSerializable();
-        orderDate = (DateTime) in.readSerializable();
-        orderFor = (DateTime) in.readSerializable();
-        estimatedDelivery = (DateTime) in.readSerializable();
+        orderDate =  in.readString();
+        orderFor = in.readString();
+        estimatedDelivery = in.readString();
         clientNotes = in.readString();
         serverNotes = in.readString();
     }
@@ -81,9 +81,9 @@ class Order  implements Parcelable {
         parcel.writeParcelable(client, i);
         parcel.writeTypedList(products);
         parcel.writeSerializable(status);
-        parcel.writeSerializable(orderDate);
-        parcel.writeSerializable(orderFor);
-        parcel.writeSerializable(estimatedDelivery);
+        parcel.writeString(orderDate);
+        parcel.writeString(orderFor);
+        parcel.writeString(estimatedDelivery);
         parcel.writeString(clientNotes);
         parcel.writeString(serverNotes);
     }

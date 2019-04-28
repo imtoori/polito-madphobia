@@ -8,10 +8,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +31,7 @@ final class Database {
     private static MyDateComparator myDateComparator;
     DatabaseReference restaurantRef;
     DatabaseReference menuItemsRef;
+    DatabaseReference ordersRef;
 
     public static Database getInstance() {
         if (instance == null) {
@@ -43,7 +48,12 @@ final class Database {
         //TODO: after login implementation use current user
         restaurantRef = database.getReference("users/restaurants/demoRestaurant");
         menuItemsRef = database.getReference("users/restaurants/demoRestaurant/menuItems");
+        ordersRef = database.getReference("orders");
+
+
     }
+
+
 
     void updateToken(String token) {
         Log.d("TOKEN", token);
@@ -72,15 +82,39 @@ final class Database {
     }
 
 
-    public static List<Order> getPendingOrders() {
+    public  List<Order> getPendingOrders(FirebaseCallback firebaseCallback) {
         List<Order> pendings = new ArrayList<>();
-        for (Order o : orders.values()) {
+       ordersRef.orderByChild("status").equalTo("pending").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                        if(o!=null)
+                            Log.d("ORDER","size"+pendings.size());
+                            pendings.add(o);
+                    }
+                }
+                firebaseCallback.onCallbak(pendings);
+                Log.d("QQQQQQ", "requested getPendingOrders() size=" + pendings.size());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+   /*     for (Order o : orders.values()) {
             if (o.status.equals(OrderStatus.pending)) pendings.add(o);
         }
+        */
         Collections.sort(pendings, myDateComparator);
 
-        Log.d("MADAPP", "requested getPendingOrders() size=" + pendings.size());
-        return pendings;
+        Log.d("QQQQQQ", "requested getPendingOrders() size=" + pendings.size());
+   return pendings;
     }
 
     public static List<Order> getPreparingOrders() {
@@ -175,3 +209,6 @@ interface OnDataFetched<T, E> {
     void onError(E error);
 }
 
+ interface FirebaseCallback{
+    void  onCallbak(List<Order> list);
+}

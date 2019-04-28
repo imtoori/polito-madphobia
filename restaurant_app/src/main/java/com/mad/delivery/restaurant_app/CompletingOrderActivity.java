@@ -58,7 +58,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         newStatus.setText(newStatusAsString);
         newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
         btnUndoDelivery = findViewById(R.id.btn_undo_delivery);
-        requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(modifiedOrder.orderFor)));
+        requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
@@ -90,8 +90,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         btnUndoDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modifiedOrder.orderFor = oldDateTime;
-                requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(modifiedOrder.orderFor)));
+                modifiedOrder.orderFor = oldDateTime.toString();
+                requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
                 btnDeliveryTimeChange.setVisibility(View.VISIBLE);
                 btnConfirm.setVisibility(View.VISIBLE);
                 btnUndoDelivery.setVisibility(View.GONE);
@@ -189,7 +189,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     }
 
     public void confirmDeliveryTime() {
-        requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, MyDateFormat.parse(modifiedOrder.orderFor)));
+        requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
         btnDeliveryTimeChange.setVisibility(View.GONE);
         btnConfirm.setVisibility(View.GONE);
         btnUndoDelivery.setVisibility(View.VISIBLE);
@@ -200,9 +200,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void onTimePicked(int h, int m) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
-        modifiedOrder.orderFor = modifiedOrder.orderFor.hourOfDay().setCopy(h);
-        modifiedOrder.orderFor = modifiedOrder.orderFor.minuteOfHour().setCopy(m);
+         DateTime.parse(modifiedOrder.orderFor).hourOfDay().setCopy(h);
+        DateTime.parse(modifiedOrder.orderFor).minuteOfHour().setCopy(m);
         confirmDeliveryTime();
     }
 

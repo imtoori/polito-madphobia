@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 
@@ -52,8 +54,11 @@ public class DetailOrderFragment extends Fragment {
         statusIcon = view.findViewById(R.id.status_icon);
         clientNotes = view.findViewById(R.id.client_notes_tv);
         Order order = getArguments().getParcelable("order");
-        arrived.setText(MyDateFormat.parse(order.orderDate));
-        requested.setText(MyDateFormat.parse(order.orderFor));
+        arrived.setText(MyDateFormat.parse(DateTime.parse(order.orderDate)));
+        requested.setText(MyDateFormat.parse(DateTime.parse(order.orderFor)));
+
+      //  arrived.setText(order.orderDate);
+       // requested.setText(order.orderFor);
         status.setText(order.status.toString().toLowerCase());
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);

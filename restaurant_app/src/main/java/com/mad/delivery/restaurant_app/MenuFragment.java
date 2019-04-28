@@ -42,6 +42,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
+
         // TODO remove items here when persistence is implemented
         Database.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
             @Override
@@ -91,4 +92,6 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_menu,menu);
     }
+
+
 }
