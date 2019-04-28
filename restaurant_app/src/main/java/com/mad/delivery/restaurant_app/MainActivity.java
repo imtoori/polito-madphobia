@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class MainActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
         }
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> Database.getInstance().updateToken(instanceIdResult.getToken()));
+        FirebaseMessaging.getInstance().subscribeToTopic("demoRestaurant:order:new");
     }
 
     @Override
