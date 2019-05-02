@@ -97,6 +97,14 @@
           }
         },
         {
+          "client_id": "593427983711-7bjqg6eqm3194dj2s7k6bm25q9j4nva7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mad.delivery.restaurant_app",
+            "certificate_hash": "9595e40f5f962a2fbb029a59322a43d22558ffb2"
+          }
+        },
+        {
           "client_id": "593427983711-gnrdjh3583vma0jqn9jkplff8uqdle1p.apps.googleusercontent.com",
           "client_type": 3
         }

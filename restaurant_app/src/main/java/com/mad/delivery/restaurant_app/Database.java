@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +32,8 @@ final class Database {
     DatabaseReference restaurantRef;
     DatabaseReference menuItemsRef;
     DatabaseReference ordersRef;
+    FirebaseAuth mAuth;
+
 
     public static Database getInstance() {
         if (instance == null) {
@@ -44,9 +47,11 @@ final class Database {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //TODO: call this after login
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
+        mAuth = FirebaseAuth.getInstance();
+
         //TODO: after login implementation use current user
-        restaurantRef = database.getReference("users/restaurants/demoRestaurant");
-        menuItemsRef = database.getReference("users/restaurants/demoRestaurant/menuItems");
+        restaurantRef = database.getReference("users/restaurants/" + mAuth.getUid());
+        menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/menuItems");
         ordersRef = database.getReference("orders");
 
 
@@ -81,20 +86,20 @@ final class Database {
 
     public  List<Order> getPendingOrders(FirebaseCallback firebaseCallback) {
         List<Order> pendings = new ArrayList<>();
-       ordersRef.orderByChild("status").equalTo("pending").addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o!=null)
+                        if(o.status.toString().equals("pending")) {
                             o.id = issue.getKey();
                             pendings.add(o);
+                        }
                     }
                 }
                 firebaseCallback.onCallbak(pendings);
-                Log.d("QQQQQQ", "requested getPendingOrders() size=" + pendings.size());
             }
 
             @Override
@@ -110,27 +115,25 @@ final class Database {
         */
         Collections.sort(pendings, myDateComparator);
 
-        Log.d("QQQQQQ", "requested getPendingOrders() size=" + pendings.size());
    return pendings;
     }
 
     public  List<Order> getPreparingOrders(FirebaseCallback firebaseCallback) {
         List<Order> preparing = new ArrayList<>();
-        ordersRef.orderByChild("status").equalTo("preparing").addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o!=null)
-                            Log.d("ORDER","size"+preparing.size());
-                        o.id= issue.getKey();
-                        preparing.add(o);
+                        if(o.status.toString().equals("preparing")) {
+                            o.id = issue.getKey();
+                            preparing.add(o);
+                        }
                     }
                 }
                 firebaseCallback.onCallbak(preparing);
-                Log.d("QQQQQQ", "requested getPendingOrders() size=" + preparing.size());
             }
 
             @Override
@@ -145,25 +148,24 @@ final class Database {
 
     public  List<Order> getCompletedOrders(FirebaseCallback firebaseCallback) {
         if (instance == null) {
-            Log.d("MADAPP", "#### Database instance created");
             instance = new Database();
         }
         List<Order> completed = new ArrayList<>();
-        ordersRef.orderByChild("status").equalTo("completed").addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o!=null)
-                            Log.d("ORDER","size"+completed.size());
-                        o.id= issue.getKey();
-                        completed.add(o);
+
+                        if(o.status.toString().equals("completed")) {
+                            o.id = issue.getKey();
+                            completed.add(o);
+                        }
                     }
                 }
                 firebaseCallback.onCallbak(completed);
-                Log.d("QQQQQQ", "requested getPendingOrders() size=" + completed.size());
             }
 
             @Override
@@ -233,6 +235,27 @@ final class Database {
         });
         return null;
     }
+
+    User getUserProfile(String id, OnDataFetched<User, String> onDataFetched){
+
+        restaurantRef.child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User item = dataSnapshot.getValue(User.class);
+                if (item != null) {
+                    onDataFetched.onDataFetched(item);
+                } else {
+                    onDataFetched.onError("data not found");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                onDataFetched.onError(databaseError.getMessage());
+            }
+        });
+        return null;
+    }
+
 }
 
 interface OnDataFetched<T, E> {
@@ -243,4 +266,5 @@ interface OnDataFetched<T, E> {
 
  interface FirebaseCallback{
     void  onCallbak(List<Order> list);
+
 }

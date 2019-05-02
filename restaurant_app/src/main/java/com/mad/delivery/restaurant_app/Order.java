@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 class Order  implements Parcelable {
@@ -19,6 +18,7 @@ class Order  implements Parcelable {
     protected String estimatedDelivery;
     protected String clientNotes;
     protected String serverNotes;
+    protected String restaurantId;
     public Order(){}
     public Order(Customer u, List<Product> products, String orderFor) {
         this.client = u;
@@ -86,6 +86,8 @@ class Order  implements Parcelable {
         parcel.writeString(estimatedDelivery);
         parcel.writeString(clientNotes);
         parcel.writeString(serverNotes);
+        parcel.writeString(restaurantId);
+
     }
 
     public static final Parcelable.Creator<Order> CREATOR
@@ -110,6 +112,7 @@ class Order  implements Parcelable {
         estimatedDelivery = other.estimatedDelivery;
         clientNotes = other.clientNotes;
         serverNotes = other.serverNotes;
+        restaurantId = other.restaurantId;
     }
 
     @Override

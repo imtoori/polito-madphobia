@@ -33,5 +33,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha05'
     implementation 'joda-time:joda-time:2.9.4'
     implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha04'
+    implementation project(':resources')
 }
 apply plugin: 'com.google.gms.google-services'

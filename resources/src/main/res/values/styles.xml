@@ -1,0 +1,86 @@
+<resources xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
+
+        <item name="colorControlNormal">@color/colorTextIcon</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.ToolBar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary" >
+        <item name="android:background">@drawable/gradient</item>
+        <item name="android:textColor">@color/colorTextIcon</item>
+        <item name="android:subtitleTextColor" > @color/colorTextIcon</item>
+        <item name="android:homeAsUpIndicator">@color/colorTextIcon</item>
+        <item name="actionMenuTextColor">@color/colorTextIcon</item>
+        <item name="android:actionMenuTextColor">@color/colorTextIcon</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Base.Theme.MaterialComponents.Light.Dialog">
+        <item name="android:textSize">@dimen/subtitle</item>
+    </style>
+    <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/colorTextIcon</item>
+        <item name="android:textStyle">bold</item>
+        <item name="elevation">5dp</item>
+        <item name="android:textSize">@dimen/description</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+    <style name="AppTheme.EditText" parent="Base.V7.Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/et_background</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
+    <style name="AppTheme.TextInputEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textAppearance"> @style/AppTheme.InputText</item>
+        <item name="android:dropDownHintAppearance"> @style/AppTheme.HintText</item>
+    </style>
+    <style name="AppTheme.InputText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textSize">@dimen/normalText</item>
+    </style>
+    <style name="AppTheme.HintText" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textSize">@dimen/description</item>
+    </style>
+    <style name="EditText.Login" parent="Widget.AppCompat.EditText">
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
+        <item name="android:colorControlActivated">@color/colorPrimaryDark</item>
+    </style>
+    <style name="TextView.Title" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/title</item>
+        <item name="android:textColor">@color/colorTextIcon</item>
+    </style>
+    <style name="AppTheme.Login.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textSize">@dimen/title</item>
+        <item name="android:background">@drawable/edittextshape</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+        <item name="android:letterSpacing">@dimen/spacing</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">8dp</item>
+    </style>
+    <style name="AppTheme.Login.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:textSize">@dimen/title</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">@dimen/spacing</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/edittextshape</item>
+        <item name="android:textColor">@color/colorTextIcon</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:padding">8dp</item>
+    </style>
+    <style name="AppTheme.RatingBar" parent="android:style/Widget.Material.RatingBar.Small">
+        <item name="colorControlNormal">@color/colorDivider</item>
+        <item name="colorControlActivated">@color/colorWhite</item>
+    </style>
+</resources>

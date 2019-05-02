@@ -1,20 +1,24 @@
 package com.mad.delivery.consumerApp;
 
 import android.net.Uri;
+
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
-    protected String name;
-    protected String lastName;
-    protected String  phoneNumber;
-    protected String  email;
-    protected String  description;
-    protected String  road;
-    protected String  houseNumber;
-    protected String  doorPhone;
-    protected String  postCode;
-    protected String city;
-    protected Uri imageUri;
+    public String name;
+    public String lastName;
+    public String  phoneNumber;
+    public String  email;
+    public String  description;
+    public String  road;
+    public String  houseNumber;
+    public String  doorPhone;
+    public String  postCode;
+    public String city;
+    public Uri imageUri;
+    public String registrationDate;
 
     public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;
@@ -28,6 +32,8 @@ public class User implements Serializable {
         this.postCode = postCode;
         this.city = city;
         this.imageUri = imageUri;
+        registrationDate = new DateTime().toString();
+
     }
 
     public User() {}

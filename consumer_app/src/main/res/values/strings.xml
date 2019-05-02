@@ -43,4 +43,10 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
+
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

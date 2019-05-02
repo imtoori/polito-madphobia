@@ -3,8 +3,6 @@ package com.mad.delivery.restaurant_app;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
-import android.util.Log;
 
 import java.util.Locale;
 

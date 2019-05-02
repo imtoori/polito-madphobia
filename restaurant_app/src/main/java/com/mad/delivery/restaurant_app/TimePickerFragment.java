@@ -9,9 +9,7 @@ import android.widget.TimePicker;
 
 import org.joda.time.DateTime;
 
-import java.sql.Time;
 import java.util.Calendar;
-import java.util.Date;
 
 import androidx.fragment.app.DialogFragment;
 

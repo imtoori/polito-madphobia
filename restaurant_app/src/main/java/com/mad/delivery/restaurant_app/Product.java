@@ -3,8 +3,6 @@ package com.mad.delivery.restaurant_app;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 class Product implements Parcelable {
     protected String name;
     protected int quantity;
