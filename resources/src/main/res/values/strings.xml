@@ -183,5 +183,11 @@
     <string name="title_category">Exploring our restaurants </string>
     <string name="reviews">Reviews</string>
     <string name="restaurant_info">Info</string>
-    <string name="restaurant_menu">Menu</string>
+    <string name="restaurant_name">Menu</string>
+    <string name="delivery_cost_title">Delivery Cost</string>
+    <string name="delivery_cost">Delivery cost is: %1$s€</string>
+    <string name="min_order_title">Orders Limitations</string>
+    <string name="min_order">Minimum order is %1$s €</string>
+    <string name="rest_menu">Restaurant Menu</string>
+    <string name="choose_restaurant">Choose a restaurant</string>
 </resources>

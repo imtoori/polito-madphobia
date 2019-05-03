@@ -4,29 +4,67 @@ package com.mad.delivery.consumerApp.search;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.resources.MenuCategory;
+import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.Restaurant;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RestaurantMenuFragment extends Fragment {
-
-
+    private MenuCategoriesAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private Restaurant restaurant;
+    private List<MenuCategory> categories;
+    private TextView minOrder, deliveryCost;
     public RestaurantMenuFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_restaurant_menu, container, false);
+        View view =  inflater.inflate(R.layout.fragment_restaurant_menu, container, false);
+        minOrder = view.findViewById(R.id.rest_menu_minorder_cost);
+        deliveryCost = view.findViewById(R.id.rest_menu_delivery_cost);
+        restaurant = (Restaurant) getArguments().get("restaurant");
+        Log.d("MADAPP", restaurant.toString());
+        categories = new ArrayList<>();
+        Map<String, List<MenuItemRest>> menus = new HashMap<>();
+        if(restaurant.menuItems != null) {
+            restaurant.menuItems.values().stream().forEach(item -> {
+                menus.putIfAbsent(item.category, new ArrayList<>());
+                List<MenuItemRest> menuList = menus.get(item.category);
+                menuList.add(item);
+                MenuCategory mc = new MenuCategory(item.category, menuList);
+                categories.add(mc);
+            });
+        }
+
+        minOrder.setText(getResources().getString(R.string.min_order, String.valueOf(restaurant.minOrderCost)));
+        deliveryCost.setText(getResources().getString(R.string.delivery_cost, String.valueOf(restaurant.deliveryCost)));
+        mAdapter = new MenuCategoriesAdapter(categories);
+        recyclerView =  view.findViewById(R.id.restaurant_menu_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mAdapter);
+        return view;
     }
 
 }

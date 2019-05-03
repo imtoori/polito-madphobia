@@ -6,30 +6,60 @@
     android:layout_height="wrap_content"
     tools:context=".search.SearchFragment">
 
-    <EditText
-        android:id="@+id/delivery_address_et"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/fragmentName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="@string/location_hint"
-        android:inputType="textPostalAddress"
-        app:layout_constraintEnd_toStartOf="@+id/location_img"
+        android:layout_marginEnd="16dp"
+        android:text="@string/choose_restaurant"
+        android:textSize="@dimen/bigTitle"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/delivery_address_et"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/edit_text_border"
+        style="@style/Widget.AppCompat.EditText"
+        android:ems="10"
+        android:paddingStart="16dp"
+        android:hint="@string/location_hint"
+        android:inputType="textPostalAddress"
+        app:layout_constraintBottom_toBottomOf="@+id/search_imgbtn"
+        app:layout_constraintEnd_toStartOf="@+id/search_imgbtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_imgbtn" />
 
     <ImageButton
         android:id="@+id/location_img"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_location2"
+        android:layout_marginEnd="8dp"
         android:background="@null"
+        android:src="@drawable/ic_myloc"
         app:layout_constraintBottom_toBottomOf="@+id/delivery_address_et"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/search_imgbtn"
         app:layout_constraintTop_toTopOf="@+id/delivery_address_et" />
+
+
+    <ImageButton
+        android:id="@+id/search_imgbtn"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/gradient"
+        android:elevation="4dp"
+        android:src="@drawable/ic_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentName" />
 
     <com.mad.delivery.resources.GridRecyclerView
         android:id="@+id/category_rv"
@@ -38,7 +68,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layoutAnimation="@anim/grid_layout_animation_from_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/delivery_address_et">
