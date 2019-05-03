@@ -21,11 +21,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,7 +61,6 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
-        imageProfileUri = Uri.EMPTY;
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
@@ -160,7 +162,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.doorPhone = savedInstanceState.getString("doorPhone");
         mUser.postCode = savedInstanceState.getString("postCode");
         mUser.city = savedInstanceState.getString("city");
-        mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
+        mUser.imageUri = savedInstanceState.getString("imageUri");
         updateFields(mUser);
     }
 
@@ -193,52 +195,37 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("phoneNumber", ""),
-                sharedPref.getString("emailAddress", ""),
-                sharedPref.getString("description", ""),
-                sharedPref.getString("road", ""),
-                sharedPref.getString("houseNumber", ""),
-                sharedPref.getString("doorPhone", ""),
-                sharedPref.getString("postCode", ""),
-                sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())),
-                sharedPref.getString("openingTime", getResources().getString(R.string.opening_hours_full))
-        );
 
-        Log.d("MADAPP", "GET Profile data = " + Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        updateFields(mUser);
+      Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
+            @Override
+            public void onCallbak(User user) {
+                if(user!=null){
+                    mUser=new User(user);
+                    updateFields(mUser);
+                }
+
+            }
+        });
     }
 
     private void setProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("name", name.getText().toString());
-        editor.putString("phoneNumber", phoneNumber.getText().toString());
-        editor.putString("emailAddress", emailAddress.getText().toString());
-        editor.putString("description", description.getText().toString());
-        editor.putString("road", road.getText().toString());
-        editor.putString("houseNumber", houseNumber.getText().toString());
-        editor.putString("doorPhone", doorPhone.getText().toString());
-        editor.putString("postCode", postCode.getText().toString());
-        editor.putString("city", city.getText().toString());
-        editor.putString("openingTime", openingTime.getText().toString());
 
-        try {
-            Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
-            if (imageProfileUri != Uri.EMPTY) {
-                editor.putString("imageUri", imageProfileUri.toString());
-            } else {
-                Log.d("MADAPP", "added empty");
-                editor.putString("imageUri", Uri.EMPTY.toString());
-            }
+        User user  = new User(name.getText().toString(),
+                phoneNumber.getText().toString(),
+                emailAddress.getText().toString(),
+                description.getText().toString(),
+                road.getText().toString(),
+                houseNumber.getText().toString(),
+                doorPhone.getText().toString(),
+                postCode.getText().toString(),
+                city.getText().toString(),
+                imageProfileUri,
+                openingTime.getText().toString(),
+                imageProfileUri.getLastPathSegment());
+        Database.getInstance().putUserProfile(user);
 
-        } catch (NullPointerException e) {
-            editor.putString("imageUri", Uri.EMPTY.toString());
-        }
 
-        editor.apply();
+
     }
 
     private File createImageFile() throws IOException {
@@ -300,6 +287,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateFields(User u) {
+        Log.d("UPDATE","name: " + u.name);
         name.setText(u.name);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
@@ -310,17 +298,33 @@ public class EditProfileActivity extends AppCompatActivity {
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
+        imageProfileUri = Uri.parse( mUser.imageUri);
+        imgProfile.setImageURI(Uri.parse(u.imageUri));
 
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
-            Log.d("MADAPP", "Setting user default image");
-            imageProfileUri = Uri.EMPTY;
+        if(imgProfile.getDrawable() == null) {
+            Database.getInstance().getImageProfile(u.imageUri, new Callback() {
+                @Override
+                public void onCallback(Uri item) {
+                    if (item != null) {
+                        if (item == Uri.EMPTY || item.toString().equals("")) {
+                            Log.d("MADAPP", "Setting user default image");
+                            imageProfileUri = Uri.EMPTY;
 
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-        } else {
-            Log.d("MADAPP", "Setting custom user image");
-            imageProfileUri = u.imageUri;
-            imgProfile.setImageURI(u.imageUri);
+                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        } else {
+                            Log.d("MADAPP", "Setting custom user image");
+                          //  imageProfileUri = item;
+                            // imgProfile.setImageURI(item);
+                            Picasso.get().load(item.toString()).into(imgProfile);
+                           // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
+
+                        }
+                    }
+
+                }
+            });
         }
+
     }
 
     /*

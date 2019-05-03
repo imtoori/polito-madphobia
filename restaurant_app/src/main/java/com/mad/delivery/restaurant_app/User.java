@@ -13,10 +13,12 @@ public class User implements Serializable {
     protected String  doorPhone;
     protected String  postCode;
     protected String city;
-    protected Uri imageUri;
+    protected String imageUri;
+    protected String imageName;
     protected String opening;
+    protected String id;
 
-    public User(String name,String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String opening) {
+    public User(String name,String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String opening,String imageName) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
@@ -26,10 +28,25 @@ public class User implements Serializable {
         this.doorPhone = doorPhone;
         this.postCode = postCode;
         this.city = city;
-        this.imageUri = imageUri;
+        this.imageUri = imageUri.toString();
         this.opening = opening;
+        this.imageName = imageName;
     }
 
     public User() {}
+    public User(User u) {
+        this.name = u.name;
+        this.phoneNumber = u.phoneNumber;
+        this.email = u.email;
+        this.description = u.description;
+        this.road = u.road;
+        this.houseNumber = u.houseNumber;
+        this.doorPhone = u.doorPhone;
+        this.postCode = u.postCode;
+        this.city = u.city;
+        this.imageUri = u.imageUri;
+        this.opening = u.opening;
+        this.imageName = u.imageName;
+    }
 
 }

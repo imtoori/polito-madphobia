@@ -1,9 +1,12 @@
 package com.mad.delivery.restaurant_app;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,12 +15,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,6 +39,8 @@ final class Database {
     DatabaseReference restaurantRef;
     DatabaseReference menuItemsRef;
     DatabaseReference ordersRef;
+    DatabaseReference profileRef;
+    StorageReference storageRef;
     FirebaseAuth mAuth;
 
 
@@ -53,6 +62,8 @@ final class Database {
         restaurantRef = database.getReference("users/restaurants/" + mAuth.getUid());
         menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/menuItems");
         ordersRef = database.getReference("orders");
+        profileRef = database.getReference("users/restaurants/"+mAuth.getUid());
+        storageRef = FirebaseStorage.getInstance().getReference().child("users/"+ mAuth.getUid());
 
 
     }
@@ -69,6 +80,8 @@ final class Database {
             ordersRef.child(o.id).setValue(o);
 
     }
+
+
 
     class MyDateComparator implements Comparator<Order> {
         @Override
@@ -235,26 +248,73 @@ final class Database {
         });
         return null;
     }
+    void putUserProfile(User user){
 
-    User getUserProfile(String id, OnDataFetched<User, String> onDataFetched){
+        Uri file = Uri.parse(user.imageUri);
+        storageRef.child("images/profile/");
 
-        restaurantRef.child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+        StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
+        profileRefStore.putFile(file);
+        profileRef.setValue("profile");
+        profileRef.child("profile").setValue(user);
+
+
+
+
+    }
+    public void getImageProfile(String imageName,Callback UriImg) {
+
+        if (!imageName.equals("")) {
+            Log.d("name", imageName);
+            Uri tmp = Uri.parse(imageName);
+            StorageReference profileRefStore = storageRef.child("/images/profile/" + tmp.getLastPathSegment());
+            profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // Got the download URL for 'users/me/profile.png'
+                    Log.d("DOWNLOAD",uri.toString());
+
+                    UriImg.onCallback(uri);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        }
+    }
+    public void getUserProfile(FirebaseCallbackUser firebaseCallbackUser) {
+
+
+//        profileRef.child("profile");
+        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User item = dataSnapshot.getValue(User.class);
-                if (item != null) {
-                    onDataFetched.onDataFetched(item);
-                } else {
-                    onDataFetched.onError("data not found");
-                }
+               if (dataSnapshot.hasChild("profile")) {
+                   dataSnapshot = dataSnapshot.child("profile");
+                   User item = dataSnapshot.getValue(User.class);
+                   if (item != null) {
+
+                       firebaseCallbackUser.onCallbak(item);
+                   } else {
+                       //   userStringOnDataFetched.onError("data not found");
+                       Log.d("DATABASE: ", "SONO ENTRATO222");
+
+                   }
+               }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                onDataFetched.onError(databaseError.getMessage());
+                Log.d("DATABASE: ", "SONO ENTRATO");
+
             }
         });
-        return null;
+
     }
+
 
 }
 
@@ -267,4 +327,10 @@ interface OnDataFetched<T, E> {
  interface FirebaseCallback{
     void  onCallbak(List<Order> list);
 
+}
+interface FirebaseCallbackUser {
+    void onCallbak(User user);
+}
+interface Callback{
+    void onCallback(Uri item);
 }

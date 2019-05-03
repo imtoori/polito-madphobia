@@ -3,6 +3,8 @@ package com.mad.delivery.restaurant_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
+
+import com.squareup.picasso.Picasso;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class ProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -81,35 +93,29 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("phoneNumber", ""),
-                sharedPref.getString("emailAddress", ""),
-                sharedPref.getString("description", ""),
-                sharedPref.getString("road", ""),
-                sharedPref.getString("houseNumber", ""),
-                sharedPref.getString("doorPhone", ""),
-                sharedPref.getString("postCode", ""),
-                sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())),
-                sharedPref.getString("openingTime", getResources().getString(R.string.opening_hours_full))
-        );
 
-        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        if(mUser!=null) {
-            Log.i("AAA", mUser.name + "-" + mUser.phoneNumber + "-" + mUser.email + "-" + mUser.description + "-" + mUser.road + "-" + mUser.houseNumber + "-" + mUser.doorPhone + "-" + mUser.postCode + "-" + mUser.city);
-            updateFields(mUser);
-        }
-        else
-            Log.i("AAA", "---------------------------------------------------------");
+        Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
+            @Override
+            public void onCallbak(User user) {
+                if(user!=null){
+                    mUser = new User(user);
+                    updateFields(mUser);
+                }
+                else{
+                    mUser  = new User("","","","","","","","","", Uri.EMPTY,"","");
+                    updateFields(mUser);
+                    }
+
+            }
+        });
     }
+
     private void updateFields(User u) {
         if(!u.name.equals("") )
             name.setText(u.name );
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-        Log.d("MADAPP", u.opening);
         if(!u.opening.equals("")) {
             opening.setText(u.opening);
         } else {
@@ -119,15 +125,36 @@ public class ProfileActivity extends AppCompatActivity {
         if(!u.road.equals("")) {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
+        //Picasso.get().load(u.imageUri.toString()).into(imgProfile);
+       // Log.d("----",Uri.parse(u.imageUri).getPath());
+        // imageProfileUri = Uri.parse( mUser.imageUri);
 
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
-            Log.d("MADAPP", "Setting user default image");
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-        } else {
-            Log.d("MADAPP", "Setting custom user image");
-            imgProfile.setImageURI(u.imageUri);
+        imgProfile.setImageURI(Uri.parse(u.imageUri));
+
+        if(imgProfile.getDrawable() == null) {
+            Database.getInstance().getImageProfile(u.imageUri, new Callback() {
+                @Override
+                public void onCallback(Uri item) {
+                    if (item != null) {
+                        if (item == Uri.EMPTY || item.toString().equals("")) {
+                            Log.d("MADAPP", "Setting user default image");
+
+                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        } else {
+                            Log.d("MADAPP", "Setting custom user image");
+                            Log.d("DOWNLOAD2", item.toString());
+
+                            // imgProfile.setImageURI(item);
+                            Picasso.get().load(item.toString()).into(imgProfile);
+
+                        }
+                    }
+
+                }
+            });
         }
     }
+
 
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity

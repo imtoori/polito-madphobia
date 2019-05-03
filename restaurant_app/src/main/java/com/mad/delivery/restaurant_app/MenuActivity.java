@@ -45,6 +45,7 @@ public class MenuActivity extends AppCompatActivity {
         Database.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
             @Override
             public void onDataFetched(List<MenuItemRest> data) {
+
                 loadData(data);
             }
 
