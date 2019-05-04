@@ -9,6 +9,8 @@ public class PreviewInfo implements Parcelable {
     public String description;
     public Integer scoreValue;
     public String imageURL;
+    public int deliveryCost;
+    public int minOrderCost;
 
     public PreviewInfo() {}
 
@@ -22,25 +24,8 @@ public class PreviewInfo implements Parcelable {
             scoreValue = in.readInt();
         }
         imageURL = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(description);
-        if (scoreValue == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(scoreValue);
-        }
-        dest.writeString(imageURL);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        deliveryCost = in.readInt();
+        minOrderCost = in.readInt();
     }
 
     public static final Creator<PreviewInfo> CREATOR = new Creator<PreviewInfo>() {
@@ -90,10 +75,13 @@ public class PreviewInfo implements Parcelable {
     @Override
     public String toString() {
         return "PreviewInfo{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", scoreValue=" + scoreValue +
                 ", imageURL='" + imageURL + '\'' +
+                ", deliveryCost=" + deliveryCost +
+                ", minOrderCost=" + minOrderCost +
                 '}';
     }
 
@@ -103,5 +91,42 @@ public class PreviewInfo implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(name);
+        parcel.writeString(description);
+        if (scoreValue == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(scoreValue);
+        }
+        parcel.writeString(imageURL);
+        parcel.writeInt(deliveryCost);
+        parcel.writeInt(minOrderCost);
+    }
+
+    public int getDeliveryCost() {
+        return deliveryCost;
+    }
+
+    public void setDeliveryCost(int deliveryCost) {
+        this.deliveryCost = deliveryCost;
+    }
+
+    public int getMinOrderCost() {
+        return minOrderCost;
+    }
+
+    public void setMinOrderCost(int minOrderCost) {
+        this.minOrderCost = minOrderCost;
     }
 }

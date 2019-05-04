@@ -75,7 +75,7 @@ public class ConsumerDatabase {
         return restaurantIds;
     }
 
-    public void getRestaurants(Set<String> chosen, String address, final onPreviewRestaurantsReceived firebaseCallback) {
+    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d,  final onPreviewRestaurantsReceived firebaseCallback) {
         getRestaurantsIds(chosen, list -> {
             if(list.isEmpty()) {
                 // show empty icon
@@ -87,7 +87,14 @@ public class ConsumerDatabase {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             PreviewInfo restaurantPreview = dataSnapshot.getValue(PreviewInfo.class);
+                            Log.d("MADAPP", restaurantPreview.toString());
                             if (restaurantPreview != null) {
+                                if(m && restaurantPreview.minOrderCost != 0) {
+                                    return;
+                                }
+                                if(d && restaurantPreview.deliveryCost != 0) {
+                                    return;
+                                }
                                 firebaseCallback.onCallback(restaurantPreview);
                             }
                         }

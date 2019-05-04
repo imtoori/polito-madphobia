@@ -190,4 +190,8 @@
     <string name="min_order">Minimum order is %1$s €</string>
     <string name="rest_menu">Restaurant Menu</string>
     <string name="choose_restaurant">Choose a restaurant</string>
+    <string name="no_min_order">No min order</string>
+    <string name="free_delivery">Free delivery</string>
+    <string name="search_empty">No results</string>
+    <string name="filters">Apply filters</string>
 </resources>

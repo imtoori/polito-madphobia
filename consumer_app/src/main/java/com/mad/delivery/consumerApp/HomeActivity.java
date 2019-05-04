@@ -23,7 +23,7 @@ import com.mad.delivery.resources.RestaurantCategory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements SearchFragment.OnCategorySelected, RestaurantsFragment.OnRestaurantSelected {
+public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected {
     Toolbar myToolbar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     FragmentManager fm;
@@ -52,20 +52,20 @@ public class HomeActivity extends AppCompatActivity implements SearchFragment.On
                     case R.id.nav_menu:
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, walletFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_search:
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, searchFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_settings:
                         ft = fm.beginTransaction();
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.frag_container, settingsFragment);
                         ft.commit();
@@ -82,6 +82,11 @@ public class HomeActivity extends AppCompatActivity implements SearchFragment.On
     public void onBackPressed() {
         Log.d("MADAPP", "onBackPressed");
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        Log.d("MADAPP", "onBackPressed and fragments count=" + fragments);
+        if(searchFragment != null && searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
+            searchFragment.getChildFragmentManager().popBackStack();
+            return;
+        }
         if (fragments == 1) {
             finish();
         } else if (getFragmentManager().getBackStackEntryCount() > 1) {
@@ -91,23 +96,7 @@ public class HomeActivity extends AppCompatActivity implements SearchFragment.On
         }
     }
 
-    @Override
-    public void openCategory(RestaurantCategory category, String address) {
-        Log.d("MADAPP", "Opening RestaurantsFragment");
-        RestaurantsFragment restaurantsFragment = new RestaurantsFragment();
-        Bundle bundle = new Bundle();
-        List<String> chosen = new ArrayList<>();
-        if(category != null)
-            chosen.add(category.name);
-        bundle.putStringArrayList("categories", (ArrayList<String>) chosen);
-        bundle.putString("address", address);
-        restaurantsFragment.setArguments(bundle);
-        ft = fm.beginTransaction();
-        ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.frag_container, restaurantsFragment);
-        ft.commit();
-    }
+
 
 
     @Override

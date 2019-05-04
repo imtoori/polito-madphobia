@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp.search;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.RestaurantCategory;
@@ -17,9 +19,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     private List<RestaurantCategory> categories;
     private View view;
-    private final SearchFragment.OnCategorySelected mListener;
+    private final CategoriesFragment.OnCategorySelected mListener;
 
-    public CategoriesAdapter(List<RestaurantCategory> items, SearchFragment.OnCategorySelected listener) {
+    public CategoriesAdapter(List<RestaurantCategory> items, CategoriesFragment.OnCategorySelected listener) {
         categories = items;
         mListener = listener;
     }
@@ -35,13 +37,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
         holder.cvCategory.setBackground(holder.category.imageDrawable);
+        List<String> categories = new ArrayList<>();
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.openCategory(holder.category, "");
+                    categories.add(holder.category.name);
+                    mListener.openCategory(categories, "", false, false);
                 }
             }
         });
