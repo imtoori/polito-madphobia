@@ -20,6 +20,8 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="@string/restaurant_name"
+            app:titleEnabled="true"
             app:toolbarId="@+id/toolbar">
 
             <androidx.appcompat.widget.Toolbar

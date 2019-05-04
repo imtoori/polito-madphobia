@@ -1,94 +1,176 @@
 package com.mad.delivery.consumerApp.search;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 
+import com.google.android.material.chip.Chip;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.resources.GridRecyclerView;
-import com.mad.delivery.consumerApp.FoodCategory;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.resources.RestaurantCategory;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
-    private GridRecyclerView recyclerView;
-    private CategoriesAdapter categoriesAdapter;
-    private OnCategorySelected mListener;
-    private List<FoodCategory> categories;
+public class SearchFragment extends Fragment implements CategoriesFragment.OnCategorySelected {
+    private FragmentManager fm;
+    private FragmentTransaction ft;
+    private ImageButton search;
+    private CategoriesFragment catFragment;
+    private RestaurantsFragment restaurantsFragment;
+    private CardView filter;
+    private Chip delivery, minorder;
+    private List<Chip> categoriesFilter;
+    private String address = "";
+    private List<String> chosen;
+    private boolean freeDelivery, minOrderCost;
     public SearchFragment() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnCategorySelected) {
-            mListener = (OnCategorySelected) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnCategorySelected");
-        }
-    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.grid_layout_animation_from_bottom);
+        search = view.findViewById(R.id.search_imgbtn);
+        filter = view.findViewById(R.id.cv_filters);
+        delivery = view.findViewById(R.id.deliverychip);
+        minorder = view.findViewById(R.id.minorderchip);
+        chosen = new ArrayList<>();
+        freeDelivery = false;
+        minOrderCost = false;
+        delivery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                applyFilters(minOrderCost, b);
+                if(b) {
+                    delivery.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    delivery.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                    delivery.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    freeDelivery = true;
+                } else {
+                    delivery.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    delivery.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                    delivery.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    freeDelivery = false;
+                }
+            }
+        });
+        minorder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                applyFilters(b, freeDelivery);
+                if(b) {
+                    minOrderCost = true;
+                    minorder.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    minorder.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                    minorder.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                } else {
+                    minOrderCost = false;
+                    minorder.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    minorder.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                    minorder.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                }
+            }
+        });
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCategory(null, "", minOrderCost, freeDelivery);
+            }
+        });
 
-
-        recyclerView = view.findViewById(R.id.category_rv);
-        categories = new ArrayList<>();
-        categoriesAdapter = new CategoriesAdapter(categories, mListener);
-
-        recyclerView.hasFixedSize();
-        GridLayoutManager gridLayoutManager =  new GridLayoutManager(getContext(), 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(categoriesAdapter);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FoodCategory pizza = new FoodCategory("Pizza", "Best pizza ever", R.drawable.pizza);
-        FoodCategory burger = new FoodCategory("Burger", "", R.drawable.burger);
-        FoodCategory grill = new FoodCategory("Grill", "Best grill ever", R.drawable.grill);
-        FoodCategory jappo = new FoodCategory("Japanese", "Best Japanese ever", R.drawable.jappo);
-        FoodCategory chinese = new FoodCategory("Chinese", "Best Chinese ever", R.drawable.chinese);
-        FoodCategory veggie = new FoodCategory("Veggie", "Best Veggie ever", R.drawable.veggie);
-        FoodCategory thai = new FoodCategory("Thai", "Best Thai ever", R.drawable.thai);
-        categories.add(pizza);
-        categories.add(burger);
-        categories.add(grill);
-        categories.add(jappo);
-        categories.add(chinese);
-        categories.add(veggie);
-        categories.add(thai);
-        categoriesAdapter.notifyDataSetChanged();
+        catFragment = new CategoriesFragment();
+
+        fm = getChildFragmentManager();
+        ft = fm.beginTransaction();
+        ft.addToBackStack(null);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.childfrag_container, catFragment);
+        ft.commit();
     }
 
-    public interface OnCategorySelected {
-        void openCategory();
+    public void applyFilters(boolean m, boolean d) {
+        restaurantsFragment = new RestaurantsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("categories", (ArrayList<String>) chosen);
+        bundle.putString("address", address);
+        bundle.putBoolean("minOrderCost", m);
+        bundle.putBoolean("freeDelivery", d);
+        restaurantsFragment.setArguments(bundle);
+        ft = fm.beginTransaction();
+        ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.childfrag_container, restaurantsFragment);
+        ft.commit();
     }
 
+    @Override
+    public void openCategory(List<String> chosen, String address, boolean m, boolean d) {
+        // if present, close the RestaurantsFragment
+        Fragment fOpen = fm.findFragmentByTag(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
+        Log.d("MADAPP", fm.getFragments().toString());
+        if(fOpen != null) {
+            Log.d("MADAPP", "Closing restaurantsFragment..");
+            fm.beginTransaction().remove(fOpen).commit();
+        }
+        filter.setVisibility(View.VISIBLE);
+        restaurantsFragment = new RestaurantsFragment();
+        Bundle bundle = new Bundle();
+        this.address = address;
+        bundle.putStringArrayList("categories", (ArrayList<String>) chosen);
+        bundle.putString("address", address);
+        bundle.putBoolean("minOrderCost", m);
+        bundle.putBoolean("freeDelivery", d);
+        restaurantsFragment.setArguments(bundle);
+        ft = fm.beginTransaction();
+        ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.childfrag_container, restaurantsFragment);
+        ft.commit();
+    }
+
+    @Override
+    public boolean getDeliveryCostParam() {
+        return freeDelivery;
+    }
+
+    @Override
+    public boolean getMinOrderCostParam() {
+        return minOrderCost;
+    }
 }

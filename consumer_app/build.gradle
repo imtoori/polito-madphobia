@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.mad.delivery.consumerApp"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -26,6 +30,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-auth:16.2.1'
     implementation 'com.google.firebase:firebase-database:16.1.0'
+    implementation 'com.google.firebase:firebase-storage:16.1.0'
+    implementation 'com.google.firebase:firebase-messaging:17.6.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'

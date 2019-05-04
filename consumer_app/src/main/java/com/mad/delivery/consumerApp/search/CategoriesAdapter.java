@@ -1,6 +1,6 @@
 package com.mad.delivery.consumerApp.search;
 
-import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +10,18 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mad.delivery.consumerApp.FoodCategory;
-
+import java.util.ArrayList;
 import java.util.List;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.resources.RestaurantCategory;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
 
-    private List<FoodCategory> categories;
+    private List<RestaurantCategory> categories;
     private View view;
-    private final SearchFragment.OnCategorySelected mListener;
+    private final CategoriesFragment.OnCategorySelected mListener;
 
-    public CategoriesAdapter(List<FoodCategory> items, SearchFragment.OnCategorySelected listener) {
+    public CategoriesAdapter(List<RestaurantCategory> items, CategoriesFragment.OnCategorySelected listener) {
         categories = items;
         mListener = listener;
     }
@@ -36,14 +36,16 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
-        holder.cvCategory.setBackgroundResource(holder.category.resourceImage);
+        holder.cvCategory.setBackground(holder.category.imageDrawable);
+        List<String> categories = new ArrayList<>();
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.openCategory();
+                    categories.add(holder.category.name);
+                    mListener.openCategory(categories, "", false, false);
                 }
             }
         });
@@ -58,7 +60,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         public final View mView;
         public final TextView nameCategory;
         public final CardView cvCategory;
-        public FoodCategory category;
+        public RestaurantCategory category;
 
         public ViewHolder(View view) {
             super(view);

@@ -8,22 +8,21 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mad.delivery.consumerApp.FoodCategory;
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.consumerApp.Restaurant;
+import com.mad.delivery.resources.PreviewInfo;
+import com.mad.delivery.resources.Restaurant;
 
 import java.util.List;
 
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.ViewHolder> {
 
-    private List<Restaurant> restaurants;
+    private List<PreviewInfo> restaurants;
     private View view;
     private final RestaurantsFragment.OnRestaurantSelected mListener;
 
-    public RestaurantsAdapter(List<Restaurant> items, RestaurantsFragment.OnRestaurantSelected listener) {
+    public RestaurantsAdapter(List<PreviewInfo> items, RestaurantsFragment.OnRestaurantSelected listener) {
         restaurants = items;
         mListener = listener;
     }
@@ -39,8 +38,9 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         holder.restaurant = restaurants.get(position);
         holder.nameRestaurant.setText(holder.restaurant.name);
         holder.descRestaurant.setText(holder.restaurant.description);
-        if(holder.restaurant.urlImage != null)
-            holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.urlImage));
+        holder.rbRestaurant.setRating(holder.restaurant.scoreValue);
+        if(holder.restaurant.imageURL != null)
+            holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.imageURL));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +48,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.openRestaurant();
+                    mListener.openRestaurant(holder.restaurant);
                 }
             }
         });
@@ -65,7 +65,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         public final TextView descRestaurant;
         public final ImageView imgRestaurant;
         public final RatingBar rbRestaurant;
-        public Restaurant restaurant;
+        public PreviewInfo restaurant;
 
         public ViewHolder(View view) {
             super(view);

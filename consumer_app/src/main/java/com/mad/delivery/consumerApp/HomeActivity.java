@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -16,12 +17,20 @@ import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
+import com.mad.delivery.resources.PreviewInfo;
+import com.mad.delivery.resources.RestaurantCategory;
 
-public class HomeActivity extends AppCompatActivity implements SearchFragment.OnCategorySelected, RestaurantsFragment.OnRestaurantSelected {
+import java.util.ArrayList;
+import java.util.List;
+
+public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected {
     Toolbar myToolbar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     FragmentManager fm;
     FragmentTransaction ft;
+    WalletFragment walletFragment;
+    SearchFragment searchFragment;
+    SettingsFragment settingsFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,37 +38,34 @@ public class HomeActivity extends AppCompatActivity implements SearchFragment.On
         myToolbar = findViewById(R.id.mainActivityToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        setTitle(getResources().getString(R.string.app_customer_name));
         fm = getSupportFragmentManager();
         BottomNavigationView navigation = findViewById(R.id.navigation);
+        walletFragment = new WalletFragment();
+        searchFragment = new SearchFragment();
+        settingsFragment = new SettingsFragment();
+
         mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_menu:
-                        setTitle(getString(R.string.nav_wallet));
-                        WalletFragment walletFragment = new WalletFragment();
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, walletFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_search:
-                        setTitle(getString(R.string.nav_search));
-                        SearchFragment searchFragment = new SearchFragment();
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, searchFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_settings:
-                        setTitle(getString(R.string.nav_settings));
-                        SettingsFragment settingsFragment = new SettingsFragment();
                         ft = fm.beginTransaction();
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.frag_container, settingsFragment);
                         ft.commit();
@@ -73,32 +79,53 @@ public class HomeActivity extends AppCompatActivity implements SearchFragment.On
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        return super.onSupportNavigateUp();
+    public void onBackPressed() {
+        Log.d("MADAPP", "onBackPressed");
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        Log.d("MADAPP", "onBackPressed and fragments count=" + fragments);
+        if(searchFragment != null && searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
+            searchFragment.getChildFragmentManager().popBackStack();
+            return;
+        }
+        if (fragments == 1) {
+            finish();
+        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    @Override
-    public void openCategory() {
-        Log.d("MADAPP", "Clicked on category");
-        setTitle(getString(R.string.title_category));
-        RestaurantsFragment restaurantsFragment = new RestaurantsFragment();
-        ft = fm.beginTransaction();
-        ft.addToBackStack(null);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.frag_container, restaurantsFragment);
-        ft.commit();
-    }
+
+
 
     @Override
-    public void openRestaurant() {
+    public void openRestaurant(PreviewInfo previewInfo) {
         Log.d("MADAPP", "Clicked on restaurant");
         Intent intent = new Intent(getApplicationContext(), RestaurantInfoActivity.class);
+        intent.putExtra("restaurant", previewInfo);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.nav_login:
+                Log.d("MADAPP", "Opening Login Activity");
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                return true;
+            default:
+                // do nothing
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

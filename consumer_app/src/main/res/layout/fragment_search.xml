@@ -1,50 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context=".search.SearchFragment">
+    android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/delivery_address_et"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="@string/location_hint"
-        android:inputType="textPostalAddress"
-        app:layout_constraintEnd_toStartOf="@+id/location_img"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/location_img"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_location2"
-        android:background="@null"
-        app:layout_constraintBottom_toBottomOf="@+id/delivery_address_et"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/delivery_address_et" />
-
-    <com.mad.delivery.resources.GridRecyclerView
-        android:id="@+id/category_rv"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layoutAnimation="@anim/grid_layout_animation_from_bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/delivery_address_et">
+        android:layout_height="wrap_content"
+        tools:context=".search.SearchFragment">
 
 
-    </com.mad.delivery.resources.GridRecyclerView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/fragmentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/choose_restaurant"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/bigTitle"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/delivery_address_et"
+                    style="@style/Widget.AppCompat.EditText"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/edit_text_border"
+                    android:ems="10"
+                    android:hint="@string/location_hint"
+                    android:inputType="textPostalAddress"
+                    android:paddingStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/search_imgbtn"
+                    app:layout_constraintEnd_toStartOf="@+id/search_imgbtn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/search_imgbtn" />
+
+                <ImageButton
+                    android:id="@+id/location_img"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@null"
+                    android:src="@drawable/ic_myloc"
+                    app:layout_constraintBottom_toBottomOf="@+id/delivery_address_et"
+                    app:layout_constraintEnd_toStartOf="@+id/search_imgbtn"
+                    app:layout_constraintTop_toTopOf="@+id/delivery_address_et" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageButton
+                    android:id="@+id/search_imgbtn"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/gradient"
+                    android:elevation="4dp"
+                    android:src="@drawable/ic_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragmentName" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_filters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cv_search"
+            card_view:cardElevation="4dp"
+            card_view:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/filtertv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/filters"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/subtitle"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/minorderchip"
+                    style="@style/Theme.MaterialComponents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:checkable="true"
+                    android:text="@string/no_min_order"
+                    android:textColor="@color/colorPrimary"
+                    app:checkedIconEnabled="false"
+                    app:chipBackgroundColor="@color/colorWhite"
+                    app:chipIcon="@drawable/ic_order"
+                    app:chipIconTint="@color/colorPrimary"
+                    app:chipStrokeColor="@color/colorPrimary"
+                    app:chipStrokeWidth="1dp"
+                    app:layout_constraintStart_toEndOf="@+id/deliverychip"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:rippleColor="@color/colorPrimaryDark"
+                    card_view:layout_constraintBottom_toBottomOf="@+id/deliverychip"
+                    card_view:layout_constraintTop_toTopOf="@+id/deliverychip" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/deliverychip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:checkable="true"
+                    android:text="@string/free_delivery"
+                    android:textColor="@color/colorPrimary"
+                    app:checkedIconEnabled="false"
+                    app:chipBackgroundColor="@color/colorWhite"
+                    app:chipIcon="@drawable/ic_money"
+                    app:chipIconTint="@color/colorPrimary"
+                    app:chipStrokeColor="@color/colorPrimary"
+                    app:chipStrokeWidth="1dp"
+                    app:rippleColor="@color/colorPrimaryDark"
+                    card_view:layout_constraintBottom_toBottomOf="parent"
+                    card_view:layout_constraintStart_toStartOf="@+id/filtertv"
+                    card_view:layout_constraintTop_toBottomOf="@+id/filtertv" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <RelativeLayout
+            android:id="@+id/childfrag_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cv_filters" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
