@@ -30,7 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.User;
+import com.mad.delivery.resources.Biker;
 
 import org.joda.time.DateTime;
 
@@ -156,7 +156,7 @@ public class RegisterFragment extends Fragment {
                             Log.d("MADAPP", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             myRef = db.getReference();
-                            User registered = new User();
+                            Biker registered = new Biker();
                             registered.registrationDate = new DateTime().toString();
                             registered.email = emailAddress.getText().toString();
                             myRef.child("users").child("biker").push().setValue(registered);

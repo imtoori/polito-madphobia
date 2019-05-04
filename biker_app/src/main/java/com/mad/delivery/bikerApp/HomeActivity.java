@@ -16,10 +16,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.orders.DetailOrderActivity;
-import com.mad.delivery.bikerApp.orders.Order;
 import com.mad.delivery.bikerApp.orders.OrderFragment;
 import com.mad.delivery.bikerApp.orders.PendingOrdersFragment;
 import com.mad.delivery.bikerApp.settings.SettingFragment;
+import com.mad.delivery.resources.Order;
 
 public class HomeActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
@@ -110,6 +110,7 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     public void openOrder(Order order) {
         Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
         intent.putExtra("order", order);
+        Log.d("MADAPP" , "order in HomeActivity: " + order.toString());
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

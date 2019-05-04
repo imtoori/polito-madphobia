@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.StorageReference;
+import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

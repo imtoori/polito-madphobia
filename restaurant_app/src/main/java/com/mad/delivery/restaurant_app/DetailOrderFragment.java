@@ -15,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.resources.Product;
+
 import org.joda.time.DateTime;
 
 import java.util.List;

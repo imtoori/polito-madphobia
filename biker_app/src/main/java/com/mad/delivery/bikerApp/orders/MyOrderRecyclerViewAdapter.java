@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.MyDateFormat;
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -38,10 +43,10 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
         holder.mItem = orders.get(position);
         holder.id.setText(holder.mItem.id);
         holder.orderFrom.setText(holder.mItem.client.name);
-        holder.requestedDelivery.setText(MyDateFormat.parse(holder.mItem.orderFor));
+        holder.requestedDelivery.setText(MyDateFormat.parse(new DateTime(holder.mItem.orderFor)));
         holder.status.setTextColor(getColor(holder.mItem.status));
         holder.status.setText(holder.mItem.status.toString());
-        holder.orderDate.setText(MyDateFormat.parse(holder.mItem.orderFor));
+        holder.orderDate.setText(MyDateFormat.parse(new DateTime(holder.mItem.orderFor)));
         holder.products.setText(view.getResources().getString(R.string.prefix_products) + " " + holder.mItem.products.size() + " " + view.getResources().getString(R.string.suffix_products));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

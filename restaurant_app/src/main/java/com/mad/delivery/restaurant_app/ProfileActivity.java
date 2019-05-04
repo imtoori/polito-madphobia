@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;

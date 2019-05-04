@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.Order;
 
 public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     private Context context;

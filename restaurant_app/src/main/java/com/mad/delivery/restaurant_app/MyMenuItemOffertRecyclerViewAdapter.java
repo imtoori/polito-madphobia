@@ -2,7 +2,6 @@ package com.mad.delivery.restaurant_app;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.mad.delivery.resources.Order;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Order} and makes a call to the

@@ -17,6 +17,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
 
 public class DetailOrderActivity extends AppCompatActivity {
     Toolbar myToolBar;
@@ -33,6 +35,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         order  = bundle.getParcelable("order");
+        Log.d("MADAPP", "order in DetailOrderActivity : " + order.toString());
         setTitle(getResources().getString(R.string.order) + " " + order.id);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.detail_order_pager);

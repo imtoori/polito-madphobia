@@ -9,7 +9,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.Restaurant;
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.Restaurant;
 
 public class RestaurantInformationFragment extends Fragment {
         private RestaurantInformationFragment.OnRestaurantInformationFragmentInteraction mListener;

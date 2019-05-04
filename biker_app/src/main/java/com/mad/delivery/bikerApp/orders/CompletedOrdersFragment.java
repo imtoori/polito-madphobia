@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.Order;
 
 import java.util.ArrayList;
 import java.util.List;

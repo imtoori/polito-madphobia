@@ -5,6 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.Product;
+
 import java.util.List;
 
 /**

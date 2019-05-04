@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class Biker implements Serializable {
     public String name;
     public String lastname;
     public String phoneNumber;
@@ -14,47 +14,29 @@ public class User implements Serializable {
     public String description;
     public String imageUri;
     public String registrationDate;
-    public String  road;
-    public String  houseNumber;
-    public String  doorPhone;
-    public String  postCode;
-    public String city;
     public String imageName;
-    public String opening;
     public String id;
 
-    public User(String name, String lastname, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String opening, String imageName) {
+    public Biker(String name, String lastname, String phoneNumber, String emailAddress, String description,  Uri imageUri) {
         this.name = name;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.description = description;
-        this.road = road;
-        this.houseNumber = houseNumber;
-        this.doorPhone = doorPhone;
-        this.postCode = postCode;
-        this.city = city;
         this.imageUri = imageUri.toString();
-        this.opening = opening;
-        this.imageName = imageName;
+        this.imageName = "";
         this.registrationDate = new DateTime().toString();
     }
 
-    public User() {
+    public Biker() {
     }
 
-    public User(User u) {
+    public Biker(Biker u) {
         this.name = u.name;
         this.phoneNumber = u.phoneNumber;
         this.email = u.email;
         this.description = u.description;
-        this.road = u.road;
-        this.houseNumber = u.houseNumber;
-        this.doorPhone = u.doorPhone;
-        this.postCode = u.postCode;
-        this.city = u.city;
         this.imageUri = u.imageUri;
-        this.opening = u.opening;
         this.imageName = u.imageName;
     }
 
@@ -114,46 +96,6 @@ public class User implements Serializable {
         this.registrationDate = registrationDate;
     }
 
-    public String getRoad() {
-        return road;
-    }
-
-    public void setRoad(String road) {
-        this.road = road;
-    }
-
-    public String getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public String getDoorPhone() {
-        return doorPhone;
-    }
-
-    public void setDoorPhone(String doorPhone) {
-        this.doorPhone = doorPhone;
-    }
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
     public String getImageName() {
         return imageName;
     }
@@ -162,13 +104,6 @@ public class User implements Serializable {
         this.imageName = imageName;
     }
 
-    public String getOpening() {
-        return opening;
-    }
-
-    public void setOpening(String opening) {
-        this.opening = opening;
-    }
 
     public String getId() {
         return id;

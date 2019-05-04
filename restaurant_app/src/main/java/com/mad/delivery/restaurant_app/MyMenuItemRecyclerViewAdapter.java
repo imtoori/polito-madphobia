@@ -18,9 +18,9 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mad.delivery.resources.Order;
 import com.squareup.picasso.Picasso;
 
 /**

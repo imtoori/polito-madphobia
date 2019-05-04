@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.mad.delivery.resources.Order;
+
 import java.util.List;
 
 /**

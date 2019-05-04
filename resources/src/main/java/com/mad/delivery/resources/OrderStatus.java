@@ -1,4 +1,6 @@
-package com.mad.delivery.bikerApp.orders;
+package com.mad.delivery.resources;
+
+import android.os.Parcelable;
 
 import java.io.Serializable;
 

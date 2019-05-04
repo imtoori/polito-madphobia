@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.mad.delivery.resources.OrderStatus;
+
 public class TimeOpeningDialog extends DialogFragment {
     OrderStatus currentStatus;
     ListDialogListener listener;

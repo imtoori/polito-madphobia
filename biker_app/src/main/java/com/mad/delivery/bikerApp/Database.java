@@ -2,8 +2,11 @@ package com.mad.delivery.bikerApp;
 
 import android.util.Log;
 
-import com.mad.delivery.bikerApp.orders.Order;
-import com.mad.delivery.bikerApp.orders.OrderStatus;
+import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.resources.Product;
+import com.mad.delivery.resources.Restaurant;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
@@ -65,19 +68,17 @@ final public class Database {
             rest.houseNumber = "20";
             rest.postCode = "10126";
             rest.doorPhone = "pinco";
-
             DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
             DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
             DateTime to = DateTime.now();
-            Order o = new Order(u,rest, products, from);
+            Order o = new Order(u,rest, products, from.toString());
             o.id = "1234";
             o.status = OrderStatus.pending;
-            o.orderDate = to;
-            o.estimatedDelivery = to;
+            o.orderDate = to.toString();
+            o.estimatedDelivery = to.toString();
             o.clientNotes = "Notes added by client";
-            o.restNotes="Notes added by restaurant";
+            o.serverNotes ="Notes added by restaurant";
             orders.put(o.id, o);
-
 
         }
     }

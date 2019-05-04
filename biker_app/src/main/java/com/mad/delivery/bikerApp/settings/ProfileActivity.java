@@ -19,7 +19,8 @@ import androidx.core.app.ActivityOptionsCompat;
 
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.User;
+import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.User;
 
 public class ProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -30,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView emailAddress;
     TextView description;
     ImageView imgProfile;
-    User mUser=new User();
+    Biker mUser=new Biker();
 
 
     @Override
@@ -82,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new User(sharedPref.getString("name", ""),
+        mUser = new Biker(sharedPref.getString("name", ""),
                 sharedPref.getString("lastname", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
@@ -90,7 +91,8 @@ public class ProfileActivity extends AppCompatActivity {
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
 
-        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
+
+            Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         if(mUser!=null) {
             Log.i("AAA", mUser.name + "-" + mUser.phoneNumber + "-" + mUser.email + "-" + mUser.description );
             updateFields(mUser);
@@ -98,7 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
         else
             Log.i("AAA", "---------------------------------------------------------");
     }
-    private void updateFields(User u) {
+    private void updateFields(Biker u) {
         if(!u.name.equals("") )
             name.setText(u.name+" "+u.lastname );
         phoneNumber.setText(u.phoneNumber);
@@ -107,12 +109,12 @@ public class ProfileActivity extends AppCompatActivity {
 
 
 
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+        if (u.imageUri == null || u.imageUri.equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
             Log.d("MADAPP", "Setting custom user image");
-            imgProfile.setImageURI(u.imageUri);
+            imgProfile.setImageURI(Uri.parse(u.imageUri));
         }
     }
 

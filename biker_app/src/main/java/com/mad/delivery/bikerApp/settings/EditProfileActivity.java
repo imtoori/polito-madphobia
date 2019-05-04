@@ -23,7 +23,8 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mad.delivery.bikerApp.BuildConfig;
 import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.User;
+import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,7 +39,7 @@ import androidx.core.content.FileProvider;
 public class EditProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     Menu menu;
-    User mUser;
+    Biker mUser;
     FloatingActionButton btnCamera;
     EditText name;
     EditText lastname;
@@ -138,14 +139,14 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new User();
+        mUser = new Biker();
         Log.d("MADAPP", "SavedInstanceState contains data");
         mUser.name = savedInstanceState.getString("name");
         mUser.lastname = savedInstanceState.getString("lastname");
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
-        mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
+        mUser.imageUri = savedInstanceState.getString("imageUri");
         updateFields(mUser);
     }
 
@@ -179,7 +180,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
         sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new User(sharedPref.getString("name", ""),
+        mUser = new Biker(sharedPref.getString("name", ""),
                 sharedPref.getString("lastname", ""),
                 sharedPref.getString("phoneNumber", ""),
                 sharedPref.getString("emailAddress", ""),
@@ -274,22 +275,22 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void updateFields(User u) {
+    private void updateFields(Biker u) {
         name.setText(u.name);
         lastname.setText(u.lastname);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
 
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+        if (u.imageUri == null || u.imageUri.equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
 
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
             Log.d("MADAPP", "Setting custom user image");
-            imageProfileUri = u.imageUri;
-            imgProfile.setImageURI(u.imageUri);
+            imageProfileUri = Uri.parse(u.imageUri);
+            imgProfile.setImageURI(Uri.parse(u.imageUri));
         }
     }
 

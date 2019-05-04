@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.tabs.TabLayout;
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
 
 public class DetailOrderActivity extends AppCompatActivity {
     Toolbar myToolBar;

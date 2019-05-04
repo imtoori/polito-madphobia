@@ -10,8 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mad.delivery.bikerApp.Customer;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.Order;
 
 
 /**

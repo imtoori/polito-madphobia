@@ -13,6 +13,8 @@ import java.util.List;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.mad.delivery.resources.OrderStatus;
+
 public class ListDialog extends DialogFragment {
     OrderStatus currentStatus;
     ListDialogListener listener;

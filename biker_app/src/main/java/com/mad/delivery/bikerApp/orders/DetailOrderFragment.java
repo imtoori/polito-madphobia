@@ -9,14 +9,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mad.delivery.bikerApp.Product;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.MyDateFormat;
+import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.resources.Product;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -57,14 +63,15 @@ public class DetailOrderFragment extends Fragment {
         restAdd=view.findViewById(R.id.detail_restaurantadd);
         custAdd=view.findViewById(R.id.detail_customeradd);
         Order order = getArguments().getParcelable("order");
-        requested.setText(MyDateFormat.parse(order.orderFor));
+        Log.d("MADAPP", "detailorderfragment : " + order.toString());
+        requested.setText(MyDateFormat.parse(new DateTime(order.orderFor)));
         restAdd.setText(order.restaurant.road + " " + order.restaurant.houseNumber + ", " + order.restaurant.postCode + " " + order.restaurant.city + "(door " + order.restaurant.doorPhone+ ")");
         custAdd.setText(order.client.road + " " + order.client.houseNumber + ", " + order.client.postCode + " " + order.client.city + "(door " + order.client.doorPhone+ ")");
         status.setText(order.status.toString().toLowerCase());
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
         clientNotes.setText(order.clientNotes);
-        restNotes.setText(order.restNotes);
+        restNotes.setText(order.serverNotes);
         products = order.products;
         recyclerView = view.findViewById(R.id.rl_products);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

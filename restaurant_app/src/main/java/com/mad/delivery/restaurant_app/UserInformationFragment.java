@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.Order;
+
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp.orders;
+package com.mad.delivery.resources;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;

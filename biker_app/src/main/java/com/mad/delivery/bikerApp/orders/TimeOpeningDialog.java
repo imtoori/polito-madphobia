@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.OrderStatus;
 
 public class TimeOpeningDialog extends DialogFragment {
     OrderStatus currentStatus;
