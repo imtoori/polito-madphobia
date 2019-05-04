@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,10 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Order} and makes a call to the
@@ -77,6 +81,28 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         if(url!= Uri.EMPTY)
             holder.image.setImageURI(url);
 
+
+
+        Database.getInstance().getImage(mItem.imageName, "/images/menuItems/", new Callback() {
+            @Override
+            public void onCallback(Uri item) {
+                if (item != null) {
+                    if (item == Uri.EMPTY || item.toString().equals("")) {
+                        Log.d("MADAPP", "Setting user default image");
+                        //imageProfileUri = Uri.EMPTY;
+                        holder.image.setImageResource(R.drawable.restaurant_default);
+                    } else {
+                        Log.d("MADAPP", "Setting custom user image");
+                        //  imageProfileUri = item;
+                        // imgProfile.setImageURI(item);
+                        Picasso.get().load(item.toString()).into(holder.image);
+                        // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
+
+                    }
+                }
+
+            }
+        });
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

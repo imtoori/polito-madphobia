@@ -90,9 +90,12 @@ final class Database {
         }
     }
 
-    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, subItems);
+    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems,String imageName) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, subItems,imageName);
         menuItemsRef.push().setValue(item);
+        Uri file = Uri.parse(imgUri);
+        StorageReference profileRefStore = storageRef.child("images/menuItems/" + imageName);
+        profileRefStore.putFile(file);
         //TODO: add callback may be useful
     }
 
@@ -191,8 +194,8 @@ final class Database {
     }
 
 
-    public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri,  subItems);
+    public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems,String imageName) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri,  subItems, imageName);
         menuItemsRef.child(id).setValue(item);
         //TODO add callback
     }
@@ -262,12 +265,12 @@ final class Database {
 
 
     }
-    public void getImageProfile(String imageName,Callback UriImg) {
+    public void getImage(String imageName,String path,Callback UriImg) {
 
         if (!imageName.equals("")) {
             Log.d("name", imageName);
-            Uri tmp = Uri.parse(imageName);
-            StorageReference profileRefStore = storageRef.child("/images/profile/" + tmp.getLastPathSegment());
+           // Uri tmp = Uri.parse(imageName);
+            StorageReference profileRefStore = storageRef.child(path + imageName);
             profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -281,14 +284,12 @@ final class Database {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle any errors
+                    UriImg.onCallback(Uri.EMPTY);
                 }
             });
         }
     }
     public void getUserProfile(FirebaseCallbackUser firebaseCallbackUser) {
-
-
-//        profileRef.child("profile");
         profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

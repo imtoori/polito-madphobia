@@ -13,10 +13,11 @@ public class MenuItemRest {
     public String category;
     public String id;
     public Integer availability;
+    public String imageName;
    // protected Uri imageUri;
     List<String> subItems = new ArrayList<>();
 
-    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl,  List<String> subItems) {
+    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl,  List<String> subItems,String imageName) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -27,6 +28,7 @@ public class MenuItemRest {
         this.availability = availability;
    //     this.imageUri = url;
         this.subItems = subItems;
+        this.imageName =imageName;
     }
 
     public MenuItemRest() {

@@ -302,7 +302,7 @@ public class EditProfileActivity extends AppCompatActivity {
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
-            Database.getInstance().getImageProfile(u.imageUri, new Callback() {
+            Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
                 @Override
                 public void onCallback(Uri item) {
                     if (item != null) {

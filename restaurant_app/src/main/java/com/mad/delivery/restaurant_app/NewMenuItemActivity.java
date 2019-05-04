@@ -28,6 +28,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -235,19 +236,32 @@ public class NewMenuItemActivity extends AppCompatActivity {
         loadSubItems(u.subItems);
 
         category.setText(u.category);
+        Log.d("MENU: ",u.imgUrl);
+        imageProfileUri = Uri.parse(u.imgUrl);
+        imgProfile.setImageURI(Uri.parse(u.imgUrl));
 
-        Log.d("TAG", u.category);
+        if (imgProfile.getDrawable() == null) {
+            Database.getInstance().getImage(u.imageName, "/images/menuItems/", new Callback() {
+                @Override
+                public void onCallback(Uri item) {
+                    if (item != null) {
+                        if (item == Uri.EMPTY || item.toString().equals("")) {
+                            Log.d("MADAPP", "Setting user default image");
+                            imageProfileUri = Uri.EMPTY;
 
-        if (u.imgUrl == null || u.imgUrl.isEmpty() ) {
-            Log.d("MADAPP", "Setting user default image");
-            imageProfileUri = Uri.EMPTY;
+                            imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
+                        } else {
+                            Log.d("MADAPP", "Setting custom user image");
+                            //  imageProfileUri = item;
+                            // imgProfile.setImageURI(item);
+                            Picasso.get().load(item.toString()).into(imgProfile);
+                            // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
 
-            imgProfile.setImageDrawable(getDrawable(R.drawable.dish_icon));
-        } else {
-            Log.d("MADAPP", "Setting custom user image");
-            Uri url = Uri.parse(u.imgUrl);
-            imageProfileUri = url;
-            imgProfile.setImageURI(url);
+                        }
+                    }
+
+                }
+            });
         }
     }
 
@@ -339,10 +353,10 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
                     if (index == null) {
                         Log.d("INDEX1", "L'indice è:" + index);
-                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems);
+                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems,name.getText().toString()+"_"+imageProfileUri.getLastPathSegment());
                     } else {
                         Log.d("INDEX2", "L'indice è:" + index + "Nome: " + name.toString());
-                        Database.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems);
+                        Database.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems,name.getText().toString()+"_"+imageProfileUri.getLastPathSegment());
                     }
 
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
