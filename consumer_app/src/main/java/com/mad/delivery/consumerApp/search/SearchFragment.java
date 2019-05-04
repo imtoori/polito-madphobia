@@ -21,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,7 +33,10 @@ import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -44,9 +48,10 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private RestaurantsFragment restaurantsFragment;
     private CardView filter;
     private Chip delivery, minorder;
-    private List<Chip> categoriesFilter;
+    private ChipGroup chipGroup;
     private String address = "";
-    private List<String> chosen;
+    private Set<String> chosen;
+
     private boolean freeDelivery, minOrderCost;
     public SearchFragment() {
         // Required empty public constructor
@@ -64,9 +69,11 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         filter = view.findViewById(R.id.cv_filters);
         delivery = view.findViewById(R.id.deliverychip);
         minorder = view.findViewById(R.id.minorderchip);
-        chosen = new ArrayList<>();
+        chipGroup = view.findViewById(R.id.chip_group);
+        chosen = new HashSet<>();
         freeDelivery = false;
         minOrderCost = false;
+
         delivery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -107,6 +114,41 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                 openCategory(null, "", minOrderCost, freeDelivery);
             }
         });
+        CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Chip chip = (Chip) buttonView;
+
+                if(isChecked) {
+                    chosen.add(chip.getText().toString().toLowerCase());
+                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                } else {
+                    chosen.removeIf(c -> c.equals(chip.getText().toString().toLowerCase()));
+                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                }
+                applyFilters(minOrderCost, freeDelivery);
+            }
+        };
+    ConsumerDatabase.getInstance().getCategories(set -> {
+            set.stream().forEach(n -> {
+                Chip chip = new Chip(view.getContext());
+                chip.setText(n);
+                chip.setChipBackgroundColorResource(R.color.colorWhite);
+                chip.setChipStrokeWidth((float) 0.1);
+                chip.setChipStrokeColorResource(R.color.colorPrimary);
+                chip.setCheckable(true);
+                chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                chip.setRippleColorResource(R.color.colorPrimaryDark);
+                chip.setCheckedIconVisible(false);
+                chip.setChipIconTintResource(R.color.colorPrimary);
+                chip.setOnCheckedChangeListener(filterChipListener);
+                chipGroup.addView(chip);
+            });
+        });
 
         return view;
     }
@@ -115,19 +157,21 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         catFragment = new CategoriesFragment();
-
         fm = getChildFragmentManager();
         ft = fm.beginTransaction();
         ft.addToBackStack(null);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.childfrag_container, catFragment);
         ft.commit();
+
+
+
     }
 
     public void applyFilters(boolean m, boolean d) {
         restaurantsFragment = new RestaurantsFragment();
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("categories", (ArrayList<String>) chosen);
+        bundle.putStringArrayList("categories", new ArrayList<>(chosen));
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
@@ -140,7 +184,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     }
 
     @Override
-    public void openCategory(List<String> chosen, String address, boolean m, boolean d) {
+    public void openCategory(List<String> chosenList, String address, boolean m, boolean d) {
         // if present, close the RestaurantsFragment
         Fragment fOpen = fm.findFragmentByTag(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
         Log.d("MADAPP", fm.getFragments().toString());
@@ -152,7 +196,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         restaurantsFragment = new RestaurantsFragment();
         Bundle bundle = new Bundle();
         this.address = address;
-        bundle.putStringArrayList("categories", (ArrayList<String>) chosen);
+        bundle.putStringArrayList("categories", (ArrayList<String>) chosenList);
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);

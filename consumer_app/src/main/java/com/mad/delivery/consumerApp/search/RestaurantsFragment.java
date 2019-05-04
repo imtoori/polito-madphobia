@@ -89,6 +89,7 @@ public class RestaurantsFragment extends Fragment {
         try {
             categories = getArguments().getStringArrayList("categories");
             chosenCategories.addAll(categories);
+            Log.d("MADAPP", "in restaurants: " + chosenCategories.toString());
             address = getArguments().getString("address");
             freeDelivery = getArguments().getBoolean("freeDelivery");
             minOrderCost = getArguments().getBoolean("minOrderCost");

@@ -15,7 +15,9 @@ import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ConsumerDatabase {
@@ -31,8 +33,11 @@ public class ConsumerDatabase {
         return instance;
     }
 
-    public interface onCategoriesReceived{
+    public interface onRestaurantsIdReceived{
         void  onCallback(Set<String> list);
+    }
+    public interface onAllCategoriesReceived {
+        void onReceived(Set<String> categories);
     }
     public interface onPreviewRestaurantsReceived{
         void  onCallback(PreviewInfo preview);
@@ -48,9 +53,10 @@ public class ConsumerDatabase {
         void onReceived(Restaurant rest);
     }
 
-    public Set<String> getRestaurantsIds(final Set<String> chosen, final onCategoriesReceived firebaseCallback) {
+    public Set<String> getRestaurantsIds(final Set<String> chosen, final onRestaurantsIdReceived firebaseCallback) {
         final Set<String> restaurantIds = new HashSet<>();
         // if chosen.size = 0, search for all restaurants
+        Log.d("MADAPP", "in database --> " + chosen.toString());
         myRef.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -58,7 +64,7 @@ public class ConsumerDatabase {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         RestaurantCategory restCategory = issue.getValue(RestaurantCategory.class);
                         if(restCategory != null) {
-                            if (chosen.contains(restCategory.name) || chosen.size() == 0)
+                            if (chosen.contains(restCategory.name.toLowerCase()) || chosen.size() == 0)
                                 if(restCategory.restaurants != null && restCategory.restaurants.size() != 0)
                                     restaurantIds.addAll(restCategory.restaurants.keySet());
                         }
@@ -158,6 +164,30 @@ public class ConsumerDatabase {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("MADAPP", "onCanceled: "+ this.toString());
+            }
+        });
+    }
+
+
+    public void getCategories(onAllCategoriesReceived cb) {
+        Set<String> categories = new HashSet<>();
+        myRef.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        RestaurantCategory restCategory = issue.getValue(RestaurantCategory.class);
+                        if(restCategory != null) {
+                           categories.add(restCategory.name);
+                        }
+                    }
+                }
+                cb.onReceived(categories);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                cb.onReceived(new HashSet<>());
             }
         });
     }

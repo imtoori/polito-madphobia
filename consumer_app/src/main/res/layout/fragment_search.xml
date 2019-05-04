@@ -125,7 +125,6 @@
                     style="@style/Theme.MaterialComponents"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:checkable="true"
                     android:text="@string/no_min_order"
                     android:textColor="@color/colorPrimary"
@@ -134,19 +133,17 @@
                     app:chipIcon="@drawable/ic_order"
                     app:chipIconTint="@color/colorPrimary"
                     app:chipStrokeColor="@color/colorPrimary"
-                    app:chipStrokeWidth="1dp"
+                    app:chipStrokeWidth="0.1dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/deliverychip"
                     app:layout_constraintStart_toEndOf="@+id/deliverychip"
-                    app:layout_constraintVertical_bias="0.0"
-                    app:rippleColor="@color/colorPrimaryDark"
-                    card_view:layout_constraintBottom_toBottomOf="@+id/deliverychip"
-                    card_view:layout_constraintTop_toTopOf="@+id/deliverychip" />
+                    app:layout_constraintTop_toTopOf="@+id/deliverychip"
+                    app:rippleColor="@color/colorPrimaryDark" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/deliverychip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
                     android:checkable="true"
                     android:text="@string/free_delivery"
                     android:textColor="@color/colorPrimary"
@@ -155,12 +152,23 @@
                     app:chipIcon="@drawable/ic_money"
                     app:chipIconTint="@color/colorPrimary"
                     app:chipStrokeColor="@color/colorPrimary"
-                    app:chipStrokeWidth="1dp"
-                    app:rippleColor="@color/colorPrimaryDark"
-                    card_view:layout_constraintBottom_toBottomOf="parent"
-                    card_view:layout_constraintStart_toStartOf="@+id/filtertv"
-                    card_view:layout_constraintTop_toBottomOf="@+id/filtertv" />
+                    app:chipStrokeWidth="0.1dp"
+                    app:layout_constraintStart_toStartOf="@+id/filtertv"
+                    app:layout_constraintTop_toBottomOf="@+id/filtertv"
+                    app:rippleColor="@color/colorPrimaryDark" />
 
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/deliverychip"
+                    app:layout_constraintTop_toBottomOf="@+id/deliverychip" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
