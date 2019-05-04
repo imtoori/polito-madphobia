@@ -10,4 +10,10 @@ public class Restaurant {
         this.name = name;
         this.description = desc;
     }
+
+    public Restaurant(Restaurant other) {
+        this.name = other.name;
+        this.description = other.description;
+
+    }
 }

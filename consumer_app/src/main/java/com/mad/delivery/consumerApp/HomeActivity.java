@@ -17,7 +17,7 @@ import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
 
-public class HomeActivity extends AppCompatActivity implements SearchFragment.OnCategorySelected, RestaurantsFragment.OnRestaurantSelected {
+public class HomeActivity extends AppCompatActivity implements SearchFragment.OnCategorySelected, RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
     Toolbar myToolbar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     FragmentManager fm;
@@ -96,6 +96,13 @@ public class HomeActivity extends AppCompatActivity implements SearchFragment.On
     public void openRestaurant() {
         Log.d("MADAPP", "Clicked on restaurant");
         Intent intent = new Intent(getApplicationContext(), RestaurantInfoActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+    @Override
+    public void openOrder() {
+        Log.d("MADAPP", "Clicked on restaurant");
+        Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

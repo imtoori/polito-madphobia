@@ -49,4 +49,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="status">status</string>
+    <string name="Credit">Credit</string>
+    <string name="Total">Total:</string>
+    <string name="enter_code">Enter your credit code</string>
+    <string name="credit_description">Your credit can be used as payment on your order</string>
+    <string name="data">Date:</string>
+
 </resources>
