@@ -46,8 +46,8 @@ public class WalletFragment extends Fragment {
 
         // TODO remove items here when persistence is implemented
         List<Product> products = new ArrayList<>();
-        Product p1 = new Product("Prodotto 1", 20);
-        Product p2 = new Product("Prodotto 2", 10);
+        Product p1 = new Product("Prodotto 1", 20, 18.55);
+        Product p2 = new Product("Prodotto 2", 10, 17.01);
         products.add(p1);
         products.add(p2);
         Restaurant rest= new Restaurant();

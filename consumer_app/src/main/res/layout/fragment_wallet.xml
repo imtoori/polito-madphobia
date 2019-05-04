@@ -64,7 +64,7 @@ tools:context=".WalletFragment">
                     android:textSize="@dimen/description"/>
 
                 <ImageView
-                    android:id="@+id/editprofile_userimage"
+                    android:id="@+id/done_code"
                     android:layout_width="35dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"

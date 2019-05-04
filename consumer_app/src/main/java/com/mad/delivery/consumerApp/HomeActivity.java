@@ -101,7 +101,7 @@ public class HomeActivity extends AppCompatActivity implements SearchFragment.On
     }
     @Override
     public void openOrder() {
-        Log.d("MADAPP", "Clicked on restaurant");
+        Log.d("MADAPP", "Clicked on ORDER");
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
