@@ -195,6 +195,10 @@
     <string name="search_empty">No results</string>
     <string name="filters">Apply filters</string>
 
+
+    <!-- Wallet Fragment -->
+    <string name="basket_toolbar">Basket Toolbar</string>
+
     <!-- Restaurant APP -->
     <string name="opening_hours_full" > No opening hours added yet</string>
 </resources>

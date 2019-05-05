@@ -29,7 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.consumerApp.User;
+import com.mad.delivery.resources.User;
 
 import org.joda.time.DateTime;
 

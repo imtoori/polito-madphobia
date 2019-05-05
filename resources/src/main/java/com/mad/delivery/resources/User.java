@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     public String name;
-    public String lastname;
+    public String lastName;
     public String phoneNumber;
     public String email;
     public String description;
@@ -19,13 +19,11 @@ public class User implements Serializable {
     public String  doorPhone;
     public String  postCode;
     public String city;
-    public String imageName;
-    public String opening;
     public String id;
 
-    public User(String name, String lastname, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String opening, String imageName) {
+    public User(String name, String lastname, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;
-        this.lastname = lastname;
+        this.lastName = lastname;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.description = description;
@@ -35,8 +33,6 @@ public class User implements Serializable {
         this.postCode = postCode;
         this.city = city;
         this.imageUri = imageUri.toString();
-        this.opening = opening;
-        this.imageName = imageName;
         this.registrationDate = new DateTime().toString();
     }
 
@@ -54,8 +50,6 @@ public class User implements Serializable {
         this.postCode = u.postCode;
         this.city = u.city;
         this.imageUri = u.imageUri;
-        this.opening = u.opening;
-        this.imageName = u.imageName;
     }
 
     public String getName() {
@@ -67,11 +61,11 @@ public class User implements Serializable {
     }
 
     public String getLastname() {
-        return lastname;
+        return lastName;
     }
 
     public void setLastname(String lastname) {
-        this.lastname = lastname;
+        this.lastName = lastname;
     }
 
     public String getPhoneNumber() {
@@ -152,22 +146,6 @@ public class User implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public String getOpening() {
-        return opening;
-    }
-
-    public void setOpening(String opening) {
-        this.opening = opening;
     }
 
     public String getId() {

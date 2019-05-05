@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mad.delivery.consumerApp.BuildConfig;
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.consumerApp.User;
+import com.mad.delivery.resources.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -164,7 +164,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.doorPhone = savedInstanceState.getString("doorPhone");
         mUser.postCode = savedInstanceState.getString("postCode");
         mUser.city = savedInstanceState.getString("city");
-        mUser.imageUri = Uri.parse(savedInstanceState.getString("imageUri"));
+        mUser.imageUri = savedInstanceState.getString("imageUri");
         updateFields(mUser);
     }
 
@@ -210,7 +210,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 sharedPref.getString("city", ""),
                 Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
         );
-        Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
+
+            Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
         updateFields(mUser);
     }
 
@@ -314,14 +315,14 @@ public class EditProfileActivity extends AppCompatActivity {
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
 
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+        if (u.imageUri == null|| u.imageUri.equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imageProfileUri = Uri.EMPTY;
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
             Log.d("MADAPP", "Setting custom user image");
-            imageProfileUri = u.imageUri;
-            imgProfile.setImageURI(u.imageUri);
+            imageProfileUri = Uri.parse(u.imageUri);
+            imgProfile.setImageURI(Uri.parse(u.imageUri));
         }
     }
 

@@ -20,10 +20,7 @@ import com.mad.delivery.consumerApp.search.SearchFragment;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.RestaurantCategory;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected {
+public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
     Toolbar myToolbar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     FragmentManager fm;
@@ -104,6 +101,13 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         Log.d("MADAPP", "Clicked on restaurant");
         Intent intent = new Intent(getApplicationContext(), RestaurantInfoActivity.class);
         intent.putExtra("restaurant", previewInfo);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+    @Override
+    public void openOrder() {
+        Log.d("MADAPP", "Clicked on ORDER");
+        Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

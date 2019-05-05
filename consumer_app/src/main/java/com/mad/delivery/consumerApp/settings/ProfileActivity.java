@@ -18,7 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.consumerApp.User;
+import com.mad.delivery.resources.User;
 
 public class ProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -99,12 +99,12 @@ public class ProfileActivity extends AppCompatActivity {
         if (!u.road.equals("")) {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
-        if (u.imageUri == Uri.EMPTY || u.imageUri.toString().equals("")) {
+        if (u.imageUri == null || u.imageUri.equals("")) {
             Log.d("MADAPP", "Setting user default image");
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
             Log.d("MADAPP", "Setting custom user image");
-            imgProfile.setImageURI(u.imageUri);
+            imgProfile.setImageURI(Uri.parse(u.imageUri));
         }
     }
 

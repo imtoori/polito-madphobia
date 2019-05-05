@@ -49,4 +49,23 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="status">status</string>
+    <string name="Credit">Credit</string>
+    <string name="Total">Total:</string>
+    <string name="enter_code">Enter your credit code</string>
+    <string name="credit_description">Your credit can be used as payment on your order</string>
+    <string name="data">Date:</string>
+    <string name="order_summary">Order summary</string>
+    <string name="subtotal">SUBTOTAL</string>
+    <string name="delivery_fee">Delivery fee</string>
+    <string name="null_value">0.00</string>
+    <string name="biker_notes">Biker Notes</string>
+    <string name="payment">PAYMENT</string>
+    <string name="pay_method">Payment method</string>
+    <string name="cash">cash</string>
+    <string name="time_format">hh:mm</string>
+    <string name="datatime_format">dd/mm/yyyy-hh:mm</string>
+    <string name="Basket_toolbar">Basket</string>
+    <string name="datatime_secect">Click here to select delivery time!</string>
+
 </resources>
