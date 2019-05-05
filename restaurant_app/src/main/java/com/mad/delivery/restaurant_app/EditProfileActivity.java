@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.StorageReference;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +40,7 @@ import androidx.core.content.FileProvider;
 public class EditProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     Menu menu;
-    User mUser;
+    Restaurant mUser;
     FloatingActionButton btnCamera;
     EditText name;
     EditText phoneNumber;
@@ -61,6 +62,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageProfileUri =Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
@@ -151,14 +153,14 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new User();
+        mUser = new Restaurant();
         Log.d("MADAPP", "SavedInstanceState contains data");
         mUser.name = savedInstanceState.getString("name");
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
         mUser.road = savedInstanceState.getString("road");
-        mUser.opening = savedInstanceState.getString("openingTime");
+        mUser.openingHours = savedInstanceState.getString("openingTime");
         mUser.houseNumber = savedInstanceState.getString("houseNumber");
         mUser.doorPhone = savedInstanceState.getString("doorPhone");
         mUser.postCode = savedInstanceState.getString("postCode");
@@ -197,11 +199,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
 
-      Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
+      Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
             @Override
-            public void onCallbak(User user) {
+            public void onCallbak(Restaurant user) {
                 if(user!=null){
-                    mUser=new User(user);
+                    mUser=new Restaurant(user);
                     updateFields(mUser);
                 }
 
@@ -211,19 +213,20 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void setProfileData() {
 
-        User user  = new User(name.getText().toString(),
-                phoneNumber.getText().toString(),
+        Restaurant user  = new Restaurant(name.getText().toString(),
+
                 emailAddress.getText().toString(),
                 description.getText().toString(),
+                phoneNumber.getText().toString(),
                 road.getText().toString(),
                 houseNumber.getText().toString(),
                 doorPhone.getText().toString(),
                 postCode.getText().toString(),
                 city.getText().toString(),
-                imageProfileUri,
-                openingTime.getText().toString(),
-                imageProfileUri.getLastPathSegment());
-        Database.getInstance().putUserProfile(user);
+                imageProfileUri.toString(),
+                imageProfileUri.getLastPathSegment(),
+                openingTime.getText().toString());
+        Database.getInstance().putRestaurantProfile(user);
 
 
 
@@ -287,14 +290,14 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void updateFields(User u) {
+    private void updateFields(Restaurant u) {
         Log.d("UPDATE","name: " + u.name);
         name.setText(u.name);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
         road.setText(u.road);
-        openingTime.setText(u.opening);
+        openingTime.setText(u.openingHours);
         houseNumber.setText(u.houseNumber);
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));

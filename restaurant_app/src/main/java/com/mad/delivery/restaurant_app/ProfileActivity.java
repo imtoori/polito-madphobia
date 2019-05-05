@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
@@ -40,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView opening;
     TextView road;
     ImageView imgProfile;
-    User mUser=new User();
+    Restaurant mUser=new Restaurant();
 
 
     @Override
@@ -95,30 +96,30 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
 
-        Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
+        Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
             @Override
-            public void onCallbak(User user) {
+            public void onCallbak(Restaurant user) {
                 if(user!=null){
-                    mUser = new User(user);
+                    mUser = new Restaurant(user);
                     updateFields(mUser);
                 }
                 else{
-                    mUser  = new User("","","","","","","","","", Uri.EMPTY,"","");
-                    updateFields(mUser);
+                    mUser  = new Restaurant("","","","","","","","", "","","","");
+                       updateFields(mUser);
                     }
 
             }
         });
     }
 
-    private void updateFields(User u) {
+    private void updateFields(Restaurant u) {
         if(!u.name.equals("") )
             name.setText(u.name );
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-        if(!u.opening.equals("")) {
-            opening.setText(u.opening);
+        if(!u.openingHours.equals("")) {
+            opening.setText(u.openingHours);
         } else {
             opening.setText(getResources().getString(R.string.opening_hours_full));
         }

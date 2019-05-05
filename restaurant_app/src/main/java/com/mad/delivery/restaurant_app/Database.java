@@ -17,6 +17,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 
 import org.joda.time.DateTimeComparator;
@@ -245,7 +246,7 @@ final class Database {
         });
         return null;
     }
-    void putUserProfile(User user){
+    void putRestaurantProfile(Restaurant user){
 
         Uri file = Uri.parse(user.imageUri);
         storageRef.child("images/profile/");
@@ -283,13 +284,13 @@ final class Database {
             });
         }
     }
-    public void getUserProfile(FirebaseCallbackUser firebaseCallbackUser) {
+    public void getRestaurantProfile(FirebaseCallbackUser firebaseCallbackUser) {
         profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                if (dataSnapshot.hasChild("profile")) {
                    dataSnapshot = dataSnapshot.child("profile");
-                   User item = dataSnapshot.getValue(User.class);
+                   Restaurant item = dataSnapshot.getValue(Restaurant.class);
                    if (item != null) {
 
                        firebaseCallbackUser.onCallbak(item);
@@ -324,7 +325,7 @@ interface OnDataFetched<T, E> {
 
 }
 interface FirebaseCallbackUser {
-    void onCallbak(User user);
+    void onCallbak(Restaurant user);
 }
 interface Callback{
     void onCallback(Uri item);
