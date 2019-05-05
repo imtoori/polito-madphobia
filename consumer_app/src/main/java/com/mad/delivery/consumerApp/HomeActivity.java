@@ -17,8 +17,8 @@ import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
+import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.PreviewInfo;
-import com.mad.delivery.resources.RestaurantCategory;
 
 public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
     Toolbar myToolbar;

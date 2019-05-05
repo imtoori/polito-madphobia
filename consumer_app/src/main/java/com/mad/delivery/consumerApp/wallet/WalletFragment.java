@@ -1,12 +1,14 @@
-package com.mad.delivery.consumerApp;
+package com.mad.delivery.consumerApp.wallet;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mad.delivery.consumerApp.search.RestaurantsAdapter;
+import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.search.CategoriesFragment;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
@@ -31,14 +33,27 @@ import androidx.viewpager.widget.ViewPager;
  * A simple {@link Fragment} subclass.
  */
 public class WalletFragment extends Fragment {
-    private ViewPager mPager;
-    private PagerAdapter pagerAdapter;
     private WalletFragment.OnOrderSelected mListener;
     public WalletFragment() {
         setHasOptionsMenu(true);
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof WalletFragment.OnOrderSelected) {
+            mListener = (WalletFragment.OnOrderSelected) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement onRestaurantSelected");
+        }
+    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

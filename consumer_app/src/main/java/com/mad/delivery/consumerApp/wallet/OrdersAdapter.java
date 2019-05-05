@@ -1,6 +1,5 @@
-package com.mad.delivery.consumerApp;
+package com.mad.delivery.consumerApp.wallet;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,11 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.Order;
-import com.mad.delivery.resources.Product;
 
 
-public class OrdersAdapter extends RecyclerView.Adapter<com.mad.delivery.consumerApp.OrdersAdapter.ViewHolder> {
+public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
         private List<Order> orders;
         private View view;
@@ -28,13 +27,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
         }
 
         @Override
-        public com.mad.delivery.consumerApp.OrdersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public OrdersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_layout, parent, false);
-            return new com.mad.delivery.consumerApp.OrdersAdapter.ViewHolder(view);
+            return new OrdersAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final com.mad.delivery.consumerApp.OrdersAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final OrdersAdapter.ViewHolder holder, int position) {
             holder.order = orders.get(position);
             holder.nameRestaurant.setText(holder.order.restaurant.name);
             int price = 0;
