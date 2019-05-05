@@ -23,16 +23,18 @@ public class Order implements Parcelable {
     public String clientNotes;
     public String serverNotes;
     public String restaurantId;
+    public String paymentMethod;
     public Order(){}
 
 
-    public Order(Customer u, Restaurant r, List<Product> products, String orderFor) {
+    public Order(Customer u, Restaurant r, List<Product> products, String orderFor, String paymentMethod) {
         this.client = u;
         this.products = products;
         status = OrderStatus.pending;
         orderDate = MyDateFormat.parse(new DateTime());
         this.restaurant = r;
         this.orderFor = orderFor;
+        this.paymentMethod = paymentMethod;
     }
 
     public Order(Order other) {
@@ -46,6 +48,7 @@ public class Order implements Parcelable {
         estimatedDelivery = other.estimatedDelivery;
         clientNotes = other.clientNotes;
         serverNotes = other.serverNotes;
+        paymentMethod = other.paymentMethod;
     }
 
     protected Order(Parcel in) {
@@ -60,6 +63,7 @@ public class Order implements Parcelable {
         clientNotes = in.readString();
         serverNotes = in.readString();
         restaurantId = in.readString();
+        paymentMethod = in.readString();
     }
 
     @Override
@@ -75,6 +79,7 @@ public class Order implements Parcelable {
         dest.writeString(clientNotes);
         dest.writeString(serverNotes);
         dest.writeString(restaurantId);
+        dest.writeString(paymentMethod);
     }
 
     @Override
@@ -213,6 +218,14 @@ public class Order implements Parcelable {
 
     public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     @Override

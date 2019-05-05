@@ -20,11 +20,12 @@ import com.mad.delivery.bikerApp.orders.OrderFragment;
 import com.mad.delivery.bikerApp.orders.PendingOrdersFragment;
 import com.mad.delivery.bikerApp.settings.SettingFragment;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.bikerApp.statistcs.StatisticsFragment;
 
 public class HomeActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
     private Order orderToBeUpdated;
-    int open = 0;
+    int open = 1;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private FirebaseAuth mAuth;
 
@@ -35,7 +36,7 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
         mAuth = FirebaseAuth.getInstance();
 
         if(getIntent().hasExtra("open")) {
-            open = getIntent().getIntExtra("open", 0);
+            open = getIntent().getIntExtra("open", 1);
         } else {
             Log.d("MADAPP", "NO open..");
         }
@@ -75,6 +76,15 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
                         ft.replace(R.id.frag_container, settingFragment);
                         ft.commit();
                         return true;
+                    case R.id.nav_statistics:
+                        setTitle(getString(R.string.nav_statistics));
+                        StatisticsFragment statisticsFragment = new StatisticsFragment();
+                        ft = fm.beginTransaction();
+                        ft.addToBackStack(null);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                        ft.replace(R.id.frag_container, statisticsFragment);
+                        ft.commit();
+                        return true;
                 }
                 return false;
             }
@@ -83,9 +93,12 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
         Log.d("MADAPP", "Open=" + open);
         switch(open) {
             case 0:
-                navigation.setSelectedItemId(R.id.nav_orders);
+                navigation.setSelectedItemId(R.id.nav_statistics);
                 break;
             case 1:
+                navigation.setSelectedItemId(R.id.nav_orders);
+                break;
+            case 2:
                 navigation.setSelectedItemId(R.id.nav_settings);
                 break;
             default:

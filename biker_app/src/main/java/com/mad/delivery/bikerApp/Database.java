@@ -42,8 +42,8 @@ final public class Database {
         for (int i = 0; i < 10; i++) {
             List<Product> products = new ArrayList<>();
             // create products for an order
-            Product p1 = new Product("Prodotto 1", 20);
-            Product p2 = new Product("Prodotto 2", 10);
+            Product p1 = new Product("Prodotto 1", 20, 5.0);
+            Product p2 = new Product("Prodotto 2", 10, 3.0);
             products.add(p1);
             products.add(p2);
 
@@ -72,7 +72,7 @@ final public class Database {
             DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
             DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
             DateTime to = DateTime.now();
-            Order o = new Order(u,rest, products, from.toString());
+            Order o = new Order(u,rest, products, from.toString(), "credit");
             o.id = "1234";
             o.status = OrderStatus.pending;
             o.orderDate = to.toString();
