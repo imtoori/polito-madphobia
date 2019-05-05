@@ -3,6 +3,7 @@ package com.mad.delivery.consumerApp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
 
     private List<Product> products;
     private View view;
+
 
 
     public BasketAdapter(List<Product> items) {
@@ -46,7 +48,7 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
         public final View mView;
         public final TextView price;
         public final TextView name;
-
+        public final ImageView delete;
 
         public Product product;
 
@@ -56,7 +58,7 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
 
             price = mView.findViewById(R.id.price);
             name=mView.findViewById(R.id.name);
-
+            delete=mView.findViewById(R.id.delete);
 
 
         }
