@@ -1,5 +1,12 @@
 package com.mad.delivery.bikerApp;
 
+import android.net.Uri;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -7,7 +14,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
+import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
@@ -34,6 +44,8 @@ final public class Database {
     private static MyDateComparator myDateComparator;
     DatabaseReference ordersRef;
     DatabaseReference profileRef;
+    StorageReference storageRef;
+
     FirebaseAuth mAuth;
 
     public static Database getInstance() {
@@ -50,59 +62,10 @@ final public class Database {
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         ordersRef = database.getReference("orders");
-        profileRef = database.getReference("users/restaurants/"+mAuth.getUid());
+        profileRef = database.getReference("users/biker/"+mAuth.getUid());
+        storageRef = FirebaseStorage.getInstance().getReference().child("users/biker/"+ mAuth.getUid());
 
 
-       myDateComparator = new MyDateComparator();
-        orders = new HashMap<>();
-        Random r = new Random();
-        for (int i = 0; i < 10; i++) {
-            List<Product> products = new ArrayList<>();
-            // create products for an order
-            Product p1 = new Product("Prodotto 1", 20);
-            Product p2 = new Product("Prodotto 2", 10);
-            products.add(p1);
-            products.add(p2);
-
-            Customer u = new Customer();
-            u.name = "FirstName";
-            u.phoneNumber = "+393926282813";
-            u.description = "This is a description";
-            u.lastName = "Last Name";
-            u.email = "email@email.it";
-            u.city = "Turin";
-            u.road = "Street name";
-            u.houseNumber = "20";
-            u.postCode = "10126";
-            u.doorPhone = "doorphone";
-            Restaurant rest= new Restaurant();
-            rest.name = "Pinco";
-            rest.phoneNumber = "+393926282813";
-            rest.description = "This is a description";
-            rest.email = "email@email.it";
-            rest.city = "Turin";
-            rest.road = "Street name";
-            rest.houseNumber = "20";
-            rest.postCode = "10126";
-            rest.doorPhone = "pinco";
-            rest.scoreValue=10;
-
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
-            DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
-            DateTime to = DateTime.now();
-            Order o = new Order(u,rest, products, from.toString());
-            o.id = "1234";
-            o.status = OrderStatus.pending;
-            o.orderDate = to.toString();
-            o.estimatedDelivery = to.toString();
-            o.clientNotes = "Notes added by client";
-            o.serverNotes ="Notes added by restaurant";
-            o.bikerId = mAuth.getUid();
-            ordersRef.push().setValue(o);
-            orders.put(o.id, o);
-
-
-        }
     }
 
     public  void update(Order o) {
@@ -230,8 +193,73 @@ final public class Database {
 
         return completed;
     }
+    public void getImage(String imageName,String path,FirebaseCallbackItem<Uri> UriImg) {
+
+        if (!imageName.equals("")) {
+            Log.d("name", imageName);
+            // Uri tmp = Uri.parse(imageName);
+            StorageReference profileRefStore = storageRef.child(path + imageName);
+            profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // Got the download URL for 'users/me/profile.png'
+                    Log.d("DOWNLOAD",uri.toString());
+
+                    UriImg.onCallback(uri);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    UriImg.onCallback(Uri.EMPTY);
+                }
+            });
+        }
+    }
+
+    public void putBikerProfile(Biker user){
+
+        Uri file = Uri.parse(user.imageUri);
+        storageRef.child("images/profile/");
+
+        StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
+        profileRefStore.putFile(file);
+        profileRef.setValue("profile");
+        profileRef.child("profile").setValue(user);
 
 
+
+
+    }
+    public void getBikerProfile(FirebaseCallbackItem<Biker> firebaseCallbackUser) {
+        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("profile")) {
+                    dataSnapshot = dataSnapshot.child("profile");
+                    Biker item = dataSnapshot.getValue(Biker.class);
+                    if (item != null) {
+
+                        firebaseCallbackUser.onCallback(item);
+                    } else {
+                        //   userStringOnDataFetched.onError("data not found");
+                        Log.d("DATABASE: ", "SONO ENTRATO222");
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("DATABASE: ", "SONO ENTRATO");
+
+            }
+        });
+
+    }
 
 
 }
+
+

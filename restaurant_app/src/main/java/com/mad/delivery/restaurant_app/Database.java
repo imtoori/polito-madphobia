@@ -58,7 +58,7 @@ final class Database {
         menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/menuItems");
         ordersRef = database.getReference("orders");
         profileRef = database.getReference("users/restaurants/"+mAuth.getUid());
-        storageRef = FirebaseStorage.getInstance().getReference().child("users/"+ mAuth.getUid());
+        storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/"+ mAuth.getUid());
 
 
     }

@@ -17,10 +17,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.FirebaseCallbackItem;
+import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -59,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.putExtra("open", 1);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -82,42 +87,55 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new Biker(sharedPref.getString("name", ""),
-                sharedPref.getString("lastname", ""),
-                sharedPref.getString("phoneNumber", ""),
-                sharedPref.getString("emailAddress", ""),
-                sharedPref.getString("description", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
-        );
+        Database.getInstance().getBikerProfile(new FirebaseCallbackItem<Biker>(){
+            @Override
+            public void onCallback(Biker user) {
+                if(user!=null){
+                    mUser = new Biker(user);
+                    updateFields(mUser);
+                }
+                else{
+                    mUser  = new Biker("","","","","", Uri.EMPTY);
+                    updateFields(mUser);
+                }
 
-
-            Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        if(mUser!=null) {
-            Log.i("AAA", mUser.name + "-" + mUser.phoneNumber + "-" + mUser.email + "-" + mUser.description );
-            updateFields(mUser);
-        }
-        else
-            Log.i("AAA", "---------------------------------------------------------");
+            }
+        });
     }
     private void updateFields(Biker u) {
-        if(!u.name.equals("") )
-            name.setText(u.name+" "+u.lastname );
+        if (!u.name.equals(""))
+            name.setText(u.name + " " + u.lastname);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
 
 
+        imgProfile.setImageURI(Uri.parse(u.imageUri));
 
-        if (u.imageUri == null || u.imageUri.equals("")) {
-            Log.d("MADAPP", "Setting user default image");
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-        } else {
-            Log.d("MADAPP", "Setting custom user image");
-            imgProfile.setImageURI(Uri.parse(u.imageUri));
+        if (imgProfile.getDrawable() == null) {
+            Log.d("IMAGENAME",u.imageName);
+            Database.getInstance().getImage(u.imageName, "/images/profile/", new FirebaseCallbackItem<Uri>() {
+                @Override
+                public void onCallback(Uri item) {
+                    if (item != null) {
+                        if (item == Uri.EMPTY || item.toString().equals("")) {
+                            Log.d("MADAPP", "Setting user default image");
+
+                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        } else {
+                            Log.d("MADAPP", "Setting custom user image");
+                            Log.d("DOWNLOAD2", item.toString());
+
+                            // imgProfile.setImageURI(item);
+                            Picasso.get().load(item.toString()).into(imgProfile);
+
+                        }
+                    }
+
+                }
+            });
         }
     }
-
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);

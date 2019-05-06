@@ -127,9 +127,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(!u.road.equals("")) {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
-        //Picasso.get().load(u.imageUri.toString()).into(imgProfile);
-       // Log.d("----",Uri.parse(u.imageUri).getPath());
-        // imageProfileUri = Uri.parse( mUser.imageUri);
+
 
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
