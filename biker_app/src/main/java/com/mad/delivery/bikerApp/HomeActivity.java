@@ -20,7 +20,7 @@ import com.mad.delivery.bikerApp.orders.OrderFragment;
 import com.mad.delivery.bikerApp.orders.PendingOrdersFragment;
 import com.mad.delivery.bikerApp.settings.SettingFragment;
 import com.mad.delivery.resources.Order;
-import com.mad.delivery.bikerApp.statistcs.StatisticsFragment;
+import com.mad.delivery.bikerApp.start.StartFragment;
 
 public class HomeActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
@@ -78,7 +78,7 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
                         return true;
                     case R.id.nav_statistics:
                         setTitle(getString(R.string.nav_statistics));
-                        StatisticsFragment statisticsFragment = new StatisticsFragment();
+                        StartFragment statisticsFragment = new StartFragment();
                         ft = fm.beginTransaction();
                         ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);

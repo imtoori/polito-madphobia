@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
@@ -30,7 +31,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class ProfileActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Toolbar myToolBar;
     Menu menu;
     TextView name;
@@ -40,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView opening;
     TextView road;
     ImageView imgProfile;
-    User mUser=new User();
+    Restaurant mUser=new Restaurant();
 
 
     @Override
@@ -97,13 +97,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
             @Override
-            public void onCallbak(User user) {
+            public void onCallbak(Restaurant user) {
                 if(user!=null){
-                    mUser = new User(user);
+                    mUser = new Restaurant(user);
                     updateFields(mUser);
                 }
                 else{
-                    mUser  = new User("","","","","","","","","", Uri.EMPTY,"","");
+                    mUser  = new Restaurant("","","","","","","","","","","");
                     updateFields(mUser);
                     }
 
@@ -111,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void updateFields(User u) {
+    private void updateFields(Restaurant u) {
         if(!u.name.equals("") )
             name.setText(u.name );
         phoneNumber.setText(u.phoneNumber);
@@ -129,8 +129,6 @@ public class ProfileActivity extends AppCompatActivity {
         //Picasso.get().load(u.imageUri.toString()).into(imgProfile);
        // Log.d("----",Uri.parse(u.imageUri).getPath());
         // imageProfileUri = Uri.parse( mUser.imageUri);
-
-        imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
             Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
@@ -160,7 +158,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        intent.putExtra("imageUri", mUser.imageUri.toString());
+        intent.putExtra("imageUri", mUser.imageName);
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

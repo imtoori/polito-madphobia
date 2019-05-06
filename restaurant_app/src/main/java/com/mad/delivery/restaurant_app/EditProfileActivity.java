@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.StorageReference;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
@@ -37,9 +38,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Menu menu;
-    User mUser;
+    Restaurant mUser;
     FloatingActionButton btnCamera;
     EditText name;
     EditText phoneNumber;
@@ -139,7 +139,7 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
         outState.putString("openingTime", openingTime.getText().toString());
-        if (imageProfileUri != Uri.EMPTY)
+        if (imageProfileUri != null && imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
             outState.putString("imageUri", "");
@@ -151,7 +151,7 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new User();
+        mUser = new Restaurant();
         Log.d("MADAPP", "SavedInstanceState contains data");
         mUser.name = savedInstanceState.getString("name");
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
@@ -163,7 +163,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.doorPhone = savedInstanceState.getString("doorPhone");
         mUser.postCode = savedInstanceState.getString("postCode");
         mUser.city = savedInstanceState.getString("city");
-        mUser.imageUri = savedInstanceState.getString("imageUri");
+        mUser.imageName = savedInstanceState.getString("imageUri");
         updateFields(mUser);
     }
 
@@ -199,9 +199,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
       Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
             @Override
-            public void onCallbak(User user) {
+            public void onCallbak(Restaurant user) {
                 if(user!=null){
-                    mUser=new User(user);
+                    mUser=new Restaurant(user);
                     updateFields(mUser);
                 }
 
@@ -210,25 +210,23 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void setProfileData() {
-
-        User user  = new User(name.getText().toString(),
-                phoneNumber.getText().toString(),
+        String imageName = "";
+        if(imageProfileUri != null) {
+            imageName = imageProfileUri.getLastPathSegment();
+        }
+        Restaurant user = new Restaurant(name.getText().toString(),
                 emailAddress.getText().toString(),
                 description.getText().toString(),
+                phoneNumber.getText().toString(),
                 road.getText().toString(),
                 houseNumber.getText().toString(),
                 doorPhone.getText().toString(),
                 postCode.getText().toString(),
                 city.getText().toString(),
-                imageProfileUri,
-                openingTime.getText().toString(),
-                imageProfileUri.getLastPathSegment());
+                openingTime.getText().toString(), imageName);
         Database.getInstance().putUserProfile(user);
 
-
-
     }
-
     private File createImageFile() throws IOException {
         // Create an image file name
 
@@ -287,7 +285,7 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void updateFields(User u) {
+    private void updateFields(Restaurant u) {
         Log.d("UPDATE","name: " + u.name);
         name.setText(u.name);
         phoneNumber.setText(u.phoneNumber);
@@ -299,8 +297,6 @@ public class EditProfileActivity extends AppCompatActivity {
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
-        imageProfileUri = Uri.parse( mUser.imageUri);
-        imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
             Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
@@ -355,7 +351,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public boolean checkConstraints() {
         boolean result = true;
-        String nameString = "[a-zA-Z]+";
+        String nameString = "[a-zA-Z0-9&-]+";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString = "[0-9]{5}";
         String numberString = "[1-9][0-9]*";

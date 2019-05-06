@@ -25,11 +25,12 @@ public class Restaurant implements Parcelable {
     public int scoreValue;
     public Map<String, Boolean> categories;
     public Map<String, MenuItemRest> menuItems;
-    public Uri imageUri;
     public String token;
+    public String opening;
     public int minOrderCost, deliveryCost;
+    public String imageName;
 
-    public Restaurant(String name,  String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
+    public Restaurant(String name,  String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String opening, String imageName) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
@@ -39,7 +40,6 @@ public class Restaurant implements Parcelable {
         this.doorPhone = doorPhone;
         this.postCode = postCode;
         this.city = city;
-        this.imageUri = imageUri;
         categories = new HashMap<>();
         menuItems = new HashMap<>();
         previewInfo = new PreviewInfo();
@@ -47,6 +47,8 @@ public class Restaurant implements Parcelable {
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
         previewInfo.description = this.description;
+        this.opening = opening;
+        this.imageName = imageName;
     }
 
     public Restaurant(Restaurant other) {
@@ -59,12 +61,13 @@ public class Restaurant implements Parcelable {
         this.doorPhone = other.doorPhone;
         this.postCode = other.postCode;
         this.city = other.city;
-        this.imageUri = other.imageUri;
         previewInfo = new PreviewInfo();
         previewInfo.name = this.name;
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
         previewInfo.description = this.description;
+        this.opening = other.opening;
+        this.imageName = other.imageName;
     }
 
 
@@ -89,7 +92,8 @@ public class Restaurant implements Parcelable {
         city = in.readString();
         openingHours = in.readString();
         scoreValue = in.readInt();
-        imageUri = in.readParcelable(Uri.class.getClassLoader());
+        opening = in.readString();
+        imageName = in.readString();
     }
 
     @Override
@@ -107,7 +111,8 @@ public class Restaurant implements Parcelable {
         dest.writeString(city);
         dest.writeString(openingHours);
         dest.writeInt(scoreValue);
-        dest.writeParcelable(imageUri, flags);
+        dest.writeString(opening);
+        dest.writeString(imageName);
     }
 
     @Override
@@ -207,13 +212,6 @@ public class Restaurant implements Parcelable {
         this.city = city;
     }
 
-    public Uri getImageUri() {
-        return imageUri;
-    }
-
-    public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
-    }
 
     public Map<String, Boolean> getCategories() {
         return categories;
@@ -279,6 +277,22 @@ public class Restaurant implements Parcelable {
         this.deliveryCost = deliveryCost;
     }
 
+    public String getOpening() {
+        return opening;
+    }
+
+    public void setOpening(String opening) {
+        this.opening = opening;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
@@ -297,7 +311,6 @@ public class Restaurant implements Parcelable {
                 ", scoreValue=" + scoreValue +
                 ", categories=" + categories +
                 ", menuItems=" + menuItems +
-                ", imageUri=" + imageUri +
                 ", token='" + token + '\'' +
                 ", minOrderCost=" + minOrderCost +
                 ", deliveryCost=" + deliveryCost +

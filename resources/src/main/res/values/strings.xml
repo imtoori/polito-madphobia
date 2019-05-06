@@ -195,6 +195,9 @@
     <string name="search_empty">No results</string>
     <string name="filters">Apply filters</string>
 
+    <!-- StartFragment -->
+    <string name="start_work">Start</string>
+    <string name="stop_work">Stop</string>
 
     <!-- Wallet Fragment -->
     <string name="basket_toolbar">Basket Toolbar</string>
