@@ -29,8 +29,15 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Restaurant;
 
 
 /**
@@ -44,7 +51,7 @@ public class LoginFragment extends Fragment {
     private Button loginBtn, registerBtn;
     private View progressView;
     private Animation shakeAnim;
-
+    private Biker biker;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -130,13 +137,50 @@ public class LoginFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("MADAPP", "signInWithEmail:success");
                             user = mAuth.getCurrentUser();
+                            // check if the user is registered on the right app (Restaurant, Customer, Biker)
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            Log.d("MADAPP", mAuth.getUid());
+                            DatabaseReference ref = database.getReference("users").child("biker").child(mAuth.getUid());
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        Log.d("MADAPP", "datasnapshot exists");
+                                        biker = dataSnapshot.getValue(Biker.class);
+                                        if (biker == null) {
+                                            password.startAnimation(shakeAnim);
+                                            email.startAnimation(shakeAnim);
+                                            email.setError(getResources().getString(R.string.login_error_fail));
+                                            password.setError(getResources().getString(R.string.login_error_fail));
+                                            return;
+                                        } else {
+                                            Log.d("MADAPP", "This user is not a biker!");
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("user", biker);
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
+                                            intent.putExtra("user", bundle);
+                                            startActivity(intent);
+                                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                        }
+                                    } else {
+                                        Log.d("MADAPP", "Datasnapshots does not exist");
+                                        password.startAnimation(shakeAnim);
+                                        email.startAnimation(shakeAnim);
+                                        email.setError(getResources().getString(R.string.login_error_fail));
+                                        password.setError(getResources().getString(R.string.login_error_fail));
+                                        biker = null;
+                                    }
+                                }
 
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable("user", user);
-                            Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
-                            intent.putExtra("user", bundle);
-                            startActivity(intent);
-                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    password.startAnimation(shakeAnim);
+                                    email.startAnimation(shakeAnim);
+                                    email.setError(getResources().getString(R.string.login_error_fail));
+                                    password.setError(getResources().getString(R.string.login_error_fail));
+                                    biker = null;
+                                }
+                            });
                         }
                     }
                 }).addOnFailureListener(getActivity(), new OnFailureListener() {

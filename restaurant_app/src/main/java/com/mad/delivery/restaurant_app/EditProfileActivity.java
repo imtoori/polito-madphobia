@@ -38,6 +38,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
+    SharedPreferences sharedPref;
     Menu menu;
     Restaurant mUser;
     FloatingActionButton btnCamera;
@@ -61,6 +62,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageProfileUri =Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
@@ -139,7 +141,7 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
         outState.putString("openingTime", openingTime.getText().toString());
-        if (imageProfileUri != null && imageProfileUri != Uri.EMPTY)
+        if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
             outState.putString("imageUri", "");
@@ -158,12 +160,12 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
         mUser.road = savedInstanceState.getString("road");
-        mUser.opening = savedInstanceState.getString("openingTime");
+        mUser.openingHours = savedInstanceState.getString("openingTime");
         mUser.houseNumber = savedInstanceState.getString("houseNumber");
         mUser.doorPhone = savedInstanceState.getString("doorPhone");
         mUser.postCode = savedInstanceState.getString("postCode");
         mUser.city = savedInstanceState.getString("city");
-        mUser.imageName = savedInstanceState.getString("imageUri");
+        mUser.imageUri = savedInstanceState.getString("imageUri");
         updateFields(mUser);
     }
 
@@ -197,7 +199,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
 
-      Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
+        Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
             @Override
             public void onCallbak(Restaurant user) {
                 if(user!=null){
@@ -210,11 +212,9 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void setProfileData() {
-        String imageName = "";
-        if(imageProfileUri != null) {
-            imageName = imageProfileUri.getLastPathSegment();
-        }
-        Restaurant user = new Restaurant(name.getText().toString(),
+
+        Restaurant user  = new Restaurant(name.getText().toString(),
+
                 emailAddress.getText().toString(),
                 description.getText().toString(),
                 phoneNumber.getText().toString(),
@@ -223,10 +223,15 @@ public class EditProfileActivity extends AppCompatActivity {
                 doorPhone.getText().toString(),
                 postCode.getText().toString(),
                 city.getText().toString(),
-                openingTime.getText().toString(), imageName);
-        Database.getInstance().putUserProfile(user);
+                imageProfileUri.toString(),
+                imageProfileUri.getLastPathSegment(),
+                openingTime.getText().toString());
+        Database.getInstance().putRestaurantProfile(user);
+
+
 
     }
+
     private File createImageFile() throws IOException {
         // Create an image file name
 
@@ -292,11 +297,13 @@ public class EditProfileActivity extends AppCompatActivity {
         emailAddress.setText(u.email);
         description.setText(u.description);
         road.setText(u.road);
-        openingTime.setText(u.opening);
+        openingTime.setText(u.openingHours);
         houseNumber.setText(u.houseNumber);
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
+        imageProfileUri = Uri.parse( mUser.imageUri);
+        imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
             Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
@@ -310,10 +317,10 @@ public class EditProfileActivity extends AppCompatActivity {
                             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
                         } else {
                             Log.d("MADAPP", "Setting custom user image");
-                          //  imageProfileUri = item;
+                            //  imageProfileUri = item;
                             // imgProfile.setImageURI(item);
                             Picasso.get().load(item.toString()).into(imgProfile);
-                           // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
+                            // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
 
                         }
                     }
@@ -351,7 +358,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public boolean checkConstraints() {
         boolean result = true;
-        String nameString = "[a-zA-Z0-9&-]+";
+        String nameString = "[a-zA-Z]+";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString = "[0-9]{5}";
         String numberString = "[1-9][0-9]*";

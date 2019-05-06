@@ -58,7 +58,7 @@ final class Database {
         menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/menuItems");
         ordersRef = database.getReference("orders");
         profileRef = database.getReference("users/restaurants/"+mAuth.getUid());
-        storageRef = FirebaseStorage.getInstance().getReference().child("users/"+ mAuth.getUid());
+        storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/"+ mAuth.getUid());
 
 
     }
@@ -72,7 +72,7 @@ final class Database {
 
     public  void update(Order o) {
 
-            ordersRef.child(o.id).setValue(o);
+        ordersRef.child(o.id).setValue(o);
 
     }
 
@@ -126,7 +126,7 @@ final class Database {
         */
         Collections.sort(pendings, myDateComparator);
 
-   return pendings;
+        return pendings;
     }
 
     public  List<Order> getPreparingOrders(FirebaseCallback firebaseCallback) {
@@ -246,7 +246,7 @@ final class Database {
         });
         return null;
     }
-    void putUserProfile(Restaurant user){
+    void putRestaurantProfile(Restaurant user){
 
         Uri file = Uri.parse(user.imageUri);
         storageRef.child("images/profile/");
@@ -264,7 +264,7 @@ final class Database {
 
         if (!imageName.equals("")) {
             Log.d("name", imageName);
-           // Uri tmp = Uri.parse(imageName);
+            // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
             profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -284,22 +284,22 @@ final class Database {
             });
         }
     }
-    public void getUserProfile(FirebaseCallbackUser firebaseCallbackUser) {
+    public void getRestaurantProfile(FirebaseCallbackUser firebaseCallbackUser) {
         profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               if (dataSnapshot.hasChild("profile")) {
-                   dataSnapshot = dataSnapshot.child("profile");
-                   Restaurant item = dataSnapshot.getValue(Restaurant.class);
-                   if (item != null) {
+                if (dataSnapshot.hasChild("profile")) {
+                    dataSnapshot = dataSnapshot.child("profile");
+                    Restaurant item = dataSnapshot.getValue(Restaurant.class);
+                    if (item != null) {
 
-                       firebaseCallbackUser.onCallbak(item);
-                   } else {
-                       //   userStringOnDataFetched.onError("data not found");
-                       Log.d("DATABASE: ", "SONO ENTRATO222");
+                        firebaseCallbackUser.onCallbak(item);
+                    } else {
+                        //   userStringOnDataFetched.onError("data not found");
+                        Log.d("DATABASE: ", "SONO ENTRATO222");
 
-                   }
-               }
+                    }
+                }
             }
 
             @Override
@@ -320,7 +320,7 @@ interface OnDataFetched<T, E> {
     void onError(E error);
 }
 
- interface FirebaseCallback{
+interface FirebaseCallback{
     void  onCallbak(List<Order> list);
 
 }

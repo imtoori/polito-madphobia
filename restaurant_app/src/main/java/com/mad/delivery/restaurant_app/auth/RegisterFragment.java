@@ -3,6 +3,7 @@ package com.mad.delivery.restaurant_app.auth;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.resources.User;
 
@@ -160,6 +162,12 @@ public class RegisterFragment extends Fragment {
                             registered.registrationDate = new DateTime().toString();
                             registered.email = emailAddress.getText().toString();
                             myRef.child("users").child("restaurants").child(user.getUid()).setValue(registered);
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelable("user", registered);
+                            Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                            intent.putExtra("user", bundle);
+                            startActivity(intent);
+                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("MADAPP", "createUserWithEmail:failure", task.getException());

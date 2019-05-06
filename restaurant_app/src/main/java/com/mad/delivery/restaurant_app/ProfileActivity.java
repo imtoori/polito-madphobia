@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class ProfileActivity extends AppCompatActivity {
+    SharedPreferences sharedPref;
     Toolbar myToolBar;
     Menu menu;
     TextView name;
@@ -95,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
 
-        Database.getInstance().getUserProfile(new FirebaseCallbackUser(){
+        Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
             @Override
             public void onCallbak(Restaurant user) {
                 if(user!=null){
@@ -103,9 +104,9 @@ public class ProfileActivity extends AppCompatActivity {
                     updateFields(mUser);
                 }
                 else{
-                    mUser  = new Restaurant("","","","","","","","","","","");
+                    mUser  = new Restaurant("","","","","","","","", "","","","");
                     updateFields(mUser);
-                    }
+                }
 
             }
         });
@@ -117,8 +118,8 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-        if(!u.opening.equals("")) {
-            opening.setText(u.opening);
+        if(!u.openingHours.equals("")) {
+            opening.setText(u.openingHours);
         } else {
             opening.setText(getResources().getString(R.string.opening_hours_full));
         }
@@ -126,9 +127,9 @@ public class ProfileActivity extends AppCompatActivity {
         if(!u.road.equals("")) {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
-        //Picasso.get().load(u.imageUri.toString()).into(imgProfile);
-       // Log.d("----",Uri.parse(u.imageUri).getPath());
-        // imageProfileUri = Uri.parse( mUser.imageUri);
+
+
+        imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
             Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
@@ -158,7 +159,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        intent.putExtra("imageUri", mUser.imageName);
+        intent.putExtra("imageUri", mUser.imageUri.toString());
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

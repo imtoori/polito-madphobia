@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.resources.Order;
@@ -224,8 +225,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                 order = modifiedOrder;
-                Database.update(order);
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Database.getInstance().update(order);
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 

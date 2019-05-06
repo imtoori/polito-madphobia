@@ -25,6 +25,7 @@ public class Order implements Parcelable {
     public String restaurantId;
     public String paymentMethod;
     public Double totalPrice;
+    public String bikerId;
     public Order(){}
 
 

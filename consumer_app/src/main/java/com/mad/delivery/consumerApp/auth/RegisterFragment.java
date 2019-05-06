@@ -3,6 +3,7 @@ package com.mad.delivery.consumerApp.auth;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.User;
 
@@ -158,7 +160,14 @@ public class RegisterFragment extends Fragment {
                             User registered = new User();
                             registered.registrationDate = new DateTime().toString();
                             registered.email = emailAddress.getText().toString();
-                            myRef.child("users").child("biker").push().setValue(registered);
+                            myRef.child("users").child("customer").child(user.getUid()).setValue(registered);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("user", registered);
+                            Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
+                            intent.putExtra("user", bundle);
+                            startActivity(intent);
+                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("MADAPP", "createUserWithEmail:failure", task.getException());

@@ -28,8 +28,15 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.resources.User;
 
 
 /**
@@ -43,7 +50,7 @@ public class LoginFragment extends Fragment {
     private Button loginBtn, registerBtn;
     private View progressView;
     private Animation shakeAnim;
-
+    private User mUser;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -130,12 +137,47 @@ public class LoginFragment extends Fragment {
                             Log.d("MADAPP", "signInWithEmail:success");
                             user = mAuth.getCurrentUser();
 
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable("user", user);
-                            Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
-                            intent.putExtra("user", bundle);
-                            startActivity(intent);
-                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            // check if the user is registered on the right app (Restaurant, Customer, Biker)
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference ref = database.getReference("users/customer/" + mAuth.getUid());
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        Log.d("MADAPP", "datasnapshot exists");
+                                        mUser = dataSnapshot.getValue(User.class);
+                                        if (mUser == null) {
+                                            password.startAnimation(shakeAnim);
+                                            email.startAnimation(shakeAnim);
+                                            email.setError(getResources().getString(R.string.login_error_fail));
+                                            password.setError(getResources().getString(R.string.login_error_fail));
+                                            return;
+                                        } else {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("user", mUser);
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
+                                            intent.putExtra("user", bundle);
+                                            startActivity(intent);
+                                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                        }
+                                    } else {
+                                        password.startAnimation(shakeAnim);
+                                        email.startAnimation(shakeAnim);
+                                        email.setError(getResources().getString(R.string.login_error_fail));
+                                        password.setError(getResources().getString(R.string.login_error_fail));
+                                        mUser = null;
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    password.startAnimation(shakeAnim);
+                                    email.startAnimation(shakeAnim);
+                                    email.setError(getResources().getString(R.string.login_error_fail));
+                                    password.setError(getResources().getString(R.string.login_error_fail));
+                                    mUser = null;
+                                }
+                            });
                         }
                     }
                 }).addOnFailureListener(getActivity(), new OnFailureListener() {

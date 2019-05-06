@@ -160,14 +160,21 @@ public class LoginFragment extends Fragment {
                                             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                         }
                                     } else {
-                                        Log.d("MADAPP", "I am here");
+                                        Log.d("MADAPP", "This user is not a biker");
+                                        password.startAnimation(shakeAnim);
+                                        email.startAnimation(shakeAnim);
+                                        email.setError(getResources().getString(R.string.login_error_fail));
+                                        password.setError(getResources().getString(R.string.login_error_fail));
                                         restaurant = null;
                                     }
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    Log.d("MADAPP", "also here");
+                                    password.startAnimation(shakeAnim);
+                                    email.startAnimation(shakeAnim);
+                                    email.setError(getResources().getString(R.string.login_error_fail));
+                                    password.setError(getResources().getString(R.string.login_error_fail));
                                     restaurant = null;
                                 }
                             });

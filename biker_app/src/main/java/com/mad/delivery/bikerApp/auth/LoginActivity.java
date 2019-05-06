@@ -1,5 +1,6 @@
 package com.mad.delivery.bikerApp.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -8,6 +9,9 @@ import android.animation.ObjectAnimator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.R;
 
 
@@ -18,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
         imgLogo = findViewById(R.id.img_register_logo);
         container = findViewById(R.id.layout_container);

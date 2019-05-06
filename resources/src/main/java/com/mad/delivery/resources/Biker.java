@@ -24,8 +24,8 @@ public class Biker implements Serializable {
         this.email = emailAddress;
         this.description = description;
         this.imageUri = imageUri.toString();
-        this.imageName = "";
         this.registrationDate = new DateTime().toString();
+        this.imageName  = imageUri.getLastPathSegment();
     }
 
     public Biker() {
@@ -33,6 +33,7 @@ public class Biker implements Serializable {
 
     public Biker(Biker u) {
         this.name = u.name;
+        this.lastname = u.lastname;
         this.phoneNumber = u.phoneNumber;
         this.email = u.email;
         this.description = u.description;

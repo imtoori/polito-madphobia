@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp.wallet;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             holder.price.setText("Price: "+ holder.order.totalPrice.toString());
             holder.status.setText("Delivery: "+ holder.order.status.toString());
             if(holder.order.restaurant.imageUri != null)
-                holder.imgRestaurant.setImageURI(holder.order.restaurant.imageUri);
+                holder.imgRestaurant.setImageURI(Uri.parse(holder.order.restaurant.imageUri));
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override

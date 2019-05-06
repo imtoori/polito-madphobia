@@ -80,7 +80,7 @@ public class DetailOrderActivity extends AppCompatActivity {
                 builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         order.status = OrderStatus.canceled;
-                        Database.update(order);
+                        Database.getInstance().update(order);
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
