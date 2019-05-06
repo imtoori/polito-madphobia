@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
+
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.resources.Order;
 
@@ -61,7 +63,7 @@ public class PreparingOrdersFragment extends Fragment {
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         Log.d("MADAPP", "Preparing: onCreateView called");
         orders = new ArrayList<>();
-        showEmptyFolder();
+    //    showEmptyFolder();
         Log.d("MADAPP", "Preparing: orders size = " + orders.size());
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
 
@@ -74,9 +76,21 @@ public class PreparingOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        orders.addAll(Database.getPreparingOrders());
+        Database.getInstance().getPreparingOrders(new FirebaseCallback() {
+            @Override
+            public void onCallbak(List<Order> list) {
+                if(list.isEmpty())
+                    showEmptyFolder();
+                else {
+                    Log.d("CALL", list.toString());
+                    orders.addAll(list);
+                  //  ordersAdapter = orders;
+                    ordersAdapter.notifyDataSetChanged();
+                }
+            }
+        });
         recyclerView.getAdapter().notifyDataSetChanged();
-        showEmptyFolder();
+      //  showEmptyFolder();
     }
 
     @Override

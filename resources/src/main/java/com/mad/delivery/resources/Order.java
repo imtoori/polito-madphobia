@@ -23,6 +23,7 @@ public class Order implements Parcelable {
     public String clientNotes;
     public String serverNotes;
     public String restaurantId;
+    public String bikerId;
     public Order(){}
 
 

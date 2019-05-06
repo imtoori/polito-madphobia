@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
 import com.mad.delivery.resources.Order;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class PendingOrdersFragment extends Fragment {
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         Log.d("MADAPP", "Pending: onCreateView called");
         orders = new ArrayList<>();
-        showEmptyFolder();
+     //   showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -63,9 +64,20 @@ public class PendingOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        orders.addAll(Database.getPendingOrders());
-        recyclerView.getAdapter().notifyDataSetChanged();
-        showEmptyFolder();
+        Database.getInstance().getPendingOrders(new FirebaseCallback() {
+            @Override
+            public void onCallbak(List<Order> list) {
+                if(list.isEmpty())
+                    showEmptyFolder();
+                else {
+                    Log.d("CALL", list.toString());
+                    orders.addAll(list);
+                    //ordersAdapter.orders = orders;
+                    ordersAdapter.notifyDataSetChanged();
+                }
+            }
+        });        recyclerView.getAdapter().notifyDataSetChanged();
+        //showEmptyFolder();
     }
 
     @Override

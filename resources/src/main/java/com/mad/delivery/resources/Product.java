@@ -7,7 +7,7 @@ public class Product implements Parcelable {
     public String name;
     public int quantity;
 
-
+public Product(){}
     public Product(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
