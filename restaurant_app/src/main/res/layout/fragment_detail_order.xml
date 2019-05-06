@@ -232,7 +232,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/products_tv"
-                tools:context=".DetailOrderFragment"
+                tools:context=".orders.DetailOrderFragment"
                 tools:listitem="@layout/products_recview" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

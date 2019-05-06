@@ -17,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.HomeActivity;
@@ -37,7 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView description;
     ImageView imgProfile;
     Biker mUser=new Biker();
-
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,25 @@ public class ProfileActivity extends AppCompatActivity {
         myToolBar = findViewById(R.id.mainActivityToolbar);
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.profile_toolbar));
+        mAuth = FirebaseAuth.getInstance();
         name = findViewById(R.id.main_name);
         phoneNumber = findViewById(R.id.mainprofile_phone);
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
     }
 
     @Override
@@ -139,7 +154,10 @@ public class ProfileActivity extends AppCompatActivity {
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        intent.putExtra("imageUri", mUser.imageUri);
+        if(mUser.imageUri==null)
+            intent.putExtra("imageUri", "");
+        else
+            intent.putExtra("imageUri", mUser.imageUri.toString());
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

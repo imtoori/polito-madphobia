@@ -21,10 +21,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BuildConfig;
 import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
@@ -56,7 +59,7 @@ public class EditProfileActivity extends AppCompatActivity {
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
-
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +67,7 @@ public class EditProfileActivity extends AppCompatActivity {
         imageProfileUri = Uri.EMPTY;
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
+        mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -87,6 +91,18 @@ public class EditProfileActivity extends AppCompatActivity {
             onRestoreInstanceState(savedInstanceState);
         } else {
             getProfileData();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
 

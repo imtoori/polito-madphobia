@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
@@ -44,6 +46,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     private Order order;
     private AlertDialog confirmOrderDialog;
     private boolean orderIsConfirmed;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         setSupportActionBar(myToolBar);
         order = getIntent().getParcelableExtra("order");
         modifiedOrder = new Order(order);
+        mAuth = FirebaseAuth.getInstance();
         setTitle(getResources().getString(R.string.completing_order) + " " + modifiedOrder.id);
         requestedDeliveryTime = findViewById(R.id.tv_delivery_options_sentence);
         btnDeliveryTimeChange = findViewById(R.id.delivery_opt_change);
@@ -132,6 +137,17 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

@@ -111,7 +111,11 @@ public class ProfileActivity extends AppCompatActivity {
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        intent.putExtra("imageUri", mUser.imageUri.toString());
+        if(mUser.imageUri==null)
+        intent.putExtra("imageUri", "");
+        else
+            intent.putExtra("imageUri", mUser.imageUri.toString());
+
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

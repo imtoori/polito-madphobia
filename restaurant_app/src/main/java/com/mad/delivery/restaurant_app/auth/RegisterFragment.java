@@ -161,6 +161,7 @@ public class RegisterFragment extends Fragment {
                             Restaurant registered = new Restaurant();
                             registered.registrationDate = new DateTime().toString();
                             registered.email = emailAddress.getText().toString();
+                            
                             myRef.child("users").child("restaurants").child(user.getUid()).setValue(registered);
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("user", registered);

@@ -29,7 +29,7 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
-        <activity android:name=".OpeningHoursActivity"></activity>
+        <activity android:name=".orders.OpeningHoursActivity"></activity>
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -47,27 +47,27 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".CompletingOrderActivity" />
+        <activity android:name=".orders.CompletingOrderActivity" />
         <activity
-            android:name=".PhotoZoomActivity"
-            android:parentActivityName=".ProfileActivity" />
+            android:name=".settings.PhotoZoomActivity"
+            android:parentActivityName=".settings.ProfileActivity" />
         <activity
-            android:name=".EditProfileActivity"
-            android:parentActivityName=".ProfileActivity" />
+            android:name=".settings.EditProfileActivity"
+            android:parentActivityName=".settings.ProfileActivity" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".settings.ProfileActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".PasswordActivity"
+            android:name=".settings.PasswordActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".LanguageActivity"
+            android:name=".settings.LanguageActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".MenuActivity" android:parentActivityName="" />
-        <activity android:name=".NewMenuItemActivity" />
+        <activity android:name=".menu.MenuActivity" android:parentActivityName="" />
+        <activity android:name=".menu.NewMenuItemActivity" />
 
         <activity
-            android:name=".DetailOrderActivity"
+            android:name=".orders.DetailOrderActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"

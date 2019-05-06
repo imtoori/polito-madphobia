@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
@@ -26,13 +28,14 @@ public class DetailOrderActivity extends AppCompatActivity {
     private PagerAdapter pagerAdapter;
     private TabLayout tabLayout;
     private Order order;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_order);
         myToolBar = findViewById(R.id.detailToolbar);
         setSupportActionBar(myToolBar);
-
+        mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
         order  = bundle.getParcelable("order");
         Log.d("MADAPP", "order in DetailOrderActivity : " + order.toString());
@@ -44,6 +47,17 @@ public class DetailOrderActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         tabLayout = findViewById(R.id.detail_header);
         tabLayout.setupWithViewPager(mPager);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

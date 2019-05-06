@@ -18,7 +18,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.resources.User;
+import com.mad.delivery.restaurant_app.menu.MenuItemRest;
 
 import org.joda.time.DateTimeComparator;
 
@@ -28,7 +28,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-final class Database {
+final public class Database {
     private static Database instance;
     private static MyDateComparator myDateComparator;
     DatabaseReference restaurantRef;
@@ -196,7 +196,7 @@ final class Database {
     }
 
 
-    void getMenuItems(OnDataFetched<List<MenuItemRest>, String> onDataFetched) {
+    public void getMenuItems(OnDataFetched<List<MenuItemRest>, String> onDataFetched) {
         menuItemsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -221,12 +221,12 @@ final class Database {
         });
     }
 
-    void removeMenuItem(MenuItemRest menuItemRest) {
+    public void removeMenuItem(MenuItemRest menuItemRest) {
         menuItemsRef.child(menuItemRest.id).removeValue();
         //TODO add callback
     }
 
-    MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
+    public MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
         menuItemsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -246,7 +246,7 @@ final class Database {
         });
         return null;
     }
-    void putRestaurantProfile(Restaurant user){
+    public void putRestaurantProfile(Restaurant user){
 
         Uri file = Uri.parse(user.imageUri);
         storageRef.child("images/profile/");
@@ -314,19 +314,5 @@ final class Database {
 
 }
 
-interface OnDataFetched<T, E> {
-    void onDataFetched(T data);
 
-    void onError(E error);
-}
 
-interface FirebaseCallback{
-    void  onCallbak(List<Order> list);
-
-}
-interface FirebaseCallbackUser {
-    void onCallbak(Restaurant user);
-}
-interface Callback{
-    void onCallback(Uri item);
-}

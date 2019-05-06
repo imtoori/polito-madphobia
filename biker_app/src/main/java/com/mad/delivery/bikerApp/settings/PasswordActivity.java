@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
 
@@ -25,19 +27,31 @@ public class PasswordActivity extends AppCompatActivity {
     EditText newP;
     EditText repeatnewP;
     Toolbar myToolbar;
-
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.input_password);
         myToolbar = (Toolbar) findViewById(R.id.inputpssw_toolbar);
         setTitle(getResources().getString(R.string.password_toolbar));
+        mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         currentP = findViewById(R.id.old_pssw);
         newP = findViewById(R.id.new_pssw);
         repeatnewP = findViewById(R.id.new_pssw1);
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
     }
 
     @Override
