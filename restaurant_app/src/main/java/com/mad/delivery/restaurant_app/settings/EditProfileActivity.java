@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp.settings;
+package com.mad.delivery.restaurant_app.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,14 +23,13 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.BuildConfig;
-import com.mad.delivery.bikerApp.Database;
-import com.mad.delivery.bikerApp.FirebaseCallbackItem;
-import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.auth.LoginActivity;
-import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.resources.User;
+import com.mad.delivery.restaurant_app.BuildConfig;
+import com.mad.delivery.restaurant_app.Callback;
+import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.FirebaseCallbackUser;
+import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -46,13 +45,18 @@ import androidx.core.content.FileProvider;
 public class EditProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     Menu menu;
-    Biker mUser;
+    Restaurant mUser;
     FloatingActionButton btnCamera;
     EditText name;
-    EditText lastname;
     EditText phoneNumber;
     EditText emailAddress;
     EditText description;
+    EditText road;
+    EditText houseNumber;
+    EditText doorPhone;
+    EditText postCode;
+    EditText city;
+    EditText openingTime;
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
@@ -63,22 +67,25 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        imageProfileUri =Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
-        imageProfileUri = Uri.EMPTY;
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
-        mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mAuth = FirebaseAuth.getInstance();
         name = findViewById(R.id.editprofile_name);
-        lastname = findViewById(R.id.editprofile_lastname);
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);
         description = findViewById(R.id.editprofile_description);
-
+        road = findViewById(R.id.editprofile_road);
+        houseNumber = findViewById(R.id.editprofile_housenumber);
+        doorPhone = findViewById(R.id.editprofile_doorphone);
+        postCode = findViewById(R.id.editprofile_postalcode);
+        city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
-
+        openingTime = findViewById(R.id.openinghours_et);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,10 +106,9 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
 
@@ -143,10 +149,15 @@ public class EditProfileActivity extends AppCompatActivity {
         // invoked when the activity may be temporarily destroyed, save the instance state here
         super.onSaveInstanceState(outState);
         outState.putString("name", name.getText().toString());
-        outState.putString("lastname", lastname.getText().toString());
         outState.putString("phoneNumber", phoneNumber.getText().toString());
         outState.putString("emailAddress", emailAddress.getText().toString());
         outState.putString("description", description.getText().toString());
+        outState.putString("road", road.getText().toString());
+        outState.putString("houseNumber", houseNumber.getText().toString());
+        outState.putString("doorPhone", doorPhone.getText().toString());
+        outState.putString("postCode", postCode.getText().toString());
+        outState.putString("city", city.getText().toString());
+        outState.putString("openingTime", openingTime.getText().toString());
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -159,13 +170,18 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new Biker();
+        mUser = new Restaurant();
         Log.d("MADAPP", "SavedInstanceState contains data");
         mUser.name = savedInstanceState.getString("name");
-        mUser.lastname = savedInstanceState.getString("lastname");
         mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
         mUser.email = savedInstanceState.getString("emailAddress");
         mUser.description = savedInstanceState.getString("description");
+        mUser.road = savedInstanceState.getString("road");
+        mUser.openingHours = savedInstanceState.getString("openingTime");
+        mUser.houseNumber = savedInstanceState.getString("houseNumber");
+        mUser.doorPhone = savedInstanceState.getString("doorPhone");
+        mUser.postCode = savedInstanceState.getString("postCode");
+        mUser.city = savedInstanceState.getString("city");
         mUser.imageUri = savedInstanceState.getString("imageUri");
         updateFields(mUser);
     }
@@ -200,11 +216,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
 
-        Database.getInstance().getBikerProfile(new FirebaseCallbackItem<Biker>(){
+        Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
             @Override
-            public void onCallback(Biker user) {
+            public void onCallbak(Restaurant user) {
                 if(user!=null){
-                    mUser=new Biker(user);
+                    mUser=new Restaurant(user);
                     updateFields(mUser);
                 }
 
@@ -213,14 +229,25 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void setProfileData() {
-        Biker user  = new Biker(name.getText().toString(),
-                lastname.getText().toString(),
-                phoneNumber.getText().toString(),
+
+        Restaurant user  = new Restaurant(name.getText().toString(),
+
                 emailAddress.getText().toString(),
                 description.getText().toString(),
-                imageProfileUri);
-        Database.getInstance().putBikerProfile(user);
+                phoneNumber.getText().toString(),
+                road.getText().toString(),
+                houseNumber.getText().toString(),
+                doorPhone.getText().toString(),
+                postCode.getText().toString(),
+                city.getText().toString(),
+                imageProfileUri.toString(),
+                imageProfileUri.getLastPathSegment(),
+                openingTime.getText().toString());
+        Database.getInstance().putRestaurantProfile(user);
+
     }
+
+
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -280,18 +307,23 @@ public class EditProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void updateFields(Biker u) {
+    private void updateFields(Restaurant u) {
+        Log.d("UPDATE","name: " + u.name);
         name.setText(u.name);
-        lastname.setText(u.lastname);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
-
+        road.setText(u.road);
+        openingTime.setText(u.openingHours);
+        houseNumber.setText(u.houseNumber);
+        doorPhone.setText(u.doorPhone);
+        postCode.setText(String.valueOf(u.postCode));
+        city.setText(u.city);
         imageProfileUri = Uri.parse( mUser.imageUri);
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName, "/images/profile/", new FirebaseCallbackItem<Uri>() {
+            Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
                 @Override
                 public void onCallback(Uri item) {
                     if (item != null) {
@@ -313,6 +345,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             });
         }
+
     }
 
     /*
@@ -354,18 +387,37 @@ public class EditProfileActivity extends AppCompatActivity {
             name.setError(getResources().getString(R.string.check_name));
             result = false;
         }
-        if (!lastname.getText().toString().matches(nameString)) {
-            lastname.setError(getResources().getString(R.string.check_lastName));
+
+        if (!road.getText().toString().matches(roadString)) {
+            road.setError(getResources().getString(R.string.check_road));
             result = false;
         }
 
+        if (!city.getText().toString().matches(cityString)) {
+            city.setError(getResources().getString(R.string.check_city));
+            result = false;
+        }
 
         if (!phoneNumber.getText().toString().matches(phoneNumberString)) {
             phoneNumber.setError(getResources().getString(R.string.check_phone));
             result = false;
         }
 
+        if (!doorPhone.getText().toString().matches(doorPhoneString)) {
+            doorPhone.setError(getResources().getString(R.string.check_doorphone));
+            result = false;
 
+        }
+
+        if (!postCode.getText().toString().matches(postalCodeString)) {
+            postCode.setError(getResources().getString(R.string.check_postCode));
+            result = false;
+        }
+
+        if (!houseNumber.getText().toString().matches(numberString)) {
+            houseNumber.setError(getResources().getString(R.string.house_number));
+            result = false;
+        }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress.getText().toString()).matches()) {
             emailAddress.setError(getResources().getString(R.string.email));

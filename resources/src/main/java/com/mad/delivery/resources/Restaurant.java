@@ -77,6 +77,7 @@ public class Restaurant implements Parcelable {
     }
 
     public Restaurant() {
+        this.scoreValue = 0;
     }
 
     protected Restaurant(Parcel in) {

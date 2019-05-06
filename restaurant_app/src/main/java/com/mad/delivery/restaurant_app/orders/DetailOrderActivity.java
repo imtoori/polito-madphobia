@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp.orders;
+package com.mad.delivery.restaurant_app.orders;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +16,12 @@ import android.view.MenuItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.Database;
-import com.mad.delivery.bikerApp.auth.LoginActivity;
-import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.MainActivity;
+import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.auth.LoginActivity;
 
 public class DetailOrderActivity extends AppCompatActivity {
     Toolbar myToolBar;
@@ -38,7 +39,6 @@ public class DetailOrderActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
         order  = bundle.getParcelable("order");
-        Log.d("MADAPP", "order in DetailOrderActivity : " + order.toString());
         setTitle(getResources().getString(R.string.order) + " " + order.id);
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.detail_order_pager);
@@ -62,7 +62,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
@@ -95,7 +95,7 @@ public class DetailOrderActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         order.status = OrderStatus.canceled;
                         Database.getInstance().update(order);
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                     }

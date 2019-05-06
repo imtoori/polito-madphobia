@@ -12,9 +12,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.menu.MenuActivity;
+import com.mad.delivery.restaurant_app.menu.MenuFragment;
+import com.mad.delivery.restaurant_app.orders.DetailOrderActivity;
+import com.mad.delivery.restaurant_app.orders.OrderFragment;
+import com.mad.delivery.restaurant_app.orders.PendingOrdersFragment;
+import com.mad.delivery.restaurant_app.settings.SettingFragment;
 
 
 public class MainActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
@@ -22,11 +31,12 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
     private Order orderToBeUpdated;
     int open = 1;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
-
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
         if (getIntent().hasExtra("open")) {
             open = getIntent().getIntExtra("open", 1);
         } else {
@@ -100,6 +110,17 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> Database.getInstance().updateToken(instanceIdResult.getToken()));
         FirebaseMessaging.getInstance().subscribeToTopic("demoRestaurant.order.new");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

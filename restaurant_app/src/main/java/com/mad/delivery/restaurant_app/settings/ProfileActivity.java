@@ -1,6 +1,5 @@
-package com.mad.delivery.bikerApp.settings;
+package com.mad.delivery.restaurant_app.settings;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -19,14 +17,13 @@ import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.Database;
-import com.mad.delivery.bikerApp.FirebaseCallbackItem;
-import com.mad.delivery.bikerApp.HomeActivity;
-import com.mad.delivery.bikerApp.auth.LoginActivity;
-import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.resources.User;
+import com.mad.delivery.restaurant_app.Callback;
+import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.FirebaseCallbackUser;
+import com.mad.delivery.restaurant_app.MainActivity;
+import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -37,8 +34,10 @@ public class ProfileActivity extends AppCompatActivity {
     TextView phoneNumber;
     TextView emailAddress;
     TextView description;
+    TextView opening;
+    TextView road;
     ImageView imgProfile;
-    Biker mUser=new Biker();
+    Restaurant mUser = new Restaurant();
     private FirebaseAuth mAuth;
 
     @Override
@@ -46,26 +45,26 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         myToolBar = findViewById(R.id.mainActivityToolbar);
+        mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.profile_toolbar));
-        mAuth = FirebaseAuth.getInstance();
         name = findViewById(R.id.main_name);
         phoneNumber = findViewById(R.id.mainprofile_phone);
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
+        opening = findViewById(R.id.openinghourslist);
+        road = findViewById(R.id.main_road);
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
     }
-
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
 
@@ -79,8 +78,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.putExtra("open", 1);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("open", 2);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
@@ -102,34 +101,44 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        Database.getInstance().getBikerProfile(new FirebaseCallbackItem<Biker>(){
+
+        Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
             @Override
-            public void onCallback(Biker user) {
+            public void onCallbak(Restaurant user) {
                 if(user!=null){
-                    mUser = new Biker(user);
+                    mUser = new Restaurant(user);
                     updateFields(mUser);
                 }
                 else{
-                    mUser  = new Biker("","","","","", Uri.EMPTY);
+                    mUser  = new Restaurant("","","","","","","","", "","","","");
                     updateFields(mUser);
                 }
 
             }
         });
     }
-    private void updateFields(Biker u) {
-        if (!u.name.equals(""))
-            name.setText(u.name + " " + u.lastname);
+
+    private void updateFields(Restaurant u) {
+        if(!u.name.equals("") )
+            name.setText(u.name );
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
+        if(!u.openingHours.equals("")) {
+            opening.setText(u.openingHours);
+        } else {
+            opening.setText(getResources().getString(R.string.opening_hours_full));
+        }
+
+        if(!u.road.equals("")) {
+            road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
+        }
 
 
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
-        if (imgProfile.getDrawable() == null) {
-            Log.d("IMAGENAME",u.imageName);
-            Database.getInstance().getImage(u.imageName, "/images/profile/", new FirebaseCallbackItem<Uri>() {
+        if(imgProfile.getDrawable() == null) {
+            Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
                 @Override
                 public void onCallback(Uri item) {
                     if (item != null) {
@@ -151,6 +160,8 @@ public class ProfileActivity extends AppCompatActivity {
             });
         }
     }
+
+
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);

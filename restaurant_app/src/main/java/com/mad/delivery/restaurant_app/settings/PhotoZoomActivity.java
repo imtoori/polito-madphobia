@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp.settings;
+package com.mad.delivery.restaurant_app.settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,16 +13,17 @@ import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.MainActivity;
+import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.auth.LoginActivity;
 
 public class PhotoZoomActivity extends AppCompatActivity  {
     final String DEBUG_TAG = "MAD-APP";
     private GestureDetector gestureDetector;
-    private FirebaseAuth mAuth;
     String className;
     Toolbar toolbar;
     ImageView imageProfile;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,18 +57,17 @@ public class PhotoZoomActivity extends AppCompatActivity  {
             }
         });
     }
-
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
+
     class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -83,7 +83,7 @@ public class PhotoZoomActivity extends AppCompatActivity  {
         try {
             intent = new Intent(this, Class.forName(className));
         } catch(ClassNotFoundException e) {
-            intent = new Intent(this, ProfileActivity.class);
+            intent = new Intent(this, MainActivity.class);
         }
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

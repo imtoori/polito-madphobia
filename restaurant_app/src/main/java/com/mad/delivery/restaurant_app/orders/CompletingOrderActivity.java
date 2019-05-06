@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp.orders;
+package com.mad.delivery.restaurant_app.orders;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,16 +23,17 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.Database;
-import com.mad.delivery.bikerApp.HomeActivity;
-import com.mad.delivery.bikerApp.auth.LoginActivity;
-import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.ListDialog;
+import com.mad.delivery.restaurant_app.MainActivity;
+import com.mad.delivery.restaurant_app.MyDateFormat;
+import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.TimePickerFragment;
+import com.mad.delivery.restaurant_app.auth.LoginActivity;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener {
     private Toolbar myToolBar;
@@ -55,9 +56,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         orderIsConfirmed = false;
         myToolBar = findViewById(R.id.detailToolbar);
         setSupportActionBar(myToolBar);
+        mAuth = FirebaseAuth.getInstance();
         order = getIntent().getParcelableExtra("order");
         modifiedOrder = new Order(order);
-        mAuth = FirebaseAuth.getInstance();
         setTitle(getResources().getString(R.string.completing_order) + " " + modifiedOrder.id);
         requestedDeliveryTime = findViewById(R.id.tv_delivery_options_sentence);
         btnDeliveryTimeChange = findViewById(R.id.delivery_opt_change);
@@ -71,7 +72,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         newStatus.setText(newStatusAsString);
         newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
         btnUndoDelivery = findViewById(R.id.btn_undo_delivery);
-        requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, modifiedOrder.orderFor));
+        requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
@@ -104,7 +105,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             @Override
             public void onClick(View view) {
                 modifiedOrder.orderFor = oldDateTime.toString();
-                requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, modifiedOrder.orderFor));
+                requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
                 btnDeliveryTimeChange.setVisibility(View.VISIBLE);
                 btnConfirm.setVisibility(View.VISIBLE);
                 btnUndoDelivery.setVisibility(View.GONE);
@@ -213,7 +214,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     }
 
     public void confirmDeliveryTime() {
-        requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, modifiedOrder.orderFor));
+        requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
         btnDeliveryTimeChange.setVisibility(View.GONE);
         btnConfirm.setVisibility(View.GONE);
         btnUndoDelivery.setVisibility(View.VISIBLE);
@@ -224,10 +225,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void onTimePicked(int h, int m) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
-        DateTime dt = new DateTime(modifiedOrder.orderFor);
-        modifiedOrder.orderFor = dt.hourOfDay().setCopy(h).toString();
-        modifiedOrder.orderFor = dt.minuteOfHour().setCopy(m).toString();
+         DateTime.parse(modifiedOrder.orderFor).hourOfDay().setCopy(h);
+        DateTime.parse(modifiedOrder.orderFor).minuteOfHour().setCopy(m);
         confirmDeliveryTime();
     }
 
@@ -242,7 +241,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                 order = modifiedOrder;
                 Database.getInstance().update(order);
-                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 
