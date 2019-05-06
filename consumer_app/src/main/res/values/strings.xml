@@ -67,5 +67,7 @@
     <string name="datatime_format">dd/mm/yyyy-hh:mm</string>
     <string name="Basket_toolbar">Basket</string>
     <string name="datatime_secect">Click here to select delivery time!</string>
+    <string name="hint_client_note">Insert here your notes!</string>
+    <string name="order_info_toolbar">Order info</string>
 
 </resources>

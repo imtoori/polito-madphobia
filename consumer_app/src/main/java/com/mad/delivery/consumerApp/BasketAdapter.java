@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -70,5 +71,6 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
                     "name=" + product.name;
         }
     }
+
 }
 

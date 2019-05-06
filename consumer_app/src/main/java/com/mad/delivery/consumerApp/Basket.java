@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -40,6 +41,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     Toolbar toolbar;
     DateTime datetime;
     Button payment;
+    EditText notes;
 
 
     @Override
@@ -47,7 +49,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         super.onCreate(savedInstanceState);
         setContentView(R.layout.basket_layout);
         toolbar=findViewById(R.id.toolbar);
-        setTitle(getResources().getString(R.string.basket_toolbar));
+        setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
         order_code=findViewById(R.id.order_code);
         subtot=findViewById(R.id.subtotal_price);
@@ -56,6 +58,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         address=findViewById(R.id.address);
         time=findViewById(R.id.time);
         payment=findViewById(R.id.button);
+        notes=findViewById(R.id.client_note);
         rg=findViewById(R.id.rg_method);
 
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -131,6 +134,11 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         datetime = datetime.hourOfDay().setCopy(h);
         datetime = datetime.minuteOfHour().setCopy(m);
         time.setText(datetime.toString(dtf));
+    }
+
+    public void deleteProduct()
+    {
+        Toast.makeText(this, "ciao", Toast.LENGTH_SHORT).show();
     }
 
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,27 +24,32 @@ public class OrderInfoActivity extends AppCompatActivity {
     TextView tot;
     TextView rest_note;
     TextView biker_note;
+    TextView client_note;
+    Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_info);
-        setTitle(getResources().getString(R.string.profile_toolbar));
+        setTitle(getResources().getString(R.string.order_info_toolbar));
+        toolbar=findViewById(R.id.toolbar);
+        setTitle(getResources().getString(R.string.Basket_toolbar));
+        setSupportActionBar(toolbar);
         order_code=findViewById(R.id.order_code);
         subtot=findViewById(R.id.subtotal_price);
         del_fee=findViewById(R.id.delivery_fee);
         tot=findViewById(R.id.total);
         rest_note=findViewById(R.id.rest_note);
         biker_note=findViewById(R.id.biker_note);
-
+        client_note=findViewById(R.id.client_note);
         order_code.setText("#123456");
         subtot.setText("0.00");
         del_fee.setText("0.00");
         tot.setText("0.00");
         rest_note.setText("note ristorante bla bla");
         biker_note.setText("note biker bla bla");
-
+        client_note.setText("bla bla bla");
 
         List<Product> products = new ArrayList<>();
         Product p1 = new Product("Prodotto 1", 20, 18.50);
