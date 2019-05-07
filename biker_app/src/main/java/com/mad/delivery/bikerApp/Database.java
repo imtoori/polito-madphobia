@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Customer;
@@ -215,11 +216,28 @@ final public class Database {
 
         Uri file = Uri.parse(user.imageUri);
         storageRef.child("images/profile/");
-
+        user.id= mAuth.getUid();
         StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
-        profileRefStore.putFile(file);
+        profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Uri downloadUrl = uri;
+                        //Do what you want with the url
+                        user.imageDownload =downloadUrl.toString();
+                        profileRef.child("profile").setValue(user);
+
+                    }
+                });
+            }
+            });
         profileRef.setValue("profile");
         profileRef.child("profile").setValue(user);
+       // user.imageDownload = storageRef.child("images/profile/" + user.imageName).getDownloadUrl().toString();
+
 
 
 

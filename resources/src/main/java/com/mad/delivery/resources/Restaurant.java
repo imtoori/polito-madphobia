@@ -23,6 +23,7 @@ public class Restaurant implements Parcelable {
     public String city;
     public String openingHours;
     public String imageName;
+    public String id;
     public Integer scoreValue;
     public Map<String, Boolean> categories;
     public Map<String, MenuItemRest> menuItems;

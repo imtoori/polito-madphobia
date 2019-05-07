@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,7 +41,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         holder.descRestaurant.setText(holder.restaurant.description);
         holder.rbRestaurant.setRating(holder.restaurant.scoreValue);
         if(holder.restaurant.imageURL != null)
-            holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.imageURL));
+        //    holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.imageURL));
+        Picasso.get().load(holder.restaurant.imageDownload).into( holder.imgRestaurant);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -16,6 +16,7 @@ public class Biker implements Serializable {
     public String registrationDate;
     public String imageName;
     public String id;
+    public String imageDownload;
 
     public Biker(String name, String lastname, String phoneNumber, String emailAddress, String description,  Uri imageUri) {
         this.name = name;

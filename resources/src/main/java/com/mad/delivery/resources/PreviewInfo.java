@@ -9,6 +9,8 @@ public class PreviewInfo implements Parcelable {
     public String description;
     public Integer scoreValue;
     public String imageURL;
+    public String imageDownload;
+
     public int deliveryCost;
     public int minOrderCost;
 

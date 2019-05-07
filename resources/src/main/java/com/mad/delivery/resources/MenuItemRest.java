@@ -13,12 +13,14 @@ public class MenuItemRest implements Parcelable {
     public Integer ttl;
     public String imgUrl;
     public String category;
-    public Integer id;
+    public String id;
+    public String imageDownload;
     public Integer availability;
+    public String imageName;
     protected Uri imageUri;
-    List<Integer> subItems = new ArrayList<>();
+    public List<String> subItems = new ArrayList<>();
 
-    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl, Integer id, Uri url, List<Integer> subItems) {
+    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl, String  id, Uri url, List<String> subItems,String imageName) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -29,6 +31,7 @@ public class MenuItemRest implements Parcelable {
         this.availability = availability;
         this.imageUri = url;
         this.subItems = subItems;
+        this.imageName =imageName;
     }
 
     public MenuItemRest() {
@@ -52,7 +55,7 @@ public class MenuItemRest implements Parcelable {
         if (in.readByte() == 0) {
             id = null;
         } else {
-            id = in.readInt();
+            id = in.readString();
         }
         if (in.readByte() == 0) {
             availability = null;
@@ -84,7 +87,7 @@ public class MenuItemRest implements Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(id);
+            dest.writeString(id);
         }
         if (availability == null) {
             dest.writeByte((byte) 0);
@@ -160,11 +163,11 @@ public class MenuItemRest implements Parcelable {
         this.category = category;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -184,11 +187,11 @@ public class MenuItemRest implements Parcelable {
         this.imageUri = imageUri;
     }
 
-    public List<Integer> getSubItems() {
+    public List<String> getSubItems() {
         return subItems;
     }
 
-    public void setSubItems(List<Integer> subItems) {
+    public void setSubItems(List<String> subItems) {
         this.subItems = subItems;
     }
 }

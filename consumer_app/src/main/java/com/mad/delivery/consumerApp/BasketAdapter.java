@@ -57,7 +57,6 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
         public ViewHolder(View view) {
             super(view);
             mView = view;
-
             price = mView.findViewById(R.id.price);
             name=mView.findViewById(R.id.name);
             delete=mView.findViewById(R.id.delete);

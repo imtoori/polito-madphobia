@@ -40,6 +40,7 @@ public class RestaurantInfoActivity extends AppCompatActivity {
             previewInfo = (PreviewInfo) bundle.get("restaurant");
             ConsumerDatabase.getInstance().getRestaurantInfo(previewInfo, (rest) -> {
                 restaurant = rest;
+
                 pagerAdapter = new RestaurantInfoPageAdapter(getSupportFragmentManager(), this, restaurant);
                 mPager.setAdapter(pagerAdapter);
                 collapsingToolbarLayout.setTitle(restaurant.name);

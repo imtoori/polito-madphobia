@@ -13,6 +13,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.restaurant_app.orders.PendingOrdersFragment;
 import com.mad.delivery.restaurant_app.R;

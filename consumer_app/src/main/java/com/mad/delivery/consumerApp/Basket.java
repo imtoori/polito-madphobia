@@ -60,7 +60,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         payment=findViewById(R.id.button);
         notes=findViewById(R.id.client_note);
         rg=findViewById(R.id.rg_method);
-
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override

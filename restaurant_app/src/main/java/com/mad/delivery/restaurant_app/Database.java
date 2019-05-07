@@ -16,9 +16,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.restaurant_app.menu.MenuItemRest;
 
 import org.joda.time.DateTimeComparator;
 
@@ -86,12 +87,27 @@ final public class Database {
     }
 
     public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems,String imageName) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, subItems,imageName);
+        MenuItemRest item =  new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
+        item.id = mAuth.getUid();
         menuItemsRef.push().setValue(item);
         Uri file = Uri.parse(imgUri);
         StorageReference profileRefStore = storageRef.child("images/menuItems/" + imageName);
-        profileRefStore.putFile(file);
-        //TODO: add callback may be useful
+        profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Uri downloadUrl = uri;
+                        //Do what you want with the url
+                        item.imageDownload =downloadUrl.toString();
+                        menuItemsRef.push().setValue(item);
+
+                    }
+                });
+            }
+        });
     }
 
 
@@ -190,7 +206,7 @@ final public class Database {
 
 
     public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems,String imageName) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri,  subItems, imageName);
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
         menuItemsRef.child(id).setValue(item);
         //TODO add callback
     }
@@ -247,12 +263,25 @@ final public class Database {
         return null;
     }
     public void putRestaurantProfile(Restaurant user){
-
+        user.id = mAuth.getUid();
         Uri file = Uri.parse(user.imageUri);
-        storageRef.child("images/profile/");
-
         StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
-        profileRefStore.putFile(file);
+        profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Uri downloadUrl = uri;
+                        //Do what you want with the url
+                        user.previewInfo.imageDownload =downloadUrl.toString();
+                        profileRef.child("profile").setValue(user);
+
+                    }
+                });
+            }
+        });
         profileRef.setValue("profile");
         profileRef.child("profile").setValue(user);
 
@@ -296,7 +325,7 @@ final public class Database {
                         firebaseCallbackUser.onCallbak(item);
                     } else {
                         //   userStringOnDataFetched.onError("data not found");
-                        Log.d("DATABASE: ", "SONO ENTRATO222");
+                        Log.d("DATABASE: ", "Elemento nullo");
 
                     }
                 }

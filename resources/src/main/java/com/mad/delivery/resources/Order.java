@@ -22,10 +22,11 @@ public class Order implements Parcelable {
     public String estimatedDelivery;
     public String clientNotes;
     public String serverNotes;
-    public String restaurantId;
     public String paymentMethod;
     public Double totalPrice;
+    public String restaurantId;
     public String bikerId;
+    public String clientId;
     public Order(){}
 
 

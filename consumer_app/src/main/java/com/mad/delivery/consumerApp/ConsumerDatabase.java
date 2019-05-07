@@ -1,16 +1,23 @@
 package com.mad.delivery.consumerApp;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
@@ -18,15 +25,18 @@ import com.mad.delivery.resources.RestaurantCategory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class ConsumerDatabase {
     public static ConsumerDatabase instance = new ConsumerDatabase();
     private FirebaseDatabase db;
     private DatabaseReference myRef;
+    private StorageReference storageRef;
     private ConsumerDatabase() {
         db = FirebaseDatabase.getInstance();
         myRef = db.getReference();
+        storageRef = FirebaseStorage.getInstance().getReference();
     }
 
     public static ConsumerDatabase getInstance() {
@@ -89,7 +99,7 @@ public class ConsumerDatabase {
                 // ask for restaurants
                 Log.d("MADAPP", "Restaurants IDS returned!");
                 for(String restName : list) {
-                    myRef.child("users").child("restaurants").child(restName).child("previewInfo").addListenerForSingleValueEvent(new ValueEventListener() {
+                    myRef.child("users").child("restaurants").child(restName).child("profile").child("previewInfo").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             PreviewInfo restaurantPreview = dataSnapshot.getValue(PreviewInfo.class);
@@ -190,6 +200,78 @@ public class ConsumerDatabase {
                 cb.onReceived(new HashSet<>());
             }
         });
+    }
+
+    public void putOrder(Order order){
+        Random rand = new Random();
+
+        getBikerId(new firebaseCallback<List<String>>() {
+            @Override
+            public void onCallBack(List<String> item) {
+                int n = rand.nextInt(item.size());
+                order.bikerId = item.get(n);
+                myRef.child("order").setValue(order);
+            }
+        });
+
+    }
+
+    public void getBikerId(firebaseCallback<List<String>> firebaseCallback){
+        myRef.child("users/bikers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> bikerIds = new ArrayList<>();
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+               for (DataSnapshot snapshot : iterator) {
+                    Biker item = snapshot.getValue(Biker.class);
+                    if (item != null) {
+                       // item.id = snapshot.getKey();
+                        bikerIds.add(item.id);
+                    } else {
+                        //onDataFetched.onError("data not found");
+                        Log.d("MADDAP","dara not found");
+                    }
+                }
+                firebaseCallback.onCallBack(bikerIds);
+                }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("DATABASE: ", "Dato cancellato");
+
+            }
+        });
+
+    }
+
+    public void getImage(String imageName,String path,firebaseCallback <Uri> firebaseCallback) {
+
+        if (!imageName.equals("")) {
+            Log.d("name", imageName);
+            // Uri tmp = Uri.parse(imageName);
+            StorageReference profileRefStore = storageRef.child(path + imageName);
+            profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // Got the download URL for 'users/me/profile.png'
+                    Log.d("DOWNLOAD",uri.toString());
+
+                    firebaseCallback.onCallBack(uri);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    firebaseCallback.onCallBack(Uri.EMPTY);
+                }
+            });
+        }
+    }
+
+    public interface firebaseCallback<T>{
+        void onCallBack(T item);
     }
 
 

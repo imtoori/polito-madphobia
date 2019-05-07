@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.RestaurantCategory;
+import com.squareup.picasso.Picasso;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
 
@@ -36,7 +37,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
-        holder.cvCategory.setBackground(holder.category.imageDrawable);
+        Picasso.get().load(holder.category.imageURL).into(holder.imageCategory);
+        holder.cvCategory.setBackground(holder.imageCategory.getDrawable());
         List<String> categories = new ArrayList<>();
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +62,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         public final View mView;
         public final TextView nameCategory;
         public final CardView cvCategory;
+        public final ImageView imageCategory;
         public RestaurantCategory category;
 
         public ViewHolder(View view) {
@@ -67,6 +70,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             mView = view;
             nameCategory = mView.findViewById(R.id.tv_name_category);
             cvCategory = mView.findViewById(R.id.cv_category);
+            imageCategory = mView.findViewById(R.id.tv_image_category);
 
         }
 

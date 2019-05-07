@@ -30,6 +30,7 @@ import androidx.core.content.FileProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.restaurant_app.BuildConfig;
 import com.mad.delivery.restaurant_app.Callback;
 import com.mad.delivery.restaurant_app.Database;

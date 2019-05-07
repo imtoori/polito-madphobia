@@ -45,6 +45,7 @@ public class RestaurantMenuFragment extends Fragment {
         minOrder = view.findViewById(R.id.rest_menu_minorder_cost);
         deliveryCost = view.findViewById(R.id.rest_menu_delivery_cost);
         restaurant = (Restaurant) getArguments().get("restaurant");
+
         Log.d("MADAPP", restaurant.toString());
         categories = new ArrayList<>();
         Map<String, List<MenuItemRest>> menus = new HashMap<>();
