@@ -56,7 +56,7 @@ final public class Database {
 
         //TODO: after login implementation use current user
         restaurantRef = database.getReference("users/restaurants/" + mAuth.getUid());
-        menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/menuItems");
+        menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/profile/menuItems");
         ordersRef = database.getReference("orders");
         profileRef = database.getReference("users/restaurants/"+mAuth.getUid());
         storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/"+ mAuth.getUid());
@@ -103,7 +103,7 @@ final public class Database {
                         Uri downloadUrl = uri;
                         //Do what you want with the url
                         item.imageDownload =downloadUrl.toString();
-                        menuItemsRef.push().setValue(item);
+                       // menuItemsRef.push().setValue(item);
 
                     }
                 });
