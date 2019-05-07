@@ -64,10 +64,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mad.delivery.consumerApp.settings.ProfileActivity" />
         </activity>
-        <activity android:name=".settings.ProfileActivity" />
+        <activity android:name=".settings.ProfileActivity" android:parentActivityName=".HomeActivity" />
         <activity android:name=".auth.LoginActivity" />
         <activity android:name=".OrderInfoActivity"/>
         <activity android:name=".Basket"/>
+        <activity android:name=".settings.PasswordActivity" android:parentActivityName=".HomeActivity" />
     </application>
 
 </manifest>

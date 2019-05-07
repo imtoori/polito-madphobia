@@ -21,9 +21,9 @@ public class User implements Serializable {
     public String city;
     public String id;
 
-    public User(String name, String lastname, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
+    public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;
-        this.lastName = lastname;
+        this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.description = description;
@@ -41,6 +41,7 @@ public class User implements Serializable {
 
     public User(User u) {
         this.name = u.name;
+        this.name = u.lastName;
         this.phoneNumber = u.phoneNumber;
         this.email = u.email;
         this.description = u.description;
@@ -60,12 +61,12 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getLastname() {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastName = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhoneNumber() {

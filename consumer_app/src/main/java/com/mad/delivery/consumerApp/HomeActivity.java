@@ -17,6 +17,7 @@ import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
+import com.mad.delivery.consumerApp.settings.SettingsFragment;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.PreviewInfo;
 

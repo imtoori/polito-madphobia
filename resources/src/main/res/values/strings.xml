@@ -194,6 +194,7 @@
     <string name="free_delivery">Free delivery</string>
     <string name="search_empty">No results</string>
     <string name="filters">Apply filters</string>
+    <string name="login_required">Please log in</string>
 
     <!-- StartFragment -->
     <string name="start_work">Start</string>
