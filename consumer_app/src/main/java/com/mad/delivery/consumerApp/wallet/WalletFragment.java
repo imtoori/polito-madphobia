@@ -91,7 +91,7 @@ public class WalletFragment extends Fragment {
         DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
         DateTime to = DateTime.now();
         Customer c = new Customer();
-        Order o = new Order(c, rest, products, from.toString(), "credit");
+        Order o = new Order(new Customer(),rest,products, from.toString(), "credit");
         o.id = "1234";
         o.status = OrderStatus.pending;
         o.orderDate = to.toString();

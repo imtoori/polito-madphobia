@@ -84,18 +84,6 @@ final public class Database {
 
 
     public  List<Order> getPendingOrders(FirebaseCallback firebaseCallback) {
-     /*   if (instance == null) {
-            Log.d("MADAPP", "#### Database instance created");
-            instance = new Database();
-        }
-        List<Order> pendings = new ArrayList<>();
-        for (Order o : orders.values()) {
-            if (o.status.equals(OrderStatus.pending)) pendings.add(o);
-        }
-        Collections.sort(pendings, myDateComparator);
-
-        Log.d("MADAPP", "requested getPendingOrders() size=" + pendings.size());
-        return pendings;*/
         List<Order> pendings = new ArrayList<>();
         ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

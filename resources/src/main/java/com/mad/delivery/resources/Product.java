@@ -29,7 +29,7 @@ public class Product implements Parcelable {
         this.quantity = in.readInt();
         this.price = in.readDouble();
     }
-
+    public  Product(){}
     public void setQuantity(int newQuantity) {
         this.quantity = newQuantity;
     }

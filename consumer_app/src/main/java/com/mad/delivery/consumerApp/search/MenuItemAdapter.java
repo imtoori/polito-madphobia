@@ -11,19 +11,29 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.MenuItemRest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHolder> {
     private final int MAX_LIMIT_ORDER = 100;
     private List<MenuItemRest> items;
     private View view;
+    private HashMap<MenuItemRest,Integer> itemsSelected;
     public MenuItemAdapter(List<MenuItemRest> items) {
         this.items = items;
     }
 
+    public HashMap<MenuItemRest,Integer> getItemSelected(){
+        return this.itemsSelected;
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext())
@@ -36,6 +46,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         MenuItemRest item = items.get(index);
         holder.mItem = item;
         holder.name.setText(item.name);
+        //Log.d(TAG, "onBindViewHolder:" + holder.etQuantity);
 
     }
 
@@ -66,10 +77,13 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
             btnPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int qty = Integer.valueOf(etQuantity.getText().toString());
+                    Integer qty = Integer.valueOf(etQuantity.getText().toString());
                     if(qty < MAX_LIMIT_ORDER) {
                         qty++;
-                        etQuantity.setText(String.valueOf(qty));
+
+                        ConsumerDatabase.getInstance().setItemSelected(mItem,qty);
+                        etQuantity.setText(qty.toString());
+
                     }
                 }
             });
@@ -77,10 +91,12 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
             btnMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int qty = Integer.valueOf(etQuantity.getText().toString());
+                    Integer qty = Integer.valueOf(etQuantity.getText().toString());
                     if(qty > 0) {
                         qty--;
-                        etQuantity.setText(String.valueOf(qty));
+                        ConsumerDatabase.getInstance().setItemSelected(mItem,qty);
+                        etQuantity.setText(qty.toString());
+
                     }
                 }
             });

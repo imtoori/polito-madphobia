@@ -19,12 +19,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.CreditCode;
+import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -35,12 +38,16 @@ public class ConsumerDatabase {
     private FirebaseDatabase db;
     private DatabaseReference myRef;
     private StorageReference storageRef;
+    private HashMap <MenuItemRest,Integer> itemSelected;
+    private String resturantId;
     FirebaseAuth mAuth;
     private ConsumerDatabase() {
         db = FirebaseDatabase.getInstance();
         myRef = db.getReference();
         storageRef = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        itemSelected = new HashMap<MenuItemRest,Integer>();
+        resturantId ="";
     }
 
     public static ConsumerDatabase getInstance() {
@@ -65,6 +72,60 @@ public class ConsumerDatabase {
 
     public interface onRestaurantInfoReceived {
         void onReceived(Restaurant rest);
+    }
+
+    public void setItemSelected(MenuItemRest item, Integer value){
+        Log.d("MADDAPP","Il nome del piatto è"+item.name);
+        if(!resturantId.equals(item.id))
+            itemSelected.clear();
+        if(itemSelected.get(item)==null)
+            itemSelected.put(item,value);
+        else
+            itemSelected.replace(item,value);
+    }
+
+    public HashMap<MenuItemRest, Integer> getItemSelected(){
+        return itemSelected;
+    }
+
+    public void putOrder(Order o){
+        Random rand = new Random();
+        o.clientId =mAuth.getUid();
+        o.id = resturantId;
+
+        o.status =OrderStatus.pending;
+        ConsumerDatabase.getInstance().getBikerId(new firebaseCallback<List<String>>() {
+            @Override
+            public void onCallBack(List<String> item) {
+                if(!item.isEmpty()) {
+                    int n = rand.nextInt(item.size());
+                    Log.d("MADDAPP", "item: " + item.get(n) + " n: " + n);
+                    o.bikerId = item.get(n);
+                    myRef.child("orders").push().setValue(o);
+                }
+            }
+        });
+
+    }
+
+    public void getRestourant(String resturantId, firebaseCallback<Restaurant> firebaseCallback){
+        myRef.child("users").child("restaurants").child(resturantId).child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Restaurant rest = dataSnapshot.getValue(Restaurant.class);
+                Log.d("MADAPP", "inside db: " + rest.toString());
+                if(rest != null) {
+                    firebaseCallback.onCallBack(rest);
+                } else {
+                    Log.d("MADAPP", "restaurant is null");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("MADAPP", "onCanceled: "+ this.toString());
+            }
+        });
     }
 
     public Set<String> getRestaurantsIds(final Set<String> chosen, final onRestaurantsIdReceived firebaseCallback) {
@@ -206,34 +267,23 @@ public class ConsumerDatabase {
         });
     }
 
-    public void putOrder(Order order){
-        Random rand = new Random();
 
-        getBikerId(new firebaseCallback<List<String>>() {
-            @Override
-            public void onCallBack(List<String> item) {
-                int n = rand.nextInt(item.size());
-                order.bikerId = item.get(n);
-                myRef.child("order").setValue(order);
-            }
-        });
-
-    }
 
     public void getBikerId(firebaseCallback<List<String>> firebaseCallback){
-        myRef.child("users/bikers").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> bikerIds = new ArrayList<>();
-                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
-               for (DataSnapshot snapshot : iterator) {
-                    Biker item = snapshot.getValue(Biker.class);
-                    if (item != null) {
-                       // item.id = snapshot.getKey();
-                        bikerIds.add(item.id);
-                    } else {
-                        //onDataFetched.onError("data not found");
-                        Log.d("MADDAP","dara not found");
+                if(dataSnapshot.exists()) {
+
+                    Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : iterator) {
+
+                            // item.id = snapshot.getKey();
+
+                            bikerIds.add(snapshot.getKey());
+
+
                     }
                 }
                 firebaseCallback.onCallBack(bikerIds);
@@ -325,9 +375,12 @@ public class ConsumerDatabase {
             }
         });
     }
+
     public void updateCreditCustomer(Integer i){
         myRef.child("users").child("restaurant").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
     }
+
+
     public interface firebaseCallback<T>{
         void onCallBack(T item);
     }

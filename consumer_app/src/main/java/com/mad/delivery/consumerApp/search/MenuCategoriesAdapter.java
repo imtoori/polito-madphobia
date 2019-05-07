@@ -8,22 +8,26 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.MenuCategory;
+import com.mad.delivery.resources.MenuItemRest;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MenuCategoriesAdapter extends RecyclerView.Adapter<MenuCategoriesAdapter.ViewHolder> {
 
     private List<MenuCategory> categories;
     private View view;
-
     public MenuCategoriesAdapter(List<MenuCategory> categories) {
         this.categories = categories;
     }
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -33,6 +37,7 @@ public class MenuCategoriesAdapter extends RecyclerView.Adapter<MenuCategoriesAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -51,6 +56,7 @@ public class MenuCategoriesAdapter extends RecyclerView.Adapter<MenuCategoriesAd
         public final RecyclerView recyclerView;
         public MenuCategory category;
 
+
         public ViewHolder(View view) {
             super(view);
             mView = view;
@@ -63,5 +69,10 @@ public class MenuCategoriesAdapter extends RecyclerView.Adapter<MenuCategoriesAd
             return "ViewHolder{" +
                     "name=" + category.name;
         }
+
+
     }
+
+
+
 }

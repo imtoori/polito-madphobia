@@ -18,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +26,12 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Product;
+import com.mad.delivery.resources.Restaurant;
 
 
 public class Basket extends AppCompatActivity implements TimePickerFragment.TimePickedListener{
@@ -42,6 +48,8 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     DateTime datetime;
     Button payment;
     EditText notes;
+    Order order;
+
 
 
     @Override
@@ -73,11 +81,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
             }
 
         });
-        payment.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // TODO store order
-            }
-        });
 
         order_code.setText("#123456");
         subtot.setText("0.00");
@@ -86,14 +89,10 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
 
 
         List<Product> products = new ArrayList<>();
-        Product p1 = new Product("Prodotto 1", 20, 18.50);
-        Product p2 = new Product("Prodotto 2", 10, 17.01);
-        products.add(p1);
-        products.add(p2);
-        products.add(p1);
-        products.add(p2);
-        products.add(p1);
-        products.add(p2);
+
+        ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name,value,item.price)));
+
+
 
         RecyclerView recyclerView = findViewById(R.id.rv_orders);
         BasketAdapter basketAdapter = new BasketAdapter(products);
@@ -108,6 +107,14 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                 showTimePickerDialog(view);
             }
         });
+
+        payment.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                order = new Order(new Customer(), new Restaurant(),products,"","cash");
+                ConsumerDatabase.getInstance().putOrder(order);
+            }
+        });
+
     }
     @Override
     public boolean onSupportNavigateUp() {

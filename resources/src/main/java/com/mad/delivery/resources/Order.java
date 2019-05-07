@@ -40,6 +40,7 @@ public class Order implements Parcelable {
         this.paymentMethod = paymentMethod;
         this.totalPrice = 0.0;
         products.forEach(p -> totalPrice += p.price);
+
     }
 
     public Order(Order other) {
@@ -55,7 +56,6 @@ public class Order implements Parcelable {
         serverNotes = other.serverNotes;
         paymentMethod = other.paymentMethod;
         this.totalPrice = other.totalPrice;
-        this.clientId = other.clientId;
     }
 
     protected Order(Parcel in) {
