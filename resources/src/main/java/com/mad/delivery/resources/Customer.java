@@ -15,6 +15,7 @@ public class Customer implements Parcelable {
     public String  doorPhone;
     public String  postCode;
     public String city;
+    public Integer credit;
     public Uri imageUri;
 
     public Customer(String name, String lastName, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
@@ -29,6 +30,7 @@ public class Customer implements Parcelable {
         this.postCode = postCode;
         this.city = city;
         this.imageUri = imageUri;
+        this.credit = 0;
     }
     public Customer(Customer other) {
         this.name = other.name;
@@ -42,6 +44,7 @@ public class Customer implements Parcelable {
         this.postCode = other.postCode;
         this.city = other.city;
         this.imageUri = other.imageUri;
+        this.credit = 0;
     }
 
     public Customer(String name) {

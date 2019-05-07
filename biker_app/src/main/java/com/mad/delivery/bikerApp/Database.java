@@ -270,6 +270,10 @@ final public class Database {
 
     }
 
+    public void setBikerStatus(String status){
+        profileRef.child("profile").child("status").setValue(status);
+    }
+
 }
 
 

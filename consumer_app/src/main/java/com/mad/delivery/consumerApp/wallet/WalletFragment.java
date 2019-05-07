@@ -76,6 +76,7 @@ public class WalletFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.orders_rv);
         List<Order> orders= new ArrayList<>();
         Log.d("MAD","Sono nel wallet!");
+       // ConsumerDatabase.getInstance().updateCreditCustomer(20);
         // TODO remove items here when persistence is implemented
         //TODO usare metodo getCompletedOrders per farsi restituire gli ordini completati del cliente
         List<Product> products = new ArrayList<>();

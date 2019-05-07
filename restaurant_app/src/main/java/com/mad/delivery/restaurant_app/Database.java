@@ -89,6 +89,7 @@ final public class Database {
     public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems,String imageName) {
         MenuItemRest item =  new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
         item.id = mAuth.getUid();
+        Log.d("MADDAP",item.name +" "+item.category);
         menuItemsRef.push().setValue(item);
         Uri file = Uri.parse(imgUri);
         StorageReference profileRefStore = storageRef.child("images/menuItems/" + imageName);
@@ -264,6 +265,7 @@ final public class Database {
     }
     public void putRestaurantProfile(Restaurant user){
         user.id = mAuth.getUid();
+        user.previewInfo.id = mAuth.getUid();
         Uri file = Uri.parse(user.imageUri);
         StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
         profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

@@ -17,7 +17,7 @@ public class MenuItemRest implements Parcelable {
     public String imageDownload;
     public Integer availability;
     public String imageName;
-    protected Uri imageUri;
+    protected String imageUri;
     public List<String> subItems = new ArrayList<>();
 
     public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl, String  id, Uri url, List<String> subItems,String imageName) {
@@ -29,7 +29,7 @@ public class MenuItemRest implements Parcelable {
         this.id = id;
         this.category = category;
         this.availability = availability;
-        this.imageUri = url;
+        this.imageUri = url.toString();
         this.subItems = subItems;
         this.imageName =imageName;
     }
@@ -95,7 +95,7 @@ public class MenuItemRest implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(availability);
         }
-        dest.writeParcelable(imageUri, flags);
+        dest.writeParcelable(Uri.parse(imageUri), flags);
     }
 
     @Override
@@ -179,11 +179,11 @@ public class MenuItemRest implements Parcelable {
         this.availability = availability;
     }
 
-    public Uri getImageUri() {
+    public String getImageUri() {
         return imageUri;
     }
 
-    public void setImageUri(Uri imageUri) {
+    public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
 

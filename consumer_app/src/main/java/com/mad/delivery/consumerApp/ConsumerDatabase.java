@@ -163,7 +163,7 @@ public class ConsumerDatabase {
 
     public void getRestaurantInfo(PreviewInfo previewInfo, onRestaurantInfoReceived cb) {
 
-        myRef.child("users").child("restaurants").child(previewInfo.id).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("restaurants").child(previewInfo.id).child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Restaurant rest = dataSnapshot.getValue(Restaurant.class);
@@ -324,6 +324,9 @@ public class ConsumerDatabase {
                     Log.d("MADDAPP","Funzione credit code fail");
             }
         });
+    }
+    public void updateCreditCustomer(Integer i){
+        myRef.child("users").child("restaurant").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
     }
     public interface firebaseCallback<T>{
         void onCallBack(T item);
