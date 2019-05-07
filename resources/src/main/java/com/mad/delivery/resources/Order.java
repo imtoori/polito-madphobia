@@ -55,6 +55,7 @@ public class Order implements Parcelable {
         serverNotes = other.serverNotes;
         paymentMethod = other.paymentMethod;
         this.totalPrice = other.totalPrice;
+        this.clientId = other.clientId;
     }
 
     protected Order(Parcel in) {

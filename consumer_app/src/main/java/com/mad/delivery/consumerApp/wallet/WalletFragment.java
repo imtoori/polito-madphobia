@@ -3,12 +3,16 @@ package com.mad.delivery.consumerApp.wallet;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DatabaseReference;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.search.CategoriesFragment;
+import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
@@ -59,12 +63,21 @@ public class WalletFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        // TODO usare metodo checkCreditCode per verificare un codice di credito
+       /* ConsumerDatabase.getInstance().checkCreditCode("TO10", new ConsumerDatabase.firebaseCallback<CreditCode>() {
+            @Override
+            public void onCallBack(CreditCode item) {
+            }
+        });
+        */
         View v = inflater.inflate(R.layout.fragment_wallet, container, false);
         setHasOptionsMenu(true);
         RecyclerView recyclerView = v.findViewById(R.id.orders_rv);
         List<Order> orders= new ArrayList<>();
-
+        Log.d("MAD","Sono nel wallet!");
         // TODO remove items here when persistence is implemented
+        //TODO usare metodo getCompletedOrders per farsi restituire gli ordini completati del cliente
         List<Product> products = new ArrayList<>();
         Product p1 = new Product("Prodotto 1", 20, 18.55);
         Product p2 = new Product("Prodotto 2", 10, 17.01);

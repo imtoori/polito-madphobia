@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
@@ -33,10 +35,12 @@ public class ConsumerDatabase {
     private FirebaseDatabase db;
     private DatabaseReference myRef;
     private StorageReference storageRef;
+    FirebaseAuth mAuth;
     private ConsumerDatabase() {
         db = FirebaseDatabase.getInstance();
         myRef = db.getReference();
         storageRef = FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     public static ConsumerDatabase getInstance() {
@@ -270,6 +274,57 @@ public class ConsumerDatabase {
         }
     }
 
+    public  List<Order> getCompletedOrders(firebaseCallback<List<Order>> firebaseCallback) {
+
+        List<Order> completed = new ArrayList<>();
+        myRef.child("order").orderByChild("clientId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+
+                        if(o.status.toString().equals("completed")) {
+                            o.id = issue.getKey();
+                            completed.add(o);
+                        }
+                    }
+                }
+                firebaseCallback.onCallBack(completed);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return completed;
+    }
+    public void checkCreditCode(String code,firebaseCallback<CreditCode> firebaseCallback){
+        myRef.child("creditsCode").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        CreditCode o = issue.getValue(CreditCode.class);
+                        if(o.code.equals(code)){
+                            firebaseCallback.onCallBack(o);
+
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d("MADDAPP","Funzione credit code fail");
+            }
+        });
+    }
     public interface firebaseCallback<T>{
         void onCallBack(T item);
     }
