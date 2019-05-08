@@ -160,7 +160,7 @@ public class RegisterFragment extends Fragment {
                             User registered = new User();
                             registered.registrationDate = new DateTime().toString();
                             registered.email = emailAddress.getText().toString();
-                            myRef.child("users").child("customer").child(user.getUid()).setValue(registered);
+                            myRef.child("users").child("customers").child(user.getUid()).child("register").setValue(registered);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("user", registered);
                             Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
@@ -193,6 +193,7 @@ public class RegisterFragment extends Fragment {
                         // ...
                     }
                 });
+
     }
 
     public void openErrorView ( int id){

@@ -13,10 +13,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
+import com.mad.delivery.consumerApp.settings.ProfileActivity;
 import com.mad.delivery.consumerApp.settings.SettingsFragment;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.PreviewInfo;
@@ -29,9 +37,16 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     WalletFragment walletFragment;
     SearchFragment searchFragment;
     SettingsFragment settingsFragment;
+    FirebaseDatabase db;
+    FirebaseAuth mAuth;
+    DatabaseReference myRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseDatabase.getInstance();
+        mAuth =FirebaseAuth.getInstance();
+        myRef = db.getReference();
         setContentView(R.layout.activity_home);
         myToolbar = findViewById(R.id.mainActivityToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
@@ -123,10 +138,30 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.nav_login:
-                Log.d("MADAPP", "Opening Login Activity");
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                myRef.child("user").child("customer").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            Log.d("MADAPP", "Opening Profile Activity");
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        }
+                        else{
+                            Log.d("MADAPP", "Opening Login Activity");
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 return true;
             default:
                 // do nothing

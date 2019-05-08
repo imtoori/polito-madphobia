@@ -139,7 +139,7 @@ public class LoginFragment extends Fragment {
 
                             // check if the user is registered on the right app (Restaurant, Customer, Biker)
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference ref = database.getReference("users/customer/" + mAuth.getUid());
+                            DatabaseReference ref = database.getReference("users/customers/" + mAuth.getUid());
                             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -154,7 +154,7 @@ public class LoginFragment extends Fragment {
                                             return;
                                         } else {
                                             Bundle bundle = new Bundle();
-                                            bundle.putSerializable("user", mUser);
+                                            bundle.putParcelable("user", mUser);
                                             Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
                                             intent.putExtra("user", bundle);
                                             startActivity(intent);

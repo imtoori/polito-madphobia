@@ -312,8 +312,7 @@ public class ConsumerDatabase {
 
     public void getImage(String imageName,String path,firebaseCallback <Uri> firebaseCallback) {
 
-        if (!imageName.equals("")) {
-            Log.d("name", imageName);
+        if (imageName==null ||!imageName.equals("")) {
             // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
             profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -400,19 +399,19 @@ public class ConsumerDatabase {
                     public void onSuccess(Uri uri) {
                         Uri downloadUrl = uri;
                         //Do what you want with the url
-                        myRef.child("users").child("customer").child(mAuth.getUid()).child("profile").setValue(user);
+                        myRef.child("users").child("customers").child(mAuth.getUid()).child("profile").setValue(user);
 
                     }
                 });
             }
         });
-        myRef.child("users").child("customer").child(mAuth.getUid()).setValue("profile");
-        myRef.child("users").child("customer").child(mAuth.getUid()).child("profile").setValue(user);
+      //  myRef.child("users").child("customers").child(mAuth.getUid()).setValue("profile");
+        myRef.child("users").child("customers").child(mAuth.getUid()).child("profile").setValue(user);
 
     }
 
     public void getUserId(firebaseCallback<User> firebaseCallbackUser) {
-        myRef.child("users").child("customer").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("customers").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("profile")) {
@@ -439,8 +438,34 @@ public class ConsumerDatabase {
     }
 
 
-    public void updateCreditCustomer(Integer i){
-        myRef.child("users").child("restaurant").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
+    public void updateCreditCustomer(Integer i,firebaseCallback<Boolean> firebaseCallback){
+       myRef.child("users").child("customers").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
+
+
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               if (dataSnapshot.hasChild("profile")) {
+                   Integer credit = dataSnapshot.child("profile").child("credit").getValue(Integer.class);
+                   setValueCredit(credit+i);
+                   firebaseCallback.onCallBack(true);
+               }
+               else{
+                   firebaseCallback.onCallBack(false);
+               }
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+
+
+       });
+
+    }
+
+    public void setValueCredit(Integer i){
+        myRef.child("users").child("customers").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
     }
 
 

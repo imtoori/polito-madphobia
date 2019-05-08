@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.consumerApp.search.CategoriesFragment;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Customer;
@@ -72,6 +74,7 @@ public class WalletFragment extends Fragment {
             }
         });
         */
+        ImageView done;
         View v = inflater.inflate(R.layout.fragment_wallet, container, false);
         setHasOptionsMenu(true);
         RecyclerView recyclerView = v.findViewById(R.id.orders_rv);
@@ -80,7 +83,7 @@ public class WalletFragment extends Fragment {
        // ConsumerDatabase.getInstance().updateCreditCustomer(20);
         // TODO remove items here when persistence is implemented
         //TODO usare metodo getCompletedOrders per farsi restituire gli ordini completati del cliente
-        List<Product> products = new ArrayList<>();
+    /*    List<Product> products = new ArrayList<>();
         Product p1 = new Product("Prodotto 1", 20, 18.55);
         Product p2 = new Product("Prodotto 2", 10, 17.01);
         products.add(p1);
@@ -104,14 +107,45 @@ public class WalletFragment extends Fragment {
         orders.add(o);
         orders.add(o);
         orders.add(o);
-        orders.add(o);
+        orders.add(o);*/
 
-        OrdersAdapter ordersAdapter = new OrdersAdapter(orders, mListener);
+        ConsumerDatabase.getInstance().getCompletedOrders(new firebaseCallback<List<Order>>() {
+            @Override
+            public void onCallBack(List<Order> item) {
+                OrdersAdapter ordersAdapter = new OrdersAdapter(item, mListener);
 
-        recyclerView.hasFixedSize();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(ordersAdapter);
+                recyclerView.hasFixedSize();
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(ordersAdapter);
+            }
+        });
 
+
+
+        v.findViewById(R.id.done_code).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                ConsumerDatabase.getInstance().checkCreditCode("TO10", new firebaseCallback<CreditCode>() {
+                    @Override
+                    public void onCallBack(CreditCode item) {
+                        Integer val = item.value;
+                         ConsumerDatabase.getInstance().updateCreditCustomer(item.value, new firebaseCallback<Boolean>() {
+                             @Override
+                             public void onCallBack(Boolean item) {
+                                 if(item==true){
+                                     Log.d("MADD","Il tuo conto è stato aumentato di "+val);
+                                 }
+                                 else
+                                     Log.d("MADD","ti devi registre");
+
+                             }
+                         });
+
+                    }
+                });
+            }
+        });
         return v;
 
 

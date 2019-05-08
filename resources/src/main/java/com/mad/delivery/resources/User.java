@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class User implements Parcelable {
+public class User implements Parcelable,Serializable {
     public String name;
     public String lastName;
     public String phoneNumber;
@@ -40,6 +40,7 @@ public class User implements Parcelable {
         this.imageUri = imageUri.toString();
         this.registrationDate = new DateTime().toString();
         this.imageName = imageName;
+        this.credit =0;
     }
 
     public User() {
