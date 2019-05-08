@@ -27,6 +27,7 @@ import com.mad.delivery.consumerApp.search.SearchFragment;
 import com.mad.delivery.consumerApp.settings.ProfileActivity;
 import com.mad.delivery.consumerApp.settings.SettingsFragment;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
+import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.PreviewInfo;
 
 public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
@@ -124,6 +125,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     public void openOrder() {
         Log.d("MADAPP", "Clicked on ORDER");
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
+
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

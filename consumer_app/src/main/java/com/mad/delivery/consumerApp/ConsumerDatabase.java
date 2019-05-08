@@ -44,15 +44,23 @@ public class ConsumerDatabase {
     private StorageReference storageRef;
     private HashMap <MenuItemRest,Integer> itemSelected;
     private String resturantId;
-
+    private Order order;
     public Restaurant restaurant;
     FirebaseAuth mAuth;
+
 
     public void setResturantId(String resturantId) {
         this.resturantId = resturantId;
     }
     public String getResturantId(){
         return resturantId;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+    public Order getOrder(){
+        return order;
     }
 
     private ConsumerDatabase() {

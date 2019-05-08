@@ -13,11 +13,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Product;
 
 
 public class OrderInfoActivity extends AppCompatActivity {
     Menu menu;
+    Order order;
     TextView order_code;
     TextView subtot;
     TextView del_fee;
@@ -26,11 +28,10 @@ public class OrderInfoActivity extends AppCompatActivity {
     TextView biker_note;
     TextView client_note;
     Toolbar toolbar;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        order = ConsumerDatabase.getInstance().getOrder();
         setContentView(R.layout.activity_order_info);
         setTitle(getResources().getString(R.string.order_info_toolbar));
         toolbar=findViewById(R.id.toolbar);
@@ -51,14 +52,10 @@ public class OrderInfoActivity extends AppCompatActivity {
         biker_note.setText("note biker bla bla");
         client_note.setText("bla bla bla");
 
-        List<Product> products = new ArrayList<>();
-        Product p1 = new Product("Prodotto 1", 20, 18.50);
-        Product p2 = new Product("Prodotto 2", 10, 17.01);
-        products.add(p1);
-        products.add(p2);
+
 
         RecyclerView recyclerView = findViewById(R.id.rv_orders);
-        SummaryOrdersAdapter summaryordersAdapter = new SummaryOrdersAdapter(products);
+        SummaryOrdersAdapter summaryordersAdapter = new SummaryOrdersAdapter(order.products);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryordersAdapter);
