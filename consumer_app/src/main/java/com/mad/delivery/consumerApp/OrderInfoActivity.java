@@ -45,9 +45,9 @@ public class OrderInfoActivity extends AppCompatActivity {
         biker_note=findViewById(R.id.biker_note);
         client_note=findViewById(R.id.client_note);
         order_code.setText("#123456");
-        subtot.setText("0.00");
+        subtot.setText(order.totalPrice.toString());
         del_fee.setText("0.00");
-        tot.setText("0.00");
+        tot.setText(order.totalPrice.toString());
         rest_note.setText("note ristorante bla bla");
         biker_note.setText("note biker bla bla");
         client_note.setText("bla bla bla");
