@@ -25,8 +25,23 @@ public class User implements Parcelable,Serializable {
     public String imageName;
     public Integer credit;
 
+    public String getImageName() {
+        return imageName;
+    }
 
-    public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri,String imageName) {
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public Integer getCredit() {
+        return credit;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+
+    public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String imageName) {
         this.name = name;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;

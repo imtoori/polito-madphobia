@@ -27,6 +27,8 @@ public class Order implements Parcelable {
     public String restaurantId;
     public String bikerId;
     public String clientId;
+
+
     public Order(){}
 
 
@@ -63,15 +65,20 @@ public class Order implements Parcelable {
         client = in.readParcelable(User.class.getClassLoader());
         restaurant = in.readParcelable(Restaurant.class.getClassLoader());
         products = in.createTypedArrayList(Product.CREATOR);
-        status = (OrderStatus) in.readSerializable();
         orderDate = in.readString();
         orderFor = in.readString();
         estimatedDelivery = in.readString();
         clientNotes = in.readString();
         serverNotes = in.readString();
-        restaurantId = in.readString();
         paymentMethod = in.readString();
-        totalPrice = in.readDouble();
+        if (in.readByte() == 0) {
+            totalPrice = null;
+        } else {
+            totalPrice = in.readDouble();
+        }
+        restaurantId = in.readString();
+        bikerId = in.readString();
+        clientId = in.readString();
     }
 
     @Override
@@ -80,15 +87,21 @@ public class Order implements Parcelable {
         dest.writeParcelable(client, flags);
         dest.writeParcelable(restaurant, flags);
         dest.writeTypedList(products);
-        dest.writeSerializable(status);
         dest.writeString(orderDate);
         dest.writeString(orderFor);
         dest.writeString(estimatedDelivery);
         dest.writeString(clientNotes);
         dest.writeString(serverNotes);
-        dest.writeString(restaurantId);
         dest.writeString(paymentMethod);
-        dest.writeDouble(totalPrice);
+        if (totalPrice == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(totalPrice);
+        }
+        dest.writeString(restaurantId);
+        dest.writeString(bikerId);
+        dest.writeString(clientId);
     }
 
     @Override

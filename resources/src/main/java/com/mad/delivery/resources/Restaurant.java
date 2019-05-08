@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Restaurant implements Parcelable {
+public class Restaurant implements Parcelable  {
     public PreviewInfo previewInfo;
     public String name;
     public String phoneNumber;
@@ -31,7 +31,97 @@ public class Restaurant implements Parcelable {
     public String token;
     public Integer minOrderCost, deliveryCost;
 
-    public Restaurant(String name,  String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri,String imageName,String openingTime) {
+
+    protected Restaurant(Parcel in) {
+        previewInfo = in.readParcelable(PreviewInfo.class.getClassLoader());
+        name = in.readString();
+        phoneNumber = in.readString();
+        registrationDate = in.readString();
+        email = in.readString();
+        description = in.readString();
+        road = in.readString();
+        houseNumber = in.readString();
+        doorPhone = in.readString();
+        postCode = in.readString();
+        city = in.readString();
+        openingHours = in.readString();
+        imageName = in.readString();
+        id = in.readString();
+        if (in.readByte() == 0) {
+            scoreValue = null;
+        } else {
+            scoreValue = in.readInt();
+        }
+        imageUri = in.readString();
+        token = in.readString();
+        if (in.readByte() == 0) {
+            minOrderCost = null;
+        } else {
+            minOrderCost = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            deliveryCost = null;
+        } else {
+            deliveryCost = in.readInt();
+        }
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(previewInfo, flags);
+        dest.writeString(name);
+        dest.writeString(phoneNumber);
+        dest.writeString(registrationDate);
+        dest.writeString(email);
+        dest.writeString(description);
+        dest.writeString(road);
+        dest.writeString(houseNumber);
+        dest.writeString(doorPhone);
+        dest.writeString(postCode);
+        dest.writeString(city);
+        dest.writeString(openingHours);
+        dest.writeString(imageName);
+        dest.writeString(id);
+        if (scoreValue == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(scoreValue);
+        }
+        dest.writeString(imageUri);
+        dest.writeString(token);
+        if (minOrderCost == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(minOrderCost);
+        }
+        if (deliveryCost == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(deliveryCost);
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {
+        @Override
+        public Restaurant createFromParcel(Parcel in) {
+            return new Restaurant(in);
+        }
+
+        @Override
+        public Restaurant[] newArray(int size) {
+            return new Restaurant[size];
+        }
+    };
+
+    public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
@@ -72,7 +162,6 @@ public class Restaurant implements Parcelable {
         previewInfo.description = this.description;
     }
 
-
     public Restaurant(String name) {
         this.name = name;
     }
@@ -81,57 +170,13 @@ public class Restaurant implements Parcelable {
         this.scoreValue = 0;
     }
 
-    protected Restaurant(Parcel in) {
-        previewInfo = in.readParcelable(PreviewInfo.class.getClassLoader());
-        name = in.readString();
-        phoneNumber = in.readString();
-        registrationDate = in.readString();
-        email = in.readString();
-        description = in.readString();
-        road = in.readString();
-        houseNumber = in.readString();
-        doorPhone = in.readString();
-        postCode = in.readString();
-        city = in.readString();
-        openingHours = in.readString();
-        scoreValue = in.readInt();
-        imageUri = in.readParcelable(Uri.class.getClassLoader());
+    public PreviewInfo getPreviewInfo() {
+        return previewInfo;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(previewInfo, flags);
-        dest.writeString(name);
-        dest.writeString(phoneNumber);
-        dest.writeString(registrationDate);
-        dest.writeString(email);
-        dest.writeString(description);
-        dest.writeString(road);
-        dest.writeString(houseNumber);
-        dest.writeString(doorPhone);
-        dest.writeString(postCode);
-        dest.writeString(city);
-        dest.writeString(openingHours);
-        dest.writeInt(scoreValue);
-        dest.writeString(imageUri);
+    public void setPreviewInfo(PreviewInfo previewInfo) {
+        this.previewInfo = previewInfo;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Restaurant> CREATOR = new Creator<Restaurant>() {
-        @Override
-        public Restaurant createFromParcel(Parcel in) {
-            return new Restaurant(in);
-        }
-
-        @Override
-        public Restaurant[] newArray(int size) {
-            return new Restaurant[size];
-        }
-    };
 
     public String getName() {
         return name;
@@ -213,12 +258,36 @@ public class Restaurant implements Parcelable {
         this.city = city;
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public String getOpeningHours() {
+        return openingHours;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setOpeningHours(String openingHours) {
+        this.openingHours = openingHours;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Integer getScoreValue() {
+        return scoreValue;
+    }
+
+    public void setScoreValue(Integer scoreValue) {
+        this.scoreValue = scoreValue;
     }
 
     public Map<String, Boolean> getCategories() {
@@ -229,7 +298,7 @@ public class Restaurant implements Parcelable {
         this.categories = categories;
     }
 
-    public Map<String ,MenuItemRest> getMenuItems() {
+    public Map<String, MenuItemRest> getMenuItems() {
         return menuItems;
     }
 
@@ -237,20 +306,12 @@ public class Restaurant implements Parcelable {
         this.menuItems = menuItems;
     }
 
-    public Integer getScoreValue() {
-        return scoreValue;
+    public String getImageUri() {
+        return imageUri;
     }
 
-    public void setScoreValue(int scoreValue) {
-        this.scoreValue = scoreValue;
-    }
-
-    public String getOpeningHours() {
-        return openingHours;
-    }
-
-    public void setOpeningHours(String openingHours) {
-        this.openingHours = openingHours;
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public String getToken() {
@@ -261,19 +322,11 @@ public class Restaurant implements Parcelable {
         this.token = token;
     }
 
-    public PreviewInfo getPreviewInfo() {
-        return previewInfo;
-    }
-
-    public void setPreviewInfo(PreviewInfo previewInfo) {
-        this.previewInfo = previewInfo;
-    }
-
     public Integer getMinOrderCost() {
         return minOrderCost;
     }
 
-    public void setMinOrderCost(int minOrderCost) {
+    public void setMinOrderCost(Integer minOrderCost) {
         this.minOrderCost = minOrderCost;
     }
 
@@ -281,32 +334,7 @@ public class Restaurant implements Parcelable {
         return deliveryCost;
     }
 
-    public void setDeliveryCost(int deliveryCost) {
+    public void setDeliveryCost(Integer deliveryCost) {
         this.deliveryCost = deliveryCost;
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "previewInfo=" + previewInfo +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", registrationDate='" + registrationDate + '\'' +
-                ", email='" + email + '\'' +
-                ", description='" + description + '\'' +
-                ", road='" + road + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", doorPhone='" + doorPhone + '\'' +
-                ", postCode='" + postCode + '\'' +
-                ", city='" + city + '\'' +
-                ", openingHours='" + openingHours + '\'' +
-                ", scoreValue=" + scoreValue +
-                ", categories=" + categories +
-                ", menuItems=" + menuItems +
-                ", imageUri=" + imageUri +
-                ", token='" + token + '\'' +
-                ", minOrderCost=" + minOrderCost +
-                ", deliveryCost=" + deliveryCost +
-                '}';
     }
 }
