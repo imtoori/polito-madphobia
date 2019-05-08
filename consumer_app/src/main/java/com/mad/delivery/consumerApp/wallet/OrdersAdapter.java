@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
 
@@ -39,7 +40,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         @Override
         public void onBindViewHolder(final OrdersAdapter.ViewHolder holder, int position) {
             holder.order = orders.get(position);
-            ConsumerDatabase.getInstance().getRestourant(holder.order.restaurantId, new ConsumerDatabase.firebaseCallback<Restaurant>() {
+            ConsumerDatabase.getInstance().getRestourant(holder.order.restaurantId, new firebaseCallback<Restaurant>() {
                 @Override
                 public void onCallBack(Restaurant item) {
                     holder.nameRestaurant.setText(item.name);

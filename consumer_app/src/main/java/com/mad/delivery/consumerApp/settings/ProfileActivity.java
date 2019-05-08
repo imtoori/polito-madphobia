@@ -17,8 +17,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.auth.LoginActivity;
+import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
+import com.squareup.picasso.Picasso;
 
 public class ProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -30,14 +37,27 @@ public class ProfileActivity extends AppCompatActivity {
     TextView description;
     TextView road;
     ImageView imgProfile;
-    User mUser;
+    User mUser= new User ();
+    private FirebaseAuth mAuth;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         myToolBar = findViewById(R.id.mainActivityToolbar);
-
+        mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.profile_toolbar));
         name = findViewById(R.id.main_name);
@@ -73,21 +93,22 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("lastName", ""),
-                sharedPref.getString("phoneNumber", ""),
-                sharedPref.getString("emailAddress", ""),
-                sharedPref.getString("description", ""),
-                sharedPref.getString("road", ""),
-                sharedPref.getString("houseNumber", ""),
-                sharedPref.getString("doorPhone", ""),
-                sharedPref.getString("postCode", ""),
-                sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
-        );
-        Log.d("MADAPP", "GET Profile data = " + Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        updateFields(mUser);
+        ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>(){
+            @Override
+            public void onCallBack(User user) {
+                if(user!=null){
+
+                    mUser = new User(user);
+
+                    updateFields(mUser);
+                }
+                else{
+                    mUser  = new User("","","","","","","","", "","",Uri.EMPTY,"");
+                    updateFields(mUser);
+                }
+
+            }
+        });
     }
 
     private void updateFields(User u) {
@@ -105,6 +126,30 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             Log.d("MADAPP", "Setting custom user image");
             imgProfile.setImageURI(Uri.parse(u.imageUri));
+        }
+
+        imgProfile.setImageURI(Uri.parse(u.imageUri));
+
+        if(imgProfile.getDrawable() == null) {
+            ConsumerDatabase.getInstance().getImage(u.imageName, "/images/profile/", new firebaseCallback<Uri>() {
+                @Override
+                public void onCallBack(Uri item) {
+                    if (item != null) {
+                        if (item == Uri.EMPTY || item.toString().equals("")) {
+                            Log.d("MADAPP", "Setting user default image");
+
+                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        } else {
+                            Log.d("MADAPP", "Setting custom user image");
+                            Log.d("DOWNLOAD2", item.toString());
+
+                            // imgProfile.setImageURI(item);
+                            Picasso.get().load(item.toString()).into(imgProfile);
+
+                        }
+                    }
+                }
+            });
         }
     }
 

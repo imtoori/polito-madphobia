@@ -287,9 +287,6 @@ final public class Database {
         profileRef.setValue("profile");
         profileRef.child("profile").setValue(user);
 
-
-
-
     }
     public void getImage(String imageName,String path,Callback UriImg) {
 

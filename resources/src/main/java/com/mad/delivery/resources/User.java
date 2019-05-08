@@ -20,8 +20,9 @@ public class User implements Serializable {
     public String  postCode;
     public String city;
     public String id;
+    public String imageName;
 
-    public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
+    public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri,String imageName) {
         this.name = name;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -34,6 +35,7 @@ public class User implements Serializable {
         this.city = city;
         this.imageUri = imageUri.toString();
         this.registrationDate = new DateTime().toString();
+        this.imageName = imageName;
     }
 
     public User() {
@@ -41,7 +43,7 @@ public class User implements Serializable {
 
     public User(User u) {
         this.name = u.name;
-        this.name = u.lastName;
+        this.lastName = u.lastName;
         this.phoneNumber = u.phoneNumber;
         this.email = u.email;
         this.description = u.description;
@@ -51,6 +53,7 @@ public class User implements Serializable {
         this.postCode = u.postCode;
         this.city = u.city;
         this.imageUri = u.imageUri;
+        this.imageName = u.imageName;
     }
 
     public String getName() {

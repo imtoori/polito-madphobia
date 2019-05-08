@@ -21,9 +21,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.consumerApp.BuildConfig;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.auth.LoginActivity;
+import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,6 +46,8 @@ public class EditProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     Menu menu;
     User mUser;
+    private FirebaseAuth mAuth;
+
     FloatingActionButton btnCamera;
     EditText name;
     EditText lastName;
@@ -65,6 +74,8 @@ public class EditProfileActivity extends AppCompatActivity {
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
+        mAuth = FirebaseAuth.getInstance();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         name = findViewById(R.id.editprofile_name);
@@ -92,6 +103,17 @@ public class EditProfileActivity extends AppCompatActivity {
             getProfileData();
         }
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -197,52 +219,33 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        mUser = new User(sharedPref.getString("name", ""),
-                sharedPref.getString("lastName", ""),
-                sharedPref.getString("phoneNumber", ""),
-                sharedPref.getString("emailAddress", ""),
-                sharedPref.getString("description", ""),
-                sharedPref.getString("road", ""),
-                sharedPref.getString("houseNumber", ""),
-                sharedPref.getString("doorPhone", ""),
-                sharedPref.getString("postCode", ""),
-                sharedPref.getString("city", ""),
-                Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString()))
-        );
 
-            Log.d("MADAPP", "GET Profile data = "+ Uri.parse(sharedPref.getString("imageUri", Uri.EMPTY.toString())));
-        updateFields(mUser);
+        ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>(){
+            @Override
+            public void onCallBack(User user) {
+                if(user!=null){
+                    mUser=new User(user);
+                    updateFields(mUser);
+                }
+
+            }
+        });
     }
 
     private void setProfileData() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("name", name.getText().toString());
-        editor.putString("lastName", lastName.getText().toString());
-        editor.putString("phoneNumber", phoneNumber.getText().toString());
-        editor.putString("emailAddress", emailAddress.getText().toString());
-        editor.putString("description", description.getText().toString());
-        editor.putString("road", road.getText().toString());
-        editor.putString("houseNumber", houseNumber.getText().toString());
-        editor.putString("doorPhone", doorPhone.getText().toString());
-        editor.putString("postCode", postCode.getText().toString());
-        editor.putString("city", city.getText().toString());
-
-        try {
-            Log.d("MADAPP", "ImageProfileURI=" + imageProfileUri.toString());
-            if (imageProfileUri != Uri.EMPTY) {
-                editor.putString("imageUri", imageProfileUri.toString());
-            } else {
-                Log.d("MADAPP", "added empty");
-                editor.putString("imageUri", Uri.EMPTY.toString());
-            }
-
-        } catch (NullPointerException e) {
-            editor.putString("imageUri", Uri.EMPTY.toString());
-        }
-
-        editor.apply();
+        User user  = new User(name.getText().toString(),
+                lastName.getText().toString(),
+                phoneNumber.getText().toString(),
+                emailAddress.getText().toString(),
+                description.getText().toString(),
+                road.getText().toString(),
+                houseNumber.getText().toString(),
+                doorPhone.getText().toString(),
+                postCode.getText().toString(),
+                city.getText().toString(),
+                Uri.parse(imageProfileUri.toString()),
+                imageProfileUri.getLastPathSegment());
+        ConsumerDatabase.getInstance().putUserProfile(user);
     }
 
     private File createImageFile() throws IOException {
@@ -315,15 +318,32 @@ public class EditProfileActivity extends AppCompatActivity {
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
 
-        if (u.imageUri == null|| u.imageUri.equals("")) {
-            Log.d("MADAPP", "Setting user default image");
-            imageProfileUri = Uri.EMPTY;
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-        } else {
-            Log.d("MADAPP", "Setting custom user image");
-            imageProfileUri = Uri.parse(u.imageUri);
-            imgProfile.setImageURI(Uri.parse(u.imageUri));
+        imgProfile.setImageURI(Uri.parse(u.imageUri));
+
+        if(imgProfile.getDrawable() == null) {
+            ConsumerDatabase.getInstance().getImage(u.imageName,"/images/profile/", new firebaseCallback<Uri>() {
+                @Override
+                public void onCallBack(Uri item) {
+                    if (item != null) {
+                        if (item == Uri.EMPTY || item.toString().equals("")) {
+                            Log.d("MADAPP", "Setting user default image");
+                            imageProfileUri = Uri.EMPTY;
+
+                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        } else {
+                            Log.d("MADAPP", "Setting custom user image");
+                            //  imageProfileUri = item;
+                            // imgProfile.setImageURI(item);
+                            Picasso.get().load(item.toString()).into(imgProfile);
+                            // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
+
+                        }
+                    }
+
+                }
+            });
         }
+
     }
 
     /*

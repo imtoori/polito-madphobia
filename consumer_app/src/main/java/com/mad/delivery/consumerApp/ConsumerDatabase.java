@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp;
 
+import android.hardware.usb.UsbRequest;
 import android.net.Uri;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.MenuItemRest;
@@ -25,6 +27,7 @@ import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
+import com.mad.delivery.resources.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ConsumerDatabase {
     public static ConsumerDatabase instance = new ConsumerDatabase();
@@ -40,6 +44,7 @@ public class ConsumerDatabase {
     private StorageReference storageRef;
     private HashMap <MenuItemRest,Integer> itemSelected;
     private String resturantId;
+    public Restaurant restaurant;
     FirebaseAuth mAuth;
     private ConsumerDatabase() {
         db = FirebaseDatabase.getInstance();
@@ -231,6 +236,7 @@ public class ConsumerDatabase {
                 Log.d("MADAPP", "inside db: " + rest.toString());
                 if(rest != null) {
                     cb.onReceived(rest);
+                    restaurant = rest;
                 } else {
                     Log.d("MADAPP", "restaurant is null");
                 }
@@ -243,6 +249,9 @@ public class ConsumerDatabase {
         });
     }
 
+    public Restaurant getRestaurantInLocal(){
+        return this.restaurant;
+    }
 
     public void getCategories(onAllCategoriesReceived cb) {
         Set<String> categories = new HashSet<>();
@@ -376,14 +385,64 @@ public class ConsumerDatabase {
         });
     }
 
+    public void putUserProfile(User user){
+        user.id = mAuth.getUid();
+        Uri file = Uri.parse(user.imageUri);
+        StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
+        profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Uri downloadUrl = uri;
+                        //Do what you want with the url
+                        myRef.child("users").child("customer").child(mAuth.getUid()).child("profile").setValue(user);
+
+                    }
+                });
+            }
+        });
+        myRef.child("users").child("customer").child(mAuth.getUid()).setValue("profile");
+        myRef.child("users").child("customer").child(mAuth.getUid()).child("profile").setValue(user);
+
+    }
+
+    public void getUserId(firebaseCallback<User> firebaseCallbackUser) {
+        myRef.child("users").child("customer").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("profile")) {
+                    dataSnapshot = dataSnapshot.child("profile");
+                    User item = dataSnapshot.getValue(User.class);
+                    if (item != null) {
+
+                        firebaseCallbackUser.onCallBack(item);
+                    } else {
+                        //   userStringOnDataFetched.onError("data not found");
+                        Log.d("DATABASE: ", "Elemento nullo");
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("DATABASE: ", "SONO ENTRATO");
+
+            }
+        });
+
+    }
+
+
     public void updateCreditCustomer(Integer i){
         myRef.child("users").child("restaurant").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
     }
 
 
-    public interface firebaseCallback<T>{
-        void onCallBack(T item);
-    }
 
 
 }
+
