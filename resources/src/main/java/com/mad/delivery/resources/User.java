@@ -1,12 +1,14 @@
 package com.mad.delivery.resources;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class User implements Parcelable {
     public String name;
     public String lastName;
     public String phoneNumber;
@@ -21,6 +23,8 @@ public class User implements Serializable {
     public String city;
     public String id;
     public String imageName;
+    public Integer credit;
+
 
     public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri,String imageName) {
         this.name = name;
@@ -55,6 +59,40 @@ public class User implements Serializable {
         this.imageUri = u.imageUri;
         this.imageName = u.imageName;
     }
+
+    protected User(Parcel in) {
+        name = in.readString();
+        lastName = in.readString();
+        phoneNumber = in.readString();
+        email = in.readString();
+        description = in.readString();
+        imageUri = in.readString();
+        registrationDate = in.readString();
+        road = in.readString();
+        houseNumber = in.readString();
+        doorPhone = in.readString();
+        postCode = in.readString();
+        city = in.readString();
+        id = in.readString();
+        imageName = in.readString();
+        if (in.readByte() == 0) {
+            credit = null;
+        } else {
+            credit = in.readInt();
+        }
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -158,5 +196,25 @@ public class User implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(name);
+        parcel.writeString(lastName);
+        parcel.writeString(phoneNumber);
+        parcel.writeString(email);
+        parcel.writeString(description);
+        parcel.writeString(road);
+        parcel.writeString(houseNumber);
+        parcel.writeString(doorPhone);
+        parcel.writeString(postCode);
+        parcel.writeString(city);
+        parcel.writeString(imageUri);
     }
 }

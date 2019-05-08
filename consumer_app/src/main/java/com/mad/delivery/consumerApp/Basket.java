@@ -2,6 +2,7 @@ package com.mad.delivery.consumerApp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Product;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.resources.User;
 
 
 public class Basket extends AppCompatActivity implements TimePickerFragment.TimePickedListener{
@@ -49,6 +51,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     Button payment;
     EditText notes;
     Order order;
+    Customer customer;
 
 
 
@@ -110,8 +113,18 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
 
         payment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                order = new Order(new Customer(), new Restaurant(),products,"","cash");
-                ConsumerDatabase.getInstance().putOrder(order);
+                ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
+                    @Override
+                    public void onCallBack(User item) {
+                        if(item!=null && item.lastName!=null){
+                            order =new Order(item,ConsumerDatabase.getInstance().getRestaurantInLocal(),products,"","cash");
+                            ConsumerDatabase.getInstance().putOrder(order);
+                        }
+                        else
+                            Log.d("TAG","Ti devi registrare");
+                    }
+                });
+
             }
         });
 

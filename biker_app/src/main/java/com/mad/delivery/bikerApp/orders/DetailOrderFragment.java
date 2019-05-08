@@ -65,7 +65,7 @@ public class DetailOrderFragment extends Fragment {
         restNotes = view.findViewById(R.id.restaurant_notes_tv);
         restAdd=view.findViewById(R.id.detail_restaurantadd);
         custAdd=view.findViewById(R.id.detail_customeradd);
-        Order order = getArguments().getParcelable("order");
+       Order order = getArguments().getParcelable("order");
         Log.d("MADAPP", "detailorderfragment : " + order.toString());
         requested.setText(MyDateFormat.parse(new DateTime(order.orderFor)));
         restAdd.setText(order.restaurant.road + " " + order.restaurant.houseNumber + ", " + order.restaurant.postCode + " " + order.restaurant.city + "(door " + order.restaurant.doorPhone+ ")");

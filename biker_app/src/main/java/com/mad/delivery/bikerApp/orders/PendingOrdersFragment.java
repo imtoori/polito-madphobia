@@ -71,6 +71,7 @@ public class PendingOrdersFragment extends Fragment {
                     showEmptyFolder();
                 else {
                     Log.d("CALL", list.toString());
+                    list.forEach(o->Log.d("!!!ORDINE: ",o.toString()));
                     orders.addAll(list);
                     //ordersAdapter.orders = orders;
                     ordersAdapter.notifyDataSetChanged();

@@ -18,6 +18,7 @@ import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Product;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.resources.User;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -90,8 +91,7 @@ public class WalletFragment extends Fragment {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
         DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
         DateTime to = DateTime.now();
-        Customer c = new Customer();
-        Order o = new Order(new Customer(),rest,products, from.toString(), "credit");
+        Order o = new Order(new User(),rest,products, from.toString(), "credit");
         o.id = "1234";
         o.status = OrderStatus.pending;
         o.orderDate = to.toString();

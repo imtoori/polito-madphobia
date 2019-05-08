@@ -44,6 +44,7 @@ public class ConsumerDatabase {
     private StorageReference storageRef;
     private HashMap <MenuItemRest,Integer> itemSelected;
     private String resturantId;
+
     public Restaurant restaurant;
     FirebaseAuth mAuth;
     private ConsumerDatabase() {
@@ -53,6 +54,7 @@ public class ConsumerDatabase {
         mAuth = FirebaseAuth.getInstance();
         itemSelected = new HashMap<MenuItemRest,Integer>();
         resturantId ="";
+
     }
 
     public static ConsumerDatabase getInstance() {

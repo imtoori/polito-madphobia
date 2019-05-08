@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Order implements Parcelable {
     public String id;
-    public Customer client;
+    public User client;
     @Exclude
     public Restaurant restaurant;
     public List<Product> products;
@@ -30,7 +30,7 @@ public class Order implements Parcelable {
     public Order(){}
 
 
-    public Order(Customer u, Restaurant r, List<Product> products, String orderFor, String paymentMethod) {
+    public Order(User u, Restaurant r, List<Product> products, String orderFor, String paymentMethod) {
         this.client = u;
         this.products = products;
         status = OrderStatus.pending;
@@ -45,7 +45,7 @@ public class Order implements Parcelable {
 
     public Order(Order other) {
         this.id = other.id;
-        this.client = new Customer(other.client);
+        this.client = new User(other.client);
         this.products = new ArrayList<>(other.products);
         this.restaurant = other.restaurant;
         status = other.status;
@@ -60,7 +60,7 @@ public class Order implements Parcelable {
 
     protected Order(Parcel in) {
         id = in.readString();
-        client = in.readParcelable(Customer.class.getClassLoader());
+        client = in.readParcelable(User.class.getClassLoader());
         restaurant = in.readParcelable(Restaurant.class.getClassLoader());
         products = in.createTypedArrayList(Product.CREATOR);
         status = (OrderStatus) in.readSerializable();
@@ -149,11 +149,11 @@ public class Order implements Parcelable {
         this.id = id;
     }
 
-    public Customer getClient() {
+    public User getClient() {
         return client;
     }
 
-    public void setClient(Customer client) {
+    public void setClient(User client) {
         this.client = client;
     }
 
