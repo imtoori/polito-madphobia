@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
@@ -37,6 +39,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.restaurant = restaurants.get(position);
+        ConsumerDatabase.getInstance().setResturantId(holder.restaurant.id);
         holder.nameRestaurant.setText(holder.restaurant.name);
         holder.descRestaurant.setText(holder.restaurant.description);
         holder.rbRestaurant.setRating(holder.restaurant.scoreValue);

@@ -138,29 +138,11 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.nav_login:
-                myRef.child("user").child("customer").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            Log.d("MADAPP", "Opening Profile Activity");
-                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        }
-                        else{
+
                             Log.d("MADAPP", "Opening Login Activity");
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
 
                 return true;
             default:

@@ -47,6 +47,14 @@ public class ConsumerDatabase {
 
     public Restaurant restaurant;
     FirebaseAuth mAuth;
+
+    public void setResturantId(String resturantId) {
+        this.resturantId = resturantId;
+    }
+    public String getResturantId(){
+        return resturantId;
+    }
+
     private ConsumerDatabase() {
         db = FirebaseDatabase.getInstance();
         myRef = db.getReference();
@@ -98,7 +106,7 @@ public class ConsumerDatabase {
     public void putOrder(Order o){
         Random rand = new Random();
         o.clientId =mAuth.getUid();
-        o.id = resturantId;
+        o.restaurantId = resturantId;
 
         o.status =OrderStatus.pending;
         ConsumerDatabase.getInstance().getBikerId(new firebaseCallback<List<String>>() {
@@ -362,6 +370,33 @@ public class ConsumerDatabase {
 
         return completed;
     }
+
+    public  List<Order> getAllCostumerOrders(firebaseCallback<List<Order>> firebaseCallback) {
+
+        List<Order> completed = new ArrayList<>();
+        myRef.child("orders").orderByChild("clientId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                            o.id = issue.getKey();
+                            completed.add(o);
+
+                    }
+                }
+                firebaseCallback.onCallBack(completed);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return completed;
+    }
     public void checkCreditCode(String code,firebaseCallback<CreditCode> firebaseCallback){
         myRef.child("creditsCode").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -389,6 +424,7 @@ public class ConsumerDatabase {
     public void putUserProfile(User user){
         user.id = mAuth.getUid();
         Uri file = Uri.parse(user.imageUri);
+
         StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
         profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
