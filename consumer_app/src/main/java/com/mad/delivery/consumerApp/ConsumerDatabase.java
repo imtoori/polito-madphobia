@@ -482,14 +482,14 @@ public class ConsumerDatabase {
     }
 
 
-    public void updateCreditCustomer(Integer i,firebaseCallback<Boolean> firebaseCallback){
+    public void updateCreditCustomer(Double i,firebaseCallback<Boolean> firebaseCallback){
        myRef.child("users").child("customers").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener(){
 
 
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                if (dataSnapshot.hasChild("profile")) {
-                   Integer credit = dataSnapshot.child("profile").child("credit").getValue(Integer.class);
+                   Double credit = dataSnapshot.child("profile").child("credit").getValue(Double.class);
                    setValueCredit(credit+i);
                    firebaseCallback.onCallBack(true);
                }
@@ -508,7 +508,7 @@ public class ConsumerDatabase {
 
     }
 
-    public void setValueCredit(Integer i){
+    public void setValueCredit(Double i){
         myRef.child("users").child("customers").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
     }
 

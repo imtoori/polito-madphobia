@@ -52,8 +52,6 @@ public class OrderInfoActivity extends AppCompatActivity {
         biker_note.setText("note biker bla bla");
         client_note.setText("bla bla bla");
 
-
-
         RecyclerView recyclerView = findViewById(R.id.rv_orders);
         SummaryOrdersAdapter summaryordersAdapter = new SummaryOrdersAdapter(order.products);
         recyclerView.hasFixedSize();

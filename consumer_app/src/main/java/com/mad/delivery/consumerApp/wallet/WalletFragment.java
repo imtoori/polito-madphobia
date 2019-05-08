@@ -128,7 +128,7 @@ public class WalletFragment extends Fragment {
                 ConsumerDatabase.getInstance().checkCreditCode("TO10", new firebaseCallback<CreditCode>() {
                     @Override
                     public void onCallBack(CreditCode item) {
-                        Integer val = item.value;
+                        Double val = item.value;
                          ConsumerDatabase.getInstance().updateCreditCustomer(item.value, new firebaseCallback<Boolean>() {
                              @Override
                              public void onCallBack(Boolean item) {

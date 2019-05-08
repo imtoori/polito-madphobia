@@ -2,6 +2,7 @@ package com.mad.delivery.resources;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.firebase.database.Exclude;
 
@@ -40,8 +41,9 @@ public class Order implements Parcelable {
         this.restaurant = r;
         this.orderFor = orderFor;
         this.paymentMethod = paymentMethod;
-        this.totalPrice = 0.0;
-        products.forEach(p -> totalPrice += p.price);
+//        products.forEach(p->Log.d("MADD",p.name+" "+p.quantity + " " + p.price));
+        this.totalPrice=0.0;
+        products.forEach(p->this.totalPrice+=p.price*p.quantity);
 
     }
 

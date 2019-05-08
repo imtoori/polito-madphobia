@@ -118,7 +118,23 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                     public void onCallBack(User item) {
                         if(item!=null && item.lastName!=null){
                             order =new Order(item,ConsumerDatabase.getInstance().getRestaurantInLocal(),products,"","cash");
-                            ConsumerDatabase.getInstance().putOrder(order);
+                            if(order.totalPrice<=item.credit) {
+                                ConsumerDatabase.getInstance().putOrder(order);
+                                ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
+                                    @Override
+                                    public void onCallBack(Boolean item) {
+                                        if(item)
+                                            Log.d("TAG","Transazione Avvenuta con successo");
+                                        else
+                                            Log.d("TAG","Transazione NON Avvenuta con successo");
+
+
+                                    }
+                                });
+                            }
+                            else
+                                Log.d("TAG","Non hai abbastanza credito");
+
                         }
                         else
                             Log.d("TAG","Ti devi registrare");
