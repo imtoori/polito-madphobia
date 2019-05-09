@@ -77,6 +77,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         setContentView(R.layout.basket_layout);
         toolbar = findViewById(R.id.toolbar);
         setTitle(getResources().getString(R.string.Basket_toolbar));
+        payment_met ="cash";
         setSupportActionBar(toolbar);
         order_code = findViewById(R.id.order_code);
         subtot = findViewById(R.id.subtotal_price);
@@ -89,7 +90,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         rg = findViewById(R.id.rg_method);
         pm = findViewById(R.id.pm);
         credit = findViewById(R.id.credit);
-        payment_met = "cash";
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -147,6 +147,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                         @Override
                         public void onCallBack(User item) {
                             if (item != null && item.lastName != null) {
+
                                 order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", payment_met);
                                 order.orderDate = new DateTime().toString();
                                 order.orderFor = datetime.toString();

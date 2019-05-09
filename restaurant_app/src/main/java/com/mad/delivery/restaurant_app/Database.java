@@ -17,6 +17,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
@@ -427,9 +428,7 @@ final public class Database {
 
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-
-                        // item.id = snapshot.getKey();
-
+                        if(snapshot.getValue(Biker.class).status=true)
                         bikerIds.add(snapshot.getKey());
 
 
