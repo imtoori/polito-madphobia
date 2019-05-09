@@ -18,6 +18,7 @@ import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
+import com.squareup.picasso.Picasso;
 
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
@@ -45,7 +46,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 public void onCallBack(Restaurant item) {
                     holder.nameRestaurant.setText(item.name);
                     if(item.imageUri != null)
-                        holder.imgRestaurant.setImageURI(Uri.parse(item.imageUri));
+                        Picasso.get().load(item.previewInfo.imageDownload).into(holder.imgRestaurant);
 
                 }
             });
@@ -59,6 +60,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
+                        ConsumerDatabase.getInstance().setOrder(holder.order);
                         mListener.openOrder();
                     }
                 }

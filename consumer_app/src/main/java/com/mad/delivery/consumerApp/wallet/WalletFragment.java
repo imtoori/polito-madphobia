@@ -109,11 +109,10 @@ public class WalletFragment extends Fragment {
         orders.add(o);
         orders.add(o);*/
 
-        ConsumerDatabase.getInstance().getCompletedOrders(new firebaseCallback<List<Order>>() {
+        ConsumerDatabase.getInstance().getAllCostumerOrders(new firebaseCallback<List<Order>>() {
             @Override
             public void onCallBack(List<Order> item) {
                 OrdersAdapter ordersAdapter = new OrdersAdapter(item, mListener);
-
                 recyclerView.hasFixedSize();
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(ordersAdapter);
@@ -129,11 +128,11 @@ public class WalletFragment extends Fragment {
                 ConsumerDatabase.getInstance().checkCreditCode("TO10", new firebaseCallback<CreditCode>() {
                     @Override
                     public void onCallBack(CreditCode item) {
-                        Integer val = item.value;
+                        Double val = item.value;
                          ConsumerDatabase.getInstance().updateCreditCustomer(item.value, new firebaseCallback<Boolean>() {
                              @Override
                              public void onCallBack(Boolean item) {
-                                 if(item==true){
+                                 if(item){
                                      Log.d("MADD","Il tuo conto è stato aumentato di "+val);
                                  }
                                  else

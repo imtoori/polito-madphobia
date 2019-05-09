@@ -52,6 +52,15 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     EditText notes;
     Order order;
 
+    Customer customer;
+    Double priceD;
+    Double fee;
+    Double totD;
+
+
+    interface ClickListener {
+        void onItemClicked(Double position);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,23 +91,37 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
 
         });
 
-        order_code.setText("#123456");
-        subtot.setText("0.00");
-        del_fee.setText("0.00");
-        tot.setText("0.00");
 
 
         List<Product> products = new ArrayList<>();
 
         ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name,value,item.price)));
 
-
+         priceD=0.0;
+         fee =0.0;
+        products.forEach(p-> priceD+=p.price*p.quantity);
+        order_code.setText("#123456");
+        totD=priceD+fee;
+        subtot.setText(priceD.toString());
+        del_fee.setText(fee.toString());
+        tot.setText(totD.toString());
 
         RecyclerView recyclerView = findViewById(R.id.rv_orders);
-        BasketAdapter basketAdapter = new BasketAdapter(products);
+        BasketAdapter basketAdapter = new BasketAdapter(products, new ClickListener() {
+            @Override
+            public void onItemClicked(Double position) {
+                priceD-=position;
+                subtot.setText(priceD.toString());
+                totD=priceD+fee;
+                tot.setText(totD.toString());
+
+
+            }
+        });
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(basketAdapter);
+
 
 
         time.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +138,23 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                     public void onCallBack(User item) {
                         if(item!=null && item.lastName!=null){
                             order =new Order(item,ConsumerDatabase.getInstance().getRestaurantInLocal(),products,"","cash");
-                            ConsumerDatabase.getInstance().putOrder(order);
+                            if(order.totalPrice<=item.credit) {
+                                ConsumerDatabase.getInstance().putOrder(order);
+                                ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
+                                    @Override
+                                    public void onCallBack(Boolean item) {
+                                        if(item)
+                                            Log.d("TAG","Transazione Avvenuta con successo");
+                                        else
+                                            Log.d("TAG","Transazione NON Avvenuta con successo");
+
+
+                                    }
+                                });
+                            }
+                            else
+                                Log.d("TAG","Non hai abbastanza credito");
+
                         }
                         else
                             Log.d("TAG","Ti devi registrare");

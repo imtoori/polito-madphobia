@@ -128,7 +128,6 @@ public class ProfileActivity extends AppCompatActivity {
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if (imgProfile.getDrawable() == null) {
-            Log.d("IMAGENAME",u.imageName);
             Database.getInstance().getImage(u.imageName, "/images/profile/", new FirebaseCallbackItem<Uri>() {
                 @Override
                 public void onCallback(Uri item) {

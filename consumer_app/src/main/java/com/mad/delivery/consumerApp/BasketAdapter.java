@@ -18,11 +18,13 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
 
     private List<Product> products;
     private View view;
+    Basket.ClickListener listener;
 
 
 
-    public BasketAdapter(List<Product> items) {
+    public BasketAdapter(List<Product> items, Basket.ClickListener listener) {
         products = items;
+        this.listener = listener;
 
     }
 
@@ -37,7 +39,17 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
         holder.product = products.get(position);
         holder.price.setText(String.valueOf(holder.product.price));
         holder.name.setText(holder.product.name);
+        holder.delete.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                listener.onItemClicked(products.get(position).quantity*products.get(position).price);
 
+                products.remove(position);
+                notifyDataSetChanged();
+            }
+        });
 
     }
 

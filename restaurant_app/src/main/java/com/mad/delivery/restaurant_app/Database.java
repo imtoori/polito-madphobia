@@ -319,8 +319,7 @@ final public class Database {
         });
     }
     public void getImage(String imageName,String path,Callback UriImg) {
-        if (imageName != null && !imageName.equals("")) {
-            Log.d("name", imageName);
+        if (imageName==null||!imageName.equals("")) {
             // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
             profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

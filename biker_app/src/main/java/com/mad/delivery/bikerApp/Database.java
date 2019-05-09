@@ -177,8 +177,7 @@ final public class Database {
     }
     public void getImage(String imageName,String path,FirebaseCallbackItem<Uri> UriImg) {
 
-        if (!imageName.equals("")) {
-            Log.d("name", imageName);
+        if (imageName==null||!imageName.equals("")) {
             // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
             profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -222,7 +221,7 @@ final public class Database {
                 });
             }
             });
-        profileRef.setValue("profile");
+     //   profileRef.setValue("profile");
         profileRef.child("profile").setValue(user);
        // user.imageDownload = storageRef.child("images/profile/" + user.imageName).getDownloadUrl().toString();
 
