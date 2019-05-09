@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp.search;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
+        Log.d("MADDD","Sono qui "+holder.category.name );
         Picasso.get().load(holder.category.imageURL).into(holder.imageCategory);
         holder.cvCategory.setBackground(holder.imageCategory.getDrawable());
         List<String> categories = new ArrayList<>();
@@ -63,6 +65,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         public final TextView nameCategory;
         public final CardView cvCategory;
         public final ImageView imageCategory;
+        public final boolean setted;
         public RestaurantCategory category;
 
         public ViewHolder(View view) {
@@ -71,6 +74,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             nameCategory = mView.findViewById(R.id.tv_name_category);
             cvCategory = mView.findViewById(R.id.cv_category);
             imageCategory = mView.findViewById(R.id.tv_image_category);
+            setted = false;
 
         }
 

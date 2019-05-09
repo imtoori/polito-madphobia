@@ -90,8 +90,8 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ConsumerDatabase.getInstance().getRestaurantCategories(new ConsumerDatabase.onRestaurantCategoryReceived() {
+        //categories.clear();
+        ConsumerDatabase.getInstance().getRestaurantCategories(categories,new ConsumerDatabase.onRestaurantCategoryReceived() {
             @Override
             public void childAdded(RestaurantCategory rc) {
                 categories.add(rc);

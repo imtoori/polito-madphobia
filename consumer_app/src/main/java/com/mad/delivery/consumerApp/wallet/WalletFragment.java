@@ -88,40 +88,12 @@ public class WalletFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.orders_rv);
         EditText Creditcode=v.findViewById(R.id.credit_code);
         totalCredit= v.findViewById(R.id.total_credit);
-
+git
         checkCredit();
 
 
         List<Order> orders= new ArrayList<>();
         Log.d("MAD","Sono nel wallet!");
-       // ConsumerDatabase.getInstance().updateCreditCustomer(20);
-        // TODO remove items here when persistence is implemented
-        //TODO usare metodo getCompletedOrders per farsi restituire gli ordini completati del cliente
-    /*    List<Product> products = new ArrayList<>();
-        Product p1 = new Product("Prodotto 1", 20, 18.55);
-        Product p2 = new Product("Prodotto 2", 10, 17.01);
-        products.add(p1);
-        products.add(p2);
-        Restaurant rest= new Restaurant();
-        rest.name = "Pinco";
-        rest.description = "This is a description";
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
-        DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
-        DateTime to = DateTime.now();
-        Order o = new Order(new User(),rest,products, from.toString(), "credit");
-        o.id = "1234";
-        o.status = OrderStatus.pending;
-        o.orderDate = to.toString();
-        o.estimatedDelivery = to.toString();
-        o.clientNotes = "Notes added by client";
-        o.serverNotes="Notes added by restaurant";
-
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);*/
 
         ConsumerDatabase.getInstance().getAllCostumerOrders(new firebaseCallback<List<Order>>() {
             @Override
