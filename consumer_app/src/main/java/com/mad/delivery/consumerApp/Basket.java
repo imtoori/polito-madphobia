@@ -171,7 +171,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
 
                                         }
                                     });
-                                } else if (payment_met == "cash") {
+                                } else if (payment_met.equals("cash")) {
                                     ConsumerDatabase.getInstance().putOrder(order);
                                     Log.i("TAG", "Acquisto effettuato ");
                                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

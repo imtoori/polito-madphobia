@@ -31,7 +31,7 @@ public class RestaurantInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_info);
-        PreviewInfo previewInfo = new PreviewInfo();
+        PreviewInfo previewInfo;
         Toolbar toolbar = findViewById(R.id.toolbar);
         collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
