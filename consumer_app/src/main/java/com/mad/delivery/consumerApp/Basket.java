@@ -146,18 +146,14 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         payment.setOnClickListener(new View.OnClickListener() {
                                        public void onClick(View v) {
                                            if (checkConstraints()) {
-                                               Log.i("TAG", "qui1");
                                                ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
                                                    @Override
                                                    public void onCallBack(User item) {
-                                                       Log.i("TAG", "qui2");
                                                        if (item != null && item.lastName != null) {
-                                                           Log.i("TAG", "qui3");
                                                            order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, address.toString(), payment_met);
                                                            order.orderDate = new DateTime().toString();
                                                            order.orderFor = datetime.toString();
                                                            if (order.totalPrice <= item.credit && payment_met.equals("credit")) {
-                                                               Log.i("TAG", "qui4");
                                                                ConsumerDatabase.getInstance().putOrder(order);
                                                                ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
                                                                    @Override
