@@ -50,7 +50,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         myRef = db.getReference();
         setContentView(R.layout.activity_home);
         myToolbar = findViewById(R.id.mainActivityToolbar);
-        setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
         setTitle(getResources().getString(R.string.app_customer_name));
         fm = getSupportFragmentManager();

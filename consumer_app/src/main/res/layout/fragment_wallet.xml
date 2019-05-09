@@ -33,14 +33,25 @@ tools:context=".wallet.WalletFragment">
                 android:layout_marginTop="8dp"
                 android:text="@string/Credit"
                 android:textSize="@dimen/bigTitle" />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
                 android:text="@string/Total"
                 android:textSize="@dimen/description" />
+            <TextView
+                android:id="@+id/total_credit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/null_value"
+                android:textSize="@dimen/description" />
+
+        </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,7 +74,7 @@ tools:context=".wallet.WalletFragment">
                     android:hint="@string/enter_code"
                     android:textSize="@dimen/description"/>
 
-                <ImageView
+                <ImageButton
                     android:id="@+id/done_code"
                     android:layout_width="35dp"
                     android:layout_height="match_parent"
@@ -72,8 +83,9 @@ tools:context=".wallet.WalletFragment">
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
                     android:clickable="true"
+                    android:background="@color/colorAccent"
                     android:contentDescription="@string/photo_toolbar"
-                    app:srcCompat="@drawable/ic_done_black" />
+                    app:srcCompat="@drawable/ic_done" />
 
             </LinearLayout>
         </LinearLayout>

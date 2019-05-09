@@ -60,6 +60,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/order_summary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/order_summary"
@@ -227,6 +228,7 @@
                         android:textSize="@dimen/description" />
 
                     <TextView
+                        android:id="@+id/pm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -252,7 +254,8 @@
                             android:id="@+id/credit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/Credit" />
+                            android:text="@string/Credit"
+                            android:visibility="visible"/>
                     </RadioGroup>
 
 

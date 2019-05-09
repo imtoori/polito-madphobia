@@ -199,8 +199,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     Log.d("MADAPP", "imageProfileUri on ActivityResult: "+imageProfileUri.toString());
                     if (imageProfileUri != null)
                         Log.d("MADAPP", "i am here");
-                        imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                        imgProfile.setImageURI(imageProfileUri);
+                    imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
+                    imgProfile.setImageURI(imageProfileUri);
                 }
                 break;
             case GALLERY_CODE:
