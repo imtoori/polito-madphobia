@@ -51,9 +51,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     Button payment;
     EditText notes;
     Order order;
-    Customer customer;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

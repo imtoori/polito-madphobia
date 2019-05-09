@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,10 +17,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +40,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,8 +49,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Menu menu;
+    FirebaseUser currentUser;
     Restaurant mUser;
     FloatingActionButton btnCamera;
     EditText name;
@@ -64,12 +70,15 @@ public class EditProfileActivity extends AppCompatActivity {
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
     private FirebaseAuth mAuth;
+    private ChipGroup chipGroup;
+    private Set<String> categories;
+    private Set<String> myCategories;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageProfileUri =Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
-        myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
+        myToolbar = findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,6 +96,16 @@ public class EditProfileActivity extends AppCompatActivity {
         imgProfile = findViewById(R.id.editprofile_imgprofile);
         openingTime = findViewById(R.id.openinghours_et);
         btnCamera = findViewById(R.id.editprofile_btncamera);
+        chipGroup = findViewById(R.id.chip_group);
+        categories = new HashSet<>();
+        myCategories = new HashSet<>();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,13 +118,60 @@ public class EditProfileActivity extends AppCompatActivity {
         } else {
             getProfileData();
         }
+
+        CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Chip chip = (Chip) buttonView;
+                if(isChecked) {
+                    categories.add(chip.getText().toString().toLowerCase());
+                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    myCategories.add(chip.getText().toString().toLowerCase());
+                } else {
+                    categories.removeIf(c -> c.equals(chip.getText().toString().toLowerCase()));
+                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    myCategories.remove(chip.getText().toString().toLowerCase());
+                }
+
+            }
+        };
+
+        Database.getInstance().getCategories(currentUser.getUid(), set -> {
+            myCategories = new HashSet<>(set);
+        });
+        Database.getInstance().getCategories(set -> {
+            set.stream().forEach(n -> {
+                Chip chip = new Chip(this);
+                chip.setText(n);
+                chip.setChipBackgroundColorResource(R.color.colorWhite);
+                chip.setChipStrokeWidth((float) 0.1);
+                chip.setChipStrokeColorResource(R.color.colorPrimary);
+                chip.setCheckable(true);
+                chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                chip.setRippleColorResource(R.color.colorPrimaryDark);
+                chip.setCheckedIconVisible(false);
+                chip.setChipIconTintResource(R.color.colorPrimary);
+                if(myCategories.contains(n.toLowerCase())) {
+                    chip.setChecked(true);
+                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                }
+                chip.setOnCheckedChangeListener(filterChipListener);
+                chipGroup.addView(chip);
+            });
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -215,7 +281,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-
         Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
             @Override
             public void onCallbak(Restaurant user) {
@@ -231,7 +296,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private void setProfileData() {
 
         Restaurant user  = new Restaurant(name.getText().toString(),
-
                 emailAddress.getText().toString(),
                 description.getText().toString(),
                 phoneNumber.getText().toString(),
@@ -243,6 +307,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 imageProfileUri.toString(),
                 imageProfileUri.getLastPathSegment(),
                 openingTime.getText().toString());
+        user.id = mAuth.getCurrentUser().getUid();
+        user.previewInfo.id = user.id;
+        for(String c : myCategories) {
+            user.categories.put(c.toLowerCase(), true);
+
+        }
+        Database.getInstance().putRestaurantIntoCategory(user.id, myCategories);
+
         Database.getInstance().putRestaurantProfile(user);
 
     }
@@ -375,7 +447,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public boolean checkConstraints() {
         boolean result = true;
-        String nameString = "[a-zA-Z]+";
+        String nameString = "[a-zA-Z0-9\'\\s]+";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString = "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
