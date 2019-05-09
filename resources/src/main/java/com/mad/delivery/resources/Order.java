@@ -14,7 +14,6 @@ import java.util.List;
 public class Order implements Parcelable {
     public String id;
     public User client;
-    @Exclude
     public Restaurant restaurant;
     public List<Product> products;
     public OrderStatus status;
@@ -29,15 +28,13 @@ public class Order implements Parcelable {
     public String bikerId;
     public String clientId;
 
-
     public Order(){}
-
 
     public Order(User u, Restaurant r, List<Product> products, String orderFor, String paymentMethod) {
         this.client = u;
         this.products = products;
         status = OrderStatus.pending;
-        orderDate = MyDateFormat.parse(new DateTime());
+        orderDate = new DateTime().toString();
         this.restaurant = r;
         this.orderFor = orderFor;
         this.paymentMethod = paymentMethod;
@@ -62,11 +59,13 @@ public class Order implements Parcelable {
         this.totalPrice = other.totalPrice;
     }
 
+
     protected Order(Parcel in) {
         id = in.readString();
         client = in.readParcelable(User.class.getClassLoader());
         restaurant = in.readParcelable(Restaurant.class.getClassLoader());
         products = in.createTypedArrayList(Product.CREATOR);
+        status = (OrderStatus) in.readSerializable();
         orderDate = in.readString();
         orderFor = in.readString();
         estimatedDelivery = in.readString();
@@ -89,6 +88,7 @@ public class Order implements Parcelable {
         dest.writeParcelable(client, flags);
         dest.writeParcelable(restaurant, flags);
         dest.writeTypedList(products);
+        dest.writeSerializable(status);
         dest.writeString(orderDate);
         dest.writeString(orderFor);
         dest.writeString(estimatedDelivery);
@@ -236,14 +236,6 @@ public class Order implements Parcelable {
         this.serverNotes = serverNotes;
     }
 
-    public String getRestaurantId() {
-        return restaurantId;
-    }
-
-    public void setRestaurantId(String restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -260,6 +252,34 @@ public class Order implements Parcelable {
         this.totalPrice = totalPrice;
     }
 
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public String getBikerId() {
+        return bikerId;
+    }
+
+    public void setBikerId(String bikerId) {
+        this.bikerId = bikerId;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public static Creator<Order> getCREATOR() {
+        return CREATOR;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -273,7 +293,11 @@ public class Order implements Parcelable {
                 ", estimatedDelivery='" + estimatedDelivery + '\'' +
                 ", clientNotes='" + clientNotes + '\'' +
                 ", serverNotes='" + serverNotes + '\'' +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", totalPrice=" + totalPrice +
                 ", restaurantId='" + restaurantId + '\'' +
+                ", bikerId='" + bikerId + '\'' +
+                ", clientId='" + clientId + '\'' +
                 '}';
     }
 }

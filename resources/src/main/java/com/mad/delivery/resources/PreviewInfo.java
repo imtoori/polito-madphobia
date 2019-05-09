@@ -26,8 +26,31 @@ public class PreviewInfo implements Parcelable {
             scoreValue = in.readInt();
         }
         imageURL = in.readString();
+        imageDownload = in.readString();
         deliveryCost = in.readInt();
         minOrderCost = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        if (scoreValue == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(scoreValue);
+        }
+        dest.writeString(imageURL);
+        dest.writeString(imageDownload);
+        dest.writeInt(deliveryCost);
+        dest.writeInt(minOrderCost);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<PreviewInfo> CREATOR = new Creator<PreviewInfo>() {
@@ -42,12 +65,28 @@ public class PreviewInfo implements Parcelable {
         }
     };
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getScoreValue() {
@@ -66,54 +105,12 @@ public class PreviewInfo implements Parcelable {
         this.imageURL = imageURL;
     }
 
-    public String getDescription() {
-        return description;
+    public String getImageDownload() {
+        return imageDownload;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "PreviewInfo{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", scoreValue=" + scoreValue +
-                ", imageURL='" + imageURL + '\'' +
-                ", deliveryCost=" + deliveryCost +
-                ", minOrderCost=" + minOrderCost +
-                '}';
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(description);
-        if (scoreValue == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(scoreValue);
-        }
-        parcel.writeString(imageURL);
-        parcel.writeInt(deliveryCost);
-        parcel.writeInt(minOrderCost);
+    public void setImageDownload(String imageDownload) {
+        this.imageDownload = imageDownload;
     }
 
     public int getDeliveryCost() {
@@ -130,5 +127,23 @@ public class PreviewInfo implements Parcelable {
 
     public void setMinOrderCost(int minOrderCost) {
         this.minOrderCost = minOrderCost;
+    }
+
+    public static Creator<PreviewInfo> getCREATOR() {
+        return CREATOR;
+    }
+
+    @Override
+    public String toString() {
+        return "PreviewInfo{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", scoreValue=" + scoreValue +
+                ", imageURL='" + imageURL + '\'' +
+                ", imageDownload='" + imageDownload + '\'' +
+                ", deliveryCost=" + deliveryCost +
+                ", minOrderCost=" + minOrderCost +
+                '}';
     }
 }

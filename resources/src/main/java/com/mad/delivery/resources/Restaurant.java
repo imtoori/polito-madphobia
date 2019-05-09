@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Restaurant implements Parcelable  {
+public class Restaurant implements Parcelable {
     public PreviewInfo previewInfo;
     public String name;
     public String phoneNumber;
@@ -30,6 +30,55 @@ public class Restaurant implements Parcelable  {
     public String imageUri;
     public String token;
     public Integer minOrderCost, deliveryCost;
+
+    public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = emailAddress;
+        this.description = description;
+        this.road = road;
+        this.houseNumber = houseNumber;
+        this.doorPhone = doorPhone;
+        this.postCode = postCode;
+        this.city = city;
+        this.imageUri = imageUri;
+        this.imageName =imageName;
+        this.openingHours = openingTime;
+        categories = new HashMap<>();
+        menuItems = new HashMap<>();
+        previewInfo = new PreviewInfo();
+        previewInfo.name = this.name;
+        previewInfo.scoreValue = 0;
+        previewInfo.imageURL = "";
+        previewInfo.description = this.description;
+    }
+
+    public Restaurant(Restaurant other) {
+        this.name = other.name;
+        this.phoneNumber = other.phoneNumber;
+        this.email = other.email;
+        this.description = other.description;
+        this.road = other.road;
+        this.houseNumber = other.houseNumber;
+        this.doorPhone = other.doorPhone;
+        this.postCode = other.postCode;
+        this.city = other.city;
+        this.imageUri = other.imageUri;
+        this.openingHours = other.openingHours;
+        previewInfo = new PreviewInfo();
+        previewInfo.name = this.name;
+        previewInfo.scoreValue = 0;
+        previewInfo.imageURL = "";
+        previewInfo.description = this.description;
+    }
+
+    public Restaurant(String name) {
+        this.name = name;
+    }
+
+    public Restaurant() {
+        this.scoreValue = 0;
+    }
 
 
     protected Restaurant(Parcel in) {
@@ -120,55 +169,6 @@ public class Restaurant implements Parcelable  {
             return new Restaurant[size];
         }
     };
-
-    public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.email = emailAddress;
-        this.description = description;
-        this.road = road;
-        this.houseNumber = houseNumber;
-        this.doorPhone = doorPhone;
-        this.postCode = postCode;
-        this.city = city;
-        this.imageUri = imageUri;
-        this.imageName =imageName;
-        this.openingHours = openingTime;
-        categories = new HashMap<>();
-        menuItems = new HashMap<>();
-        previewInfo = new PreviewInfo();
-        previewInfo.name = this.name;
-        previewInfo.scoreValue = 0;
-        previewInfo.imageURL = "";
-        previewInfo.description = this.description;
-    }
-
-    public Restaurant(Restaurant other) {
-        this.name = other.name;
-        this.phoneNumber = other.phoneNumber;
-        this.email = other.email;
-        this.description = other.description;
-        this.road = other.road;
-        this.houseNumber = other.houseNumber;
-        this.doorPhone = other.doorPhone;
-        this.postCode = other.postCode;
-        this.city = other.city;
-        this.imageUri = other.imageUri;
-        this.openingHours = other.openingHours;
-        previewInfo = new PreviewInfo();
-        previewInfo.name = this.name;
-        previewInfo.scoreValue = 0;
-        previewInfo.imageURL = "";
-        previewInfo.description = this.description;
-    }
-
-    public Restaurant(String name) {
-        this.name = name;
-    }
-
-    public Restaurant() {
-        this.scoreValue = 0;
-    }
 
     public PreviewInfo getPreviewInfo() {
         return previewInfo;
@@ -338,30 +338,7 @@ public class Restaurant implements Parcelable  {
         this.deliveryCost = deliveryCost;
     }
 
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "previewInfo=" + previewInfo +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", registrationDate='" + registrationDate + '\'' +
-                ", email='" + email + '\'' +
-                ", description='" + description + '\'' +
-                ", road='" + road + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", doorPhone='" + doorPhone + '\'' +
-                ", postCode='" + postCode + '\'' +
-                ", city='" + city + '\'' +
-                ", openingHours='" + openingHours + '\'' +
-                ", imageName='" + imageName + '\'' +
-                ", id='" + id + '\'' +
-                ", scoreValue=" + scoreValue +
-                ", categories=" + categories +
-                ", menuItems=" + menuItems +
-                ", imageUri='" + imageUri + '\'' +
-                ", token='" + token + '\'' +
-                ", minOrderCost=" + minOrderCost +
-                ", deliveryCost=" + deliveryCost +
-                '}';
+    public static Creator<Restaurant> getCREATOR() {
+        return CREATOR;
     }
 }

@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class User implements Parcelable,Serializable {
+public class User implements Serializable, Parcelable {
     public String name;
     public String lastName;
     public String phoneNumber;
@@ -24,22 +24,6 @@ public class User implements Parcelable,Serializable {
     public String id;
     public String imageName;
     public Integer credit;
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public Integer getCredit() {
-        return credit;
-    }
-
-    public void setCredit(Integer credit) {
-        this.credit = credit;
-    }
 
     public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String imageName) {
         this.name = name;
@@ -76,6 +60,7 @@ public class User implements Parcelable,Serializable {
         this.imageName = u.imageName;
     }
 
+
     protected User(Parcel in) {
         name = in.readString();
         lastName = in.readString();
@@ -98,6 +83,35 @@ public class User implements Parcelable,Serializable {
         }
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(lastName);
+        dest.writeString(phoneNumber);
+        dest.writeString(email);
+        dest.writeString(description);
+        dest.writeString(imageUri);
+        dest.writeString(registrationDate);
+        dest.writeString(road);
+        dest.writeString(houseNumber);
+        dest.writeString(doorPhone);
+        dest.writeString(postCode);
+        dest.writeString(city);
+        dest.writeString(id);
+        dest.writeString(imageName);
+        if (credit == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(credit);
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -109,6 +123,27 @@ public class User implements Parcelable,Serializable {
             return new User[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", imageUri='" + imageUri + '\'' +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", road='" + road + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", doorPhone='" + doorPhone + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", city='" + city + '\'' +
+                ", id='" + id + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", credit=" + credit +
+                '}';
+    }
 
     public String getName() {
         return name;
@@ -214,23 +249,23 @@ public class User implements Parcelable,Serializable {
         this.id = id;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getImageName() {
+        return imageName;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(name);
-        parcel.writeString(lastName);
-        parcel.writeString(phoneNumber);
-        parcel.writeString(email);
-        parcel.writeString(description);
-        parcel.writeString(road);
-        parcel.writeString(houseNumber);
-        parcel.writeString(doorPhone);
-        parcel.writeString(postCode);
-        parcel.writeString(city);
-        parcel.writeString(imageUri);
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public Integer getCredit() {
+        return credit;
+    }
+
+    public void setCredit(Integer credit) {
+        this.credit = credit;
+    }
+
+    public static Creator<User> getCREATOR() {
+        return CREATOR;
     }
 }

@@ -15,23 +15,52 @@ public class Product implements Parcelable {
         this.price = price;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "name='" + name + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                '}';
+    public Product() {}
+
+    protected Product(Parcel in) {
+        name = in.readString();
+        quantity = in.readInt();
+        price = in.readDouble();
     }
 
-    public Product(Parcel in) {
-        this.name = in.readString();
-        this.quantity = in.readInt();
-        this.price = in.readDouble();
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeInt(quantity);
+        dest.writeDouble(price);
     }
-    public  Product(){}
-    public void setQuantity(int newQuantity) {
-        this.quantity = newQuantity;
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double getPrice() {
@@ -42,27 +71,17 @@ public class Product implements Parcelable {
         this.price = price;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public static Creator<Product> getCREATOR() {
+        return CREATOR;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeInt(quantity);
-        parcel.writeDouble(price);
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
     }
-
-    public static final Creator<Product> CREATOR
-            = new Creator<Product>() {
-        public Product createFromParcel(Parcel in) {
-            return new Product(in);
-        }
-
-        public Product[] newArray(int size) {
-            return new Product[size];
-        }
-    };
 }
 

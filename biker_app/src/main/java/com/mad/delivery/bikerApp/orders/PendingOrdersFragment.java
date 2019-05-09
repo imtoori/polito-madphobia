@@ -51,7 +51,6 @@ public class PendingOrdersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rl_pending);
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
-        Log.d("MADAPP", "Pending: onCreateView called");
         orders = new ArrayList<>();
      //   showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
@@ -70,8 +69,6 @@ public class PendingOrdersFragment extends Fragment {
                 if(list.isEmpty())
                     showEmptyFolder();
                 else {
-                    Log.d("CALL", list.toString());
-                    list.forEach(o->Log.d("!!!ORDINE: ",o.toString()));
                     orders.addAll(list);
                     //ordersAdapter.orders = orders;
                     ordersAdapter.notifyDataSetChanged();
@@ -90,7 +87,6 @@ public class PendingOrdersFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnPendingOrderListener");
         }
-
     }
 
     @Override

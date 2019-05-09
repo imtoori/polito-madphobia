@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Product;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
@@ -138,6 +139,8 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                     public void onCallBack(User item) {
                         if(item!=null && item.lastName!=null){
                             order =new Order(item,ConsumerDatabase.getInstance().getRestaurantInLocal(),products,"","cash");
+                            order.orderDate = new DateTime().toString();
+                            order.orderFor = new DateTime(time.getText().toString()).toString();
                             if(order.totalPrice<=item.credit) {
                                 ConsumerDatabase.getInstance().putOrder(order);
                                 ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
