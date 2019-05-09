@@ -143,57 +143,59 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
             }
         });
 
-
         payment.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (checkConstraints()) {
-                    ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
-                        @Override
-                        public void onCallBack(User item) {
-                            if (item != null && item.lastName != null) {
-                                order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", "cash");
-                                order.orderDate = new DateTime().toString();
-                                order.orderFor = new DateTime(time.getText().toString()).toString();
-                                if (order.totalPrice <= item.credit) {
-                                    ConsumerDatabase.getInstance().putOrder(order);
-                                    ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
-                                        @Override
-                                        public void onCallBack(Boolean item) {
-                                            if (item) {
-                                                Log.d("TAG", "Transazione Avvenuta con successo");
-                                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                                startActivity(intent);
-                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                            } else {
-                                                Log.d("TAG", "Transazione NON Avvenuta con successo");
-                                            }
+                                       public void onClick(View v) {
+                                           if (checkConstraints()) {
+                                               Log.i("TAG", "qui1");
+                                               ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
+                                                   @Override
+                                                   public void onCallBack(User item) {
+                                                       Log.i("TAG", "qui2");
+                                                       if (item != null && item.lastName != null) {
+                                                           Log.i("TAG", "qui3");
+                                                           order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, address.toString(), payment_met);
+                                                           order.orderDate = new DateTime().toString();
+                                                           order.orderFor = datetime.toString();
+                                                           if (order.totalPrice <= item.credit && payment_met.equals("credit")) {
+                                                               Log.i("TAG", "qui4");
+                                                               ConsumerDatabase.getInstance().putOrder(order);
+                                                               ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
+                                                                   @Override
+                                                                   public void onCallBack(Boolean item) {
+                                                                       if (item) {
+                                                                           Log.i("TAG", "Transazione Avvenuta con successo");
+                                                                           Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                                                           startActivity(intent);
+                                                                           overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                                       } else
+                                                                           Log.i("TAG", "Transazione NON Avvenuta con successo");
 
 
-                                        }
-                                    });
-                                } else if (payment_met == "cash") {
-                                    ConsumerDatabase.getInstance().putOrder(order);
-                                    Log.i("TAG", "Acquisto effettuato ");
-                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                    startActivity(intent);
-                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                } else {
-                                    Log.i("TAG", "Non hai abbastanza credito");
-                                }
+                                                                   }
+                                                               });
+                                                           } else if (payment_met.equals("cash")) {
+                                                               ConsumerDatabase.getInstance().putOrder(order);
+                                                               Log.i("TAG", "Acquisto effettuato ");
+                                                               Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                                               startActivity(intent);
+                                                               overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                           } else
 
+                                                               Log.i("TAG", "Non hai abbastanza credito");
+                                                       } else {
+                                                           Log.i("TAG", "Ti devi registrare");
+                                                           Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                                           startActivity(intent);
+                                                           overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                       }
+                                                   }
+                                               });
 
-                            } else {
-                                Log.i("TAG", "Ti devi registrare");
-                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                            }
+                                           }
+                                       }
+                                   }
+        );
 
-                        }
-                    });
-                }
-            }
-        });
     }
 
     @Override
@@ -239,7 +241,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
 
     public boolean checkConstraints() {
         boolean result = true;
-        String checkString = "[a-zA-Z]+";
+        String checkString = "([A-Za-z0-9\'\\s-])+";
         String checkTime = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
 
         if (priceD <= 0) {
@@ -254,10 +256,11 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         if (!time.getText().toString().matches(checkTime)) {
             time.setError(getResources().getString(R.string.check_time));
             result = false;
-        } else
+        }
+        else
             time.setError(null);
 
-        if (payment_met == "credit") {
+        if (payment_met.equals("credit")) {
             Log.i("TAG", "crdito");
             ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
                 @Override
@@ -266,14 +269,20 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                         credit.setEnabled(false);
                         rg.check(R.id.cash);
                         payment_met = "cash";
-
+                        Log.i("TAG", "change pm");
                     }
+                    else if(user==null)
+                        Log.i("TAG", "user null");
+                    else
+                        Log.i("TAG", "credito sufficente");
+
 
                 }
 
             });
         }
 
+    Log.i("TAG", "result="+result);
         return result;
 
     }
