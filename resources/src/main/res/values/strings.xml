@@ -33,7 +33,7 @@
     <string name="city">City</string>
     <string name="desc_desc">A short description about you</string>
     <string name="description">Description</string>
-
+    <string name="select_categories">Select categories</string>
     <string name="max_length_line">60</string>
     <string name="max_length_description">180</string>
     <string name="max_length_phone">15</string>

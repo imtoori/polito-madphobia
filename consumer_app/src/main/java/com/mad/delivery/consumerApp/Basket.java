@@ -57,6 +57,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     Button payment;
     EditText notes;
     Order order;
+
     Customer customer;
     Double priceD;
     Double fee;

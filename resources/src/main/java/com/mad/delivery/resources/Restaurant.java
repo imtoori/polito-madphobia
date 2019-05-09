@@ -337,4 +337,31 @@ public class Restaurant implements Parcelable  {
     public void setDeliveryCost(Integer deliveryCost) {
         this.deliveryCost = deliveryCost;
     }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "previewInfo=" + previewInfo +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", road='" + road + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", doorPhone='" + doorPhone + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", city='" + city + '\'' +
+                ", openingHours='" + openingHours + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", id='" + id + '\'' +
+                ", scoreValue=" + scoreValue +
+                ", categories=" + categories +
+                ", menuItems=" + menuItems +
+                ", imageUri='" + imageUri + '\'' +
+                ", token='" + token + '\'' +
+                ", minOrderCost=" + minOrderCost +
+                ", deliveryCost=" + deliveryCost +
+                '}';
+    }
 }

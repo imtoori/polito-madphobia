@@ -20,6 +20,7 @@ import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.resources.RestaurantCategory;
 
 import org.joda.time.DateTimeComparator;
 
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 final public class Database {
@@ -36,6 +39,7 @@ final public class Database {
     DatabaseReference menuItemsRef;
     DatabaseReference ordersRef;
     DatabaseReference profileRef;
+    DatabaseReference categoriesRef;
     StorageReference storageRef;
     FirebaseAuth mAuth;
 
@@ -60,7 +64,7 @@ final public class Database {
         ordersRef = database.getReference("orders");
         profileRef = database.getReference("users/restaurants/"+mAuth.getUid());
         storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/"+ mAuth.getUid());
-
+        categoriesRef = database.getReference().child("categories");
 
     }
 
@@ -264,8 +268,6 @@ final public class Database {
         return null;
     }
     public void putRestaurantProfile(Restaurant user){
-        user.id = mAuth.getUid();
-        user.previewInfo.id = mAuth.getUid();
         Uri file = Uri.parse(user.imageUri);
         StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
         profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -286,12 +288,38 @@ final public class Database {
         });
         profileRef.setValue("profile");
         profileRef.child("profile").setValue(user);
+    }
 
+    public void putRestaurantIntoCategory(String idRestaurant, Set<String> categories) {
+        categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                for (DataSnapshot snapshot : iterator) {
+                    RestaurantCategory item = snapshot.getValue(RestaurantCategory.class);
+                    if (item != null) {
+                        if(item.restaurants != null && item.restaurants.containsKey(idRestaurant) && !categories.contains(item.name.toLowerCase())) {
+                            categoriesRef.child(item.name.toLowerCase()).child("restaurants").child(idRestaurant).removeValue();
+                        } else if (item.restaurants == null && categories.contains(item.name.toLowerCase())) {
+                            categoriesRef.child(item.name.toLowerCase()).child("restaurants").child(idRestaurant).setValue(true);
+                        } else if(item.restaurants != null && !item.restaurants.containsKey(idRestaurant) && categories.contains(item.name.toLowerCase())) {
+                            categoriesRef.child(item.name.toLowerCase()).child("restaurants").child(idRestaurant).setValue(true);
+                        }
+
+                    } else {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
     public void getImage(String imageName,String path,Callback UriImg) {
-
         if (imageName==null||!imageName.equals("")) {
-
             // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
             profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -320,12 +348,10 @@ final public class Database {
                     dataSnapshot = dataSnapshot.child("profile");
                     Restaurant item = dataSnapshot.getValue(Restaurant.class);
                     if (item != null) {
-
                         firebaseCallbackUser.onCallbak(item);
                     } else {
                         //   userStringOnDataFetched.onError("data not found");
                         Log.d("DATABASE: ", "Elemento nullo");
-
                     }
                 }
             }
@@ -338,6 +364,56 @@ final public class Database {
         });
 
     }
+
+    public void getCategories(onAllCategoriesReceived cb) {
+        categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> categories = new ArrayList<>();
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                for (DataSnapshot snapshot : iterator) {
+                    RestaurantCategory item = snapshot.getValue(RestaurantCategory.class);
+                    if (item != null) {
+                        categories.add(item.name);
+                    }
+                }
+                cb.onCompleted(categories);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onCompleted(new ArrayList<>());
+            }
+        });
+    }
+
+    public void getCategories(String restaurantID, onAllCategoriesReceived cb) {
+        restaurantRef.child("profile").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> categories = new ArrayList<>();
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                for (DataSnapshot snapshot : iterator) {
+                    String item = snapshot.getKey();
+                    if (item != null) {
+                        categories.add(item);
+                    }
+                }
+                cb.onCompleted(categories);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onCompleted(new ArrayList<>());
+            }
+        });
+    }
+
+    public interface onAllCategoriesReceived {
+        void onCompleted(List<String> categories);
+    }
+
+
 
 
 }
