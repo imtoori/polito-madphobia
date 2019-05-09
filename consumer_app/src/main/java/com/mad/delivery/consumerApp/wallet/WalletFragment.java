@@ -88,7 +88,7 @@ public class WalletFragment extends Fragment {
         RecyclerView recyclerView = v.findViewById(R.id.orders_rv);
         EditText Creditcode=v.findViewById(R.id.credit_code);
         totalCredit= v.findViewById(R.id.total_credit);
-git
+
         checkCredit();
 
 
