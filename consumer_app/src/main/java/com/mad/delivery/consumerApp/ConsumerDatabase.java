@@ -119,7 +119,8 @@ public class ConsumerDatabase {
         o.restaurantId = resturantId;
 
         o.status =OrderStatus.pending;
-        ConsumerDatabase.getInstance().getBikerId(new firebaseCallback<List<String>>() {
+        myRef.child("orders").push().setValue(o);
+     /*   ConsumerDatabase.getInstance().getBikerId(new firebaseCallback<List<String>>() {
             @Override
             public void onCallBack(List<String> item) {
                 if(!item.isEmpty()) {
@@ -129,7 +130,7 @@ public class ConsumerDatabase {
                     myRef.child("orders").push().setValue(o);
                 }
             }
-        });
+        });*/
 
     }
 

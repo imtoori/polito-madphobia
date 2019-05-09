@@ -49,14 +49,17 @@ public class Order implements Parcelable {
         this.client = new User(other.client);
         this.products = new ArrayList<>(other.products);
         this.restaurant = other.restaurant;
-        status = other.status;
-        orderDate = other.orderDate;
-        orderFor = other.orderFor;
-        estimatedDelivery = other.estimatedDelivery;
-        clientNotes = other.clientNotes;
-        serverNotes = other.serverNotes;
-        paymentMethod = other.paymentMethod;
+        this.status = other.status;
+        this.orderDate = other.orderDate;
+        this.orderFor = other.orderFor;
+        this.estimatedDelivery = other.estimatedDelivery;
+        this.clientNotes = other.clientNotes;
+        this.serverNotes = other.serverNotes;
+        this.paymentMethod = other.paymentMethod;
         this.totalPrice = other.totalPrice;
+        this.bikerId =other.bikerId;
+        this.restaurantId =other.restaurantId;
+        this.clientId = other.clientId;
     }
 
 
@@ -91,6 +94,7 @@ public class Order implements Parcelable {
         dest.writeSerializable(status);
         dest.writeString(orderDate);
         dest.writeString(orderFor);
+
         dest.writeString(estimatedDelivery);
         dest.writeString(clientNotes);
         dest.writeString(serverNotes);
@@ -147,13 +151,15 @@ public class Order implements Parcelable {
         this.client = other.client;
         this.products = other.products;
         this.restaurant = other.restaurant;
-        status = other.status;
-        orderDate = other.orderDate;
-        orderFor = other.orderFor;
-        estimatedDelivery = other.estimatedDelivery;
-        clientNotes = other.clientNotes;
-        serverNotes = other.serverNotes;
-        restaurantId = other.restaurantId;
+        this.status = other.status;
+        this.orderDate = other.orderDate;
+        this.orderFor = other.orderFor;
+        this.estimatedDelivery = other.estimatedDelivery;
+        this.clientNotes = other.clientNotes;
+        this.serverNotes = other.serverNotes;
+        this.restaurantId = other.restaurantId;
+        this.bikerId = other.bikerId;
+        this.clientId = other.clientId;
     }
 
     public String getId() {

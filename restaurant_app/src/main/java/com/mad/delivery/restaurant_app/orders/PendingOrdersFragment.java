@@ -19,8 +19,10 @@ import android.widget.TextView;
 
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.restaurant_app.Database;
-import com.mad.delivery.restaurant_app.FirebaseCallback;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.menu.MyOrderRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -66,9 +68,15 @@ public class PendingOrdersFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.d("QQQQQQ", "PENDING ORDER FRAGMENT");
 
-        Database.getInstance().getPendingOrders(new FirebaseCallback() {
+        Database.getInstance().getPendingOrders(new FireBaseCallBack<Order>() {
             @Override
-            public void onCallbak(List<Order> list) {
+            public void onCallback(Order user) {
+
+            }
+
+
+            @Override
+            public void onCallbackList(List<Order> list) {
                 if(list.isEmpty())
                      showEmptyFolder();
                 else {

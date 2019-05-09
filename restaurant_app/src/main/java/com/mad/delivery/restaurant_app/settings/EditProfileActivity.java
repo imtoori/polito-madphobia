@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,11 +28,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.BuildConfig;
-import com.mad.delivery.restaurant_app.Callback;
 import com.mad.delivery.restaurant_app.Database;
-import com.mad.delivery.restaurant_app.FirebaseCallbackUser;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.Nullable;
@@ -281,13 +282,18 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-        Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser(){
+        Database.getInstance().getRestaurantProfile(new FireBaseCallBack<Restaurant>(){
             @Override
-            public void onCallbak(Restaurant user) {
+            public void onCallback(Restaurant user) {
                 if(user!=null){
                     mUser=new Restaurant(user);
                     updateFields(mUser);
                 }
+
+            }
+
+            @Override
+            public void onCallbackList(List<Restaurant> list) {
 
             }
         });
@@ -395,7 +401,7 @@ public class EditProfileActivity extends AppCompatActivity {
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName,"/images/profile/", new Callback() {
+            Database.getInstance().getImage(u.imageName,"/images/profile/", new FireBaseCallBack<Uri>() {
                 @Override
                 public void onCallback(Uri item) {
                     if (item != null) {
@@ -413,6 +419,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         }
                     }
+
+                }
+
+                @Override
+                public void onCallbackList(List<Uri> list) {
 
                 }
             });

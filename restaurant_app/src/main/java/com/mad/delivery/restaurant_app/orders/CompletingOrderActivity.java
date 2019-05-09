@@ -23,9 +23,12 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.ListDialog;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.MyDateFormat;
@@ -35,8 +38,15 @@ import com.mad.delivery.restaurant_app.auth.LoginActivity;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+import java.util.Random;
+
+import static com.mad.delivery.resources.OrderStatus.preparing;
+
 public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener {
     private Toolbar myToolBar;
+    private FirebaseDatabase db;
+    private DatabaseReference myRef;
     private Order modifiedOrder;
     private DateTime oldDateTime;
     private EditText adminNotes;
@@ -52,6 +62,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseDatabase.getInstance();
+        myRef = db.getReference();
         setContentView(R.layout.activity_completing_order);
         orderIsConfirmed = false;
         myToolBar = findViewById(R.id.detailToolbar);
@@ -237,10 +249,35 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 modifiedOrder.serverNotes = adminNotes.getText().toString();
-                modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
-                Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
-                order = modifiedOrder;
-                Database.getInstance().update(order);
+                Random rand = new Random();
+                Log.d("MATTEO","SONO QUI status: " + newStatus.getText().toString());
+                if(newStatus.getText().toString().equals("preparing")){
+                    Log.d("MATTEO","SONO QUI");
+
+                    Database.getInstance().getBikerId(new FireBaseCallBack<String>() {
+                        @Override
+                        public void onCallback(String user) {
+                        }
+
+                        @Override
+                        public void onCallbackList(List<String> list) {
+                            if(!list.isEmpty()) {
+                                Log.d("MATTEO","SONO QUI");
+                                int n = rand.nextInt(list.size());
+                                Log.d("MADDAPP", "item: " + list.get(n) + " n: " + n);
+                                modifiedOrder.bikerId = list.get(n);
+                                modifiedOrder.restaurantId =order.restaurantId;
+                                myRef.child("orders").child(modifiedOrder.id).child("bikerId").setValue(modifiedOrder.bikerId);
+                                modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
+                                Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
+                                order = modifiedOrder;
+                                Database.getInstance().update(modifiedOrder);
+                            }
+
+                        }
+                    });
+                }
+
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

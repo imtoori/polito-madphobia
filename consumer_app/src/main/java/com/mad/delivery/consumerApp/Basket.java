@@ -153,7 +153,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                             if (item != null && item.lastName != null) {
                                 order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", "cash");
                                 order.orderDate = new DateTime().toString();
-                                order.orderFor = new DateTime(time.getText().toString()).toString();
+                                order.orderFor = datetime.toString();
                                 if (order.totalPrice <= item.credit) {
                                     ConsumerDatabase.getInstance().putOrder(order);
                                     ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {

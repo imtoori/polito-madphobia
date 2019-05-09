@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
-import com.mad.delivery.restaurant_app.Callback;
 import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.orders.PendingOrdersFragment;
 import com.mad.delivery.restaurant_app.R;
 import com.squareup.picasso.Picasso;
@@ -88,7 +88,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
 
 
 
-        Database.getInstance().getImage(mItem.imageName, "/images/menuItems/", new Callback() {
+        Database.getInstance().getImage(mItem.imageName, "/images/menuItems/", new FireBaseCallBack<Uri>() {
             @Override
             public void onCallback(Uri item) {
                 if (item != null) {
@@ -105,6 +105,11 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
 
                     }
                 }
+
+            }
+
+            @Override
+            public void onCallbackList(List<Uri> list) {
 
             }
         });

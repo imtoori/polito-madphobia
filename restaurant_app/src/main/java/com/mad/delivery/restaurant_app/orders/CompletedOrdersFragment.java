@@ -19,7 +19,8 @@ import android.widget.TextView;
 
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.restaurant_app.Database;
-import com.mad.delivery.restaurant_app.FirebaseCallback;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.menu.MyOrderRecyclerViewAdapter;
 import com.mad.delivery.restaurant_app.R;
 
@@ -80,9 +81,15 @@ public class CompletedOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Database.getInstance().getCompletedOrders(new FirebaseCallback() {
+        Database.getInstance().getCompletedOrders(new FireBaseCallBack<Order>() {
+
             @Override
-            public void onCallbak(List<Order> list) {
+            public void onCallback(Order user) {
+
+            }
+
+            @Override
+            public void onCallbackList(List<Order> list) {
                 if(list.isEmpty())
                     showEmptyFolder();
                 else {
