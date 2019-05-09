@@ -18,8 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
-import com.mad.delivery.consumerApp.settings.ProfileActivity;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +25,7 @@ import com.mad.delivery.consumerApp.settings.ProfileActivity;
 public class SettingsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private CardView cvNoLogin, cvProfile, cvPrivacy;
+    private CardView cvNoLogin, cvProfile, cvPrivacy, cvLogout;
     private LinearLayout linearLayoutLogin;
     private Button btnLogin;
     public SettingsFragment() {
@@ -90,6 +88,14 @@ public class SettingsFragment extends Fragment {
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
+        });
+        cvLogout = view.findViewById(R.id.cv_logout);
+        cvLogout.setOnClickListener(v -> {
+            mAuth.signOut();
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
         });
 
         return view;

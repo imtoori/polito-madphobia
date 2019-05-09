@@ -11,25 +11,44 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.bikerApp.auth.LoginActivity;
 
 
 public class SettingFragment extends Fragment {
     public static final String SETTING_FRAGMENT_TAG = "settings_fragment";
-
-    private CardView cvProfile, cvHour, cvPrivacy;
+    FirebaseAuth mAuth;
+    FirebaseUser mUser;
+    private CardView cvProfile, cvPrivacy, cvLogout;
 
     public SettingFragment() {
         // Required empty public constructor
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mUser = mAuth.getCurrentUser();
+        if(mUser == null) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        mAuth = FirebaseAuth.getInstance();
         cvProfile = view.findViewById(R.id.cv_profile);
         //cvHour = view.findViewById(R.id.cv_hours);
         cvPrivacy = view.findViewById(R.id.cv_privacy);
         //cvLanguage = view.findViewById(R.id.cv_language);
+        cvLogout = view.findViewById(R.id.cv_logout);
         cvProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,6 +64,14 @@ public class SettingFragment extends Fragment {
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
+        });
+
+        cvLogout.setOnClickListener(v -> {
+            mAuth.signOut();
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
         });
 
         return view;

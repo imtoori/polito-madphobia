@@ -78,7 +78,7 @@ public class RegisterFragment extends Fragment {
                 LoginFragment login = new LoginFragment();
                 transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 transaction.replace(R.id.layout_container, login,"loginFragment");
-                transaction.addToBackStack(null);
+                //transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
