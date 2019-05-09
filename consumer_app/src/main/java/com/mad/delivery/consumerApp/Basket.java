@@ -159,24 +159,32 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                                                            ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
                                                                @Override
                                                                public void onCallBack(Boolean item) {
-                                                                   if (item)
-                                                                       Log.d("TAG", "Transazione Avvenuta con successo");
-
+                                                                   if (item) {
+                                                                       Log.i("TAG", "Transazione Avvenuta con successo");
+                                                                       Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                                                       startActivity(intent);
+                                                                       overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                                   }
                                                                    else
-                                                                       Log.d("TAG", "Transazione NON Avvenuta con successo");
+                                                                       Log.i("TAG", "Transazione NON Avvenuta con successo");
 
 
                                                                }
                                                            });
                                                        } else if (payment_met == "cash") {
                                                            ConsumerDatabase.getInstance().putOrder(order);
-                                                           Log.d("TAG", "Acquisto effettuato ");
+                                                           Log.i("TAG", "Acquisto effettuato ");
+                                                           Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                                           startActivity(intent);
+                                                           overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                                                        } else
-                                                           Log.d("TAG", "Non hai abbastanza credito");
+
+                                                           Log.i("TAG", "Non hai abbastanza credito");
+
 
 
                                                    } else {
-                                                       Log.d("TAG", "Ti devi registrare");
+                                                       Log.i("TAG", "Ti devi registrare");
                                                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                                        startActivity(intent);
                                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -252,6 +260,23 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         }
         else
             time.setError(null);
+
+        if(payment_met=="credit") {
+            Log.i("TAG", "crdito");
+            ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
+                @Override
+                public void onCallBack(User user) {
+                    if (user != null && user.credit < priceD) {
+                        credit.setEnabled(false);
+                        rg.check(R.id.cash);
+                        payment_met = "cash";
+
+                    }
+
+                }
+
+            });
+        }
 
         return result;
 
