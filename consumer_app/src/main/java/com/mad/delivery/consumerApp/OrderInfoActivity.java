@@ -44,13 +44,15 @@ public class OrderInfoActivity extends AppCompatActivity {
         rest_note=findViewById(R.id.rest_note);
         biker_note=findViewById(R.id.biker_note);
         client_note=findViewById(R.id.client_note);
-        order_code.setText("#123456");
+        order_code.setText(order.id);
         subtot.setText(order.totalPrice.toString());
+        //TODO insert deliveryCost
         del_fee.setText("0.00");
         tot.setText(order.totalPrice.toString());
-        rest_note.setText("note ristorante bla bla");
-        biker_note.setText("note biker bla bla");
-        client_note.setText("bla bla bla");
+        //TODO insert bikernote
+        rest_note.setText(order.serverNotes);
+        biker_note.setText("");
+        client_note.setText(order.clientNotes);
 
         RecyclerView recyclerView = findViewById(R.id.rv_orders);
         SummaryOrdersAdapter summaryordersAdapter = new SummaryOrdersAdapter(order.products);

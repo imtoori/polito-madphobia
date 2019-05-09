@@ -33,6 +33,7 @@ public class SummaryOrdersAdapter extends RecyclerView.Adapter<com.mad.delivery.
         holder.product = products.get(position);
         holder.product_name.setText(holder.product.name);
         holder.price.setText(Double.toString(holder.product.price));
+        holder.counter.setText(Double.toString(holder.product.quantity));
 
 
     }
@@ -46,6 +47,7 @@ public class SummaryOrdersAdapter extends RecyclerView.Adapter<com.mad.delivery.
         public final View mView;
         public final TextView product_name;
         public final TextView price;
+        public final TextView counter;
 
         public Product product;
 
@@ -54,6 +56,7 @@ public class SummaryOrdersAdapter extends RecyclerView.Adapter<com.mad.delivery.
             mView = view;
             product_name = mView.findViewById(R.id.product_name);
             price = mView.findViewById(R.id.price);
+            counter = mView.findViewById(R.id.counter);
 
 
 

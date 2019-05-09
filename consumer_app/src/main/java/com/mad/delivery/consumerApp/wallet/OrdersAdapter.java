@@ -52,6 +52,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             });
             int price = 0;
             holder.price.setText("Price: "+ holder.order.totalPrice.toString());
+            holder.data.setText("Date: "+ holder.order.orderFor.toString());
             holder.status.setText("Delivery: "+ holder.order.status.toString());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +77,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             public final View mView;
             public final TextView nameRestaurant;
             public final TextView price;
+            public final TextView data;
             public final TextView status;
             public final ImageView imgRestaurant;
 
@@ -86,6 +88,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 mView = view;
                 nameRestaurant = mView.findViewById(R.id.nameRestaurant);
                 price = mView.findViewById(R.id.price);
+                data = mView.findViewById(R.id.data);
                 status=mView.findViewById(R.id.status);
                 imgRestaurant = mView.findViewById(R.id.imgRestaurant);
 
