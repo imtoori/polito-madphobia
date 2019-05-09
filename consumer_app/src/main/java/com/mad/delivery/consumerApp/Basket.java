@@ -58,8 +58,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     Button payment;
     EditText notes;
     Order order;
-
-    Customer customer;
     Double priceD;
     Double fee;
     Double totD;
@@ -91,7 +89,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         rg = findViewById(R.id.rg_method);
         pm = findViewById(R.id.pm);
         credit = findViewById(R.id.credit);
-
+        payment_met = "cash";
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -148,11 +146,11 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                     ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
                         @Override
                         public void onCallBack(User item) {
-                            if (item != null && item.lastName != null && item.lastName!="") {
-                                order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", "cash");
+                            if (item != null && item.lastName != null) {
+                                order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", payment_met);
                                 order.orderDate = new DateTime().toString();
                                 order.orderFor = datetime.toString();
-                                if (order.totalPrice <= item.credit) {
+                                if (order.totalPrice <= item.credit && payment_met.equals("credit")) {
                                     ConsumerDatabase.getInstance().putOrder(order);
                                     ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
                                         @Override
@@ -257,7 +255,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
             time.setError(null);
 
         if (payment_met.equals("credit")) {
-            Log.i("TAG", "crdito");
+            Log.i("TAG", "credito");
             ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
                 @Override
                 public void onCallBack(User user) {
