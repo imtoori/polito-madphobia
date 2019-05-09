@@ -67,7 +67,7 @@
         <activity android:name=".settings.ProfileActivity" android:parentActivityName=".HomeActivity" />
         <activity android:name=".auth.LoginActivity" />
         <activity android:name=".OrderInfoActivity"/>
-        <activity android:name=".Basket"/>
+        <activity android:name=".Basket" android:parentActivityName=".HomeActivity"/>
         <activity android:name=".settings.PasswordActivity" android:parentActivityName=".HomeActivity" />
     </application>
 

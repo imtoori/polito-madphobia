@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +28,10 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
@@ -35,8 +39,10 @@ import com.mad.delivery.resources.Product;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 
+import static java.security.AccessController.getContext;
 
-public class Basket extends AppCompatActivity implements TimePickerFragment.TimePickedListener{
+
+public class Basket extends AppCompatActivity implements TimePickerFragment.TimePickedListener {
     Menu menu;
     TextView order_code;
     TextView subtot;
@@ -44,7 +50,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     TextView tot;
     EditText address;
     TextView time;
-    Boolean payment_met;
+    String payment_met;
     RadioGroup rg;
     Toolbar toolbar;
     DateTime datetime;
@@ -55,52 +61,61 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     Double priceD;
     Double fee;
     Double totD;
+    TextView pm;
+    RadioButton credit;
+    private FirebaseAuth mAuth;
+
 
 
     interface ClickListener {
         void onItemClicked(Double position);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.basket_layout);
-        toolbar=findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
-        order_code=findViewById(R.id.order_code);
-        subtot=findViewById(R.id.subtotal_price);
-        del_fee=findViewById(R.id.delivery_fee);
-        tot=findViewById(R.id.total);
-        address=findViewById(R.id.address);
-        time=findViewById(R.id.time);
-        payment=findViewById(R.id.button);
-        notes=findViewById(R.id.client_note);
-        rg=findViewById(R.id.rg_method);
+        order_code = findViewById(R.id.order_code);
+        subtot = findViewById(R.id.subtotal_price);
+        del_fee = findViewById(R.id.delivery_fee);
+        tot = findViewById(R.id.total);
+        address = findViewById(R.id.address);
+        time = findViewById(R.id.time);
+        payment = findViewById(R.id.button);
+        notes = findViewById(R.id.client_note);
+        rg = findViewById(R.id.rg_method);
+        pm = findViewById(R.id.pm);
+        credit= findViewById(R.id.credit);
+
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(RadioGroup rg, int checkedId) {
                 // find which radio button is selected
-                if(checkedId == R.id.credit) {
-                    payment_met=true;
+                if (checkedId == R.id.credit) {
+                    payment_met = "credit";
                 } else {
-                    payment_met=false;
+                    payment_met = "cash";
                 }
             }
 
         });
 
 
-
         List<Product> products = new ArrayList<>();
 
-        ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name,value,item.price)));
+        ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name, value, item.price)));
 
-         priceD=0.0;
-         fee =0.0;
-        products.forEach(p-> priceD+=p.price*p.quantity);
+        priceD = 0.0;
+        fee = 0.0;
+        products.forEach(p -> priceD += p.price * p.quantity);
+        //TODO insert real OrderID
         order_code.setText("#123456");
-        totD=priceD+fee;
+        totD = priceD + fee;
         subtot.setText(priceD.toString());
         del_fee.setText(fee.toString());
         tot.setText(totD.toString());
@@ -109,9 +124,9 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         BasketAdapter basketAdapter = new BasketAdapter(products, new ClickListener() {
             @Override
             public void onItemClicked(Double position) {
-                priceD-=position;
+                priceD -= position;
                 subtot.setText(priceD.toString());
-                totD=priceD+fee;
+                totD = priceD + fee;
                 tot.setText(totD.toString());
 
 
@@ -122,7 +137,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         recyclerView.setAdapter(basketAdapter);
 
 
-
         time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,44 +144,67 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
             }
         });
 
+
         payment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if(checkConstraints()){
                 ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
-                    @Override
-                    public void onCallBack(User item) {
-                        if(item!=null && item.lastName!=null){
-                            order =new Order(item,ConsumerDatabase.getInstance().getRestaurantInLocal(),products,"","cash");
-                            if(order.totalPrice<=item.credit) {
-                                ConsumerDatabase.getInstance().putOrder(order);
-                                ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
-                                    @Override
-                                    public void onCallBack(Boolean item) {
-                                        if(item)
-                                            Log.d("TAG","Transazione Avvenuta con successo");
-                                        else
-                                            Log.d("TAG","Transazione NON Avvenuta con successo");
+                                               @Override
+                                               public void onCallBack(User item) {
+                                                   if (item != null && item.lastName != null) {
+                                                       order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, address.toString(), payment_met);
+                                                       if (order.totalPrice <= item.credit && payment_met == "credit") {
+                                                           ConsumerDatabase.getInstance().putOrder(order);
+                                                           ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
+                                                               @Override
+                                                               public void onCallBack(Boolean item) {
+                                                                   if (item)
+                                                                       Log.d("TAG", "Transazione Avvenuta con successo");
+
+                                                                   else
+                                                                       Log.d("TAG", "Transazione NON Avvenuta con successo");
 
 
-                                    }
-                                });
-                            }
-                            else
-                                Log.d("TAG","Non hai abbastanza credito");
+                                                               }
+                                                           });
+                                                       } else if (payment_met == "cash") {
+                                                           ConsumerDatabase.getInstance().putOrder(order);
+                                                           Log.d("TAG", "Acquisto effettuato ");
+                                                       } else
+                                                           Log.d("TAG", "Non hai abbastanza credito");
 
-                        }
-                        else
-                            Log.d("TAG","Ti devi registrare");
-                    }
-                });
 
+                                                   } else {
+                                                       Log.d("TAG", "Ti devi registrare");
+                                                       Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                                       startActivity(intent);
+                                                       overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                   }
+                                               }
+                                           });
+
+                                       }
             }
-        });
+                                   }
 
+        );
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.putExtra("user", 0);
+        intent.putExtra("user", 1);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
@@ -176,7 +213,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     public void showTimePickerDialog(View v) {
         DialogFragment timeFragment = new TimePickerFragment();
         Bundle bundle = new Bundle();
-        datetime= DateTime.now();
+        datetime = DateTime.now();
         bundle.putSerializable("datetime", datetime);
         timeFragment.setArguments(bundle);
         timeFragment.show(getSupportFragmentManager(), "timePicker");
@@ -190,11 +227,32 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         time.setText(datetime.toString(dtf));
     }
 
-    public void deleteProduct()
-    {
+    public void deleteProduct() {
         Toast.makeText(this, "ciao", Toast.LENGTH_SHORT).show();
     }
 
+    public boolean checkConstraints() {
+        boolean result = true;
+        String checkString = "[a-zA-Z]+";
+        String checkTime = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
 
+        if(priceD<=0){
+            tot.setError(getResources().getString(R.string.empty_basket_error));
+            result=false;
+        }
 
+        if (!address.getText().toString().matches(checkString)) {
+            address.setError(getResources().getString(R.string.check_address));
+            result = false;
+        }
+        if (!time.getText().toString().matches(checkTime)) {
+            time.setError(getResources().getString(R.string.check_time));
+            result = false;
+        }
+        else
+            time.setError(null);
+
+        return result;
+
+    }
 }
