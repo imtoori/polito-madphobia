@@ -186,6 +186,25 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                                                        }
                                                    }
                                                });
+                                        }
+                                    });
+                                } else if (payment_met.equals("cash")) {
+                                    ConsumerDatabase.getInstance().putOrder(order);
+                                    Log.i("TAG", "Acquisto effettuato ");
+                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                    startActivity(intent);
+                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                } else {
+                                    Log.i("TAG", "Non hai abbastanza credito");
+                                }
+
+
+                            } else {
+                                Log.i("TAG", "Ti devi registrare");
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
 
                                            }
                                        }
