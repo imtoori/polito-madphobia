@@ -2,12 +2,17 @@ package com.mad.delivery.consumerApp.wallet;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
@@ -41,6 +46,9 @@ import androidx.viewpager.widget.ViewPager;
  */
 public class WalletFragment extends Fragment {
     private WalletFragment.OnOrderSelected mListener;
+    TextView totalCredit;
+
+
     public WalletFragment() {
         setHasOptionsMenu(true);
         // Required empty public constructor
@@ -74,40 +82,18 @@ public class WalletFragment extends Fragment {
             }
         });
         */
-        ImageView done;
+
         View v = inflater.inflate(R.layout.fragment_wallet, container, false);
         setHasOptionsMenu(true);
         RecyclerView recyclerView = v.findViewById(R.id.orders_rv);
+        EditText Creditcode=v.findViewById(R.id.credit_code);
+        totalCredit= v.findViewById(R.id.total_credit);
+
+        checkCredit();
+
+
         List<Order> orders= new ArrayList<>();
         Log.d("MAD","Sono nel wallet!");
-       // ConsumerDatabase.getInstance().updateCreditCustomer(20);
-        // TODO remove items here when persistence is implemented
-        //TODO usare metodo getCompletedOrders per farsi restituire gli ordini completati del cliente
-    /*    List<Product> products = new ArrayList<>();
-        Product p1 = new Product("Prodotto 1", 20, 18.55);
-        Product p2 = new Product("Prodotto 2", 10, 17.01);
-        products.add(p1);
-        products.add(p2);
-        Restaurant rest= new Restaurant();
-        rest.name = "Pinco";
-        rest.description = "This is a description";
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
-        DateTime from = new DateTime(2019, 3, 1, 19, 20, 30);
-        DateTime to = DateTime.now();
-        Order o = new Order(new User(),rest,products, from.toString(), "credit");
-        o.id = "1234";
-        o.status = OrderStatus.pending;
-        o.orderDate = to.toString();
-        o.estimatedDelivery = to.toString();
-        o.clientNotes = "Notes added by client";
-        o.serverNotes="Notes added by restaurant";
-
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);
-        orders.add(o);*/
 
         ConsumerDatabase.getInstance().getAllCostumerOrders(new firebaseCallback<List<Order>>() {
             @Override
@@ -120,12 +106,12 @@ public class WalletFragment extends Fragment {
         });
 
 
-
         v.findViewById(R.id.done_code).setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                ConsumerDatabase.getInstance().checkCreditCode("TO10", new firebaseCallback<CreditCode>() {
+                ConsumerDatabase.getInstance().checkCreditCode( "TO10", new firebaseCallback<CreditCode>() {
+                    //TODO rimuovere codice TO10 dal codice
                     @Override
                     public void onCallBack(CreditCode item) {
                         Double val = item.value;
@@ -134,10 +120,14 @@ public class WalletFragment extends Fragment {
                              public void onCallBack(Boolean item) {
                                  if(item){
                                      Log.d("MADD","Il tuo conto è stato aumentato di "+val);
+                                     //TODO inserire interrogazione al db su totalCredit
+                                     checkCredit();
+                                     Toast.makeText(getContext(), getString(R.string.IncreasedCredit)+" "+val, Toast.LENGTH_LONG).show();
                                  }
-                                 else
-                                     Log.d("MADD","ti devi registre");
-
+                                 else {
+                                     Log.d("MADD", "ti devi registre");
+                                     Toast.makeText(getContext(), getString(R.string.ErrorCredit), Toast.LENGTH_LONG).show();
+                                 }
                              }
                          });
 
@@ -152,6 +142,20 @@ public class WalletFragment extends Fragment {
 
     public interface OnOrderSelected {
         void openOrder();
+    }
+
+    public void checkCredit(){
+        ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>(){
+            @Override
+            public void onCallBack(User user) {
+                if(user!=null)
+                    totalCredit.setText(user.credit.toString());
+                else
+                    totalCredit.setText(R.string.null_value);
+
+
+            }
+        });
     }
 
 }

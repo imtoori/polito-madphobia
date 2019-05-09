@@ -28,6 +28,7 @@ import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 import com.mad.delivery.resources.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class ConsumerDatabase {
     private Order order;
     public Restaurant restaurant;
     FirebaseAuth mAuth;
+     Boolean flag=true;
 
 
     public void setResturantId(String resturantId) {
@@ -212,12 +214,20 @@ public class ConsumerDatabase {
         });
     }
 
-    public void getRestaurantCategories(final onRestaurantCategoryReceived cb) {
+    public void getRestaurantCategories(List<RestaurantCategory> categories,final onRestaurantCategoryReceived cb) {
         myRef.child("categories").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 RestaurantCategory category = dataSnapshot.getValue(RestaurantCategory.class);
-                if(category != null) cb.childAdded(category);
+                if(category != null) {
+                    flag=true;
+                    categories.forEach(x -> {
+                        if (x.name.equals(category.name)) flag = false;
+                    });
+                    if (flag) {
+                        cb.childAdded(category);
+                    }
+                }
             }
 
             @Override

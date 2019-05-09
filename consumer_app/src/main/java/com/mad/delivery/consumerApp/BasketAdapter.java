@@ -38,6 +38,7 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
     public void onBindViewHolder(final com.mad.delivery.consumerApp.BasketAdapter.ViewHolder holder, int position) {
         holder.product = products.get(position);
         holder.price.setText(String.valueOf(holder.product.price));
+        holder.counter.setText(String.valueOf(holder.product.quantity));
         holder.name.setText(holder.product.name);
         holder.delete.setOnClickListener(new View.OnClickListener()
         {
@@ -45,7 +46,6 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
             public void onClick(View v)
             {
                 listener.onItemClicked(products.get(position).quantity*products.get(position).price);
-
                 products.remove(position);
                 notifyDataSetChanged();
             }
@@ -62,6 +62,7 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
         public final View mView;
         public final TextView price;
         public final TextView name;
+        public final TextView counter;
         public final ImageView delete;
 
         public Product product;
@@ -71,6 +72,7 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
             mView = view;
             price = mView.findViewById(R.id.price);
             name=mView.findViewById(R.id.name);
+            counter=mView.findViewById(R.id.counter);
             delete=mView.findViewById(R.id.delete);
 
 
