@@ -113,8 +113,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                 subtot.setText(priceD.toString());
                 totD=priceD+fee;
                 tot.setText(totD.toString());
-
-
             }
         });
         recyclerView.hasFixedSize();

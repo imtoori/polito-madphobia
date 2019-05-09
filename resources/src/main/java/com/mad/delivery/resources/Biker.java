@@ -17,7 +17,7 @@ public class Biker implements Serializable {
     public String imageName;
     public String id;
     public String imageDownload;
-    public String status;
+    public Boolean status;
 
     public Biker(String name, String lastname, String phoneNumber, String emailAddress, String description,  Uri imageUri) {
         this.name = name;
@@ -28,7 +28,7 @@ public class Biker implements Serializable {
         this.imageUri = imageUri.toString();
         this.registrationDate = new DateTime().toString();
         this.imageName  = imageUri.getLastPathSegment();
-        this.status = "occupied";
+        this.status = false;
     }
 
     public Biker() {

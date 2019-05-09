@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.R;
 
 import androidx.fragment.app.Fragment;
@@ -48,8 +49,11 @@ public class StartFragment extends Fragment {
                 kilometers.setEnabled(working);
                 if(working) {
                     status.setText(R.string.start_work);
+                    Database.getInstance().setBikerStatus(working);
                 } else {
                     status.setText(R.string.stop_work);
+                    Database.getInstance().setBikerStatus(working);
+
                 }
             }
         });

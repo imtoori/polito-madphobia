@@ -257,7 +257,7 @@ final public class Database {
 
     }
 
-    public void setBikerStatus(String status){
+    public void setBikerStatus(Boolean status){
         profileRef.child("profile").child("status").setValue(status);
     }
 

@@ -105,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
         Database.getInstance().getBikerProfile(new FirebaseCallbackItem<Biker>(){
             @Override
             public void onCallback(Biker user) {
-                if(user!=null){
+                if(user.id!=null){
                     mUser = new Biker(user);
                     updateFields(mUser);
                 }
