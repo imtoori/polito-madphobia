@@ -237,6 +237,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 .setTitle(titleResource);
         builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                //modifiedOrder.bikerId =order.bikerId;
+
+                modifiedOrder.restaurantId =order.restaurantId;
                 modifiedOrder.bikerNotes = adminNotes.getText().toString();
                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
