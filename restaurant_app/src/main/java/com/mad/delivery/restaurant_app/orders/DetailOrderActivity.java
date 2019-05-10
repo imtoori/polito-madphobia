@@ -82,7 +82,9 @@ public class DetailOrderActivity extends AppCompatActivity {
                 Log.d("MADAPP", "Save option selected");
                 item.setTitle("SEND");
                 Intent intent = new Intent(getApplicationContext(), CompletingOrderActivity.class);
+                Log.d("ORDER: in detail1",order.toString());
                 intent.putExtra("order", order);
+                Log.d("ORDER: in detail2",order.toString());
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;

@@ -11,8 +11,8 @@ public class PreviewInfo implements Parcelable {
     public String imageURL;
     public String imageDownload;
 
-    public double deliveryCost;
-    public double minOrderCost;
+    public Double deliveryCost;
+    public Double minOrderCost;
 
     public PreviewInfo() {}
 
@@ -27,8 +27,8 @@ public class PreviewInfo implements Parcelable {
         }
         imageURL = in.readString();
         imageDownload = in.readString();
-        deliveryCost = in.readInt();
-        minOrderCost = in.readInt();
+        deliveryCost = in.readDouble();
+        minOrderCost = in.readDouble();
     }
 
     @Override
@@ -44,8 +44,15 @@ public class PreviewInfo implements Parcelable {
         }
         dest.writeString(imageURL);
         dest.writeString(imageDownload);
-        dest.writeDouble(deliveryCost);
-        dest.writeDouble(minOrderCost);
+        if(deliveryCost==null)
+            dest.writeDouble(0.0);
+        else
+            dest.writeDouble(deliveryCost);
+        if(minOrderCost==null)
+            dest.writeDouble(0.0);
+        else
+            dest.writeDouble(minOrderCost);
+
     }
 
     @Override
@@ -113,19 +120,19 @@ public class PreviewInfo implements Parcelable {
         this.imageDownload = imageDownload;
     }
 
-    public double getDeliveryCost() {
+    public Double getDeliveryCost() {
         return deliveryCost;
     }
 
-    public void setDeliveryCost(int deliveryCost) {
+    public void setDeliveryCost(Double deliveryCost) {
         this.deliveryCost = deliveryCost;
     }
 
-    public double getMinOrderCost() {
+    public Double getMinOrderCost() {
         return minOrderCost;
     }
 
-    public void setMinOrderCost(int minOrderCost) {
+    public void setMinOrderCost(Double minOrderCost) {
         this.minOrderCost = minOrderCost;
     }
 

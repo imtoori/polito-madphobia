@@ -154,10 +154,11 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCallback(Restaurant user) {
-                if (user != null) {
+                if (user != null&&user.name!=null) {
+                    Log.d("MADAPP", "getProfileData(): " + mUser.toString());
+
                     mUser = new Restaurant(user);
                     updateFields(mUser);
-                    Log.d("MADAPP", "getProfileData(): " + mUser.toString());
                 } else {
                     mUser = new Restaurant("", "", "", "", "", "", "", "", "", "", "", "");
                     updateFields(mUser);

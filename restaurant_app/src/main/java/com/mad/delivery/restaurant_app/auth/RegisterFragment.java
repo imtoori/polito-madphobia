@@ -159,10 +159,10 @@ public class RegisterFragment extends Fragment {
                             FirebaseUser user = mAuth.getCurrentUser();
                             myRef = db.getReference();
                             Restaurant registered = new Restaurant();
-                            registered.registrationDate = new DateTime().toString();
+
                             registered.email = emailAddress.getText().toString();
-                            
-                            myRef.child("users").child("restaurants").child(user.getUid()).setValue(registered);
+
+                            myRef.child("users").child("restaurants").child(user.getUid()).child("register").setValue(registered);
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("user", registered);
                             Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);

@@ -58,6 +58,8 @@ public class DetailOrderFragment extends Fragment {
         statusIcon = view.findViewById(R.id.status_icon);
         clientNotes = view.findViewById(R.id.client_notes_tv);
         Order order = getArguments().getParcelable("order");
+        Log.d("ORDER: in openOrder1",order.toString());
+
         Log.d("TAFF","Status "+order.status.toString().toLowerCase());
         arrived.setText(order.orderDate);
         requested.setText(order.orderFor);

@@ -13,7 +13,6 @@ public class Restaurant implements Parcelable {
     public PreviewInfo previewInfo;
     public String name;
     public String phoneNumber;
-    public String registrationDate;
     public String email;
     public String description;
     public String road;
@@ -32,6 +31,7 @@ public class Restaurant implements Parcelable {
     public Double minOrderCost, deliveryCost;
 
     public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
+
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
@@ -41,23 +41,37 @@ public class Restaurant implements Parcelable {
         this.doorPhone = doorPhone;
         this.postCode = postCode;
         this.city = city;
-        this.imageUri = imageUri;
+        this.openingHours=openingTime;
         this.imageName =imageName;
-        this.deliveryCost = 0.00;
+        this.id="";
+        this.scoreValue =0;
+        this.categories = new HashMap<>();
+        this.menuItems = new HashMap<>();
+        this.imageUri="";
+        this.token ="";
         this.minOrderCost = 0.00;
-        this.openingHours = openingTime;
-        categories = new HashMap<>();
-        menuItems = new HashMap<>();
+        this.deliveryCost = 0.00;
         previewInfo = new PreviewInfo();
+        previewInfo.id = "";
         previewInfo.name = this.name;
+        previewInfo.description =this.description;
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
-        previewInfo.description = this.description;
+        previewInfo.imageDownload ="";
         previewInfo.deliveryCost = this.deliveryCost;
         previewInfo.minOrderCost = this.minOrderCost;
     }
 
     public Restaurant(Restaurant other) {
+        previewInfo =new PreviewInfo();
+        if(other.deliveryCost!=null)
+            previewInfo.deliveryCost = other.deliveryCost;
+        else
+            previewInfo.deliveryCost=0.0;
+        if(other.minOrderCost!=null)
+            previewInfo.minOrderCost = other.minOrderCost;
+        else
+            previewInfo.minOrderCost=0.0;
         this.name = other.name;
         this.phoneNumber = other.phoneNumber;
         this.email = other.email;
@@ -67,19 +81,23 @@ public class Restaurant implements Parcelable {
         this.doorPhone = other.doorPhone;
         this.postCode = other.postCode;
         this.city = other.city;
-        this.imageUri = other.imageUri;
         this.openingHours = other.openingHours;
+       this.imageName=other.imageName;
+       this.id =other.id;
+       this.scoreValue=other.scoreValue;
+       this.categories=other.categories;
+        this.menuItems = other.menuItems;
+        this.imageUri = other.imageUri;
+        this.token = other.token;
         this.deliveryCost = other.deliveryCost;
         this.minOrderCost = other.minOrderCost;
-        this.menuItems = other.menuItems;
-        this.menuItems= other.menuItems;
         previewInfo = new PreviewInfo();
-        previewInfo.name = this.name;
+        previewInfo.id="";
+        previewInfo.name =other.name;
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
-        previewInfo.description = this.description;
-        previewInfo.deliveryCost = this.deliveryCost;
-        previewInfo.minOrderCost = this.minOrderCost;
+        previewInfo.imageDownload="";
+        previewInfo.description = other.description;
     }
 
     public Restaurant(String name) {
@@ -87,6 +105,10 @@ public class Restaurant implements Parcelable {
     }
 
     public Restaurant() {
+        this.categories = new HashMap<>();
+        this.menuItems = new HashMap<>();
+        previewInfo = new PreviewInfo();
+
         this.scoreValue = 0;
     }
 
@@ -94,7 +116,6 @@ public class Restaurant implements Parcelable {
         previewInfo = in.readParcelable(PreviewInfo.class.getClassLoader());
         name = in.readString();
         phoneNumber = in.readString();
-        registrationDate = in.readString();
         email = in.readString();
         description = in.readString();
         road = in.readString();
@@ -129,7 +150,6 @@ public class Restaurant implements Parcelable {
         dest.writeParcelable(previewInfo, flags);
         dest.writeString(name);
         dest.writeString(phoneNumber);
-        dest.writeString(registrationDate);
         dest.writeString(email);
         dest.writeString(description);
         dest.writeString(road);
@@ -203,13 +223,6 @@ public class Restaurant implements Parcelable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(String registrationDate) {
-        this.registrationDate = registrationDate;
-    }
 
     public String getEmail() {
         return email;
@@ -357,7 +370,6 @@ public class Restaurant implements Parcelable {
                 "previewInfo=" + previewInfo +
                 ", name='" + name + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", registrationDate='" + registrationDate + '\'' +
                 ", email='" + email + '\'' +
                 ", description='" + description + '\'' +
                 ", road='" + road + '\'' +

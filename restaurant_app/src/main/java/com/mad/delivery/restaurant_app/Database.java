@@ -59,11 +59,11 @@ final public class Database {
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         myRef = database.getReference();
-        restaurantRef = database.getReference("users/restaurants/" + mAuth.getUid());
-        menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/profile/menuItems");
+        restaurantRef = database.getReference("users/restaurants/" );
+        menuItemsRef = database.getReference("users/restaurants/");
         ordersRef = database.getReference("orders");
-        profileRef = database.getReference("users/restaurants/"+mAuth.getUid());
-        storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/"+ mAuth.getUid());
+        profileRef = database.getReference("users/restaurants/");
+        storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/");
         categoriesRef = database.getReference().child("categories");
 
     }
@@ -72,7 +72,7 @@ final public class Database {
 
     void updateToken(String token) {
         Log.d("TOKEN", token);
-        Database.getInstance().restaurantRef.child("token").setValue(token);
+        restaurantRef.child(mAuth.getUid()).child("token").setValue(token);
     }
 
     public  void update(Order o) {
@@ -94,14 +94,14 @@ final public class Database {
     public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems,String imageName) {
         MenuItemRest item =  new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
         item.restaurantId =mAuth.getUid();
-        item.id = menuItemsRef.push().getKey();
-        menuItemsRef.child(item.id).setValue(item);
+        item.id = menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").push().getKey();
+        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(item.id).setValue(item);
 
 
         Log.d("MADDAP",item.name +" "+item.category);
        // menuItemsRef.child(item.id).child("id").setValue(item.id);
         Uri file = Uri.parse(imgUri);
-        StorageReference profileRefStore = storageRef.child("images/menuItems/" + imageName);
+        StorageReference profileRefStore = storageRef.child(mAuth.getUid()).child("images/menuItems/" + imageName);
         profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
@@ -217,13 +217,13 @@ final public class Database {
 
     public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems,String imageName) {
         MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
-        menuItemsRef.child(id).setValue(item);
+        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(id).setValue(item);
         //TODO add callback
     }
 
 
     public void getMenuItems(OnDataFetched<List<MenuItemRest>, String> onDataFetched) {
-        menuItemsRef.addValueEventListener(new ValueEventListener() {
+        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<MenuItemRest> menuItemRests = new ArrayList<>();
@@ -248,12 +248,12 @@ final public class Database {
     }
 
     public void removeMenuItem(MenuItemRest menuItemRest) {
-        menuItemsRef.child(menuItemRest.id).removeValue();
+        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(menuItemRest.id).removeValue();
         //TODO add callback
     }
 
     public MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
-        menuItemsRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 MenuItemRest item = dataSnapshot.getValue(MenuItemRest.class);
@@ -274,7 +274,7 @@ final public class Database {
     }
     public void putRestaurantProfile(Restaurant user){
         Uri file = Uri.parse(user.imageUri);
-        StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
+        StorageReference profileRefStore = storageRef.child(mAuth.getUid()).child("images/profile/" + user.imageName);
         profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
@@ -292,7 +292,7 @@ final public class Database {
             }
         });
       //  profileRef.setValue("profile");
-        profileRef.child("profile").setValue(user);
+        profileRef.child(mAuth.getUid()).child("profile").setValue(user);
     }
 
     public void putRestaurantIntoCategory(String idRestaurant, Set<String> categories) {
@@ -326,7 +326,7 @@ final public class Database {
     public void getImage(String imageName,String path,FireBaseCallBack<Uri> UriImg) {
         if (imageName==null||!imageName.equals("")) {
             // Uri tmp = Uri.parse(imageName);
-            StorageReference profileRefStore = storageRef.child(path + imageName);
+            StorageReference profileRefStore = storageRef.child(mAuth.getUid()).child(path + imageName);
             profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
@@ -346,7 +346,7 @@ final public class Database {
         }
     }
     public void getRestaurantProfile(FireBaseCallBack<Restaurant> firebaseCallbackUser) {
-        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        profileRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("profile")) {
@@ -393,7 +393,7 @@ final public class Database {
     }
 
     public void getCategories(String restaurantID, onAllCategoriesReceived cb) {
-        restaurantRef.child("profile").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+        restaurantRef.child(mAuth.getUid()).child("profile").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> categories = new ArrayList<>();

@@ -152,7 +152,11 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     @Override
     public void openOrder(Order order) {
         Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
+        Log.d("ORDER: in openOrder1",order.toString());
+
         intent.putExtra("order", order);
+        Log.d("ORDER: in openOrder2",order.toString());
+
         Log.d("MADAPP" , "order in HomeActivity: " + order.toString());
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

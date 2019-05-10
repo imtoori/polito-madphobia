@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -294,10 +295,10 @@ public class EditProfileActivity extends AppCompatActivity {
         Database.getInstance().getRestaurantProfile(new FireBaseCallBack<Restaurant>(){
             @Override
             public void onCallback(Restaurant user) {
-                if(user!=null){
+                if(user!=null&&user.name!=null){
                     mUser=new Restaurant(user);
+                    updateFields(user);
 
-                    updateFields(mUser);
                 }
 
             }
@@ -335,21 +336,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
         }
         Database.getInstance().putRestaurantIntoCategory(user.id, myCategories);
-       /* Database.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
-            @Override
-            public void onDataFetched(List<MenuItemRest> data) {
-                data.forEach(m->{
-                    user.menuItems.put(m.id,m);
-                });
-            }
 
-            @Override
-            public void onError(String error) {
-
-            }
-        });*/
-       user.menuItems =mUser.menuItems;
-        Database.getInstance().putRestaurantProfile(user);
+       if(mUser.menuItems==null)
+            user.menuItems = null;
+       else
+           user.menuItems =mUser.menuItems;
+       Database.getInstance().putRestaurantProfile(user);
 
     }
 
@@ -427,7 +419,7 @@ public class EditProfileActivity extends AppCompatActivity {
         city.setText(u.city);
         deliveryCost.setText(String.valueOf(u.deliveryCost));
         minOrder.setText(String.valueOf(u.minOrderCost));
-        imageProfileUri = Uri.parse( mUser.imageUri);
+        imageProfileUri = Uri.parse( u.imageUri);
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
         if(imgProfile.getDrawable() == null) {
