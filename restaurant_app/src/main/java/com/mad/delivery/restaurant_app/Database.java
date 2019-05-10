@@ -126,7 +126,7 @@ final public class Database {
 
     public  List<Order> getPendingOrders(FireBaseCallBack<Order> firebaseCallback) {
         List<Order> pendings = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -160,7 +160,7 @@ final public class Database {
 
     public  List<Order> getPreparingOrders(FireBaseCallBack<Order> firebaseCallback) {
         List<Order> preparing = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -191,7 +191,7 @@ final public class Database {
             instance = new Database();
         }
         List<Order> completed = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -256,7 +256,7 @@ final public class Database {
     }
 
     public MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
-        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(id).addValueEventListener(new ValueEventListener() {
+        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 MenuItemRest item = dataSnapshot.getValue(MenuItemRest.class);
@@ -299,7 +299,7 @@ final public class Database {
     }
 
     public void putRestaurantIntoCategory(String idRestaurant, Set<String> categories) {
-        categoriesRef.addValueEventListener(new ValueEventListener() {
+        categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
@@ -349,7 +349,7 @@ final public class Database {
         }
     }
     public void getRestaurantProfile(FireBaseCallBack<Restaurant> firebaseCallbackUser) {
-        profileRef.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+        profileRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("profile")) {
@@ -374,7 +374,7 @@ final public class Database {
     }
 
     public void getCategories(onAllCategoriesReceived cb) {
-        categoriesRef.addValueEventListener(new ValueEventListener() {
+        categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> categories = new ArrayList<>();
@@ -396,7 +396,7 @@ final public class Database {
     }
 
     public void getCategories(String restaurantID, onAllCategoriesReceived cb) {
-        restaurantRef.child(mAuth.getUid()).child("profile").child("categories").addValueEventListener(new ValueEventListener() {
+        restaurantRef.child(mAuth.getUid()).child("profile").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> categories = new ArrayList<>();
@@ -425,7 +425,7 @@ final public class Database {
 
 
     public void getBikerId(FireBaseCallBack <String> firebaseCallback){
-        myRef.child("users").child("biker").addValueEventListener(new ValueEventListener() {
+        myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> bikerIds = new ArrayList<>();
