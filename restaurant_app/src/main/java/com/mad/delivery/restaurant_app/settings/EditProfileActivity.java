@@ -324,6 +324,8 @@ public class EditProfileActivity extends AppCompatActivity {
         user.previewInfo.id = user.id;
         user.deliveryCost = Integer.valueOf(deliveryCost.getText().toString());
         user.minOrderCost = Integer.valueOf(minOrder.getText().toString());
+        user.previewInfo.deliveryCost = user.deliveryCost;
+        user.previewInfo.minOrderCost = user.minOrderCost;
 
         for(String c : myCategories) {
             user.categories.put(c.toLowerCase(), true);
