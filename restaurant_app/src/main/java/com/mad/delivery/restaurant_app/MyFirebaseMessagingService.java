@@ -1,5 +1,7 @@
 package com.mad.delivery.restaurant_app;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -13,6 +15,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Toast.makeText(getApplicationContext(), "New order!", Toast.LENGTH_SHORT).show();
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(() -> Toast.makeText(getBaseContext(), "New order!", Toast.LENGTH_SHORT).show());
     }
 }
