@@ -45,7 +45,8 @@ public class OrderInfoActivity extends AppCompatActivity {
         biker_note=findViewById(R.id.biker_note);
         client_note=findViewById(R.id.client_note);
         order_code.setText(order.id);
-        subtot.setText(order.totalPrice.toString());
+        Double sub= order.totalPrice-order.restaurant.deliveryCost;
+        subtot.setText(sub.toString());
         del_fee.setText(order.restaurant.deliveryCost.toString());
         tot.setText(order.totalPrice.toString());
         address.setText(order.delivery);

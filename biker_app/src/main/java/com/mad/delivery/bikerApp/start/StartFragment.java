@@ -38,7 +38,8 @@ public class StartFragment extends Fragment {
         earning.setEnabled(working);
         hours.setEnabled(working);
         kilometers.setEnabled(working);
-
+        status.setText(R.string.start_work);
+        Database.getInstance().setBikerStatus(working);
         status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,10 +50,10 @@ public class StartFragment extends Fragment {
                 kilometers.setEnabled(working);
                 if(working) {
                     status.setText(R.string.start_work);
-                    Database.getInstance().setBikerStatus(working);
+                    Database.getInstance().setBikerStatus(!working);
                 } else {
                     status.setText(R.string.stop_work);
-                    Database.getInstance().setBikerStatus(working);
+                    Database.getInstance().setBikerStatus(!working);
 
                 }
             }

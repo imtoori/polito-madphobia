@@ -14,6 +14,8 @@ public class MenuItemRest implements Parcelable {
     public String imgUrl;
     public String category;
     public String id;
+    public String restaurantId;
+
     public String imageDownload;
     public Integer availability;
     public String imageName;

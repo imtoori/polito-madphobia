@@ -35,6 +35,7 @@ public class MenuCategoriesAdapter extends RecyclerView.Adapter<MenuCategoriesAd
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 

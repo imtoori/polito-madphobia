@@ -78,7 +78,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         cvAdminNotes  = findViewById(R.id.cv_admin_notes);
         cvChangeStatus = findViewById(R.id.cv_status_change);
         adminNotes = findViewById(R.id.et_admin_notes);
-        if(order.serverNotes != null && !order.serverNotes.equals("")) adminNotes.setText(order.serverNotes);
+        if(order.bikerNotes != null && !order.bikerNotes.equals("")) adminNotes.setText(order.bikerNotes);
         btnChangeStatus = findViewById(R.id.btn_change_status);
         LayoutTransition adminNotesLt =  cvAdminNotes.getLayoutTransition();
         adminNotesLt.setDuration(500);
@@ -237,7 +237,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 .setTitle(titleResource);
         builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                modifiedOrder.serverNotes = adminNotes.getText().toString();
+                modifiedOrder.bikerNotes = adminNotes.getText().toString();
                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                 order = modifiedOrder;
