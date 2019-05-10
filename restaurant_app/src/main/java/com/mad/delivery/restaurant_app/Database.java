@@ -17,6 +17,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
@@ -40,6 +41,7 @@ final public class Database {
     DatabaseReference ordersRef;
     DatabaseReference profileRef;
     DatabaseReference categoriesRef;
+    DatabaseReference myRef;
     StorageReference storageRef;
     FirebaseAuth mAuth;
 
@@ -57,7 +59,7 @@ final public class Database {
         //TODO: call this after login
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
-
+        myRef = database.getReference();
         //TODO: after login implementation use current user
         restaurantRef = database.getReference("users/restaurants/" + mAuth.getUid());
         menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/profile/menuItems");
@@ -80,6 +82,7 @@ final public class Database {
         ordersRef.child(o.id).setValue(o);
 
     }
+
 
 
 
@@ -116,7 +119,7 @@ final public class Database {
     }
 
 
-    public  List<Order> getPendingOrders(FirebaseCallback firebaseCallback) {
+    public  List<Order> getPendingOrders(FireBaseCallBack<Order> firebaseCallback) {
         List<Order> pendings = new ArrayList<>();
         ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -131,7 +134,7 @@ final public class Database {
                         }
                     }
                 }
-                firebaseCallback.onCallbak(pendings);
+                firebaseCallback.onCallbackList(pendings);
             }
 
             @Override
@@ -150,7 +153,7 @@ final public class Database {
         return pendings;
     }
 
-    public  List<Order> getPreparingOrders(FirebaseCallback firebaseCallback) {
+    public  List<Order> getPreparingOrders(FireBaseCallBack<Order> firebaseCallback) {
         List<Order> preparing = new ArrayList<>();
         ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -165,7 +168,7 @@ final public class Database {
                         }
                     }
                 }
-                firebaseCallback.onCallbak(preparing);
+                firebaseCallback.onCallbackList(preparing);
             }
 
             @Override
@@ -178,7 +181,7 @@ final public class Database {
 
     }
 
-    public  List<Order> getCompletedOrders(FirebaseCallback firebaseCallback) {
+    public  List<Order> getCompletedOrders(FireBaseCallBack<Order> firebaseCallback) {
         if (instance == null) {
             instance = new Database();
         }
@@ -197,7 +200,7 @@ final public class Database {
                         }
                     }
                 }
-                firebaseCallback.onCallbak(completed);
+                firebaseCallback.onCallbackList(completed);
             }
 
             @Override
@@ -318,7 +321,7 @@ final public class Database {
             }
         });
     }
-    public void getImage(String imageName,String path,Callback UriImg) {
+    public void getImage(String imageName,String path,FireBaseCallBack<Uri> UriImg) {
         if (imageName==null||!imageName.equals("")) {
             // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
@@ -340,7 +343,7 @@ final public class Database {
             });
         }
     }
-    public void getRestaurantProfile(FirebaseCallbackUser firebaseCallbackUser) {
+    public void getRestaurantProfile(FireBaseCallBack<Restaurant> firebaseCallbackUser) {
         profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -348,7 +351,7 @@ final public class Database {
                     dataSnapshot = dataSnapshot.child("profile");
                     Restaurant item = dataSnapshot.getValue(Restaurant.class);
                     if (item != null) {
-                        firebaseCallbackUser.onCallbak(item);
+                        firebaseCallbackUser.onCallback(item);
                     } else {
                         //   userStringOnDataFetched.onError("data not found");
                         Log.d("DATABASE: ", "Elemento nullo");
@@ -416,6 +419,33 @@ final public class Database {
 
 
 
+    public void getBikerId(FireBaseCallBack <String> firebaseCallback){
+        myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> bikerIds = new ArrayList<>();
+                if(dataSnapshot.exists()) {
+
+                    Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : iterator) {
+                        if(snapshot.getValue(Biker.class).status=true)
+                        bikerIds.add(snapshot.getKey());
+
+
+                    }
+                }
+                firebaseCallback.onCallbackList(bikerIds);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("DATABASE: ", "Dato cancellato");
+
+            }
+        });
+
+    }
 }
 
 

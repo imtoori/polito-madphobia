@@ -1,7 +1,6 @@
 package com.mad.delivery.restaurant_app.settings;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,15 +21,16 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.restaurant_app.Callback;
 import com.mad.delivery.restaurant_app.Database;
-import com.mad.delivery.restaurant_app.FirebaseCallbackUser;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -43,12 +42,12 @@ public class ProfileActivity extends AppCompatActivity {
     TextView description;
     TextView opening;
     TextView road;
+    TextView deliveryCost, minOrderCost;
     ImageView imgProfile;
     Restaurant mUser = new Restaurant();
     private ChipGroup chipGroup;
     private Set<String> categories;
     private Set<String> myCategories;
-
     private FirebaseAuth mAuth;
 
     @Override
@@ -67,14 +66,14 @@ public class ProfileActivity extends AppCompatActivity {
         road = findViewById(R.id.main_road);
         imgProfile = findViewById(R.id.image_profile);
         chipGroup = findViewById(R.id.chip_group);
+        deliveryCost = findViewById(R.id.tv_delivery_fee);
+        minOrderCost = findViewById(R.id.tv_min_order);
         categories = new HashSet<>();
         Log.d("MADAPP", "onCreate profile..");
         getProfileData();
 
         Database.getInstance().getCategories(mUser.getId(), set -> {
             myCategories = new HashSet<>(set);
-
-
             Database.getInstance().getCategories(innerSet -> {
                 innerSet.stream().forEach(n -> {
                     Chip chip = new Chip(this);
@@ -147,9 +146,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        Database.getInstance().getRestaurantProfile(new FirebaseCallbackUser() {
+        Database.getInstance().getRestaurantProfile(new FireBaseCallBack<Restaurant>() {
             @Override
-            public void onCallbak(Restaurant user) {
+            public void onCallbackList(List<Restaurant> list) {
+
+            }
+
+            @Override
+            public void onCallback(Restaurant user) {
                 if (user != null) {
                     mUser = new Restaurant(user);
                     updateFields(mUser);
@@ -170,6 +174,8 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
+        deliveryCost.setText(String.valueOf(u.deliveryCost));
+        minOrderCost.setText(String.valueOf(u.minOrderCost));
         if (!u.openingHours.equals("")) {
             opening.setText(u.openingHours);
         } else {
@@ -187,7 +193,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         if (imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName, "/images/profile/", new Callback() {
+            Database.getInstance().getImage(u.imageName, "/images/profile/", new FireBaseCallBack<Uri>() {
                 @Override
                 public void onCallback(Uri item) {
                     if (item != null) {
@@ -204,6 +210,11 @@ public class ProfileActivity extends AppCompatActivity {
 
                         }
                     }
+
+                }
+
+                @Override
+                public void onCallbackList(List<Uri> list) {
 
                 }
             });

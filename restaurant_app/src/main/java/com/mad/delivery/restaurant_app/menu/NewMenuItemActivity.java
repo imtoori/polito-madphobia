@@ -32,8 +32,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.restaurant_app.BuildConfig;
-import com.mad.delivery.restaurant_app.Callback;
 import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.OnDataFetched;
 import com.mad.delivery.restaurant_app.R;
@@ -264,7 +264,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
         imgProfile.setImageURI(Uri.parse(u.imgUrl));
 
         if (imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName, "/images/menuItems/", new Callback() {
+            Database.getInstance().getImage(u.imageName, "/images/menuItems/", new FireBaseCallBack<Uri>() {
                 @Override
                 public void onCallback(Uri item) {
                     if (item != null) {
@@ -282,6 +282,11 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
                         }
                     }
+
+                }
+
+                @Override
+                public void onCallbackList(List<Uri> list) {
 
                 }
             });

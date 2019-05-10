@@ -119,7 +119,8 @@ public class ConsumerDatabase {
         o.restaurantId = resturantId;
 
         o.status =OrderStatus.pending;
-        ConsumerDatabase.getInstance().getBikerId(new firebaseCallback<List<String>>() {
+        myRef.child("orders").push().setValue(o);
+     /*   ConsumerDatabase.getInstance().getBikerId(new firebaseCallback<List<String>>() {
             @Override
             public void onCallBack(List<String> item) {
                 if(!item.isEmpty()) {
@@ -129,7 +130,7 @@ public class ConsumerDatabase {
                     myRef.child("orders").push().setValue(o);
                 }
             }
-        });
+        });*/
 
     }
 
@@ -193,7 +194,6 @@ public class ConsumerDatabase {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             PreviewInfo restaurantPreview = dataSnapshot.getValue(PreviewInfo.class);
-                            Log.d("MADAPP", restaurantPreview.toString());
                             if (restaurantPreview != null) {
                                 if(m && restaurantPreview.minOrderCost != 0) {
                                     return;

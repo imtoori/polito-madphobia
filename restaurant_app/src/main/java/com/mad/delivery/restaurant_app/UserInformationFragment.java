@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.User;
 
 
 /**
@@ -24,7 +25,7 @@ public class UserInformationFragment extends Fragment {
     private TextView email;
     private TextView deliveryAddress;
     private TextView description;
-    private Customer u;
+    private User u;
 
     public UserInformationFragment() {
         // Required empty public constructor

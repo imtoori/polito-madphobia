@@ -43,6 +43,8 @@ public class Restaurant implements Parcelable {
         this.city = city;
         this.imageUri = imageUri;
         this.imageName =imageName;
+        this.deliveryCost = 0;
+        this.minOrderCost = 0;
         this.openingHours = openingTime;
         categories = new HashMap<>();
         menuItems = new HashMap<>();
@@ -65,6 +67,8 @@ public class Restaurant implements Parcelable {
         this.city = other.city;
         this.imageUri = other.imageUri;
         this.openingHours = other.openingHours;
+        this.deliveryCost = other.deliveryCost;
+        this.minOrderCost = other.minOrderCost;
         previewInfo = new PreviewInfo();
         previewInfo.name = this.name;
         previewInfo.scoreValue = 0;
@@ -79,7 +83,6 @@ public class Restaurant implements Parcelable {
     public Restaurant() {
         this.scoreValue = 0;
     }
-
 
     protected Restaurant(Parcel in) {
         previewInfo = in.readParcelable(PreviewInfo.class.getClassLoader());
@@ -340,5 +343,32 @@ public class Restaurant implements Parcelable {
 
     public static Creator<Restaurant> getCREATOR() {
         return CREATOR;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "previewInfo=" + previewInfo +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", road='" + road + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", doorPhone='" + doorPhone + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", city='" + city + '\'' +
+                ", openingHours='" + openingHours + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", id='" + id + '\'' +
+                ", scoreValue=" + scoreValue +
+                ", categories=" + categories +
+                ", menuItems=" + menuItems +
+                ", imageUri='" + imageUri + '\'' +
+                ", token='" + token + '\'' +
+                ", minOrderCost=" + minOrderCost +
+                ", deliveryCost=" + deliveryCost +
+                '}';
     }
 }

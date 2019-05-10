@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.restaurant_app.Database;
-import com.mad.delivery.restaurant_app.FirebaseCallback;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.menu.MyOrderRecyclerViewAdapter;
 
@@ -76,18 +76,25 @@ public class PreparingOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-         Database.getInstance().getPreparingOrders(new FirebaseCallback() {
-            @Override
-            public void onCallbak(List<Order> list) {
-                if(list.isEmpty())
-                    showEmptyFolder();
-                else {
-                    Log.d("CALL", list.toString());
-                    orders.addAll(list);
-                    ordersAdapter.orders = orders;
-                    ordersAdapter.notifyDataSetChanged();
-                }
-            }
+         Database.getInstance().getPreparingOrders(new FireBaseCallBack<Order>() {
+             @Override
+             public void onCallback(Order user) {
+
+             }
+
+             @Override
+             public void onCallbackList(List<Order> list) {
+                 if(list.isEmpty())
+                     showEmptyFolder();
+                 else {
+                     Log.d("CALL", list.toString());
+                     orders.addAll(list);
+                     ordersAdapter.orders = orders;
+                     ordersAdapter.notifyDataSetChanged();
+                 }
+             }
+
+
         });
 
     }
