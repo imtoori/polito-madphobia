@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,13 +41,15 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     SettingsFragment settingsFragment;
     FirebaseDatabase db;
     FirebaseAuth mAuth;
+    FirebaseUser mUser;
     DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseDatabase.getInstance();
-        mAuth =FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
         myRef = db.getReference();
         setContentView(R.layout.activity_home);
         myToolbar = findViewById(R.id.mainActivityToolbar);
@@ -95,8 +98,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     public void onBackPressed() {
         Log.d("MADAPP", "onBackPressed");
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
-        Log.d("MADAPP", "onBackPressed and fragments count=" + fragments);
-        if(searchFragment != null && searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
+        if (searchFragment != null && searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
             searchFragment.getChildFragmentManager().popBackStack();
             return;
         }
@@ -110,19 +112,16 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     }
 
 
-
-
     @Override
     public void openRestaurant(PreviewInfo previewInfo) {
-        Log.d("MADAPP", "Clicked on restaurant");
         Intent intent = new Intent(getApplicationContext(), RestaurantInfoActivity.class);
         intent.putExtra("restaurant", previewInfo);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
+
     @Override
     public void openOrder() {
-        Log.d("MADAPP", "Clicked on ORDER");
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
 
         startActivity(intent);
@@ -131,19 +130,22 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.home_menu, menu);
-        return true;
+        if (mUser == null) {
+            getMenuInflater().inflate(R.menu.home_menu, menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.nav_login:
-
-                            Log.d("MADAPP", "Opening Login Activity");
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                Log.d("MADAPP", "Opening Login Activity");
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                 return true;
             default:

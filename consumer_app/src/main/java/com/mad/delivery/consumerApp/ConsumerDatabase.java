@@ -194,7 +194,6 @@ public class ConsumerDatabase {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             PreviewInfo restaurantPreview = dataSnapshot.getValue(PreviewInfo.class);
-                            Log.d("MADAPP", restaurantPreview.toString());
                             if (restaurantPreview != null) {
                                 if(m && restaurantPreview.minOrderCost != 0) {
                                     return;
