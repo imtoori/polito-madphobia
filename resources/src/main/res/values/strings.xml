@@ -43,6 +43,11 @@
     <string name="check_lastName">Last Name not valid</string>
     <string name="check_phone">Phone Number not valid</string>
     <string name="check_email">Email Address not valid</string>
+    <string name="check_delivery">Insert delivery cost</string>
+    <string name="check_minorder">Insert min order cost</string>
+    <string name="restaurant_options">Restaurant Options</string>
+    <string name="delivery_cost_hint">Delivery Cost</string>
+    <string name="min_order_hint">Min Order Cost</string>
 
     <!-- Login & Registration-->
     <string name="login">Login</string>
@@ -196,6 +201,7 @@
     <string name="filters">Apply filters</string>
     <string name="login_required">Please log in</string>
     <string name="logout">Logout</string>
+
 
     <!-- StartFragment -->
     <string name="start_work">Start</string>

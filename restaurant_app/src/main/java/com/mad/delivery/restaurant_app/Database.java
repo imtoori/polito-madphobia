@@ -56,11 +56,9 @@ final public class Database {
     private Database() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //TODO: call this after login
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         myRef = database.getReference();
-        //TODO: after login implementation use current user
         restaurantRef = database.getReference("users/restaurants/" + mAuth.getUid());
         menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/profile/menuItems");
         ordersRef = database.getReference("orders");

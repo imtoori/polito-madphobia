@@ -89,7 +89,6 @@ public class RestaurantsFragment extends Fragment {
         try {
             categories = getArguments().getStringArrayList("categories");
             chosenCategories.addAll(categories);
-            Log.d("MADAPP", "in restaurants: " + chosenCategories.toString());
             address = getArguments().getString("address");
             freeDelivery = getArguments().getBoolean("freeDelivery");
             minOrderCost = getArguments().getBoolean("minOrderCost");
@@ -103,7 +102,6 @@ public class RestaurantsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("MADAPP", "restaurantsFragment onCreatedView");
         ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery, preview -> {
             previews.add(preview);
             restaurantAdapter.notifyDataSetChanged();

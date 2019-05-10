@@ -33,7 +33,7 @@ public class SummaryOrdersAdapter extends RecyclerView.Adapter<com.mad.delivery.
         holder.product = products.get(position);
         holder.product_name.setText(holder.product.name);
         holder.price.setText(Double.toString(holder.product.price));
-        holder.counter.setText(Double.toString(holder.product.quantity));
+        holder.counter.setText("x"+Integer.toString(holder.product.quantity));
 
 
     }

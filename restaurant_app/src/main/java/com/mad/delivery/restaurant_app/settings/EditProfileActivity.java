@@ -64,6 +64,7 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText postCode;
     EditText city;
     EditText openingTime;
+    EditText deliveryCost, minOrder;
     ImageView imgProfile;
     Toolbar myToolbar;
     Uri imageProfileUri;
@@ -98,6 +99,8 @@ public class EditProfileActivity extends AppCompatActivity {
         openingTime = findViewById(R.id.openinghours_et);
         btnCamera = findViewById(R.id.editprofile_btncamera);
         chipGroup = findViewById(R.id.chip_group);
+        deliveryCost = findViewById(R.id.et_delivery_fee);
+        minOrder = findViewById(R.id.et_min_order);
         categories = new HashSet<>();
         myCategories = new HashSet<>();
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -225,6 +228,8 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
         outState.putString("openingTime", openingTime.getText().toString());
+        outState.putString("deliveryCost", deliveryCost.getText().toString());
+        outState.putString("minOrder", minOrder.getText().toString());
         if (imageProfileUri != Uri.EMPTY)
             outState.putString("imageUri", imageProfileUri.toString());
         else
@@ -250,6 +255,8 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.postCode = savedInstanceState.getString("postCode");
         mUser.city = savedInstanceState.getString("city");
         mUser.imageUri = savedInstanceState.getString("imageUri");
+        mUser.deliveryCost = Double.valueOf(savedInstanceState.getString("deliveryCost"));
+        mUser.minOrderCost = Double.valueOf(savedInstanceState.getString("minOrder"));
         updateFields(mUser);
     }
 
@@ -316,6 +323,11 @@ public class EditProfileActivity extends AppCompatActivity {
                 openingTime.getText().toString());
         user.id = mAuth.getCurrentUser().getUid();
         user.previewInfo.id = user.id;
+        user.deliveryCost = Double.valueOf(deliveryCost.getText().toString());
+        user.minOrderCost = Double.valueOf(minOrder.getText().toString());
+        user.previewInfo.deliveryCost = user.deliveryCost;
+        user.previewInfo.minOrderCost = user.minOrderCost;
+
         for(String c : myCategories) {
             user.categories.put(c.toLowerCase(), true);
 
@@ -398,6 +410,8 @@ public class EditProfileActivity extends AppCompatActivity {
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
+        deliveryCost.setText(String.valueOf(u.deliveryCost));
+        minOrder.setText(String.valueOf(u.minOrderCost));
         imageProfileUri = Uri.parse( mUser.imageUri);
         imgProfile.setImageURI(Uri.parse(u.imageUri));
 
@@ -466,6 +480,16 @@ public class EditProfileActivity extends AppCompatActivity {
         String roadString = "([A-Za-z0-9'-_\\s])+";
         String cityString = "([A-Za-z\'\\s-])+";
         String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
+        String deliveryAndOrder = "[0-9.,]{1,5}";
+
+        if(!deliveryCost.getText().toString().matches(deliveryAndOrder)) {
+            deliveryCost.setError(getResources().getString(R.string.check_delivery));
+            result = false;
+        }
+        if(!minOrder.getText().toString().matches(deliveryAndOrder)) {
+            minOrder.setError(getResources().getString(R.string.check_minorder));
+            result = false;
+        }
 
         if (!name.getText().toString().matches(nameString)) {
             name.setError(getResources().getString(R.string.check_name));

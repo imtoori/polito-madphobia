@@ -29,7 +29,7 @@ public class Restaurant implements Parcelable {
     public Map<String, MenuItemRest> menuItems;
     public String imageUri;
     public String token;
-    public Integer minOrderCost, deliveryCost;
+    public Double minOrderCost, deliveryCost;
 
     public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
         this.name = name;
@@ -43,6 +43,8 @@ public class Restaurant implements Parcelable {
         this.city = city;
         this.imageUri = imageUri;
         this.imageName =imageName;
+        this.deliveryCost = 0.00;
+        this.minOrderCost = 0.00;
         this.openingHours = openingTime;
         categories = new HashMap<>();
         menuItems = new HashMap<>();
@@ -51,6 +53,8 @@ public class Restaurant implements Parcelable {
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
         previewInfo.description = this.description;
+        previewInfo.deliveryCost = this.deliveryCost;
+        previewInfo.minOrderCost = this.minOrderCost;
     }
 
     public Restaurant(Restaurant other) {
@@ -65,11 +69,15 @@ public class Restaurant implements Parcelable {
         this.city = other.city;
         this.imageUri = other.imageUri;
         this.openingHours = other.openingHours;
+        this.deliveryCost = other.deliveryCost;
+        this.minOrderCost = other.minOrderCost;
         previewInfo = new PreviewInfo();
         previewInfo.name = this.name;
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
         previewInfo.description = this.description;
+        previewInfo.deliveryCost = this.deliveryCost;
+        previewInfo.minOrderCost = this.minOrderCost;
     }
 
     public Restaurant(String name) {
@@ -79,7 +87,6 @@ public class Restaurant implements Parcelable {
     public Restaurant() {
         this.scoreValue = 0;
     }
-
 
     protected Restaurant(Parcel in) {
         previewInfo = in.readParcelable(PreviewInfo.class.getClassLoader());
@@ -106,12 +113,12 @@ public class Restaurant implements Parcelable {
         if (in.readByte() == 0) {
             minOrderCost = null;
         } else {
-            minOrderCost = in.readInt();
+            minOrderCost = in.readDouble();
         }
         if (in.readByte() == 0) {
             deliveryCost = null;
         } else {
-            deliveryCost = in.readInt();
+            deliveryCost = in.readDouble();
         }
     }
 
@@ -143,13 +150,13 @@ public class Restaurant implements Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(minOrderCost);
+            dest.writeDouble(minOrderCost);
         }
         if (deliveryCost == null) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(deliveryCost);
+            dest.writeDouble(deliveryCost);
         }
     }
 
@@ -322,23 +329,50 @@ public class Restaurant implements Parcelable {
         this.token = token;
     }
 
-    public Integer getMinOrderCost() {
+    public Double getMinOrderCost() {
         return minOrderCost;
     }
 
-    public void setMinOrderCost(Integer minOrderCost) {
+    public void setMinOrderCost(Double minOrderCost) {
         this.minOrderCost = minOrderCost;
     }
 
-    public Integer getDeliveryCost() {
+    public Double getDeliveryCost() {
         return deliveryCost;
     }
 
-    public void setDeliveryCost(Integer deliveryCost) {
+    public void setDeliveryCost(Double deliveryCost) {
         this.deliveryCost = deliveryCost;
     }
 
     public static Creator<Restaurant> getCREATOR() {
         return CREATOR;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "previewInfo=" + previewInfo +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", road='" + road + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", doorPhone='" + doorPhone + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", city='" + city + '\'' +
+                ", openingHours='" + openingHours + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", id='" + id + '\'' +
+                ", scoreValue=" + scoreValue +
+                ", categories=" + categories +
+                ", menuItems=" + menuItems +
+                ", imageUri='" + imageUri + '\'' +
+                ", token='" + token + '\'' +
+                ", minOrderCost=" + minOrderCost +
+                ", deliveryCost=" + deliveryCost +
+                '}';
     }
 }

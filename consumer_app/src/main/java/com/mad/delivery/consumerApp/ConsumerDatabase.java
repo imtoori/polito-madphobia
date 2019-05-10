@@ -231,7 +231,6 @@ public class ConsumerDatabase {
                 // show empty icon
             } else {
                 // ask for restaurants
-                Log.d("MADAPP", "Restaurants IDS returned!");
                 for(String restName : list) {
                     myRef.child("users").child("restaurants").child(restName).child("profile").child("previewInfo").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

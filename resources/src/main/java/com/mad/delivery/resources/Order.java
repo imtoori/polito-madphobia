@@ -22,25 +22,29 @@ public class Order implements Parcelable {
     public String estimatedDelivery;
     public String clientNotes;
     public String serverNotes;
+    public String bikerNotes;
     public String paymentMethod;
     public Double totalPrice;
     public String restaurantId;
     public String bikerId;
     public String clientId;
+    public String delivery;
 
     public Order(){}
 
-    public Order(User u, Restaurant r, List<Product> products, String orderFor, String paymentMethod) {
+    public Order(User u, Restaurant r, List<Product> products, String orderFor, String paymentMethod, String delivery) {
         this.client = u;
         this.products = products;
         status = OrderStatus.pending;
         orderDate = new DateTime().toString();
         this.restaurant = r;
         this.orderFor = orderFor;
+        this.delivery=delivery;
         this.paymentMethod = paymentMethod;
 //        products.forEach(p->Log.d("MADD",p.name+" "+p.quantity + " " + p.price));
         this.totalPrice=0.0;
         products.forEach(p->this.totalPrice+=p.price*p.quantity);
+        totalPrice+=restaurant.deliveryCost;
 
     }
 
@@ -49,17 +53,16 @@ public class Order implements Parcelable {
         this.client = new User(other.client);
         this.products = new ArrayList<>(other.products);
         this.restaurant = other.restaurant;
-        this.status = other.status;
-        this.orderDate = other.orderDate;
-        this.orderFor = other.orderFor;
-        this.estimatedDelivery = other.estimatedDelivery;
-        this.clientNotes = other.clientNotes;
-        this.serverNotes = other.serverNotes;
-        this.paymentMethod = other.paymentMethod;
+        status = other.status;
+        orderDate = other.orderDate;
+        orderFor = other.orderFor;
+        estimatedDelivery = other.estimatedDelivery;
+        clientNotes = other.clientNotes;
+        serverNotes = other.serverNotes;
+        this.delivery= other.delivery;
+        bikerNotes = other.bikerNotes;
+        paymentMethod = other.paymentMethod;
         this.totalPrice = other.totalPrice;
-        this.bikerId =other.bikerId;
-        this.restaurantId =other.restaurantId;
-        this.clientId = other.clientId;
     }
 
 
@@ -74,6 +77,8 @@ public class Order implements Parcelable {
         estimatedDelivery = in.readString();
         clientNotes = in.readString();
         serverNotes = in.readString();
+        bikerNotes=in.readString();
+        delivery=in.readString();
         paymentMethod = in.readString();
         if (in.readByte() == 0) {
             totalPrice = null;
@@ -94,10 +99,11 @@ public class Order implements Parcelable {
         dest.writeSerializable(status);
         dest.writeString(orderDate);
         dest.writeString(orderFor);
-
         dest.writeString(estimatedDelivery);
         dest.writeString(clientNotes);
         dest.writeString(serverNotes);
+        dest.writeString(bikerNotes);
+        dest.writeString(delivery);
         dest.writeString(paymentMethod);
         if (totalPrice == null) {
             dest.writeByte((byte) 0);
@@ -151,15 +157,15 @@ public class Order implements Parcelable {
         this.client = other.client;
         this.products = other.products;
         this.restaurant = other.restaurant;
-        this.status = other.status;
-        this.orderDate = other.orderDate;
-        this.orderFor = other.orderFor;
-        this.estimatedDelivery = other.estimatedDelivery;
-        this.clientNotes = other.clientNotes;
-        this.serverNotes = other.serverNotes;
-        this.restaurantId = other.restaurantId;
-        this.bikerId = other.bikerId;
-        this.clientId = other.clientId;
+        status = other.status;
+        orderDate = other.orderDate;
+        orderFor = other.orderFor;
+        estimatedDelivery = other.estimatedDelivery;
+        clientNotes = other.clientNotes;
+        serverNotes = other.serverNotes;
+        bikerNotes= other.bikerNotes;
+        delivery=other.delivery;
+        restaurantId = other.restaurantId;
     }
 
     public String getId() {
@@ -242,6 +248,22 @@ public class Order implements Parcelable {
         this.serverNotes = serverNotes;
     }
 
+    public String getBikerNotes() {
+        return bikerNotes;
+    }
+
+    public void setNikerNotes(String bikerNotes) {
+        this.bikerNotes = bikerNotes;
+    }
+
+    public String getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(String delivery) {
+        this.delivery = delivery;
+    }
+
     public String getPaymentMethod() {
         return paymentMethod;
     }
@@ -297,8 +319,10 @@ public class Order implements Parcelable {
                 ", orderDate='" + orderDate + '\'' +
                 ", orderFor='" + orderFor + '\'' +
                 ", estimatedDelivery='" + estimatedDelivery + '\'' +
+                ", delivery='" + delivery + '\'' +
                 ", clientNotes='" + clientNotes + '\'' +
                 ", serverNotes='" + serverNotes + '\'' +
+                ", bikerNotes='" + bikerNotes + '\'' +
                 ", paymentMethod='" + paymentMethod + '\'' +
                 ", totalPrice=" + totalPrice +
                 ", restaurantId='" + restaurantId + '\'' +
