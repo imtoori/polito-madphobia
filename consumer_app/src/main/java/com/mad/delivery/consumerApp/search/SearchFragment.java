@@ -57,8 +57,6 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -149,7 +147,6 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                 chipGroup.addView(chip);
             });
         });
-
         return view;
     }
 
@@ -163,9 +160,6 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.childfrag_container, catFragment);
         ft.commit();
-
-
-
     }
 
     public void applyFilters(boolean m, boolean d) {

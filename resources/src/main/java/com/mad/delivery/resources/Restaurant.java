@@ -53,6 +53,8 @@ public class Restaurant implements Parcelable {
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
         previewInfo.description = this.description;
+        previewInfo.deliveryCost = this.deliveryCost;
+        previewInfo.minOrderCost = this.minOrderCost;
     }
 
     public Restaurant(Restaurant other) {
@@ -74,6 +76,8 @@ public class Restaurant implements Parcelable {
         previewInfo.scoreValue = 0;
         previewInfo.imageURL = "";
         previewInfo.description = this.description;
+        previewInfo.deliveryCost = this.deliveryCost;
+        previewInfo.minOrderCost = this.minOrderCost;
     }
 
     public Restaurant(String name) {
