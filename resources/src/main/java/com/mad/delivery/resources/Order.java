@@ -36,7 +36,7 @@ public class Order implements Parcelable {
         this.client = u;
         this.products = products;
         status = OrderStatus.pending;
-        orderDate = new DateTime().toString();
+        this.orderDate = new DateTime().toString();
         this.restaurant = r;
         this.orderFor = orderFor;
         this.delivery=delivery;
@@ -54,7 +54,7 @@ public class Order implements Parcelable {
         this.products = new ArrayList<>(other.products);
         this.restaurant = other.restaurant;
         status = other.status;
-        orderDate = other.orderDate;
+        this.orderDate = other.orderDate;
         orderFor = other.orderFor;
         estimatedDelivery = other.estimatedDelivery;
         clientNotes = other.clientNotes;

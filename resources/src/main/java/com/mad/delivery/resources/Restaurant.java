@@ -71,6 +71,8 @@ public class Restaurant implements Parcelable {
         this.openingHours = other.openingHours;
         this.deliveryCost = other.deliveryCost;
         this.minOrderCost = other.minOrderCost;
+        this.menuItems = other.menuItems;
+        this.menuItems= other.menuItems;
         previewInfo = new PreviewInfo();
         previewInfo.name = this.name;
         previewInfo.scoreValue = 0;

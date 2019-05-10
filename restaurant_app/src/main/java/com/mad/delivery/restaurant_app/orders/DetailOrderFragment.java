@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +58,9 @@ public class DetailOrderFragment extends Fragment {
         statusIcon = view.findViewById(R.id.status_icon);
         clientNotes = view.findViewById(R.id.client_notes_tv);
         Order order = getArguments().getParcelable("order");
-        arrived.setText(MyDateFormat.parse(DateTime.parse(order.orderDate)));
-        requested.setText(MyDateFormat.parse(DateTime.parse(order.orderFor)));
+        Log.d("TAFF","Status "+order.status.toString().toLowerCase());
+        arrived.setText(order.orderDate);
+        requested.setText(order.orderFor);
 
       //  arrived.setText(order.orderDate);
        // requested.setText(order.orderFor);
