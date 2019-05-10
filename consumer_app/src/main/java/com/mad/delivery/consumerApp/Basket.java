@@ -45,7 +45,7 @@ import static java.security.AccessController.getContext;
 
 public class Basket extends AppCompatActivity implements TimePickerFragment.TimePickedListener {
     Menu menu;
-    TextView order_code;
+
     TextView subtot;
     TextView del_fee;
     TextView tot;
@@ -78,7 +78,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         toolbar = findViewById(R.id.toolbar);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
-        order_code = findViewById(R.id.order_code);
+
         subtot = findViewById(R.id.subtotal_price);
         del_fee = findViewById(R.id.delivery_fee);
         tot = findViewById(R.id.total);
@@ -110,10 +110,10 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name, value, item.price)));
 
         priceD = 0.0;
+        //TODO insert real fee
         fee = 0.0;
         products.forEach(p -> priceD += p.price * p.quantity);
-        //TODO insert real OrderID
-        order_code.setText("#123456");
+
         totD = priceD + fee;
         subtot.setText(priceD.toString());
         del_fee.setText(fee.toString());
@@ -147,9 +147,10 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                         @Override
                         public void onCallBack(User item) {
                             if (item != null && item.lastName != null) {
-                                order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", payment_met);
+                                order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", payment_met, address.getText().toString());
                                 order.orderDate = new DateTime().toString();
                                 order.orderFor = datetime.toString();
+                                order.setClientNotes(notes.getText().toString());
                                 if (order.totalPrice <= item.credit && payment_met.equals("credit")) {
                                     ConsumerDatabase.getInstance().putOrder(order);
                                     ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {

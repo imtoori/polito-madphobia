@@ -51,8 +51,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 }
             });
             int price = 0;
+
             holder.price.setText("Price: "+ holder.order.totalPrice.toString());
-            holder.data.setText("Date: "+ holder.order.orderFor.toString());
+            holder.data.setText("Date: "+ holder.order.orderFor);
             holder.status.setText("Delivery: "+ holder.order.status.toString());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
