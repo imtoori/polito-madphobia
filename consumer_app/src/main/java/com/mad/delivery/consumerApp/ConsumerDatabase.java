@@ -82,6 +82,10 @@ public class ConsumerDatabase {
         return instance;
     }
 
+    public void reset() {
+        instance = null;
+    }
+
     public interface onRestaurantsIdReceived{
         void  onCallback(Set<String> list);
     }

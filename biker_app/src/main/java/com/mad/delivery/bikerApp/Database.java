@@ -61,6 +61,10 @@ final public class Database {
 
     }
 
+    public void reset() {
+        instance = null;
+    }
+
     void updateToken(String token) {
         Log.d("TOKEN", token);
         Database.getInstance().profileRef.child("token").setValue(token);

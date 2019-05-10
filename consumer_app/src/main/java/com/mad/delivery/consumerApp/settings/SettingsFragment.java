@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 
@@ -94,6 +95,8 @@ public class SettingsFragment extends Fragment {
             mAuth.signOut();
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+            ConsumerDatabase.getInstance().reset();
+            getActivity().finish();
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         });
