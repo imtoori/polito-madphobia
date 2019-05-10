@@ -104,7 +104,7 @@ public class ConsumerDatabase {
 
     public void setItemSelected(MenuItemRest item, Integer value){
         Log.d("MADDAPP","Il nome del piatto è"+item.name);
-        if(!resturantId.equals(item.id))
+        if(!resturantId.equals(item.restaurantId))
             itemSelected.clear();
         if(itemSelected.get(item)==null)
             itemSelected.put(item,value);

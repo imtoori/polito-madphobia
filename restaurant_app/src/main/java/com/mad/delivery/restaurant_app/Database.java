@@ -95,7 +95,7 @@ final public class Database {
 
     public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems,String imageName) {
         MenuItemRest item =  new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
-
+        item.restaurantId =mAuth.getUid();
         item.id = menuItemsRef.push().getKey();
         menuItemsRef.child(item.id).setValue(item);
 
