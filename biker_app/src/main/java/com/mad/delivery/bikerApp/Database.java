@@ -40,6 +40,7 @@ final public class Database {
     DatabaseReference ordersRef;
     DatabaseReference profileRef;
     StorageReference storageRef;
+    DatabaseReference myRef;
 
     FirebaseAuth mAuth;
 
@@ -58,9 +59,28 @@ final public class Database {
         ordersRef = database.getReference("orders");
         profileRef = database.getReference("users/biker/"+mAuth.getUid());
         storageRef = FirebaseStorage.getInstance().getReference().child("users/biker/"+ mAuth.getUid());
+        myRef = database.getReference();
 
     }
+    public void getBikerStatus(FirebaseCallbackItem<Boolean> firebaseCallback){
+        myRef.child("users").child("biker").child(mAuth.getUid()).child("profile").child("status").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    Boolean b =dataSnapshot.getValue(Boolean.class);
+                    if(b!=null){
+                        firebaseCallback.onCallback(b);
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
     public void reset() {
         instance = null;
     }
