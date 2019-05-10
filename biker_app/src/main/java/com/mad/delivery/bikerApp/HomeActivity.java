@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.orders.DetailOrderActivity;
 import com.mad.delivery.bikerApp.orders.OrderFragment;
@@ -104,7 +106,8 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
             default:
                 navigation.setSelectedItemId(R.id.nav_orders);
         }
-
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> Database.getInstance().updateToken(instanceIdResult.getToken()));
+        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
     }
 
     @Override
