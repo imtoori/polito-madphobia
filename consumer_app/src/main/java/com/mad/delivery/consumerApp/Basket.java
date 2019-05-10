@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Transaction;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.MenuItemRest;
@@ -107,7 +108,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
 
         List<Product> products = new ArrayList<>();
 
-        ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name, value, item.price)));
+        ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name, value, item.price,item.id)));
 
         priceD = 0.0;
 
@@ -151,30 +152,49 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                                 order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", payment_met, address.getText().toString());
                                 order.orderDate = new DateTime().toString();
                                 order.orderFor = datetime.toString();
+
                                 order.setClientNotes(notes.getText().toString());
                                 if (order.totalPrice <= item.credit && payment_met.equals("credit")) {
-                                    ConsumerDatabase.getInstance().putOrder(order);
-                                    ConsumerDatabase.getInstance().updateCreditCustomer(-order.totalPrice, new firebaseCallback<Boolean>() {
+                                    ConsumerDatabase.getInstance().putOrder(order, new firebaseCallback<Boolean>() {
+                                                @Override
+                                                public void onCallBack(Boolean item) {
+                                                    if(item) {
+                                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                                        startActivity(intent);
+                                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                    }
+                                                    else {
+
+                                                        // Toast.makeText(this, "Non ci sono abbastanza prodotti", Toast.LENGTH_SHORT).show();
+                                                        Log.i("TAG", "Non ci sono abbastanza prodotti");
+                                                    }
+
+                                                }
+                                            });
+
+
+                                } else if (payment_met.equals("cash")) {
+                                    ConsumerDatabase.getInstance().putOrder(order, new firebaseCallback<Boolean>() {
                                         @Override
                                         public void onCallBack(Boolean item) {
-                                            if (item) {
-                                                Log.d("TAG", "Transazione Avvenuta con successo");
+                                            if(item) {
                                                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                                 startActivity(intent);
                                                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                            } else {
-                                                Log.d("TAG", "Transazione NON Avvenuta");
                                             }
+                                            else {
 
-
+                                                // Toast.makeText(this, "Non ci sono abbastanza prodotti", Toast.LENGTH_SHORT).show();
+                                                Log.i("TAG", "Non ci sono abbastanza prodotti");
+                                            }
                                         }
                                     });
-                                } else if (payment_met.equals("cash")) {
-                                    ConsumerDatabase.getInstance().putOrder(order);
+
+
                                     Log.i("TAG", "Acquisto effettuato ");
-                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                               /*     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     startActivity(intent);
-                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);*/
                                 } else {
                                     Log.i("TAG", "Non hai abbastanza credito");
                                 }

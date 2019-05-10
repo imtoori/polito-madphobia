@@ -53,13 +53,17 @@ final public class Database {
     private Database() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //TODO: call this after login
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         ordersRef = database.getReference("orders");
         profileRef = database.getReference("users/biker/"+mAuth.getUid());
         storageRef = FirebaseStorage.getInstance().getReference().child("users/biker/"+ mAuth.getUid());
 
+    }
+
+    void updateToken(String token) {
+        Log.d("TOKEN", token);
+        Database.getInstance().profileRef.child("token").setValue(token);
     }
 
     public  void update(Order o) {

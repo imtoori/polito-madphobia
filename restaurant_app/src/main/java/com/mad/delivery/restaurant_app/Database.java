@@ -56,11 +56,9 @@ final public class Database {
     private Database() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //TODO: call this after login
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         myRef = database.getReference();
-        //TODO: after login implementation use current user
         restaurantRef = database.getReference("users/restaurants/" + mAuth.getUid());
         menuItemsRef = database.getReference("users/restaurants/"+mAuth.getUid()+"/profile/menuItems");
         ordersRef = database.getReference("orders");
@@ -95,9 +93,13 @@ final public class Database {
 
     public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems,String imageName) {
         MenuItemRest item =  new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
-        item.id = mAuth.getUid();
+        item.restaurantId =mAuth.getUid();
+        item.id = menuItemsRef.push().getKey();
+        menuItemsRef.child(item.id).setValue(item);
+
+
         Log.d("MADDAP",item.name +" "+item.category);
-        menuItemsRef.push().setValue(item);
+       // menuItemsRef.child(item.id).child("id").setValue(item.id);
         Uri file = Uri.parse(imgUri);
         StorageReference profileRefStore = storageRef.child("images/menuItems/" + imageName);
         profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -289,7 +291,7 @@ final public class Database {
                 });
             }
         });
-        profileRef.setValue("profile");
+      //  profileRef.setValue("profile");
         profileRef.child("profile").setValue(user);
     }
 

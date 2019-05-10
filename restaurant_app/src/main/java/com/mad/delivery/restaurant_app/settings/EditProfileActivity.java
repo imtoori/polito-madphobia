@@ -26,11 +26,13 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.BuildConfig;
 import com.mad.delivery.restaurant_app.Database;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
+import com.mad.delivery.restaurant_app.OnDataFetched;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
@@ -294,6 +296,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onCallback(Restaurant user) {
                 if(user!=null){
                     mUser=new Restaurant(user);
+
                     updateFields(mUser);
                 }
 
@@ -332,7 +335,20 @@ public class EditProfileActivity extends AppCompatActivity {
 
         }
         Database.getInstance().putRestaurantIntoCategory(user.id, myCategories);
+       /* Database.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
+            @Override
+            public void onDataFetched(List<MenuItemRest> data) {
+                data.forEach(m->{
+                    user.menuItems.put(m.id,m);
+                });
+            }
 
+            @Override
+            public void onError(String error) {
+
+            }
+        });*/
+       user.menuItems =mUser.menuItems;
         Database.getInstance().putRestaurantProfile(user);
 
     }

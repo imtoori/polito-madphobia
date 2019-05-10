@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp;
 
+import android.content.Intent;
 import android.hardware.usb.UsbRequest;
 import android.net.Uri;
 import android.util.Log;
@@ -15,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -101,7 +104,7 @@ public class ConsumerDatabase {
 
     public void setItemSelected(MenuItemRest item, Integer value){
         Log.d("MADDAPP","Il nome del piatto è"+item.name);
-        if(!resturantId.equals(item.id))
+        if(!resturantId.equals(item.restaurantId))
             itemSelected.clear();
         if(itemSelected.get(item)==null)
             itemSelected.put(item,value);
@@ -113,24 +116,64 @@ public class ConsumerDatabase {
         return itemSelected;
     }
 
-    public void putOrder(Order o){
-        Random rand = new Random();
+    public void putOrder(Order o,firebaseCallback<Boolean> firebaseCallback){
         o.clientId =mAuth.getUid();
         o.restaurantId = resturantId;
-
         o.status =OrderStatus.pending;
-        myRef.child("orders").push().setValue(o);
-     /*   ConsumerDatabase.getInstance().getBikerId(new firebaseCallback<List<String>>() {
+       flag=true;
+        myRef.child("users").child("restaurants").child(o.restaurantId).child("profile").runTransaction(new Transaction.Handler() {
+
             @Override
-            public void onCallBack(List<String> item) {
-                if(!item.isEmpty()) {
-                    int n = rand.nextInt(item.size());
-                    Log.d("MADDAPP", "item: " + item.get(n) + " n: " + n);
-                    o.bikerId = item.get(n);
-                    myRef.child("orders").push().setValue(o);
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                if(mutableData.getValue()==null) {
+                    Log.d("TRANS", "mutable null");
                 }
+                else {
+                    Log.d("TRANS", "mutable not null");
+
+                    getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
+                        @Override
+                        public void onCallBack(List<MenuItemRest> item) {
+                            item.forEach(i->{
+                                o.products.forEach(p->{
+                                    Log.d("TRANS", "id menuItems "+i.id +" id prodotto "+p.idMenuItems +" quantità prodotto: "+p.quantity +" quantità items "+ i.availability );
+                                    if(i.id.equals(p.idMenuItems)) {
+                                        if (p.quantity > i.availability)
+                                            flag = false;
+                                        else
+                                            i.availability -= p.quantity;
+                                    }
+                                });
+
+                            });
+                            if(flag){
+                                item.forEach(i->{
+                                    myRef.child("users").child("restaurants").child(o.restaurantId).child("profile").child("menuItems").child(i.id).setValue(i);
+                                });
+                                myRef.child("orders").push().setValue(o);
+                            }
+                            firebaseCallback.onCallBack(flag);
+                        }
+                    });
+                }
+
+
+
+
+
+                if(flag)
+                return Transaction.success(mutableData);
+                else
+                    return Transaction.abort();
+
             }
-        });*/
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+            }
+        });
+
 
     }
 
@@ -303,7 +346,38 @@ public class ConsumerDatabase {
         });
     }
 
+    public void getMenuItems(Order o,firebaseCallback<List<MenuItemRest>> firebaseCallback){
+        myRef.child("users").child("restaurants").child(o.restaurantId).child("profile").child("menuItems").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<MenuItemRest> MenuItems = new ArrayList<>();
+                if(dataSnapshot.exists()) {
 
+                    Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : iterator) {
+                        MenuItemRest m = snapshot.getValue(MenuItemRest.class);
+                        o.products.forEach(p->{
+                            Log.d("TRANS", "id prodotto: "+p.idMenuItems+" id item "+m.id);
+                            if(p.idMenuItems.equals(m.id))
+                                MenuItems.add(m);
+                        });
+
+
+
+                    }
+                }
+                firebaseCallback.onCallBack(MenuItems);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("DATABASE: ", "Dato cancellato");
+
+            }
+        });
+
+    }
 
     public void getBikerId(firebaseCallback<List<String>> firebaseCallback){
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
