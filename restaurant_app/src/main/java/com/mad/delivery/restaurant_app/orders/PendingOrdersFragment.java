@@ -81,7 +81,7 @@ public class PendingOrdersFragment extends Fragment {
                      showEmptyFolder();
                 else {
                     Log.d("CALL", list.toString());
-                    orders.addAll(list);
+                    orders = list;
                     ordersAdapter.orders = orders;
                     ordersAdapter.notifyDataSetChanged();
                 }
