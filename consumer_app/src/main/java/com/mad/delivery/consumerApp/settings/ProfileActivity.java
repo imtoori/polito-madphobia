@@ -20,6 +20,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
@@ -59,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         myToolBar = findViewById(R.id.mainActivityToolbar);
         mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolBar);
+
         setTitle(getResources().getString(R.string.profile_toolbar));
         name = findViewById(R.id.main_name);
         phoneNumber = findViewById(R.id.mainprofile_phone);
@@ -69,6 +71,16 @@ public class ProfileActivity extends AppCompatActivity {
         imgProfile = findViewById(R.id.image_profile);
         getProfileData();
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.putExtra("open", 1);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        return super.onSupportNavigateUp();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

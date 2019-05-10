@@ -68,20 +68,20 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
                     case R.id.nav_menu:
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        //ft.addToBackStack(null);
+                        ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, walletFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_search:
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        //ft.addToBackStack(null);
+                        ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, searchFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_settings:
                         ft = fm.beginTransaction();
-                        //ft.addToBackStack(null);
+                        ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.frag_container, settingsFragment);
                         ft.commit();

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleTextColor="@color/colorTextIcon"
+        app:navigationIcon="@drawable/ic_back"
         style="@style/AppTheme.ToolBar"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
