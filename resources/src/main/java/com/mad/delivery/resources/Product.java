@@ -5,14 +5,16 @@ import android.os.Parcelable;
 
 public class Product implements Parcelable {
     public String name;
-    public int quantity;
+    public Integer quantity;
     public double price;
+    public String idMenuItems;
 
-    public Product(String name, int quantity, double price) {
+    public Product(String name, Integer quantity, double price,String idMenuItems) {
 
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+        this.idMenuItems = idMenuItems;
     }
 
     public Product() {}
@@ -21,6 +23,7 @@ public class Product implements Parcelable {
         name = in.readString();
         quantity = in.readInt();
         price = in.readDouble();
+        idMenuItems = in.readString();
     }
 
     @Override
@@ -28,6 +31,7 @@ public class Product implements Parcelable {
         dest.writeString(name);
         dest.writeInt(quantity);
         dest.writeDouble(price);
+        dest.writeString(idMenuItems);
     }
 
     @Override
@@ -55,11 +59,11 @@ public class Product implements Parcelable {
         this.name = name;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

@@ -287,6 +287,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onCallback(Restaurant user) {
                 if(user!=null){
                     mUser=new Restaurant(user);
+
                     updateFields(mUser);
                 }
 
