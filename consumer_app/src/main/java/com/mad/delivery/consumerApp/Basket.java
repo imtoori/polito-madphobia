@@ -73,12 +73,14 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.basket_layout);
+        mAuth = FirebaseAuth.getInstance();
         toolbar = findViewById(R.id.toolbar);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         payment_met ="cash";
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         order_code = findViewById(R.id.order_code);
         subtot = findViewById(R.id.subtotal_price);
         del_fee = findViewById(R.id.delivery_fee);
@@ -106,7 +108,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
 
 
         List<Product> products = new ArrayList<>();
-
         ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name, value, item.price)));
 
         priceD = 0.0;
@@ -205,11 +206,21 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     }
 
     @Override
+    public void onBackPressed() {
+        Log.d("MADAPP", "onBackPressed");
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 1) {
+            finish();
+        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.putExtra("user", 1);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        onBackPressed();
         return super.onSupportNavigateUp();
     }
 

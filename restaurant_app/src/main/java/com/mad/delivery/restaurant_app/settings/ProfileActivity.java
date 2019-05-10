@@ -42,12 +42,12 @@ public class ProfileActivity extends AppCompatActivity {
     TextView description;
     TextView opening;
     TextView road;
+    TextView deliveryCost, minOrderCost;
     ImageView imgProfile;
     Restaurant mUser = new Restaurant();
     private ChipGroup chipGroup;
     private Set<String> categories;
     private Set<String> myCategories;
-
     private FirebaseAuth mAuth;
 
     @Override
@@ -66,14 +66,14 @@ public class ProfileActivity extends AppCompatActivity {
         road = findViewById(R.id.main_road);
         imgProfile = findViewById(R.id.image_profile);
         chipGroup = findViewById(R.id.chip_group);
+        deliveryCost = findViewById(R.id.tv_delivery_fee);
+        minOrderCost = findViewById(R.id.tv_min_order);
         categories = new HashSet<>();
         Log.d("MADAPP", "onCreate profile..");
         getProfileData();
 
         Database.getInstance().getCategories(mUser.getId(), set -> {
             myCategories = new HashSet<>(set);
-
-
             Database.getInstance().getCategories(innerSet -> {
                 innerSet.stream().forEach(n -> {
                     Chip chip = new Chip(this);
@@ -147,7 +147,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getProfileData() {
         Database.getInstance().getRestaurantProfile(new FireBaseCallBack<Restaurant>() {
-
             @Override
             public void onCallbackList(List<Restaurant> list) {
 
@@ -175,6 +174,8 @@ public class ProfileActivity extends AppCompatActivity {
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
+        deliveryCost.setText(String.valueOf(u.deliveryCost));
+        minOrderCost.setText(String.valueOf(u.minOrderCost));
         if (!u.openingHours.equals("")) {
             opening.setText(u.openingHours);
         } else {

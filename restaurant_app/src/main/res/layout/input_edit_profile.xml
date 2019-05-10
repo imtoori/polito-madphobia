@@ -51,6 +51,91 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        card_view:cardElevation="4dp"
+        card_view:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/restaurant_options"
+                android:textSize="@dimen/subtitle"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/deliveryFeeImage"
+                android:layout_width="25dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="6dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/photo_toolbar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvOptions"
+                app:srcCompat="@drawable/ic_delivery" />
+
+            <EditText
+                android:id="@+id/et_delivery_fee"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/delivery_cost_hint"
+                android:maxLength="46"
+                android:padding="8dp"
+                android:textColor="@color/colorText"
+                android:textSize="@dimen/normalText"
+                android:inputType="number"
+                app:layout_constraintBottom_toBottomOf="@+id/deliveryFeeImage"
+                app:layout_constraintStart_toEndOf="@+id/deliveryFeeImage"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/tvOptions" />
+
+            <ImageView
+                android:id="@+id/min_order_img"
+                android:layout_width="25dp"
+                android:layout_height="45dp"
+                android:contentDescription="@string/photo_toolbar"
+                app:srcCompat="@drawable/ic_min_order"
+                card_view:layout_constraintStart_toStartOf="@+id/deliveryFeeImage"
+                card_view:layout_constraintTop_toBottomOf="@+id/deliveryFeeImage" />
+
+            <EditText
+                android:id="@+id/et_min_order"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:hint="@string/min_order_hint"
+                android:maxLength="46"
+                android:padding="8dp"
+                android:textColor="@color/colorText"
+                android:textSize="@dimen/normalText"
+                android:inputType="number"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toStartOf="@+id/et_delivery_fee"
+                card_view:layout_constraintTop_toBottomOf="@+id/et_delivery_fee" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
 
     <androidx.cardview.widget.CardView
