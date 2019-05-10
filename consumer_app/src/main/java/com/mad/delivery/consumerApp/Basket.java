@@ -110,8 +110,9 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         ConsumerDatabase.getInstance().getItemSelected().forEach((item, value) -> products.add(new Product(item.name, value, item.price)));
 
         priceD = 0.0;
-        //TODO insert real fee
-        fee = 0.0;
+
+
+        fee = ConsumerDatabase.getInstance().getRestaurantInLocal().deliveryCost;
         products.forEach(p -> priceD += p.price * p.quantity);
 
         totD = priceD + fee;
@@ -239,8 +240,8 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         String checkString = "([A-Za-z0-9\'\\s-])+";
         String checkTime = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
 
-        if (priceD <= 0) {
-            tot.setError(getResources().getString(R.string.empty_basket_error));
+        if (priceD <= 0 || priceD<ConsumerDatabase.getInstance().getRestaurantInLocal().minOrderCost) {
+            tot.setError(getResources().getString(R.string.price_error));
             result = false;
         }
 

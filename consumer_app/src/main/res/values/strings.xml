@@ -77,5 +77,6 @@
     <string name="check_credit">Error credit</string>
     <string name="empty_basket_error">Basket is empty</string>
     <string name="credit_error">Credit (Error)</string>
+    <string name="price_error">Error min order cost</string>
 
 </resources>

@@ -255,8 +255,8 @@ public class EditProfileActivity extends AppCompatActivity {
         mUser.postCode = savedInstanceState.getString("postCode");
         mUser.city = savedInstanceState.getString("city");
         mUser.imageUri = savedInstanceState.getString("imageUri");
-        mUser.deliveryCost = Integer.valueOf(savedInstanceState.getString("deliveryCost"));
-        mUser.minOrderCost = Integer.valueOf(savedInstanceState.getString("minOrder"));
+        mUser.deliveryCost = Double.valueOf(savedInstanceState.getString("deliveryCost"));
+        mUser.minOrderCost = Double.valueOf(savedInstanceState.getString("minOrder"));
         updateFields(mUser);
     }
 
@@ -322,8 +322,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 openingTime.getText().toString());
         user.id = mAuth.getCurrentUser().getUid();
         user.previewInfo.id = user.id;
-        user.deliveryCost = Integer.valueOf(deliveryCost.getText().toString());
-        user.minOrderCost = Integer.valueOf(minOrder.getText().toString());
+        user.deliveryCost = Double.valueOf(deliveryCost.getText().toString());
+        user.minOrderCost = Double.valueOf(minOrder.getText().toString());
         user.previewInfo.deliveryCost = user.deliveryCost;
         user.previewInfo.minOrderCost = user.minOrderCost;
 

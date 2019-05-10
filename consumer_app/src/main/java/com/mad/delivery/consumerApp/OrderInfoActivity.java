@@ -46,8 +46,7 @@ public class OrderInfoActivity extends AppCompatActivity {
         client_note=findViewById(R.id.client_note);
         order_code.setText(order.id);
         subtot.setText(order.totalPrice.toString());
-        //TODO insert deliveryCost
-        del_fee.setText("0.00");
+        del_fee.setText(order.restaurant.deliveryCost.toString());
         tot.setText(order.totalPrice.toString());
         address.setText(order.delivery);
         rest_note.setText(order.serverNotes);

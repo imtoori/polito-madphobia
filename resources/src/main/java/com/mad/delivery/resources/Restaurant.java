@@ -29,7 +29,7 @@ public class Restaurant implements Parcelable {
     public Map<String, MenuItemRest> menuItems;
     public String imageUri;
     public String token;
-    public Integer minOrderCost, deliveryCost;
+    public Double minOrderCost, deliveryCost;
 
     public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
         this.name = name;
@@ -43,8 +43,8 @@ public class Restaurant implements Parcelable {
         this.city = city;
         this.imageUri = imageUri;
         this.imageName =imageName;
-        this.deliveryCost = 0;
-        this.minOrderCost = 0;
+        this.deliveryCost = 0.00;
+        this.minOrderCost = 0.00;
         this.openingHours = openingTime;
         categories = new HashMap<>();
         menuItems = new HashMap<>();
@@ -113,12 +113,12 @@ public class Restaurant implements Parcelable {
         if (in.readByte() == 0) {
             minOrderCost = null;
         } else {
-            minOrderCost = in.readInt();
+            minOrderCost = in.readDouble();
         }
         if (in.readByte() == 0) {
             deliveryCost = null;
         } else {
-            deliveryCost = in.readInt();
+            deliveryCost = in.readDouble();
         }
     }
 
@@ -150,13 +150,13 @@ public class Restaurant implements Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(minOrderCost);
+            dest.writeDouble(minOrderCost);
         }
         if (deliveryCost == null) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(deliveryCost);
+            dest.writeDouble(deliveryCost);
         }
     }
 
@@ -329,19 +329,19 @@ public class Restaurant implements Parcelable {
         this.token = token;
     }
 
-    public Integer getMinOrderCost() {
+    public Double getMinOrderCost() {
         return minOrderCost;
     }
 
-    public void setMinOrderCost(Integer minOrderCost) {
+    public void setMinOrderCost(Double minOrderCost) {
         this.minOrderCost = minOrderCost;
     }
 
-    public Integer getDeliveryCost() {
+    public Double getDeliveryCost() {
         return deliveryCost;
     }
 
-    public void setDeliveryCost(Integer deliveryCost) {
+    public void setDeliveryCost(Double deliveryCost) {
         this.deliveryCost = deliveryCost;
     }
 
