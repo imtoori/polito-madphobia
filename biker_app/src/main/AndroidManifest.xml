@@ -29,13 +29,14 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
-        <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".auth.LoginActivity">
+        <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".auth.LoginActivity">
         </activity>
         <service
             android:name=".MyFirebaseMessagingService"
@@ -75,7 +76,8 @@
                 android:value="com.mad.delivery.bikerApp.settings.ProfileActivity" />
         </activity>
         <activity android:name=".settings.ProfileActivity"
-            android:parentActivityName=".HomeActivity"/>
+            android:parentActivityName=".HomeActivity">
+        </activity>
         <activity
             android:name=".settings.PasswordActivity"
             android:parentActivityName=".auth.LoginActivity" />
