@@ -10,7 +10,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.Biker;
 
 import androidx.fragment.app.Fragment;
 
@@ -38,7 +40,17 @@ public class StartFragment extends Fragment {
         earning.setEnabled(working);
         hours.setEnabled(working);
         kilometers.setEnabled(working);
-        status.setText(R.string.start_work);
+        Database.getInstance().getBikerStatus(new FirebaseCallbackItem<Boolean>() {
+            @Override
+            public void onCallback(Boolean Item) {
+                if(Item)
+                    status.setText(R.string.start_work);
+                else
+                    status.setText(R.string.stop_work);
+
+
+            }
+        });
         Database.getInstance().setBikerStatus(working);
         status.setOnClickListener(new View.OnClickListener() {
             @Override
