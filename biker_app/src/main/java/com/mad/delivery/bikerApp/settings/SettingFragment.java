@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.bikerApp.Database;
 import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
@@ -35,6 +36,8 @@ public class SettingFragment extends Fragment {
         if(mUser == null) {
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+            Database.getInstance().reset();
+            getActivity().finish();
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }

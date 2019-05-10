@@ -68,6 +68,9 @@ final public class Database {
 
     }
 
+    public void reset() {
+        instance = null;
+    }
 
 
     void updateToken(String token) {
