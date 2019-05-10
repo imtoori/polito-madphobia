@@ -116,7 +116,7 @@ public class ConsumerDatabase {
         return itemSelected;
     }
 
-    public Boolean putOrder(Order o){
+    public void putOrder(Order o,firebaseCallback<Boolean> firebaseCallback){
         o.clientId =mAuth.getUid();
         o.restaurantId = resturantId;
         o.status =OrderStatus.pending;
@@ -152,6 +152,7 @@ public class ConsumerDatabase {
                                 });
                                 myRef.child("orders").push().setValue(o);
                             }
+                            firebaseCallback.onCallBack(flag);
                         }
                     });
                 }
@@ -164,6 +165,7 @@ public class ConsumerDatabase {
                 return Transaction.success(mutableData);
                 else
                     return Transaction.abort();
+
             }
 
             @Override
@@ -172,7 +174,6 @@ public class ConsumerDatabase {
             }
         });
 
-        return flag;
 
     }
 

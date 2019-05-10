@@ -154,28 +154,46 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                                 order.orderFor = datetime.toString();
 
                                 if (order.totalPrice <= item.credit && payment_met.equals("credit")) {
-                                    if(ConsumerDatabase.getInstance().putOrder(order)) {
-                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                        startActivity(intent);
-                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                    }
-                                    else{
-                                        Log.i("TAG", "Non ci sono abbastanza prodotti");
-                                    }
+                                    ConsumerDatabase.getInstance().putOrder(order, new firebaseCallback<Boolean>() {
+                                                @Override
+                                                public void onCallBack(Boolean item) {
+                                                    if(item) {
+                                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                                        startActivity(intent);
+                                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                                    }
+                                                    else {
+
+                                                        // Toast.makeText(this, "Non ci sono abbastanza prodotti", Toast.LENGTH_SHORT).show();
+                                                        Log.i("TAG", "Non ci sono abbastanza prodotti");
+                                                    }
+
+                                                }
+                                            });
+
 
                                 } else if (payment_met.equals("cash")) {
-                                    if(ConsumerDatabase.getInstance().putOrder(order)) {
-                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                        startActivity(intent);
-                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                                    }
-                                    else{
-                                        Log.i("TAG", "Non ci sono abbastanza prodotti");
-                                    }
+                                    ConsumerDatabase.getInstance().putOrder(order, new firebaseCallback<Boolean>() {
+                                        @Override
+                                        public void onCallBack(Boolean item) {
+                                            if(item) {
+                                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                                startActivity(intent);
+                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                            }
+                                            else {
+
+                                                // Toast.makeText(this, "Non ci sono abbastanza prodotti", Toast.LENGTH_SHORT).show();
+                                                Log.i("TAG", "Non ci sono abbastanza prodotti");
+                                            }
+                                        }
+                                    });
+
+
                                     Log.i("TAG", "Acquisto effettuato ");
-                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                               /*     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     startActivity(intent);
-                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);*/
                                 } else {
                                     Log.i("TAG", "Non hai abbastanza credito");
                                 }
