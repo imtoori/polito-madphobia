@@ -264,7 +264,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                                 int n = rand.nextInt(list.size());
                                 Log.d("MADDAPP", "item: " + list.get(n) + " n: " + n);
                                 modifiedOrder.bikerId = list.get(n);
-                               // modifiedOrder.restaurantId =order.restaurantId;
+
+                                 modifiedOrder.restaurantId =order.restaurantId;
                                 myRef.child("orders").child(modifiedOrder.id).child("bikerId").setValue(modifiedOrder.bikerId);
                                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
