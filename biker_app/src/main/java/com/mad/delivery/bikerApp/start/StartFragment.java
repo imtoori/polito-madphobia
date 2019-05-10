@@ -44,9 +44,9 @@ public class StartFragment extends Fragment {
             @Override
             public void onCallback(Boolean Item) {
                 if(Item)
-                    status.setText(R.string.start_work);
-                else
                     status.setText(R.string.stop_work);
+                else
+                    status.setText(R.string.start_work);
 
 
             }

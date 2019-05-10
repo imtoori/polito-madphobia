@@ -238,7 +238,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //modifiedOrder.bikerId =order.bikerId;
-
+                modifiedOrder.bikerId =order.bikerId;
                 modifiedOrder.restaurantId =order.restaurantId;
                 modifiedOrder.bikerNotes = adminNotes.getText().toString();
                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
