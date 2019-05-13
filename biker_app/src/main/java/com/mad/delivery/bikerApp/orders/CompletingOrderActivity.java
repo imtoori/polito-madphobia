@@ -179,9 +179,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                     cvDeliveryOptions.startAnimation(animShake);
                 }
                 return true;
-            case R.id.reject_order_option:
-                Log.d("MADAPP", "Reject option selected");
-                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -195,8 +193,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 return getResources().getColor(R.color.colorPreparingOrder, null);
             case ready:
                 return getResources().getColor(R.color.colorReadyOrder, null);
-            case canceled:
-                return getResources().getColor(R.color.colorCanceledOrder, null);
             case completed:
                 return getResources().getColor(R.color.colorCompletedOrder, null);
             default:
