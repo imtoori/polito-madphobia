@@ -252,7 +252,7 @@ public class Order implements Parcelable {
         return bikerNotes;
     }
 
-    public void setNikerNotes(String bikerNotes) {
+    public void setBikerNotes(String bikerNotes) {
         this.bikerNotes = bikerNotes;
     }
 
