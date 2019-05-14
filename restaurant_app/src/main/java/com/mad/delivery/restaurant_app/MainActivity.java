@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
     int open = 1;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
             }
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        Log.d("MADAPP", "Open=" + open);
         switch (open) {
             case 0:
                 navigation.setSelectedItemId(R.id.nav_menu);
@@ -108,18 +108,20 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                 navigation.setSelectedItemId(R.id.nav_menu);
         }
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> Database.getInstance().updateToken(instanceIdResult.getToken()));
-        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(currentUser.getUid(), instanceIdResult.getToken()));
+            FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
         }
     }
 
@@ -135,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_new_offert:
-
                 Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

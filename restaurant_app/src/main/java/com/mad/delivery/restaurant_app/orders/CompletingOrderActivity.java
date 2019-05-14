@@ -27,7 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
-import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.ListDialog;
 import com.mad.delivery.restaurant_app.MainActivity;
@@ -40,8 +40,6 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.Random;
-
-import static com.mad.delivery.resources.OrderStatus.preparing;
 
 public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener {
     private Toolbar myToolBar;
@@ -253,7 +251,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 if(newStatus.getText().toString().equals("preparing")){
                     Random rand = new Random();
 
-                    Database.getInstance().getBikerId(new FireBaseCallBack<String>() {
+                    RestaurantDatabase.getInstance().getBikerId(new FireBaseCallBack<String>() {
                         @Override
                         public void onCallback(String user) {
                         }
@@ -270,7 +268,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                                 order = modifiedOrder;
-                                Database.getInstance().update(modifiedOrder);
+                                RestaurantDatabase.getInstance().update(modifiedOrder);
                             }
 
                         }
@@ -280,7 +278,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                     modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                     Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                     order = modifiedOrder;
-                    Database.getInstance().update(modifiedOrder);
+                    RestaurantDatabase.getInstance().update(modifiedOrder);
 
                 }
 

@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.Biker;
@@ -29,37 +30,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 
-final public class Database {
-    private static Database instance;
+final public class RestaurantDatabase {
+    private static RestaurantDatabase instance;
     private static MyDateComparator myDateComparator;
-    DatabaseReference restaurantRef;
-    DatabaseReference menuItemsRef;
-    DatabaseReference ordersRef;
-    DatabaseReference profileRef;
-    DatabaseReference categoriesRef;
-    DatabaseReference myRef;
-    StorageReference storageRef;
-    FirebaseAuth mAuth;
+    private DatabaseReference restaurantRef;
+    private DatabaseReference menuItemsRef;
+    private DatabaseReference ordersRef;
+    private DatabaseReference profileRef;
+    private DatabaseReference categoriesRef;
+    private DatabaseReference myRef;
+    private StorageReference storageRef;
+    private FirebaseAuth mAuth;
 
 
-    public static Database getInstance() {
+    public static RestaurantDatabase getInstance() {
         if (instance == null) {
-            instance = new Database();
+            instance = new RestaurantDatabase();
         }
         return instance;
     }
 
-    private Database() {
+    private RestaurantDatabase() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         myRef = database.getReference();
-        restaurantRef = database.getReference("users/restaurants/" );
+        restaurantRef = database.getReference("users/restaurants/");
         menuItemsRef = database.getReference("users/restaurants/");
         ordersRef = database.getReference("orders");
         profileRef = database.getReference("users/restaurants/");
@@ -73,19 +73,14 @@ final public class Database {
     }
 
 
-    void updateToken(String token) {
+    void updateToken(String id, String token) {
         Log.d("TOKEN", token);
-        restaurantRef.child(mAuth.getUid()).child("token").setValue(token);
+        restaurantRef.child(id).child("token").setValue(token);
     }
 
-    public  void update(Order o) {
-
+    public void update(Order o) {
         ordersRef.child(o.id).setValue(o);
-
     }
-
-
-
 
     class MyDateComparator implements Comparator<Order> {
         @Override
@@ -94,28 +89,27 @@ final public class Database {
         }
     }
 
-    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri,  List<String> subItems,String imageName) {
-        MenuItemRest item =  new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
-        item.restaurantId =mAuth.getUid();
+    public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, List<String> subItems, String imageName) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "", Uri.parse(imgUri), subItems, imageName);
+        item.restaurantId = mAuth.getUid();
         item.id = menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").push().getKey();
         menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(item.id).setValue(item);
 
 
-        Log.d("MADDAP",item.name +" "+item.category);
-       // menuItemsRef.child(item.id).child("id").setValue(item.id);
+        Log.d("MADDAP", item.name + " " + item.category);
+        // menuItemsRef.child(item.id).child("id").setValue(item.id);
         Uri file = Uri.parse(imgUri);
         StorageReference profileRefStore = storageRef.child(mAuth.getUid()).child("images/menuItems/" + imageName);
         profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-            {
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Uri downloadUrl = uri;
                         //Do what you want with the url
-                        item.imageDownload =downloadUrl.toString();
-                       // menuItemsRef.push().setValue(item);
+                        item.imageDownload = downloadUrl.toString();
+                        // menuItemsRef.push().setValue(item);
 
                     }
                 });
@@ -124,7 +118,7 @@ final public class Database {
     }
 
 
-    public  List<Order> getPendingOrders(FireBaseCallBack<Order> firebaseCallback) {
+    public List<Order> getPendingOrders(FireBaseCallBack<Order> firebaseCallback) {
         List<Order> pendings = new ArrayList<>();
         ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -133,7 +127,7 @@ final public class Database {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o.status.toString().equals("pending")) {
+                        if (o.status.toString().equals("pending")) {
                             o.id = issue.getKey();
                             pendings.add(o);
                         }
@@ -147,18 +141,11 @@ final public class Database {
 
             }
         });
-
-
-   /*     for (Order o : orders.values()) {
-            if (o.status.equals(OrderStatus.pending)) pendings.add(o);
-        }
-        */
         Collections.sort(pendings, myDateComparator);
-
         return pendings;
     }
 
-    public  List<Order> getPreparingOrders(FireBaseCallBack<Order> firebaseCallback) {
+    public List<Order> getPreparingOrders(FireBaseCallBack<Order> firebaseCallback) {
         List<Order> preparing = new ArrayList<>();
         ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -167,7 +154,7 @@ final public class Database {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o.status.toString().equals("preparing")) {
+                        if (o.status.toString().equals("preparing")) {
                             o.id = issue.getKey();
                             preparing.add(o);
                         }
@@ -186,9 +173,9 @@ final public class Database {
 
     }
 
-    public  List<Order> getCompletedOrders(FireBaseCallBack<Order> firebaseCallback) {
+    public List<Order> getCompletedOrders(FireBaseCallBack<Order> firebaseCallback) {
         if (instance == null) {
-            instance = new Database();
+            instance = new RestaurantDatabase();
         }
         List<Order> completed = new ArrayList<>();
         ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -199,7 +186,7 @@ final public class Database {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
 
-                        if(o.status.toString().equals("completed")) {
+                        if (o.status.toString().equals("completed")) {
                             o.id = issue.getKey();
                             completed.add(o);
                         }
@@ -218,8 +205,8 @@ final public class Database {
     }
 
 
-    public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems,String imageName) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "",Uri.parse(imgUri),  subItems, imageName);
+    public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems, String imageName) {
+        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "", Uri.parse(imgUri), subItems, imageName);
         menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(id).setValue(item);
         //TODO add callback
     }
@@ -275,28 +262,14 @@ final public class Database {
         });
         return null;
     }
-    public void putRestaurantProfile(Restaurant user){
-        Uri file = Uri.parse(user.imageUri);
-        StorageReference profileRefStore = storageRef.child(mAuth.getUid()).child("images/profile/" + user.imageName);
-        profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-            {
-                profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Uri downloadUrl = uri;
-                        //Do what you want with the url
-                        user.previewInfo.imageDownload =downloadUrl.toString();
-                        profileRef.child("profile").setValue(user);
 
-                    }
-                });
-            }
+    public void updateRestaurantProfile(Restaurant r, Uri image) {
+        uploadImage(r.previewInfo.id, image, "images/profile", image.getLastPathSegment(), () -> {
+            r.pre
         });
-      //  profileRef.setValue("profile");
-        profileRef.child(mAuth.getUid()).child("profile").setValue(user);
+        profileRef.child(r.previewInfo.id).setValue(r);
     }
+
 
     public void putRestaurantIntoCategory(String idRestaurant, Set<String> categories) {
         categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -306,11 +279,11 @@ final public class Database {
                 for (DataSnapshot snapshot : iterator) {
                     RestaurantCategory item = snapshot.getValue(RestaurantCategory.class);
                     if (item != null) {
-                        if(item.restaurants != null && item.restaurants.containsKey(idRestaurant) && !categories.contains(item.name.toLowerCase())) {
+                        if (item.restaurants != null && item.restaurants.containsKey(idRestaurant) && !categories.contains(item.name.toLowerCase())) {
                             categoriesRef.child(item.name.toLowerCase()).child("restaurants").child(idRestaurant).removeValue();
                         } else if (item.restaurants == null && categories.contains(item.name.toLowerCase())) {
                             categoriesRef.child(item.name.toLowerCase()).child("restaurants").child(idRestaurant).setValue(true);
-                        } else if(item.restaurants != null && !item.restaurants.containsKey(idRestaurant) && categories.contains(item.name.toLowerCase())) {
+                        } else if (item.restaurants != null && !item.restaurants.containsKey(idRestaurant) && categories.contains(item.name.toLowerCase())) {
                             categoriesRef.child(item.name.toLowerCase()).child("restaurants").child(idRestaurant).setValue(true);
                         }
 
@@ -326,48 +299,35 @@ final public class Database {
             }
         });
     }
-    public void getImage(String imageName,String path,FireBaseCallBack<Uri> UriImg) {
-        if (imageName==null||!imageName.equals("")) {
-            // Uri tmp = Uri.parse(imageName);
-            StorageReference profileRefStore = storageRef.child(mAuth.getUid()).child(path + imageName);
-            profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    // Got the download URL for 'users/me/profile.png'
-                    Log.d("DOWNLOAD",uri.toString());
 
-                    UriImg.onCallback(uri);
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                    UriImg.onCallback(Uri.EMPTY);
-                }
-            });
+    public void getImage(String id, String path, String imageName, OnImageDownloaded uriImage) {
+        if (imageName == null || imageName.equals("")) {
+            uriImage.onReceived(Uri.EMPTY);
+            return;
         }
+        StorageReference profileRefStore = storageRef.child(id).child(path + imageName);
+        profileRefStore.getDownloadUrl().addOnSuccessListener(uri -> {
+            uriImage.onReceived(uri);
+        }).addOnFailureListener(exception -> {
+            exception.printStackTrace();
+            uriImage.onReceived(Uri.EMPTY);
+        });
     }
-    public void getRestaurantProfile(FireBaseCallBack<Restaurant> firebaseCallbackUser) {
-        profileRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public void getRestaurantProfile(String id, OnFirebaseData<Restaurant> cb) {
+        profileRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("profile")) {
-                    dataSnapshot = dataSnapshot.child("profile");
+                if (dataSnapshot.exists()) {
                     Restaurant item = dataSnapshot.getValue(Restaurant.class);
                     if (item != null) {
-                        firebaseCallbackUser.onCallback(item);
-                    } else {
-                        //   userStringOnDataFetched.onError("data not found");
-                        Log.d("DATABASE: ", "Elemento nullo");
+                        cb.onReceived(item);
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("DATABASE: ", "SONO ENTRATO");
-
             }
         });
 
@@ -422,19 +382,17 @@ final public class Database {
     }
 
 
-
-
-    public void getBikerId(FireBaseCallBack <String> firebaseCallback){
+    public void getBikerId(FireBaseCallBack<String> firebaseCallback) {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> bikerIds = new ArrayList<>();
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
 
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if(snapshot.getValue(Biker.class).status=true)
-                        bikerIds.add(snapshot.getKey());
+                        if (snapshot.getValue(Biker.class).status = true)
+                            bikerIds.add(snapshot.getKey());
 
 
                     }
@@ -448,6 +406,17 @@ final public class Database {
                 Log.d("DATABASE: ", "Dato cancellato");
 
             }
+        });
+
+    }
+
+
+    public void uploadImage(String id, Uri uri, String path, String imageName, OnImageUploaded cb ) {
+        Uri file = uri;
+        StorageReference profileRefStore = storageRef.child(id).child(path + imageName);
+        profileRefStore.putFile(file).addOnSuccessListener(taskSnapshot -> {
+               Log.d("MADAPP", "The image profile has been uploaded.");
+               cb.onFinished();
         });
 
     }

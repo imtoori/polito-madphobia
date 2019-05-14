@@ -1,9 +1,11 @@
 package com.mad.delivery.resources;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,175 +13,123 @@ import java.util.Map;
 
 public class Restaurant implements Parcelable {
     public PreviewInfo previewInfo;
-    public String name;
     public String phoneNumber;
     public String email;
-    public String description;
     public String road;
     public String houseNumber;
     public String doorPhone;
     public String postCode;
     public String city;
     public String openingHours;
-    public String imageName;
-    public String id;
-    public Integer scoreValue;
     public Map<String, Boolean> categories;
     public Map<String, MenuItemRest> menuItems;
-    public String imageUri;
     public String token;
-    public Double minOrderCost, deliveryCost;
 
+    public Restaurant() {}
     public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
-
-        this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
-        this.description = description;
         this.road = road;
         this.houseNumber = houseNumber;
         this.doorPhone = doorPhone;
         this.postCode = postCode;
         this.city = city;
         this.openingHours=openingTime;
-        this.imageName =imageName;
-        this.id="";
-        this.scoreValue =0;
         this.categories = new HashMap<>();
         this.menuItems = new HashMap<>();
-        this.imageUri="";
         this.token ="";
-        this.minOrderCost = 0.00;
-        this.deliveryCost = 0.00;
         previewInfo = new PreviewInfo();
         previewInfo.id = "";
-        previewInfo.name = this.name;
-        previewInfo.description =this.description;
+        previewInfo.name = name;
+        previewInfo.description =description;
         previewInfo.scoreValue = 0;
-        previewInfo.imageURL = "";
-        previewInfo.imageDownload ="";
-        previewInfo.deliveryCost = this.deliveryCost;
-        previewInfo.minOrderCost = this.minOrderCost;
+        previewInfo.imageName = "";
+        previewInfo.deliveryCost = 0.0;
+        previewInfo.minOrderCost = 0.0;
     }
 
     public Restaurant(Restaurant other) {
-        previewInfo =new PreviewInfo();
-        if(other.deliveryCost!=null)
-            previewInfo.deliveryCost = other.deliveryCost;
-        else
-            previewInfo.deliveryCost=0.0;
-        if(other.minOrderCost!=null)
-            previewInfo.minOrderCost = other.minOrderCost;
-        else
-            previewInfo.minOrderCost=0.0;
-        this.name = other.name;
+        this.previewInfo = new PreviewInfo();
+        this.previewInfo.id = other.previewInfo.id;
+        this.previewInfo.name = other.previewInfo.name;
+        this.previewInfo.description = other.previewInfo.description;
+        this.previewInfo.imageName = other.previewInfo.imageName;
+        this.previewInfo.scoreValue = other.previewInfo.scoreValue;
+        this.previewInfo.deliveryCost = other.previewInfo.deliveryCost;
+        this.previewInfo.minOrderCost = other.previewInfo.minOrderCost;
         this.phoneNumber = other.phoneNumber;
         this.email = other.email;
-        this.description = other.description;
         this.road = other.road;
         this.houseNumber = other.houseNumber;
         this.doorPhone = other.doorPhone;
         this.postCode = other.postCode;
         this.city = other.city;
         this.openingHours = other.openingHours;
-       this.imageName=other.imageName;
-       this.id =other.id;
-       this.scoreValue=other.scoreValue;
        this.categories=other.categories;
         this.menuItems = other.menuItems;
-        this.imageUri = other.imageUri;
         this.token = other.token;
-        this.deliveryCost = other.deliveryCost;
-        this.minOrderCost = other.minOrderCost;
-        previewInfo = new PreviewInfo();
-        previewInfo.id="";
-        previewInfo.name =other.name;
-        previewInfo.scoreValue = 0;
-        previewInfo.imageURL = "";
-        previewInfo.imageDownload="";
-        previewInfo.description = other.description;
-    }
-
-    public Restaurant(String name) {
-        this.name = name;
-    }
-
-    public Restaurant() {
         this.categories = new HashMap<>();
         this.menuItems = new HashMap<>();
-        previewInfo = new PreviewInfo();
-
-        this.scoreValue = 0;
     }
+
 
     protected Restaurant(Parcel in) {
         previewInfo = in.readParcelable(PreviewInfo.class.getClassLoader());
-        name = in.readString();
         phoneNumber = in.readString();
         email = in.readString();
-        description = in.readString();
         road = in.readString();
         houseNumber = in.readString();
         doorPhone = in.readString();
         postCode = in.readString();
         city = in.readString();
         openingHours = in.readString();
-        imageName = in.readString();
-        id = in.readString();
-        if (in.readByte() == 0) {
-            scoreValue = null;
-        } else {
-            scoreValue = in.readInt();
+        int size1 = in.readInt();
+        for(int i = 0; i < size1; i++){
+            String key = in.readString();
+            Boolean value =  (Boolean) in.readSerializable();
+            categories.put(key,value);
         }
-        imageUri = in.readString();
+        int size2 = in.readInt();
+        for(int i = 0; i < size2; i++){
+            String key = in.readString();
+            MenuItemRest value =  (MenuItemRest) in.readSerializable();
+            menuItems.put(key,value);
+        }
         token = in.readString();
-        if (in.readByte() == 0) {
-            minOrderCost = null;
-        } else {
-            minOrderCost = in.readDouble();
-        }
-        if (in.readByte() == 0) {
-            deliveryCost = null;
-        } else {
-            deliveryCost = in.readDouble();
-        }
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(previewInfo, flags);
-        dest.writeString(name);
         dest.writeString(phoneNumber);
         dest.writeString(email);
-        dest.writeString(description);
         dest.writeString(road);
         dest.writeString(houseNumber);
         dest.writeString(doorPhone);
         dest.writeString(postCode);
         dest.writeString(city);
         dest.writeString(openingHours);
-        dest.writeString(imageName);
-        dest.writeString(id);
-        if (scoreValue == null) {
-            dest.writeByte((byte) 0);
+        if(categories == null) {
+            dest.writeInt(0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(scoreValue);
+            dest.writeInt(categories.size());
+            for(Map.Entry<String,Boolean> entry : categories.entrySet()){
+                dest.writeString(entry.getKey());
+                dest.writeSerializable(entry.getValue());
+            }
         }
-        dest.writeString(imageUri);
+
+        if(menuItems == null) {
+            dest.writeInt(0);
+        } else {
+            dest.writeInt(menuItems.size());
+            for(Map.Entry<String,MenuItemRest> entry : menuItems.entrySet()){
+                dest.writeString(entry.getKey());
+                dest.writeSerializable(entry.getValue());
+            }
+        }
+
         dest.writeString(token);
-        if (minOrderCost == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(minOrderCost);
-        }
-        if (deliveryCost == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(deliveryCost);
-        }
     }
 
     @Override
@@ -207,14 +157,6 @@ public class Restaurant implements Parcelable {
         this.previewInfo = previewInfo;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -223,21 +165,12 @@ public class Restaurant implements Parcelable {
         this.phoneNumber = phoneNumber;
     }
 
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getRoad() {
@@ -288,30 +221,6 @@ public class Restaurant implements Parcelable {
         this.openingHours = openingHours;
     }
 
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Integer getScoreValue() {
-        return scoreValue;
-    }
-
-    public void setScoreValue(Integer scoreValue) {
-        this.scoreValue = scoreValue;
-    }
-
     public Map<String, Boolean> getCategories() {
         return categories;
     }
@@ -328,14 +237,6 @@ public class Restaurant implements Parcelable {
         this.menuItems = menuItems;
     }
 
-    public String getImageUri() {
-        return imageUri;
-    }
-
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
-    }
-
     public String getToken() {
         return token;
     }
@@ -344,49 +245,7 @@ public class Restaurant implements Parcelable {
         this.token = token;
     }
 
-    public Double getMinOrderCost() {
-        return minOrderCost;
-    }
-
-    public void setMinOrderCost(Double minOrderCost) {
-        this.minOrderCost = minOrderCost;
-    }
-
-    public Double getDeliveryCost() {
-        return deliveryCost;
-    }
-
-    public void setDeliveryCost(Double deliveryCost) {
-        this.deliveryCost = deliveryCost;
-    }
-
     public static Creator<Restaurant> getCREATOR() {
         return CREATOR;
-    }
-
-    @Override
-    public String toString() {
-        return "Restaurant{" +
-                "previewInfo=" + previewInfo +
-                ", name='" + name + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", description='" + description + '\'' +
-                ", road='" + road + '\'' +
-                ", houseNumber='" + houseNumber + '\'' +
-                ", doorPhone='" + doorPhone + '\'' +
-                ", postCode='" + postCode + '\'' +
-                ", city='" + city + '\'' +
-                ", openingHours='" + openingHours + '\'' +
-                ", imageName='" + imageName + '\'' +
-                ", id='" + id + '\'' +
-                ", scoreValue=" + scoreValue +
-                ", categories=" + categories +
-                ", menuItems=" + menuItems +
-                ", imageUri='" + imageUri + '\'' +
-                ", token='" + token + '\'' +
-                ", minOrderCost=" + minOrderCost +
-                ", deliveryCost=" + deliveryCost +
-                '}';
     }
 }

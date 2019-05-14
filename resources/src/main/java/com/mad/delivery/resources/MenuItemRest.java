@@ -4,10 +4,11 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuItemRest implements Parcelable {
+public class MenuItemRest implements Serializable, Parcelable {
     public String name, description;
     public Double price;
     public Integer ttl;
@@ -15,7 +16,6 @@ public class MenuItemRest implements Parcelable {
     public String category;
     public String id;
     public String restaurantId;
-
     public String imageDownload;
     public Integer availability;
     public String imageName;

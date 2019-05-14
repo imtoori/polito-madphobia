@@ -32,8 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.restaurant_app.BuildConfig;
-import com.mad.delivery.restaurant_app.Database;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.OnDataFetched;
 import com.mad.delivery.restaurant_app.R;
@@ -49,20 +48,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NewMenuItemActivity extends AppCompatActivity {
-
     Menu menu;
     FloatingActionButton btnCamera;
     MenuItemRest menuItem;
-    EditText name;
-    EditText price;
-    EditText time;
-    EditText category;
-    EditText availability;
-
-    EditText description;
+    EditText name, price, time, category, availability, description;
     ImageView imgProfile;
     Toolbar myToolbar;
-    Uri imageProfileUri;
+    Uri imageMenuItemUri;
     String imgProfilUri;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
@@ -70,13 +62,13 @@ public class NewMenuItemActivity extends AppCompatActivity {
     List<String> subItems = new ArrayList<>();
     String index;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_newmenuitem);
-        imageProfileUri = Uri.EMPTY;
+        imageMenuItemUri = Uri.EMPTY;
         myToolbar = findViewById(R.id.newmenuitem_toolbar);
         setTitle("Edit menu item");
         setSupportActionBar(myToolbar);
@@ -101,7 +93,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
         });
 
         if (index != null) {
-            Database.getInstance().getMenuItem(index, new OnDataFetched<MenuItemRest, String>() {
+            RestaurantDatabase.getInstance().getMenuItem(index, new OnDataFetched<MenuItemRest, String>() {
                 @Override
                 public void onDataFetched(MenuItemRest data) {
                     updateFields(data);
@@ -130,7 +122,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -148,7 +140,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
             for (String item : items) {
                 this.subItems.add(item);
-                Database.getInstance().getMenuItem(item, new OnDataFetched<MenuItemRest, String>() {
+                RestaurantDatabase.getInstance().getMenuItem(item, new OnDataFetched<MenuItemRest, String>() {
                     @Override
                     public void onDataFetched(MenuItemRest menuItemRest) {
                         TextView textView = new TextView(NewMenuItemActivity.this);
@@ -211,19 +203,19 @@ public class NewMenuItemActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageProfileUri on ActivityResult: " + imageProfileUri.toString());
-                    if (imageProfileUri != null)
+                    Log.d("MADAPP", "imageMenuItemUri on ActivityResult: " + imageMenuItemUri.toString());
+                    if (imageMenuItemUri != null)
                         Log.d("MADAPP", "i am here");
-                    imageProfileUri = saveImage(imageProfileUri, NewMenuItemActivity.this);
-                    imgProfile.setImageURI(imageProfileUri);
+                    imageMenuItemUri = saveImage(imageMenuItemUri, NewMenuItemActivity.this);
+                    imgProfile.setImageURI(imageMenuItemUri);
                 }
                 break;
             case GALLERY_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    imageProfileUri = data.getData();
-                    if (imageProfileUri != null) {
-                        imageProfileUri = saveImage(imageProfileUri, NewMenuItemActivity.this);
-                        imgProfile.setImageURI(imageProfileUri);
+                    imageMenuItemUri = data.getData();
+                    if (imageMenuItemUri != null) {
+                        imageMenuItemUri = saveImage(imageMenuItemUri, NewMenuItemActivity.this);
+                        imgProfile.setImageURI(imageMenuItemUri);
                     } else {
                         imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
                     }
@@ -242,8 +234,8 @@ public class NewMenuItemActivity extends AppCompatActivity {
         outState.putString("availability", availability.getText().toString());
         outState.putString("category", category.getText().toString());
 
-        if (imageProfileUri != Uri.EMPTY)
-            outState.putString("imageUri", imageProfileUri.toString());
+        if (imageMenuItemUri != Uri.EMPTY)
+            outState.putString("imageUri", imageMenuItemUri.toString());
         else
             outState.putString("imageUri", "");
 
@@ -259,35 +251,21 @@ public class NewMenuItemActivity extends AppCompatActivity {
         loadSubItems(u.subItems);
 
         category.setText(u.category);
-        Log.d("MENU: ",u.imgUrl);
-        imageProfileUri = Uri.parse(u.imgUrl);
+        Log.d("MENU: ", u.imgUrl);
+        imageMenuItemUri = Uri.parse(u.imgUrl);
         imgProfile.setImageURI(Uri.parse(u.imgUrl));
 
         if (imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName, "/images/menuItems/", new FireBaseCallBack<Uri>() {
-                @Override
-                public void onCallback(Uri item) {
-                    if (item != null) {
-                        if (item == Uri.EMPTY || item.toString().equals("")) {
-                            Log.d("MADAPP", "Setting user default image");
-                            imageProfileUri = Uri.EMPTY;
+            RestaurantDatabase.getInstance().getImage(currentUser.getUid(), "/images/menuItems/", u.imageName, imageUri -> {
+                if (imageUri != null) {
+                    if (imageUri == Uri.EMPTY || imageUri.toString().equals("")) {
+                        imageMenuItemUri = Uri.EMPTY;
+                        imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
+                    } else {
+                        Log.d("MADAPP", "Setting custom user image");
+                        Picasso.get().load(imageUri.toString()).into(imgProfile);
 
-                            imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
-                        } else {
-                            Log.d("MADAPP", "Setting custom user image");
-                            //  imageProfileUri = item;
-                            // imgProfile.setImageURI(item);
-                            Picasso.get().load(item.toString()).into(imgProfile);
-                            // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
-
-                        }
                     }
-
-                }
-
-                @Override
-                public void onCallbackList(List<Uri> list) {
-
                 }
             });
         }
@@ -334,12 +312,12 @@ public class NewMenuItemActivity extends AppCompatActivity {
                         if (photoFile != null) {
                             Log.d("PHOTO", " non null");
 
-                            imageProfileUri = FileProvider.getUriForFile(NewMenuItemActivity.this,
+                            imageMenuItemUri = FileProvider.getUriForFile(NewMenuItemActivity.this,
                                     BuildConfig.APPLICATION_ID,
                                     photoFile);
                             Log.d("PHOTO", " CONTINUO");
 
-                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileUri);
+                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageMenuItemUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
 
                         }
@@ -381,10 +359,10 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
                     if (index == null) {
                         Log.d("INDEX1", "L'indice è:" + index);
-                        Database.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems,name.getText().toString()+"_"+imageProfileUri.getLastPathSegment());
+                        RestaurantDatabase.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageMenuItemUri.toString(), subItems, name.getText().toString() + "_" + imageMenuItemUri.getLastPathSegment());
                     } else {
                         Log.d("INDEX2", "L'indice è:" + index + "Nome: " + name.toString());
-                        Database.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageProfileUri.toString(), subItems,name.getText().toString()+"_"+imageProfileUri.getLastPathSegment());
+                        RestaurantDatabase.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageMenuItemUri.toString(), subItems, name.getText().toString() + "_" + imageMenuItemUri.getLastPathSegment());
                     }
 
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();

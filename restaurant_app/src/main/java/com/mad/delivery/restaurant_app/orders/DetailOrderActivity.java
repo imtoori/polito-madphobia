@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
-import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
@@ -96,7 +96,7 @@ public class DetailOrderActivity extends AppCompatActivity {
                 builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         order.status = OrderStatus.canceled;
-                        Database.getInstance().update(order);
+                        RestaurantDatabase.getInstance().update(order);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

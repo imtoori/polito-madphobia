@@ -22,7 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
-import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.OnImageDownloaded;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.orders.PendingOrdersFragment;
 import com.mad.delivery.restaurant_app.R;
@@ -36,11 +37,14 @@ import com.squareup.picasso.Picasso;
 public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<MenuItemRest> menuItems;
+    private String authID;
     private View view;
     private Context context;
-    public MyMenuItemRecyclerViewAdapter(List<MenuItemRest> menuItems,Context context) {
+
+    public MyMenuItemRecyclerViewAdapter(List<MenuItemRest> menuItems, Context context, String authID) {
         this.menuItems = menuItems;
         this.context = context;
+        this.authID = authID;
     }
 
     @Override
@@ -67,7 +71,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Database.getInstance().removeMenuItem(mItem);
+                        RestaurantDatabase.getInstance().removeMenuItem(mItem);
                         menuItems.remove(mItem);
                         notifyItemRemoved(position);
                     }
@@ -83,45 +87,31 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
         });
         Uri url = Uri.parse(mItem.imgUrl);
 
-        if(url!= Uri.EMPTY)
+        if (url != Uri.EMPTY)
             holder.image.setImageURI(url);
 
 
+        RestaurantDatabase.getInstance().getImage(authID, "/images/menuItems/", mItem.imageName, imageUri -> {
+            if (imageUri != null) {
+                if (imageUri == Uri.EMPTY || imageUri.toString().equals("")) {
+                    Log.d("MADAPP", "Setting user default image");
+                    //imageMenuItemUri = Uri.EMPTY;
+                    holder.image.setImageResource(R.drawable.restaurant_default);
+                } else {
+                    Log.d("MADAPP", "Setting custom user image");
+                    //  imageMenuItemUri = item;
+                    // imgProfile.setImageURI(item);
+                    Picasso.get().load(imageUri.toString()).into(holder.image);
+                    // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
 
-        Database.getInstance().getImage(mItem.imageName, "/images/menuItems/", new FireBaseCallBack<Uri>() {
-            @Override
-            public void onCallback(Uri item) {
-                if (item != null) {
-                    if (item == Uri.EMPTY || item.toString().equals("")) {
-                        Log.d("MADAPP", "Setting user default image");
-                        //imageProfileUri = Uri.EMPTY;
-                        holder.image.setImageResource(R.drawable.restaurant_default);
-                    } else {
-                        Log.d("MADAPP", "Setting custom user image");
-                        //  imageProfileUri = item;
-                        // imgProfile.setImageURI(item);
-                        Picasso.get().load(item.toString()).into(holder.image);
-                        // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
-
-                    }
                 }
-
-            }
-
-            @Override
-            public void onCallbackList(List<Uri> list) {
-
             }
         });
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        holder.mView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, NewMenuItemActivity.class);
                 intent.putExtra("id", mItem.id);
                 context.startActivity(intent);
-
-            }
-
         });
     }
 
@@ -157,7 +147,6 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
     }
 
     public static int LONG_PRESS_TIME = 500; // Time in miliseconds
-
 
 
 }

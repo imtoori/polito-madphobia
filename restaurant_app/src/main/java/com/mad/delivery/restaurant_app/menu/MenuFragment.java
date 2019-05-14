@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mad.delivery.resources.MenuItemRest;
-import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.OnDataFetched;
 import com.mad.delivery.restaurant_app.R;
 
@@ -48,7 +48,7 @@ public class MenuFragment extends Fragment implements View.OnClickListener {
 
 
         // TODO remove items here when persistence is implemented
-        Database.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
+        RestaurantDatabase.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
             @Override
             public void onDataFetched(List<MenuItemRest> menuItems) {
                 List<String> categoryMenu = new ArrayList<>();

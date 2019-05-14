@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
@@ -155,11 +156,11 @@ public class RegisterFragment extends Fragment {
                         progressView.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("MADAPP", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             myRef = db.getReference();
                             Restaurant registered = new Restaurant();
-
+                            registered.previewInfo = new PreviewInfo();
+                            registered.previewInfo.id = user.getUid();
                             registered.email = emailAddress.getText().toString();
 
                             myRef.child("users").child("restaurants").child(user.getUid()).child("register").setValue(registered);

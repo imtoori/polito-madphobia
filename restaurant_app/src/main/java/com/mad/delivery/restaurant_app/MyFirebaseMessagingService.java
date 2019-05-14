@@ -8,9 +8,14 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    String id;
+
+    public MyFirebaseMessagingService(String id) {
+        this.id = id;
+    }
     @Override
     public void onNewToken(String s) {
-        Database.getInstance().updateToken(s);
+        RestaurantDatabase.getInstance().updateToken(id, s);
     }
 
     @Override

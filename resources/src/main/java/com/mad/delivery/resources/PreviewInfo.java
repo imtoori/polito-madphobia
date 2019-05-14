@@ -8,13 +8,12 @@ public class PreviewInfo implements Parcelable {
     public String name;
     public String description;
     public Integer scoreValue;
-    public String imageURL;
-    public String imageDownload;
-
+    public String imageName;
     public Double deliveryCost;
     public Double minOrderCost;
 
     public PreviewInfo() {}
+
 
     protected PreviewInfo(Parcel in) {
         id = in.readString();
@@ -25,10 +24,17 @@ public class PreviewInfo implements Parcelable {
         } else {
             scoreValue = in.readInt();
         }
-        imageURL = in.readString();
-        imageDownload = in.readString();
-        deliveryCost = in.readDouble();
-        minOrderCost = in.readDouble();
+        imageName = in.readString();
+        if (in.readByte() == 0) {
+            deliveryCost = null;
+        } else {
+            deliveryCost = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            minOrderCost = null;
+        } else {
+            minOrderCost = in.readDouble();
+        }
     }
 
     @Override
@@ -42,17 +48,19 @@ public class PreviewInfo implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(scoreValue);
         }
-        dest.writeString(imageURL);
-        dest.writeString(imageDownload);
-        if(deliveryCost==null)
-            dest.writeDouble(0.0);
-        else
+        dest.writeString(imageName);
+        if (deliveryCost == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
             dest.writeDouble(deliveryCost);
-        if(minOrderCost==null)
-            dest.writeDouble(0.0);
-        else
+        }
+        if (minOrderCost == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
             dest.writeDouble(minOrderCost);
-
+        }
     }
 
     @Override
@@ -104,20 +112,12 @@ public class PreviewInfo implements Parcelable {
         this.scoreValue = scoreValue;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
-    }
-
-    public String getImageDownload() {
-        return imageDownload;
-    }
-
-    public void setImageDownload(String imageDownload) {
-        this.imageDownload = imageDownload;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public Double getDeliveryCost() {
@@ -138,19 +138,5 @@ public class PreviewInfo implements Parcelable {
 
     public static Creator<PreviewInfo> getCREATOR() {
         return CREATOR;
-    }
-
-    @Override
-    public String toString() {
-        return "PreviewInfo{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", scoreValue=" + scoreValue +
-                ", imageURL='" + imageURL + '\'' +
-                ", imageDownload='" + imageDownload + '\'' +
-                ", deliveryCost=" + deliveryCost +
-                ", minOrderCost=" + minOrderCost +
-                '}';
     }
 }

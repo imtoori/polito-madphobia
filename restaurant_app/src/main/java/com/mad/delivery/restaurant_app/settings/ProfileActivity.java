@@ -20,9 +20,11 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.restaurant_app.Database;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
+import com.mad.delivery.restaurant_app.OnFirebaseData;
+import com.mad.delivery.restaurant_app.OnImageDownloaded;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
@@ -44,7 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView road;
     TextView deliveryCost, minOrderCost;
     ImageView imgProfile;
-    Restaurant mUser = new Restaurant();
+    Restaurant restaurant;
     private ChipGroup chipGroup;
     private Set<String> categories;
     private Set<String> myCategories;
@@ -69,12 +71,23 @@ public class ProfileActivity extends AppCompatActivity {
         deliveryCost = findViewById(R.id.tv_delivery_fee);
         minOrderCost = findViewById(R.id.tv_min_order);
         categories = new HashSet<>();
-        Log.d("MADAPP", "onCreate profile..");
-        getProfileData();
+    }
 
-        Database.getInstance().getCategories(mUser.getId(), set -> {
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+        restaurant = new Restaurant();
+        restaurant.previewInfo = new PreviewInfo();
+        restaurant.previewInfo.id = currentUser.getUid();
+        RestaurantDatabase.getInstance().getCategories(restaurant.previewInfo.id, set -> {
             myCategories = new HashSet<>(set);
-            Database.getInstance().getCategories(innerSet -> {
+            RestaurantDatabase.getInstance().getCategories(innerSet -> {
                 innerSet.stream().forEach(n -> {
                     Chip chip = new Chip(this);
                     chip.setText(n);
@@ -97,18 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
             });
         });
 
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
+        getProfileData();
     }
 
     @Override
@@ -135,8 +137,7 @@ public class ProfileActivity extends AppCompatActivity {
                 // start activity: EditProfileActivity
                 Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
                 Bundle bundle = new Bundle();
-                intent.putExtra("user", mUser);
-                Log.d("MADAPP", mUser.toString());
+                intent.putExtra("user", restaurant);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
@@ -146,37 +147,25 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getProfileData() {
-        Database.getInstance().getRestaurantProfile(new FireBaseCallBack<Restaurant>() {
-            @Override
-            public void onCallbackList(List<Restaurant> list) {
-
-            }
-
-            @Override
-            public void onCallback(Restaurant user) {
-                if (user != null&&user.name!=null) {
-                    Log.d("MADAPP", "getProfileData(): " + mUser.toString());
-
-                    mUser = new Restaurant(user);
-                    updateFields(mUser);
+        RestaurantDatabase.getInstance().getRestaurantProfile(restaurant.previewInfo.id, r -> {
+                if (r != null && r.previewInfo != null && r.previewInfo.name != null) {
+                    restaurant = new Restaurant(r);
+                    updateFields(restaurant);
                 } else {
-                    mUser = new Restaurant("", "", "", "", "", "", "", "", "", "", "", "");
-                    updateFields(mUser);
-                    Log.d("MADAPP", "(null..) getProfileData(): " + mUser.toString());
+                    restaurant = new Restaurant("", "", "", "", "", "", "", "", "", "", "", "");
+                    updateFields(restaurant);
                 }
-
-            }
-        });
+            });
     }
 
     private void updateFields(Restaurant u) {
-        if (!u.name.equals(""))
-            name.setText(u.name);
+        if (!u.previewInfo.name.equals(""))
+            name.setText(u.previewInfo.name);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
-        description.setText(u.description);
-        deliveryCost.setText(String.valueOf(u.deliveryCost));
-        minOrderCost.setText(String.valueOf(u.minOrderCost));
+        description.setText(u.previewInfo.description);
+        deliveryCost.setText(String.valueOf(u.previewInfo.deliveryCost));
+        minOrderCost.setText(String.valueOf(u.previewInfo.minOrderCost));
         if (!u.openingHours.equals("")) {
             opening.setText(u.openingHours);
         } else {
@@ -187,49 +176,35 @@ public class ProfileActivity extends AppCompatActivity {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
 
-        if (u.imageUri == null || u.imageUri == "") {
+        if (u.previewInfo.imageName == null || u.previewInfo.imageName == "") {
             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         } else {
-            imgProfile.setImageURI(Uri.parse(u.imageUri));
+            // TODO: add image
+            //imgProfile.setImageURI(Uri.parse(u.imageUri));
         }
 
-        if (imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName, "/images/profile/", new FireBaseCallBack<Uri>() {
+            RestaurantDatabase.getInstance().getImage(u.previewInfo.id, "/images/profile/", u.previewInfo.imageName, new OnImageDownloaded() {
                 @Override
-                public void onCallback(Uri item) {
-                    if (item != null) {
+                public void onReceived(Uri item) {
                         if (item == Uri.EMPTY || item.toString().equals("")) {
-                            Log.d("MADAPP", "Setting user default image");
-
                             imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
                         } else {
-                            Log.d("MADAPP", "Setting custom user image");
-                            Log.d("DOWNLOAD2", item.toString());
-
                             // imgProfile.setImageURI(item);
                             Picasso.get().load(item.toString()).into(imgProfile);
-
                         }
-                    }
-
                 }
 
-                @Override
-                public void onCallbackList(List<Uri> list) {
-
-                }
             });
-        }
     }
 
 
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        if (mUser.imageUri == null)
+        if (restaurant.previewInfo.imageName == null)
             intent.putExtra("imageUri", "");
         else
-            intent.putExtra("imageUri", mUser.imageUri.toString());
+            intent.putExtra("imageUri", restaurant.previewInfo.imageName.toString());
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

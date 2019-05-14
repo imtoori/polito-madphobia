@@ -9,7 +9,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.MenuItemRest;
-import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.OnDataFetched;
 import com.mad.delivery.restaurant_app.R;
@@ -30,7 +30,7 @@ public class MenuActivity extends AppCompatActivity {
     private FloatingActionButton button;
     private RecyclerView recyclerView;
     private FirebaseAuth mAuth;
-
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MenuActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         recyclerView = findViewById(R.id.menu_list);
 
-        Database.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
+        RestaurantDatabase.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
             @Override
             public void onDataFetched(List<MenuItemRest> data) {
 
@@ -65,7 +65,7 @@ public class MenuActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -92,7 +92,7 @@ public class MenuActivity extends AppCompatActivity {
             }
 
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(categoryItems, this));
+            recyclerView.setAdapter(new MyMenuItemRecyclerViewAdapter(categoryItems, this, currentUser.getUid()));
         } else {
             button.setOnClickListener(v -> {
                 String[] strings = new String[selectedItems.size()];

@@ -15,7 +15,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,16 +25,15 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.BuildConfig;
-import com.mad.delivery.restaurant_app.Database;
+import com.mad.delivery.restaurant_app.OnFirebaseData;
+import com.mad.delivery.restaurant_app.OnImageDownloaded;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
-import com.mad.delivery.restaurant_app.OnDataFetched;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -54,23 +52,13 @@ import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
     Menu menu;
-    FirebaseUser currentUser;
-    Restaurant mUser;
+    Restaurant restaurant;
     FloatingActionButton btnCamera;
-    EditText name;
-    EditText phoneNumber;
-    EditText emailAddress;
-    EditText description;
-    EditText road;
-    EditText houseNumber;
-    EditText doorPhone;
-    EditText postCode;
-    EditText city;
-    EditText openingTime;
+    EditText name, phoneNumber, emailAddress, description, road, houseNumber, doorPhone, postCode, city, openingTime;
     EditText deliveryCost, minOrder;
     ImageView imgProfile;
     Toolbar myToolbar;
-    Uri imageProfileUri;
+    Uri imageProfileLocalUri;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
@@ -78,10 +66,11 @@ public class EditProfileActivity extends AppCompatActivity {
     private ChipGroup chipGroup;
     private Set<String> categories;
     private Set<String> myCategories;
+    private CompoundButton.OnCheckedChangeListener filterChipListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        imageProfileUri =Uri.EMPTY;
+        imageProfileLocalUri =Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
         myToolbar = findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
@@ -106,51 +95,50 @@ public class EditProfileActivity extends AppCompatActivity {
         minOrder = findViewById(R.id.et_min_order);
         categories = new HashSet<>();
         myCategories = new HashSet<>();
+
+        btnCamera.setOnClickListener(view -> {
+            selectImage(EditProfileActivity.this);
+        });
+        if (savedInstanceState != null) {
+            onRestoreInstanceState(savedInstanceState);
+        }
+
+        filterChipListener = (buttonView, isChecked) -> {
+            Chip chip = (Chip) buttonView;
+            if(isChecked) {
+                categories.add(chip.getText().toString().toLowerCase());
+                chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                myCategories.add(chip.getText().toString().toLowerCase());
+            } else {
+                categories.removeIf(c -> c.equals(chip.getText().toString().toLowerCase()));
+                chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                myCategories.remove(chip.getText().toString().toLowerCase());
+            }
+        };
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
-        btnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectImage(EditProfileActivity.this);
-            }
-        });
-
-        if (savedInstanceState != null) {
-            onRestoreInstanceState(savedInstanceState);
-        } else {
-            getProfileData();
-        }
-
-        CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Chip chip = (Chip) buttonView;
-                if(isChecked) {
-                    categories.add(chip.getText().toString().toLowerCase());
-                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                    chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                    myCategories.add(chip.getText().toString().toLowerCase());
-                } else {
-                    categories.removeIf(c -> c.equals(chip.getText().toString().toLowerCase()));
-                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                    chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                    myCategories.remove(chip.getText().toString().toLowerCase());
-                }
-
-            }
-        };
-
-        Database.getInstance().getCategories(currentUser.getUid(), set -> {
+        restaurant = new Restaurant();
+        restaurant.previewInfo = new PreviewInfo();
+        restaurant.previewInfo.id = currentUser.getUid();
+        RestaurantDatabase.getInstance().getCategories(restaurant.previewInfo.id, set -> {
             myCategories = new HashSet<>(set);
         });
-        Database.getInstance().getCategories(set -> {
+
+        RestaurantDatabase.getInstance().getCategories(set -> {
             set.stream().forEach(n -> {
                 Chip chip = new Chip(this);
                 chip.setText(n);
@@ -172,17 +160,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 chipGroup.addView(chip);
             });
         });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
+        getProfileData();
     }
 
     @Override
@@ -233,8 +211,8 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("openingTime", openingTime.getText().toString());
         outState.putString("deliveryCost", deliveryCost.getText().toString());
         outState.putString("minOrder", minOrder.getText().toString());
-        if (imageProfileUri != Uri.EMPTY)
-            outState.putString("imageUri", imageProfileUri.toString());
+        if (imageProfileLocalUri != Uri.EMPTY)
+            outState.putString("imageUri", imageProfileLocalUri.toString());
         else
             outState.putString("imageUri", "");
     }
@@ -245,22 +223,21 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new Restaurant();
         Log.d("MADAPP", "SavedInstanceState contains data");
-        mUser.name = savedInstanceState.getString("name");
-        mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
-        mUser.email = savedInstanceState.getString("emailAddress");
-        mUser.description = savedInstanceState.getString("description");
-        mUser.road = savedInstanceState.getString("road");
-        mUser.openingHours = savedInstanceState.getString("openingTime");
-        mUser.houseNumber = savedInstanceState.getString("houseNumber");
-        mUser.doorPhone = savedInstanceState.getString("doorPhone");
-        mUser.postCode = savedInstanceState.getString("postCode");
-        mUser.city = savedInstanceState.getString("city");
-        mUser.imageUri = savedInstanceState.getString("imageUri");
-        mUser.deliveryCost = Double.valueOf(savedInstanceState.getString("deliveryCost"));
-        mUser.minOrderCost = Double.valueOf(savedInstanceState.getString("minOrder"));
-        updateFields(mUser);
+        restaurant.previewInfo.name = savedInstanceState.getString("name");
+        restaurant.phoneNumber = savedInstanceState.getString("phoneNumber");
+        restaurant.email = savedInstanceState.getString("emailAddress");
+        restaurant.previewInfo.description = savedInstanceState.getString("description");
+        restaurant.road = savedInstanceState.getString("road");
+        restaurant.openingHours = savedInstanceState.getString("openingTime");
+        restaurant.houseNumber = savedInstanceState.getString("houseNumber");
+        restaurant.doorPhone = savedInstanceState.getString("doorPhone");
+        restaurant.postCode = savedInstanceState.getString("postCode");
+        restaurant.city = savedInstanceState.getString("city");
+        imageProfileLocalUri = Uri.parse(savedInstanceState.getString("imageUri"));
+        restaurant.previewInfo.deliveryCost = Double.valueOf(savedInstanceState.getString("deliveryCost"));
+        restaurant.previewInfo.minOrderCost = Double.valueOf(savedInstanceState.getString("minOrder"));
+        updateFields(restaurant);
     }
 
     @Override
@@ -269,19 +246,17 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageProfileUri on ActivityResult: " + imageProfileUri.toString());
-                    if (imageProfileUri != null)
-                        Log.d("MADAPP", "i am here");
-                    imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                    imgProfile.setImageURI(imageProfileUri);
+                    Log.d("MADAPP", "imageProfileLocalUri on ActivityResult: " + imageProfileLocalUri.toString());
+                    imageProfileLocalUri = saveImage(imageProfileLocalUri, EditProfileActivity.this);
+                    imgProfile.setImageURI(imageProfileLocalUri);
                 }
                 break;
             case GALLERY_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    imageProfileUri = data.getData();
-                    if (imageProfileUri != null) {
-                        imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                        imgProfile.setImageURI(imageProfileUri);
+                    imageProfileLocalUri = data.getData();
+                    if (imageProfileLocalUri != null) {
+                        imageProfileLocalUri = saveImage(imageProfileLocalUri, EditProfileActivity.this);
+                        imgProfile.setImageURI(imageProfileLocalUri);
                     } else {
                         imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
                     }
@@ -292,64 +267,42 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-        Database.getInstance().getRestaurantProfile(new FireBaseCallBack<Restaurant>(){
-            @Override
-            public void onCallback(Restaurant user) {
-                if(user!=null&&user.name!=null){
-                    mUser=new Restaurant(user);
-                    updateFields(user);
-
-                }
-
-            }
-
-            @Override
-            public void onCallbackList(List<Restaurant> list) {
-
+        RestaurantDatabase.getInstance().getRestaurantProfile(restaurant.previewInfo.id, r -> {
+            if (r != null && r.previewInfo != null && r.previewInfo.name != null) {
+                restaurant = new Restaurant(r);
+                updateFields(restaurant);
             }
         });
     }
 
     private void setProfileData() {
-
-        Restaurant user  = new Restaurant(name.getText().toString(),
-                emailAddress.getText().toString(),
-                description.getText().toString(),
-                phoneNumber.getText().toString(),
-                road.getText().toString(),
-                houseNumber.getText().toString(),
-                doorPhone.getText().toString(),
-                postCode.getText().toString(),
-                city.getText().toString(),
-                imageProfileUri.toString(),
-                imageProfileUri.getLastPathSegment(),
-                openingTime.getText().toString());
-        user.id = mAuth.getCurrentUser().getUid();
-        user.previewInfo.id = user.id;
-        user.deliveryCost = Double.valueOf(deliveryCost.getText().toString());
-        user.minOrderCost = Double.valueOf(minOrder.getText().toString());
-        user.previewInfo.deliveryCost = user.deliveryCost;
-        user.previewInfo.minOrderCost = user.minOrderCost;
-
+        if(restaurant.previewInfo == null) restaurant.previewInfo = new PreviewInfo();
+        restaurant.previewInfo.name = name.getText().toString();
+        restaurant.email = emailAddress.getText().toString();
+        restaurant.previewInfo.description = description.getText().toString();
+        restaurant.phoneNumber = phoneNumber.getText().toString();
+        restaurant.road = road.getText().toString();
+        restaurant.houseNumber = houseNumber.getText().toString();
+        restaurant.doorPhone = doorPhone.getText().toString();
+        restaurant.postCode = postCode.getText().toString();
+        restaurant.city = city.getText().toString();
+        restaurant.previewInfo.imageName = imageProfileLocalUri.getLastPathSegment();
+        restaurant.openingHours = openingTime.getText().toString();
+        restaurant.previewInfo.deliveryCost = Double.valueOf(deliveryCost.getText().toString());
+        restaurant.previewInfo.minOrderCost =  Double.valueOf(minOrder.getText().toString());
+        if(restaurant.categories == null) restaurant.categories = new HashMap<>();
         for(String c : myCategories) {
-            user.categories.put(c.toLowerCase(), true);
-
+            restaurant.categories.put(c.toLowerCase(), true);
         }
-        Database.getInstance().putRestaurantIntoCategory(user.id, myCategories);
 
-       if(mUser.menuItems==null)
-            user.menuItems = null;
-       else
-           user.menuItems =mUser.menuItems;
-       Database.getInstance().putRestaurantProfile(user);
-
+        RestaurantDatabase.getInstance().putRestaurantIntoCategory(restaurant.previewInfo.id, myCategories);
+        RestaurantDatabase.getInstance().updateRestaurantProfile(restaurant);
     }
 
 
 
     private File createImageFile() throws IOException {
         // Create an image file name
-
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 "profile_photo",  /* prefix */
@@ -384,10 +337,10 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
-                            imageProfileUri = FileProvider.getUriForFile(EditProfileActivity.this,
+                            imageProfileLocalUri = FileProvider.getUriForFile(EditProfileActivity.this,
                                     BuildConfig.APPLICATION_ID,
                                     photoFile);
-                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileUri);
+                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileLocalUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
 
                         }
@@ -406,51 +359,29 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void updateFields(Restaurant u) {
-        Log.d("UPDATE","name: " + u.name);
-        name.setText(u.name);
+        name.setText(u.previewInfo.name);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
-        description.setText(u.description);
+        description.setText(u.previewInfo.description);
         road.setText(u.road);
         openingTime.setText(u.openingHours);
         houseNumber.setText(u.houseNumber);
         doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
-        deliveryCost.setText(String.valueOf(u.deliveryCost));
-        minOrder.setText(String.valueOf(u.minOrderCost));
-        imageProfileUri = Uri.parse( u.imageUri);
-        imgProfile.setImageURI(Uri.parse(u.imageUri));
-
+        deliveryCost.setText(String.valueOf(u.previewInfo.deliveryCost));
+        minOrder.setText(String.valueOf(u.previewInfo.minOrderCost));
         if(imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName,"/images/profile/", new FireBaseCallBack<Uri>() {
-                @Override
-                public void onCallback(Uri item) {
-                    if (item != null) {
-                        if (item == Uri.EMPTY || item.toString().equals("")) {
-                            Log.d("MADAPP", "Setting user default image");
-                            imageProfileUri = Uri.EMPTY;
-
-                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-                        } else {
-                            Log.d("MADAPP", "Setting custom user image");
-                            //  imageProfileUri = item;
-                            // imgProfile.setImageURI(item);
-                            Picasso.get().load(item.toString()).into(imgProfile);
-                            // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
-
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onCallbackList(List<Uri> list) {
-
+            RestaurantDatabase.getInstance().getImage(u.previewInfo.id, "/images/profile/", u.previewInfo.imageName, imageUri -> {
+                if (imageUri == null) {
+                    imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                    imageProfileLocalUri = Uri.EMPTY;
+                } else {
+                    imageProfileLocalUri = imageUri;
+                    Picasso.get().load(imageProfileLocalUri.toString()).into(imgProfile);
                 }
             });
         }
-
     }
 
     /*
