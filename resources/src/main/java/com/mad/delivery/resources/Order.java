@@ -29,6 +29,8 @@ public class Order implements Parcelable {
     public String bikerId;
     public String clientId;
     public String delivery;
+    public Double latitude;
+    public Double longitude;
 
     public Order(){}
 
@@ -44,7 +46,9 @@ public class Order implements Parcelable {
 //        products.forEach(p->Log.d("MADD",p.name+" "+p.quantity + " " + p.price));
         this.totalPrice=0.0;
         products.forEach(p->this.totalPrice+=p.price*p.quantity);
-        totalPrice+=restaurant.deliveryCost;
+        this.totalPrice+=restaurant.deliveryCost;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
 
     }
 
@@ -63,6 +67,9 @@ public class Order implements Parcelable {
         bikerNotes = other.bikerNotes;
         paymentMethod = other.paymentMethod;
         this.totalPrice = other.totalPrice;
+        this.latitude = other.latitude;
+        this.longitude = other.latitude;
+
     }
 
 
@@ -88,6 +95,8 @@ public class Order implements Parcelable {
         restaurantId = in.readString();
         bikerId = in.readString();
         clientId = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
     @Override
@@ -114,6 +123,8 @@ public class Order implements Parcelable {
         dest.writeString(restaurantId);
         dest.writeString(bikerId);
         dest.writeString(clientId);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 
     @Override
@@ -306,6 +317,22 @@ public class Order implements Parcelable {
 
     public static Creator<Order> getCREATOR() {
         return CREATOR;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     @Override

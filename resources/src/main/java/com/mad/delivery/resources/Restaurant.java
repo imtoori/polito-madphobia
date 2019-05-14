@@ -32,6 +32,8 @@ public class Restaurant implements Parcelable {
     public String imageUri;
     public String token;
     public Double minOrderCost, deliveryCost;
+    public Double latitude;
+    public Double longitude;
 
     public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
 
@@ -63,12 +65,8 @@ public class Restaurant implements Parcelable {
         previewInfo.imageDownload ="";
         previewInfo.deliveryCost = this.deliveryCost;
         previewInfo.minOrderCost = this.minOrderCost;
-
-
-
-
-
-
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     public Restaurant(Restaurant other) {
@@ -107,6 +105,8 @@ public class Restaurant implements Parcelable {
         previewInfo.imageURL = "";
         previewInfo.imageDownload="";
         previewInfo.description = other.description;
+        this.latitude = other.latitude;
+        this.longitude = other.latitude;
     }
 
     public Restaurant(String name) {
@@ -117,7 +117,6 @@ public class Restaurant implements Parcelable {
         this.categories = new HashMap<>();
         this.menuItems = new HashMap<>();
         previewInfo = new PreviewInfo();
-
         this.scoreValue = 0;
     }
 
@@ -152,6 +151,8 @@ public class Restaurant implements Parcelable {
         } else {
             deliveryCost = in.readDouble();
         }
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
     @Override
@@ -189,6 +190,8 @@ public class Restaurant implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(deliveryCost);
         }
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 
     @Override
@@ -371,6 +374,22 @@ public class Restaurant implements Parcelable {
 
     public static Creator<Restaurant> getCREATOR() {
         return CREATOR;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     @Override
