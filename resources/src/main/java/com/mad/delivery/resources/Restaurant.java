@@ -1,8 +1,11 @@
 package com.mad.delivery.resources;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +63,12 @@ public class Restaurant implements Parcelable {
         previewInfo.imageDownload ="";
         previewInfo.deliveryCost = this.deliveryCost;
         previewInfo.minOrderCost = this.minOrderCost;
+
+
+
+
+
+
     }
 
     public Restaurant(Restaurant other) {

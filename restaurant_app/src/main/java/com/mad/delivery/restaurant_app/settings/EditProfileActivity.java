@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -206,7 +208,11 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
                 if (checkConstraints()) {
-                    setProfileData();
+                    try {
+                        setProfileData();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(intent);
@@ -310,7 +316,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void setProfileData() {
+    private void setProfileData() throws IOException {
 
         Restaurant user  = new Restaurant(name.getText().toString(),
                 emailAddress.getText().toString(),
@@ -342,6 +348,19 @@ public class EditProfileActivity extends AppCompatActivity {
        else
            user.menuItems =mUser.menuItems;
        Database.getInstance().putRestaurantProfile(user);
+
+
+
+        ///TODO implement following line code to trasform the address in latitude and longitude
+        //Geocoder geocoder = new Geocoder(<this>);
+        //List<Address> addresses;
+        //addresses = geocoder.getFromLocationName(road.getText().toString() + houseNumber.getText().toString() + city.getText().toString(), 1);
+        //if(addresses.size() > 0) {
+        //    Double latitude= addresses.get(0).getLatitude();
+        //    Double longitude= addresses.get(0).getLongitude();
+        //    ///TODO Put lat and long in the restaurant object. PAY ATTENTION AT PARCEBLE METHODS
+        //}
+
 
     }
 

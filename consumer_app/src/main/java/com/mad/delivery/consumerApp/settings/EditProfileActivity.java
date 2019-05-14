@@ -258,6 +258,16 @@ public class EditProfileActivity extends AppCompatActivity {
                 Uri.parse(imageProfileUri.toString()),
                 imageProfileUri.getLastPathSegment());
         ConsumerDatabase.getInstance().putUserProfile(user);
+
+        ///TODO implement following line code to trasform the delivery address in latitude and longitude
+        //Geocoder geocoder = new Geocoder(<this>);
+        //List<Address> addresses;
+        //addresses = geocoder.getFromLocationName(road.getText().toString() + houseNumber.getText().toString() + city.getText().toString(), 1);
+        //if(addresses.size() > 0) {
+        //    Double latitude= addresses.get(0).getLatitude();
+        //    Double longitude= addresses.get(0).getLongitude();
+        //    ///TODO Put lat and long in the Consumer object. PAY ATTENTION AT PARCEBLE METHODS
+        //}
     }
 
     private File createImageFile() throws IOException {
