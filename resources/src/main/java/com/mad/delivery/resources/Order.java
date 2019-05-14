@@ -95,8 +95,16 @@ public class Order implements Parcelable {
         restaurantId = in.readString();
         bikerId = in.readString();
         clientId = in.readString();
-        latitude = in.readDouble();
-        longitude = in.readDouble();
+        if (in.readByte() == 0) {
+            latitude = null;
+        } else {
+            latitude = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            longitude = null;
+        } else {
+            longitude = in.readDouble();
+        }
     }
 
     @Override
@@ -123,8 +131,18 @@ public class Order implements Parcelable {
         dest.writeString(restaurantId);
         dest.writeString(bikerId);
         dest.writeString(clientId);
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
+        if (latitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(latitude);
+        }
+        if (longitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(longitude);
+        }
     }
 
     @Override
