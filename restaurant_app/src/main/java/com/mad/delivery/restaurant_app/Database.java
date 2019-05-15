@@ -28,14 +28,17 @@ import org.joda.time.DateTimeComparator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 
 
 final public class Database {
     private static Database instance;
     private static MyDateComparator myDateComparator;
+    private static Restaurant restaurant;
     DatabaseReference restaurantRef;
     DatabaseReference menuItemsRef;
     DatabaseReference ordersRef;
@@ -65,6 +68,18 @@ final public class Database {
         profileRef = database.getReference("users/restaurants/");
         storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/");
         categoriesRef = database.getReference().child("categories");
+
+        getRestaurantProfile(new FireBaseCallBack<Restaurant>() {
+            @Override
+            public void onCallback(Restaurant user) {
+                restaurant=user;
+            }
+
+            @Override
+            public void onCallbackList(List<Restaurant> list) {
+
+            }
+        });
 
     }
 
@@ -288,6 +303,7 @@ final public class Database {
                         Uri downloadUrl = uri;
                         //Do what you want with the url
                         user.previewInfo.imageDownload =downloadUrl.toString();
+                        restaurant =user;
                         profileRef.child("profile").setValue(user);
 
                     }
@@ -428,18 +444,23 @@ final public class Database {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                TreeMap<String,Double> bikerIdDistance = new TreeMap<>();
                 List<String> bikerIds = new ArrayList<>();
+
+
                 if(dataSnapshot.exists()) {
 
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
                         if(snapshot.getValue(Biker.class).status=true)
                         bikerIds.add(snapshot.getKey());
+                        bikerIdDistance.put(snapshot.getKey(),Haversine.distance(restaurant.latitude,restaurant.longitude,snapshot.getValue(Biker.class).latitude,snapshot.getValue(Biker.class).longitude));
 
 
                     }
                 }
-                firebaseCallback.onCallbackList(bikerIds);
+
+                firebaseCallback.onCallback(bikerIdDistance.firstKey());
             }
 
 
