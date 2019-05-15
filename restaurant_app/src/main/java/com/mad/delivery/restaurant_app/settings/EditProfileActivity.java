@@ -343,23 +343,27 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         Database.getInstance().putRestaurantIntoCategory(user.id, myCategories);
 
-       if(mUser.menuItems==null)
-            user.menuItems = null;
-       else
-           user.menuItems =mUser.menuItems;
-       Database.getInstance().putRestaurantProfile(user);
+      // if(mUser.menuItems==null)
+      //      user.menuItems = null;
+      // else
+      //     user.menuItems =mUser.menuItems;
 
 
+//Transform address in latitude and longitude
+       Geocoder geocoder = new Geocoder(this);
+       List<Address> addresses;
+       addresses = geocoder.getFromLocationName(road.getText().toString() + houseNumber.getText().toString() + city.getText().toString(), 1);
+       if(addresses.size() > 0) {
+           Log.d("Address1: ",road.getText().toString() + houseNumber.getText().toString() + city.getText().toString());
 
-        ///TODO implement following line code to trasform the address in latitude and longitude
-        //Geocoder geocoder = new Geocoder(<this>);
-        //List<Address> addresses;
-        //addresses = geocoder.getFromLocationName(road.getText().toString() + houseNumber.getText().toString() + city.getText().toString(), 1);
-        //if(addresses.size() > 0) {
-        //    Double latitude= addresses.get(0).getLatitude();
-        //    Double longitude= addresses.get(0).getLongitude();
-        //    ///TODO Put lat and long in the restaurant object. PAY ATTENTION AT PARCEBLE METHODS
-        //}
+           Double latitude= addresses.get(0).getLatitude();
+            Double longitude= addresses.get(0).getLongitude();
+           Log.d("Address2: ",latitude.toString()+" "+longitude.toString());
+
+           user.latitude=latitude;
+            user.longitude=longitude;
+        }
+        Database.getInstance().putRestaurantProfile(user);
 
 
     }
