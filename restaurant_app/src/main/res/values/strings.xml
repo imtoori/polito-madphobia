@@ -46,7 +46,7 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
-    <string name="check_password">The password must be at least 8 characters long and include a number, lowercase letter, uppercase letter and special character (e.g. @, &amp;, #, ?)</string>
+    <string name="check_password">The password must be at least 6 characters long </string>
     <string name="check_password_repeat">Repeat same password</string>
     <string name="check_current_password">Invalid current password</string>
     <!--new Dish -->

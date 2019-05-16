@@ -28,16 +28,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_orderNumberValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="@string/order_number"
-            android:textSize="@dimen/normalText"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_orderNumber"
-            app:layout_constraintStart_toEndOf="@+id/tv_orderNumber"
-            app:layout_constraintTop_toTopOf="@+id/tv_orderNumber" />
 
         <TextView
             android:id="@+id/tv_orderStatusValue"
@@ -105,7 +95,7 @@
         <TextView
             android:id="@+id/tv_products"
             android:layout_width="wrap_content"
-            android:layout_height="22dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             android:textSize="@dimen/normalText"

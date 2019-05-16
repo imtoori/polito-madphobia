@@ -34,7 +34,7 @@ public class OrderInfoActivity extends AppCompatActivity {
         order = ConsumerDatabase.getInstance().getOrder();
         setContentView(R.layout.activity_order_info);
         setTitle(getResources().getString(R.string.order_info_toolbar));
-        toolbar=findViewById(R.id.toolbar);
+        toolbar=findViewById(R.id.Toolbar);
         setSupportActionBar(toolbar);
         order_code=findViewById(R.id.order_code);
         subtot=findViewById(R.id.subtotal_price);
