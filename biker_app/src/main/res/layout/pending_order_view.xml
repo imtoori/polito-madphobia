@@ -29,6 +29,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/orderCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+
+            android:layout_marginBottom="8dp"
+            android:text="@string/order_number"
+            android:textSize="@dimen/description"
+            app:layout_constraintBottom_toTopOf="@+id/tv_orderFrom"
+            app:layout_constraintStart_toEndOf="@+id/tv_orderNumber"
+            app:layout_constraintTop_toTopOf="@+id/tv_orderNumber" />
+
+        <TextView
             android:id="@+id/tv_orderStatusValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

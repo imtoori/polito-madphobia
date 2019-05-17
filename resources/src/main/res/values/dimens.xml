@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="bigTitle">26sp</dimen>
-    <dimen name="title">22sp</dimen>
-    <dimen name="subtitle">20sp</dimen>
-    <dimen name="normalText">18sp</dimen>
+    <dimen name="bigTitle">22sp</dimen>
+    <dimen name="title">20sp</dimen>
+    <dimen name="subtitle">18sp</dimen>
+    <dimen name="normalText">16sp</dimen>
     <dimen name="description">14sp</dimen>
     <integer name="max">20</integer>
-    <dimen name="text_margin">16dp</dimen>
     <item name="spacing" format="float" type="dimen">0.1</item>
-
 </resources>
