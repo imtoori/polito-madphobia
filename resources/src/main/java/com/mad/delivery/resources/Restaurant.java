@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Restaurant implements Parcelable {
+public class Restaurant implements Serializable, Parcelable {
     public PreviewInfo previewInfo;
     public String phoneNumber;
     public String email;
@@ -24,9 +25,11 @@ public class Restaurant implements Parcelable {
     public Map<String, Boolean> categories;
     public Map<String, MenuItemRest> menuItems;
     public String token;
+    public Double latitude;
+    public Double longitude;
 
     public Restaurant() {}
-    public Restaurant(String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
+    public Restaurant(String id, String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.road = road;
@@ -39,13 +42,15 @@ public class Restaurant implements Parcelable {
         this.menuItems = new HashMap<>();
         this.token ="";
         previewInfo = new PreviewInfo();
-        previewInfo.id = "";
+        previewInfo.id = id;
         previewInfo.name = name;
         previewInfo.description =description;
         previewInfo.scoreValue = 0;
         previewInfo.imageName = "";
         previewInfo.deliveryCost = 0.0;
         previewInfo.minOrderCost = 0.0;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     public Restaurant(Restaurant other) {
@@ -65,13 +70,12 @@ public class Restaurant implements Parcelable {
         this.postCode = other.postCode;
         this.city = other.city;
         this.openingHours = other.openingHours;
-       this.categories=other.categories;
+        this.categories=other.categories;
         this.menuItems = other.menuItems;
         this.token = other.token;
-        this.categories = new HashMap<>();
-        this.menuItems = new HashMap<>();
+        this.latitude = other.latitude;
+        this.longitude = other.longitude;
     }
-
 
     protected Restaurant(Parcel in) {
         previewInfo = in.readParcelable(PreviewInfo.class.getClassLoader());
@@ -83,19 +87,23 @@ public class Restaurant implements Parcelable {
         postCode = in.readString();
         city = in.readString();
         openingHours = in.readString();
-        int size1 = in.readInt();
-        for(int i = 0; i < size1; i++){
-            String key = in.readString();
-            Boolean value =  (Boolean) in.readSerializable();
-            categories.put(key,value);
-        }
-        int size2 = in.readInt();
-        for(int i = 0; i < size2; i++){
-            String key = in.readString();
-            MenuItemRest value =  (MenuItemRest) in.readSerializable();
-            menuItems.put(key,value);
-        }
+        categories = new HashMap<>();
+        in.readMap(categories,Boolean.class.getClassLoader());
+        menuItems = new HashMap<>();
+        in.readMap(menuItems, MenuItemRest.class.getClassLoader());
         token = in.readString();
+        if(in.readByte() == 0) {
+            latitude = 0.0;
+        } else {
+            latitude = in.readDouble();
+        }
+        if(in.readByte() == 0) {
+            longitude = 0.0;
+        } else {
+            longitude = in.readDouble();
+        }
+
+
     }
 
     @Override
@@ -109,27 +117,21 @@ public class Restaurant implements Parcelable {
         dest.writeString(postCode);
         dest.writeString(city);
         dest.writeString(openingHours);
-        if(categories == null) {
-            dest.writeInt(0);
-        } else {
-            dest.writeInt(categories.size());
-            for(Map.Entry<String,Boolean> entry : categories.entrySet()){
-                dest.writeString(entry.getKey());
-                dest.writeSerializable(entry.getValue());
-            }
-        }
-
-        if(menuItems == null) {
-            dest.writeInt(0);
-        } else {
-            dest.writeInt(menuItems.size());
-            for(Map.Entry<String,MenuItemRest> entry : menuItems.entrySet()){
-                dest.writeString(entry.getKey());
-                dest.writeSerializable(entry.getValue());
-            }
-        }
-
+        dest.writeMap(categories);
+        dest.writeMap(menuItems);
         dest.writeString(token);
+        if (latitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(latitude);
+        }
+        if (longitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(longitude);
+        }
     }
 
     @Override
@@ -192,60 +194,81 @@ public class Restaurant implements Parcelable {
     public String getDoorPhone() {
         return doorPhone;
     }
-
     public void setDoorPhone(String doorPhone) {
         this.doorPhone = doorPhone;
     }
-
     public String getPostCode() {
         return postCode;
     }
-
     public void setPostCode(String postCode) {
         this.postCode = postCode;
     }
-
     public String getCity() {
         return city;
     }
-
     public void setCity(String city) {
         this.city = city;
     }
-
     public String getOpeningHours() {
         return openingHours;
     }
-
     public void setOpeningHours(String openingHours) {
         this.openingHours = openingHours;
     }
-
     public Map<String, Boolean> getCategories() {
         return categories;
     }
-
     public void setCategories(Map<String, Boolean> categories) {
         this.categories = categories;
     }
-
     public Map<String, MenuItemRest> getMenuItems() {
         return menuItems;
     }
-
     public void setMenuItems(Map<String, MenuItemRest> menuItems) {
         this.menuItems = menuItems;
     }
-
     public String getToken() {
         return token;
     }
-
     public void setToken(String token) {
         this.token = token;
     }
-
     public static Creator<Restaurant> getCREATOR() {
         return CREATOR;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "previewInfo=" + previewInfo +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", road='" + road + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", doorPhone='" + doorPhone + '\'' +
+                ", postCode='" + postCode + '\'' +
+                ", city='" + city + '\'' +
+                ", categories=" + categories +
+                ", menuItems=" + menuItems +
+                ", token='" + token + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
     }
 }

@@ -22,17 +22,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.restaurant_app.OnFirebaseData;
 import com.mad.delivery.restaurant_app.OnImageDownloaded;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+import java.net.URI;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -51,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Set<String> categories;
     private Set<String> myCategories;
     private FirebaseAuth mAuth;
+    private Uri imageLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+// Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -85,32 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
         restaurant = new Restaurant();
         restaurant.previewInfo = new PreviewInfo();
         restaurant.previewInfo.id = currentUser.getUid();
-        RestaurantDatabase.getInstance().getCategories(restaurant.previewInfo.id, set -> {
-            myCategories = new HashSet<>(set);
-            RestaurantDatabase.getInstance().getCategories(innerSet -> {
-                innerSet.stream().forEach(n -> {
-                    Chip chip = new Chip(this);
-                    chip.setText(n);
-                    chip.setChipBackgroundColorResource(R.color.colorWhite);
-                    chip.setChipStrokeWidth((float) 0.1);
-                    chip.setChipStrokeColorResource(R.color.colorPrimary);
-                    chip.setCheckable(false);
-                    chip.setEnabled(false);
-                    chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                    chip.setRippleColorResource(R.color.colorPrimaryDark);
-                    chip.setCheckedIconVisible(false);
-                    chip.setChipIconTintResource(R.color.colorPrimary);
-                    if (myCategories.contains(n.toLowerCase())) {
-                        chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                        chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                        chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                    }
-                    chipGroup.addView(chip);
-                });
-            });
-        });
-
-        getProfileData();
+        getProfileData(currentUser.getUid());
     }
 
     @Override
@@ -137,7 +112,9 @@ public class ProfileActivity extends AppCompatActivity {
                 // start activity: EditProfileActivity
                 Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
                 Bundle bundle = new Bundle();
-                intent.putExtra("user", restaurant);
+                intent.putExtra("user", (Serializable) restaurant);
+                intent.putExtra("imageLink", imageLink);
+
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
@@ -146,16 +123,40 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void getProfileData() {
-        RestaurantDatabase.getInstance().getRestaurantProfile(restaurant.previewInfo.id, r -> {
-                if (r != null && r.previewInfo != null && r.previewInfo.name != null) {
-                    restaurant = new Restaurant(r);
-                    updateFields(restaurant);
-                } else {
-                    restaurant = new Restaurant("", "", "", "", "", "", "", "", "", "", "", "");
-                    updateFields(restaurant);
-                }
+    private void getProfileData(String id) {
+        RestaurantDatabase.getInstance().getRestaurantProfile(id, r -> {
+            if (r != null && r.previewInfo != null && r.previewInfo.name != null) {
+                restaurant = new Restaurant(r);
+            } else {
+                restaurant = new Restaurant(id, "", r.email, "", "", "", "", "", "", "", "", "", "");
+            }
+            RestaurantDatabase.getInstance().getCategories(innerSet -> {
+                innerSet.stream().forEach(n -> {
+                    Chip chip = new Chip(this);
+                    chip.setText(n);
+                    chip.setChipBackgroundColorResource(R.color.colorWhite);
+                    chip.setChipStrokeWidth((float) 0.1);
+                    chip.setChipStrokeColorResource(R.color.colorPrimary);
+                    chip.setCheckable(false);
+                    chip.setEnabled(false);
+                    chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                    chip.setRippleColorResource(R.color.colorPrimaryDark);
+                    chip.setCheckedIconVisible(false);
+                    chip.setChipIconTintResource(R.color.colorPrimary);
+                    if (restaurant.categories != null) {
+                        if (restaurant.categories.containsKey(n.toLowerCase())) {
+                            chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                            chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                            chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                        }
+                    }
+                    chipGroup.addView(chip);
+                });
             });
+            updateFields(restaurant);
+
+        });
+
     }
 
     private void updateFields(Restaurant u) {
@@ -176,25 +177,18 @@ public class ProfileActivity extends AppCompatActivity {
             road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
         }
 
-        if (u.previewInfo.imageName == null || u.previewInfo.imageName == "") {
-            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-        } else {
-            // TODO: add image
-            //imgProfile.setImageURI(Uri.parse(u.imageUri));
-        }
-
-            RestaurantDatabase.getInstance().getImage(u.previewInfo.id, "/images/profile/", u.previewInfo.imageName, new OnImageDownloaded() {
-                @Override
-                public void onReceived(Uri item) {
-                        if (item == Uri.EMPTY || item.toString().equals("")) {
-                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-                        } else {
-                            // imgProfile.setImageURI(item);
-                            Picasso.get().load(item.toString()).into(imgProfile);
-                        }
+        if (u.previewInfo != null && u.previewInfo.imageName != null && !u.previewInfo.imageName.equals("")) {
+            RestaurantDatabase.getInstance().downloadImage(u.previewInfo.id, "profile", u.previewInfo.imageName, imageUri -> {
+                if (imageUri == null || imageUri.toString().equals("") || imageUri.equals(Uri.EMPTY)) {
+                    imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                } else {
+                    Picasso.get().load(imageUri.toString()).into(imgProfile);
+                    imageLink = imageUri;
                 }
-
             });
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+        }
     }
 
 

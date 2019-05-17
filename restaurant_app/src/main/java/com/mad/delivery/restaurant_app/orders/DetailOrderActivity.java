@@ -18,10 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 public class DetailOrderActivity extends AppCompatActivity {
     Toolbar myToolBar;
@@ -58,6 +60,19 @@ public class DetailOrderActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
+        RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
+            @Override
+            public void onSuccess(Restaurant user) {
+                // nothing happens..
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

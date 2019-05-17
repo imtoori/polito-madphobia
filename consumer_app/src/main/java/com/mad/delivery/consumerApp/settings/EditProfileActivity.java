@@ -259,7 +259,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 imageProfileUri.getLastPathSegment());
         ConsumerDatabase.getInstance().putUserProfile(user);
     }
-g
+
     private File createImageFile() throws IOException {
         // Create an image file name
 

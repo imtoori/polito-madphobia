@@ -17,7 +17,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 import com.mad.delivery.restaurant_app.menu.MenuActivity;
 import com.mad.delivery.restaurant_app.menu.MenuFragment;
 import com.mad.delivery.restaurant_app.orders.DetailOrderActivity;
@@ -120,8 +122,22 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(currentUser.getUid(), instanceIdResult.getToken()));
-            FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
+            RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
+                @Override
+                public void onSuccess(Restaurant user) {
+                    Log.d("MADAPP", "User "+ user.previewInfo.id + " have logged in.");
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(currentUser.getUid(), instanceIdResult.getToken()));
+                    FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
+                }
+
+                @Override
+                public void onFailure() {
+                    Log.d("MADAPP", "User "+ currentUser.getUid() + " can't log in.");
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+
         }
     }
 

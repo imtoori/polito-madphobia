@@ -163,7 +163,7 @@ public class RegisterFragment extends Fragment {
                             registered.previewInfo.id = user.getUid();
                             registered.email = emailAddress.getText().toString();
 
-                            myRef.child("users").child("restaurants").child(user.getUid()).child("register").setValue(registered);
+                            myRef.child("users").child("restaurants").child(user.getUid()).setValue(registered);
                             Bundle bundle = new Bundle();
                             bundle.putParcelable("user", registered);
                             Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);

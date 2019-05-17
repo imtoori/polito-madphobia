@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.ListDialog;
@@ -35,6 +36,7 @@ import com.mad.delivery.restaurant_app.MyDateFormat;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.TimePickerFragment;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 import org.joda.time.DateTime;
 
@@ -159,6 +161,19 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
+        RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
+            @Override
+            public void onSuccess(Restaurant user) {
+                // nothing happens..
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

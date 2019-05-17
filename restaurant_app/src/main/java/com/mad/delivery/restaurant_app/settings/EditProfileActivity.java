@@ -28,10 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.BuildConfig;
-import com.mad.delivery.restaurant_app.OnFirebaseData;
-import com.mad.delivery.restaurant_app.OnImageDownloaded;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.squareup.picasso.Picasso;
@@ -40,9 +37,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.Nullable;
@@ -64,13 +61,13 @@ public class EditProfileActivity extends AppCompatActivity {
     final int CAMERA_CODE = 2;
     private FirebaseAuth mAuth;
     private ChipGroup chipGroup;
-    private Set<String> categories;
-    private Set<String> myCategories;
     private CompoundButton.OnCheckedChangeListener filterChipListener;
+    private Uri imageLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        imageProfileLocalUri =Uri.EMPTY;
+        imageProfileLocalUri = Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
         myToolbar = findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
@@ -93,8 +90,6 @@ public class EditProfileActivity extends AppCompatActivity {
         chipGroup = findViewById(R.id.chip_group);
         deliveryCost = findViewById(R.id.et_delivery_fee);
         minOrder = findViewById(R.id.et_min_order);
-        categories = new HashSet<>();
-        myCategories = new HashSet<>();
 
         btnCamera.setOnClickListener(view -> {
             selectImage(EditProfileActivity.this);
@@ -103,28 +98,8 @@ public class EditProfileActivity extends AppCompatActivity {
             onRestoreInstanceState(savedInstanceState);
         }
 
-        filterChipListener = (buttonView, isChecked) -> {
-            Chip chip = (Chip) buttonView;
-            if(isChecked) {
-                categories.add(chip.getText().toString().toLowerCase());
-                chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                myCategories.add(chip.getText().toString().toLowerCase());
-            } else {
-                categories.removeIf(c -> c.equals(chip.getText().toString().toLowerCase()));
-                chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                myCategories.remove(chip.getText().toString().toLowerCase());
-            }
-        };
 
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
@@ -132,14 +107,13 @@ public class EditProfileActivity extends AppCompatActivity {
             startActivity(intent);
         }
         restaurant = new Restaurant();
-        restaurant.previewInfo = new PreviewInfo();
-        restaurant.previewInfo.id = currentUser.getUid();
-        RestaurantDatabase.getInstance().getCategories(restaurant.previewInfo.id, set -> {
-            myCategories = new HashSet<>(set);
-        });
 
-        RestaurantDatabase.getInstance().getCategories(set -> {
-            set.stream().forEach(n -> {
+        Bundle bundle = getIntent().getExtras();
+        restaurant = (Restaurant) bundle.get("user");
+        imageLink = (Uri) bundle.get("imageLink");
+        Log.d("MADAPP", restaurant.toString());
+        RestaurantDatabase.getInstance().getCategories(innerSet -> {
+            innerSet.stream().forEach(n -> {
                 Chip chip = new Chip(this);
                 chip.setText(n);
                 chip.setChipBackgroundColorResource(R.color.colorWhite);
@@ -150,18 +124,35 @@ public class EditProfileActivity extends AppCompatActivity {
                 chip.setRippleColorResource(R.color.colorPrimaryDark);
                 chip.setCheckedIconVisible(false);
                 chip.setChipIconTintResource(R.color.colorPrimary);
-                if(myCategories.contains(n.toLowerCase())) {
-                    chip.setChecked(true);
-                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                    chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                if(restaurant.categories != null) {
+                    if (restaurant.categories.containsKey(n.toLowerCase())) {
+                        chip.setChecked(true);
+                        chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                        chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                        chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    }
                 }
-                chip.setOnCheckedChangeListener(filterChipListener);
+                chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    Chip ch = (Chip) buttonView;
+                    if (isChecked) {
+                        ch.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                        ch.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                        ch.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                        restaurant.categories.put(ch.getText().toString().toLowerCase(), true);
+                    } else {
+                        ch.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                        ch.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                        ch.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                        restaurant.categories.remove(ch.getText().toString().toLowerCase());
+                    }
+                });
                 chipGroup.addView(chip);
             });
         });
+
         getProfileData();
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -169,6 +160,13 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
@@ -267,16 +265,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-        RestaurantDatabase.getInstance().getRestaurantProfile(restaurant.previewInfo.id, r -> {
-            if (r != null && r.previewInfo != null && r.previewInfo.name != null) {
-                restaurant = new Restaurant(r);
-                updateFields(restaurant);
-            }
-        });
+        updateFields(restaurant);
     }
 
     private void setProfileData() {
-        if(restaurant.previewInfo == null) restaurant.previewInfo = new PreviewInfo();
+        if (restaurant.previewInfo == null) restaurant.previewInfo = new PreviewInfo();
         restaurant.previewInfo.name = name.getText().toString();
         restaurant.email = emailAddress.getText().toString();
         restaurant.previewInfo.description = description.getText().toString();
@@ -286,20 +279,17 @@ public class EditProfileActivity extends AppCompatActivity {
         restaurant.doorPhone = doorPhone.getText().toString();
         restaurant.postCode = postCode.getText().toString();
         restaurant.city = city.getText().toString();
-        restaurant.previewInfo.imageName = imageProfileLocalUri.getLastPathSegment();
-        restaurant.openingHours = openingTime.getText().toString();
-        restaurant.previewInfo.deliveryCost = Double.valueOf(deliveryCost.getText().toString());
-        restaurant.previewInfo.minOrderCost =  Double.valueOf(minOrder.getText().toString());
-        if(restaurant.categories == null) restaurant.categories = new HashMap<>();
-        for(String c : myCategories) {
-            restaurant.categories.put(c.toLowerCase(), true);
+        if (!imageProfileLocalUri.equals(Uri.EMPTY)) {
+            restaurant.previewInfo.imageName = imageProfileLocalUri.getLastPathSegment();
         }
 
-        RestaurantDatabase.getInstance().putRestaurantIntoCategory(restaurant.previewInfo.id, myCategories);
-        RestaurantDatabase.getInstance().updateRestaurantProfile(restaurant);
+        restaurant.openingHours = openingTime.getText().toString();
+        restaurant.previewInfo.deliveryCost = Double.valueOf(deliveryCost.getText().toString());
+        restaurant.previewInfo.minOrderCost = Double.valueOf(minOrder.getText().toString());
+        if (restaurant.categories == null) restaurant.categories = new HashMap<>();
+        RestaurantDatabase.getInstance().updateRestaurantProfile(restaurant, imageProfileLocalUri);
+        RestaurantDatabase.getInstance().putRestaurantIntoCategory(restaurant.previewInfo.id, restaurant.categories.keySet());
     }
-
-
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -342,8 +332,9 @@ public class EditProfileActivity extends AppCompatActivity {
                                     photoFile);
                             takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileLocalUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
-
                         }
+                    } else {
+                        Log.d("MADAPP", "Camera cancel key..");
                     }
 
                 } else if (options[item].equals("Choose from Gallery")) {
@@ -371,16 +362,25 @@ public class EditProfileActivity extends AppCompatActivity {
         city.setText(u.city);
         deliveryCost.setText(String.valueOf(u.previewInfo.deliveryCost));
         minOrder.setText(String.valueOf(u.previewInfo.minOrderCost));
-        if(imgProfile.getDrawable() == null) {
-            RestaurantDatabase.getInstance().getImage(u.previewInfo.id, "/images/profile/", u.previewInfo.imageName, imageUri -> {
-                if (imageUri == null) {
-                    imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-                    imageProfileLocalUri = Uri.EMPTY;
-                } else {
-                    imageProfileLocalUri = imageUri;
-                    Picasso.get().load(imageProfileLocalUri.toString()).into(imgProfile);
+        if (u.previewInfo != null && u.previewInfo.imageName != null && !u.previewInfo.imageName.equals("")) {
+            if (imageProfileLocalUri == null || imageProfileLocalUri == Uri.EMPTY || imageProfileLocalUri.equals(Uri.EMPTY)) {
+                if(imageLink != null) {
+                    Picasso.get().load(imageLink.toString()).into(imgProfile);
+                    return;
                 }
-            });
+                RestaurantDatabase.getInstance().downloadImage(u.previewInfo.id, "profile", u.previewInfo.imageName, imageUri -> {
+                    if (imageUri == null || imageUri.equals(Uri.EMPTY)) {
+                        imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        imageProfileLocalUri = Uri.EMPTY;
+                    } else {
+                        Picasso.get().load(imageUri).into(imgProfile);
+                    }
+                });
+            } else {
+                Picasso.get().load(imageProfileLocalUri.toString()).into(imgProfile);
+            }
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         }
     }
 
@@ -420,11 +420,11 @@ public class EditProfileActivity extends AppCompatActivity {
         String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
         String deliveryAndOrder = "[0-9.,]{1,5}";
 
-        if(!deliveryCost.getText().toString().matches(deliveryAndOrder)) {
+        if (!deliveryCost.getText().toString().matches(deliveryAndOrder)) {
             deliveryCost.setError(getResources().getString(R.string.check_delivery));
             result = false;
         }
-        if(!minOrder.getText().toString().matches(deliveryAndOrder)) {
+        if (!minOrder.getText().toString().matches(deliveryAndOrder)) {
             minOrder.setError(getResources().getString(R.string.check_minorder));
             result = false;
         }
@@ -471,7 +471,6 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return result;
     }
-
 
 
 }

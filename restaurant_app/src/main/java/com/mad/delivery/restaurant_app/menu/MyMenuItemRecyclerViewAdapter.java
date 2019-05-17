@@ -22,9 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
-import com.mad.delivery.restaurant_app.OnImageDownloaded;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.orders.PendingOrdersFragment;
 import com.mad.delivery.restaurant_app.R;
 import com.squareup.picasso.Picasso;
@@ -91,7 +89,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
             holder.image.setImageURI(url);
 
 
-        RestaurantDatabase.getInstance().getImage(authID, "/images/menuItems/", mItem.imageName, imageUri -> {
+        RestaurantDatabase.getInstance().downloadImage(authID, "/images/menuItems/", mItem.imageName, imageUri -> {
             if (imageUri != null) {
                 if (imageUri == Uri.EMPTY || imageUri.toString().equals("")) {
                     Log.d("MADAPP", "Setting user default image");

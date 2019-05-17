@@ -9,11 +9,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.OnDataFetched;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,6 @@ public class MenuActivity extends AppCompatActivity {
         RestaurantDatabase.getInstance().getMenuItems(new OnDataFetched<List<MenuItemRest>, String>() {
             @Override
             public void onDataFetched(List<MenuItemRest> data) {
-
                 loadData(data);
             }
 
@@ -70,6 +71,18 @@ public class MenuActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+        RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
+            @Override
+            public void onSuccess(Restaurant user) {
+                // nothing happens..
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     void loadData(List<MenuItemRest> menuItems) {

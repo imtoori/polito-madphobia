@@ -23,6 +23,7 @@ import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 import org.joda.time.DateTimeComparator;
 
@@ -32,19 +33,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-
 final public class RestaurantDatabase {
     private static RestaurantDatabase instance;
     private static MyDateComparator myDateComparator;
     private DatabaseReference restaurantRef;
     private DatabaseReference menuItemsRef;
     private DatabaseReference ordersRef;
-    private DatabaseReference profileRef;
     private DatabaseReference categoriesRef;
     private DatabaseReference myRef;
     private StorageReference storageRef;
     private FirebaseAuth mAuth;
-
 
     public static RestaurantDatabase getInstance() {
         if (instance == null) {
@@ -52,7 +50,6 @@ final public class RestaurantDatabase {
         }
         return instance;
     }
-
     private RestaurantDatabase() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -62,10 +59,8 @@ final public class RestaurantDatabase {
         restaurantRef = database.getReference("users/restaurants/");
         menuItemsRef = database.getReference("users/restaurants/");
         ordersRef = database.getReference("orders");
-        profileRef = database.getReference("users/restaurants/");
-        storageRef = FirebaseStorage.getInstance().getReference().child("users/restaurant/");
+        storageRef = FirebaseStorage.getInstance().getReference();
         categoriesRef = database.getReference().child("categories");
-
     }
 
     public void reset() {
@@ -74,7 +69,6 @@ final public class RestaurantDatabase {
 
 
     void updateToken(String id, String token) {
-        Log.d("TOKEN", token);
         restaurantRef.child(id).child("token").setValue(token);
     }
 
@@ -94,7 +88,6 @@ final public class RestaurantDatabase {
         item.restaurantId = mAuth.getUid();
         item.id = menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").push().getKey();
         menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(item.id).setValue(item);
-
 
         Log.d("MADDAP", item.name + " " + item.category);
         // menuItemsRef.child(item.id).child("id").setValue(item.id);
@@ -264,12 +257,19 @@ final public class RestaurantDatabase {
     }
 
     public void updateRestaurantProfile(Restaurant r, Uri image) {
-        uploadImage(r.previewInfo.id, image, "images/profile", image.getLastPathSegment(), () -> {
-            r.pre
-        });
-        profileRef.child(r.previewInfo.id).setValue(r);
-    }
+        Log.d("MADAPP", "## UpdateRestaurantProfile: " + r.toString());
+        if (image == null || image.toString().equals("") || image.toString().contains("https:")) {
+            restaurantRef.child(r.previewInfo.id).setValue(r);
+            Log.d("MADAPP", "restaurant ID= " + r.previewInfo.id);
+            return;
+        }
 
+        uploadImage(r.previewInfo.id, image, "profile", image.getLastPathSegment(), () -> {
+            r.previewInfo.imageName = image.getLastPathSegment();
+            restaurantRef.child(r.previewInfo.id).setValue(r);
+        });
+
+    }
 
     public void putRestaurantIntoCategory(String idRestaurant, Set<String> categories) {
         categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -286,7 +286,6 @@ final public class RestaurantDatabase {
                         } else if (item.restaurants != null && !item.restaurants.containsKey(idRestaurant) && categories.contains(item.name.toLowerCase())) {
                             categoriesRef.child(item.name.toLowerCase()).child("restaurants").child(idRestaurant).setValue(true);
                         }
-
                     } else {
 
                     }
@@ -300,12 +299,12 @@ final public class RestaurantDatabase {
         });
     }
 
-    public void getImage(String id, String path, String imageName, OnImageDownloaded uriImage) {
+    public void downloadImage(String id, String path, String imageName, OnImageDownloaded uriImage) {
         if (imageName == null || imageName.equals("")) {
             uriImage.onReceived(Uri.EMPTY);
             return;
         }
-        StorageReference profileRefStore = storageRef.child(id).child(path + imageName);
+        StorageReference profileRefStore = storageRef.child(id).child(path).child(imageName);
         profileRefStore.getDownloadUrl().addOnSuccessListener(uri -> {
             uriImage.onReceived(uri);
         }).addOnFailureListener(exception -> {
@@ -314,18 +313,26 @@ final public class RestaurantDatabase {
         });
     }
 
+    public void uploadImage(String id, Uri uri, String path, String imageName, OnImageUploaded cb) {
+        StorageReference profileRefStore = storageRef.child(id).child(path).child(imageName);
+        profileRefStore.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+            Log.d("MADAPP", "The image profile has been uploaded.");
+            cb.onFinished();
+        });
+    }
+
     public void getRestaurantProfile(String id, OnFirebaseData<Restaurant> cb) {
-        profileRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        restaurantRef.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Restaurant item = dataSnapshot.getValue(Restaurant.class);
                     if (item != null) {
+                        Log.d("MADAPP", "getRestaurantProfile returned: " + item.toString());
                         cb.onReceived(item);
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -356,7 +363,7 @@ final public class RestaurantDatabase {
     }
 
     public void getCategories(String restaurantID, onAllCategoriesReceived cb) {
-        restaurantRef.child(mAuth.getUid()).child("profile").child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+        restaurantRef.child(restaurantID).child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> categories = new ArrayList<>();
@@ -367,6 +374,7 @@ final public class RestaurantDatabase {
                         categories.add(item);
                     }
                 }
+                Log.d("MADAPP", "Categories: ->" + categories.toString());
                 cb.onCompleted(categories);
             }
 
@@ -379,6 +387,7 @@ final public class RestaurantDatabase {
 
     public interface onAllCategoriesReceived {
         void onCompleted(List<String> categories);
+
     }
 
 
@@ -407,19 +416,36 @@ final public class RestaurantDatabase {
 
             }
         });
-
     }
 
+    public void checkLogin(String id, OnLogin<Restaurant> cb) {
+        if(id == null || id.equals("")) {
+            Log.d("MADAPP", "checkLogin: id null or empty" );
+            cb.onFailure();
+            return;
+        }
+        myRef.child("users").child("restaurants").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Restaurant rest = dataSnapshot.getValue(Restaurant.class);
+                    Log.d("MADAPP", "checkLogin: OK" );
+                    cb.onSuccess(rest);
+                } else {
+                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists." );
 
-    public void uploadImage(String id, Uri uri, String path, String imageName, OnImageUploaded cb ) {
-        Uri file = uri;
-        StorageReference profileRefStore = storageRef.child(id).child(path + imageName);
-        profileRefStore.putFile(file).addOnSuccessListener(taskSnapshot -> {
-               Log.d("MADAPP", "The image profile has been uploaded.");
-               cb.onFinished();
+                    cb.onFailure();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onFailure();
+            }
         });
-
     }
+
+
 }
 
 
