@@ -51,7 +51,7 @@ public class StartFragment extends Fragment {
         Database.getInstance().getBikerStatus(new FirebaseCallbackItem<Boolean>() {
             @Override
             public void onCallback(Boolean Item) {
-                Log.i("STAT","status:"+Item);
+
                 if(Item)
                     status.setText(R.string.stop_work);
                 else
