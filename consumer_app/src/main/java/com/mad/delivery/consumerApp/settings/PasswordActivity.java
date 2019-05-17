@@ -116,10 +116,8 @@ public class PasswordActivity extends AppCompatActivity {
         }
 
         //CHECK CURRENT PASSWORD
-            pattern = Pattern.compile(psswString);
-            matcher = pattern.matcher(newP.getText().toString());
 
-            if(!matcher.matches()){
+            if( newP.getText().toString().length()<6){
             newP.setError(getResources().getString(R.string.check_password));
             result = false;
         }

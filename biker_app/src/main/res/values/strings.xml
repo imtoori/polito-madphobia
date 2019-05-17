@@ -74,7 +74,7 @@
     <string name="check_doorphone">Doorphone not valid</string>
     <string name="check_postCode">Postal Code not valid</string>
     <string name="check_houseNumber">House Number not valid</string>
-    <string name="check_password">The password must be at least 8 characters long and include a number, lowercase letter, uppercase letter and special character (e.g. @, &amp;, #, ?)</string>
+    <string name="check_password">The password must be at least 6 characters long </string>
     <string name="check_password_repeat">Repeat same password</string>
     <string name="check_current_password">Invalid current password</string>
 
@@ -132,7 +132,7 @@
 
     <!--Setting Menu-->
     <string name="setting_profile">My Profile</string>
-    <string name="setting_privacy">Change Account Password</string>
+    <string name="setting_privacy">Change Password</string>
     <string name="setting_openinghours">Opening and Closing Time</string>
     <string name="description_opening_hours">In this section you can add or change the opening/closing hours of your activity. If you want to add a new slot just be sure that it\'s not overlapped (or else you\'ll get an error.</string>
     <string name="title_opening_hours">Instructions</string>

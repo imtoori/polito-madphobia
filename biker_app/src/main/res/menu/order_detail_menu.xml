@@ -6,9 +6,6 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_next"
         android:title="@string/next" />
-    <item android:id="@+id/reject_order_option"
-        android:icon="@drawable/ic_remove"
-        app:showAsAction="never"
-        android:title="@string/reject" />
+
 
 </menu>

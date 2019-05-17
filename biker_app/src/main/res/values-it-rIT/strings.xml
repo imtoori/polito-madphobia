@@ -48,7 +48,7 @@
     <string name="check_doorphone">Citofono non valido</string>
     <string name="check_postCode">Codice postale non valido</string>
     <string name="check_houseNumber">Numero civico non valido</string>
-    <string name="check_password">La password deve contenere almeno 8 caratteri ed includere un numero, lettera minuscola, lettera maiuscola e un carattere speciale(e.g. @, &amp;, #, ?)</string>
+    <string name="check_password">The password must be at least 6 characters long </string>
     <string name="check_password_repeat">Ripeti la stessa password</string>
     <string name="check_current_password">Password corrente non valida</string>
 
