@@ -1,4 +1,4 @@
-package com.mad.delivery.restaurant_app.menu;
+package com.mad.delivery.restaurant_app.orders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.restaurant_app.MyDateFormat;
-import com.mad.delivery.restaurant_app.orders.PendingOrdersFragment;
 import com.mad.delivery.restaurant_app.R;
 
 import org.joda.time.DateTime;

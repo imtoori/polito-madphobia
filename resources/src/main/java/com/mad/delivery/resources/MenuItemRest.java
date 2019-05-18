@@ -11,29 +11,22 @@ import java.util.List;
 public class MenuItemRest implements Serializable, Parcelable {
     public String name, description;
     public Double price;
-    public Integer ttl;
-    public String imgUrl;
     public String category;
     public String id;
     public String restaurantId;
-    public String imageDownload;
     public Integer availability;
     public String imageName;
-    protected String imageUri;
-    public List<String> subItems = new ArrayList<>();
+    public List<String> subItems;
 
-    public MenuItemRest(String name, String category, String description, Double price, Integer availability, Integer ttl, String imgUrl, String  id, Uri url, List<String> subItems,String imageName) {
+    public MenuItemRest(String name, String description, Double price, String category, String id, String restaurantId, Integer availability) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.ttl = ttl;
-        this.imgUrl = imgUrl;
-        this.id = id;
         this.category = category;
+        this.id = id;
+        this.restaurantId = restaurantId;
         this.availability = availability;
-        this.imageUri = url.toString();
-        this.subItems = subItems;
-        this.imageName =imageName;
+        subItems = new ArrayList<>();
     }
 
     public MenuItemRest() {
@@ -47,24 +40,16 @@ public class MenuItemRest implements Serializable, Parcelable {
         } else {
             price = in.readDouble();
         }
-        if (in.readByte() == 0) {
-            ttl = null;
-        } else {
-            ttl = in.readInt();
-        }
-        imgUrl = in.readString();
         category = in.readString();
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readString();
-        }
+        id = in.readString();
+        restaurantId = in.readString();
         if (in.readByte() == 0) {
             availability = null;
         } else {
             availability = in.readInt();
         }
-        imageUri = in.readParcelable(Uri.class.getClassLoader());
+        imageName = in.readString();
+        subItems = in.createStringArrayList();
     }
 
     @Override
@@ -77,27 +62,17 @@ public class MenuItemRest implements Serializable, Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(price);
         }
-        if (ttl == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(ttl);
-        }
-        dest.writeString(imgUrl);
         dest.writeString(category);
-        if (id == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeString(id);
-        }
+        dest.writeString(id);
+        dest.writeString(restaurantId);
         if (availability == null) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
             dest.writeInt(availability);
         }
-        dest.writeParcelable(Uri.parse(imageUri), flags);
+        dest.writeString(imageName);
+        dest.writeStringList(subItems);
     }
 
     @Override
@@ -141,22 +116,6 @@ public class MenuItemRest implements Serializable, Parcelable {
         this.price = price;
     }
 
-    public Integer getTtl() {
-        return ttl;
-    }
-
-    public void setTtl(Integer ttl) {
-        this.ttl = ttl;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
     public String getCategory() {
         return category;
     }
@@ -173,6 +132,14 @@ public class MenuItemRest implements Serializable, Parcelable {
         this.id = id;
     }
 
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
     public Integer getAvailability() {
         return availability;
     }
@@ -181,12 +148,12 @@ public class MenuItemRest implements Serializable, Parcelable {
         this.availability = availability;
     }
 
-    public String getImageUri() {
-        return imageUri;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public List<String> getSubItems() {
@@ -195,5 +162,23 @@ public class MenuItemRest implements Serializable, Parcelable {
 
     public void setSubItems(List<String> subItems) {
         this.subItems = subItems;
+    }
+
+    public static Creator<MenuItemRest> getCREATOR() {
+        return CREATOR;
+    }
+
+    @Override
+    public String toString() {
+        return "MenuItemRest{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", id='" + id + '\'' +
+                ", restaurantId='" + restaurantId + '\'' +
+                ", availability=" + availability +
+                ", imageName='" + imageName + '\'' +
+                '}';
     }
 }

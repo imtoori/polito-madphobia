@@ -20,7 +20,6 @@ import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
-import com.mad.delivery.restaurant_app.menu.MenuActivity;
 import com.mad.delivery.restaurant_app.menu.MenuFragment;
 import com.mad.delivery.restaurant_app.orders.DetailOrderActivity;
 import com.mad.delivery.restaurant_app.orders.OrderFragment;
@@ -35,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private Restaurant restaurant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                 @Override
                 public void onSuccess(Restaurant user) {
                     Log.d("MADAPP", "User "+ user.previewInfo.id + " have logged in.");
+                    restaurant = user;
                     FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(currentUser.getUid(), instanceIdResult.getToken()));
                     FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
                 }
@@ -153,9 +154,9 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_new_offert:
-                Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+                /*Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);*/
 
             default:
                 return super.onOptionsItemSelected(item);

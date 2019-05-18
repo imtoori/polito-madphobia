@@ -10,6 +10,7 @@ import com.google.firebase.messaging.RemoteMessage;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String id;
 
+    public MyFirebaseMessagingService() {}
     public MyFirebaseMessagingService(String id) {
         this.id = id;
     }

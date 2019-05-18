@@ -97,7 +97,7 @@ public class MyMenuItemOffertRecyclerViewAdapter extends RecyclerView.Adapter<My
             description = mView.findViewById(R.id.tv_menuItemsDescription);
             image = mView.findViewById(R.id.imageView2);
             price = mView.findViewById(R.id.tv_menuItemsPrice);
-            button = mView.findViewById(R.id.newMenuItem);
+            //button = mView.findViewById(R.id.newMenuItem);
             availability = mView.findViewById(R.id.tv_menuItemsAvailability);
         }
     }

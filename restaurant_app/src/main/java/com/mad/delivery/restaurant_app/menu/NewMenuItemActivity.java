@@ -15,9 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,70 +56,62 @@ public class NewMenuItemActivity extends AppCompatActivity {
     Menu menu;
     FloatingActionButton btnCamera;
     MenuItemRest menuItem;
-    EditText name, price, time, category, availability, description;
+    EditText name, price, availability, description;
+    AutoCompleteTextView category;
     ImageView imgProfile;
     Toolbar myToolbar;
-    Uri imageMenuItemUri;
-    String imgProfilUri;
+    Uri imageMenuItemUri, imageLink;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
     List<String> subItems = new ArrayList<>();
-    String index;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
+    private Restaurant restaurant;
+    private List<String> categories;
+    private ArrayAdapter<String> adapter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmenuitem);
         imageMenuItemUri = Uri.EMPTY;
+        imageLink = Uri.EMPTY;
         myToolbar = findViewById(R.id.newmenuitem_toolbar);
-        setTitle("Edit menu item");
+        setTitle("Create a new Dish");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         imgProfile = findViewById(R.id.newmenuitem_imgprofile);
-        name = findViewById(R.id.newmenuitem_name);
-        price = findViewById(R.id.newmenuitem_price);
-        time = findViewById(R.id.newmenuitem_time);
-        description = findViewById(R.id.newmenuitem_description);
-        imgProfile = findViewById(R.id.newmenuitem_imgprofile);
-        category = findViewById(R.id.newmenuitem_category);
-        availability = findViewById(R.id.newmenuitem_availability);
+        name = findViewById(R.id.newdish_name);
+        price = findViewById(R.id.newdish_price);
+        description = findViewById(R.id.newdish_desc);
+        category = findViewById(R.id.newdish_category);
+        availability = findViewById(R.id.newdish_availability);
         btnCamera = findViewById(R.id.newmenu_btncamera);
-        index = getIntent().getStringExtra("id");
-        btnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnCamera.setOnClickListener(view -> {
                 selectImage(NewMenuItemActivity.this);
-            }
         });
-
-        if (index != null) {
-            RestaurantDatabase.getInstance().getMenuItem(index, new OnDataFetched<MenuItemRest, String>() {
-                @Override
-                public void onDataFetched(MenuItemRest data) {
-                    updateFields(data);
-                }
-
-                @Override
-                public void onError(String error) {
-                    Toast.makeText(NewMenuItemActivity.this, "Error reading data: " + error, Toast.LENGTH_SHORT).show();
-                }
-            });
-            return;
+        categories = new ArrayList<>(getIntent().getStringArrayListExtra("categories"));
+        adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, categories);
+        category.setAdapter(adapter);
+        category.setThreshold(1);
+        menuItem = getIntent().getParcelableExtra("item");
+        if(menuItem != null) {
+            updateFields(menuItem);
+        } else {
+            menuItem = new MenuItemRest();
         }
 
-        Intent intent = getIntent();
+
+        /*Intent intent = getIntent();
         if (intent != null) {
             String[] items = intent.getStringArrayExtra("menuitems");
             if (items != null) {
                 List<String> strings = new ArrayList<>(Arrays.asList(items));
                 loadSubItems(strings);
             }
-        }
+        }*/
 
     }
 
@@ -132,7 +127,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
         RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
             @Override
             public void onSuccess(Restaurant user) {
-                // nothing happens..
+                restaurant = user;
             }
 
             @Override
@@ -144,7 +139,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
     }
 
-    private void loadSubItems(List<String> items) {
+/*    private void loadSubItems(List<String> items) {
         if (items != null && items.size() > 0) {
             category.setText(R.string.offer);
             category.setEnabled(false);
@@ -170,22 +165,19 @@ public class NewMenuItemActivity extends AppCompatActivity {
                 });
             }
         }
-    }
+    }*/
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         super.onRestoreInstanceState(savedInstanceState);
-        menuItem = new MenuItemRest();
         menuItem.name = savedInstanceState.getString("name");
         menuItem.description = savedInstanceState.getString("description");
         menuItem.price = Double.parseDouble(savedInstanceState.getString("price"));
-        menuItem.ttl = Integer.parseInt(savedInstanceState.getString("time"));
         menuItem.category = savedInstanceState.getString("category");
         menuItem.availability = Integer.parseInt(savedInstanceState.getString("availability"));
-        menuItem.imgUrl = savedInstanceState.getString("imageUri");
         //  menuItem.imageUri = Uri.EMPTY;
-        menuItem.subItems = savedInstanceState.getStringArrayList("subitems");
+        //menuItem.subItems = savedInstanceState.getStringArrayList("subitems");
         updateFields(menuItem);
 
     }
@@ -245,44 +237,37 @@ public class NewMenuItemActivity extends AppCompatActivity {
         outState.putString("name", name.getText().toString());
         outState.putString("description", description.getText().toString());
         outState.putString("price", price.getText().toString());
-        outState.putString("time", time.getText().toString());
         outState.putString("availability", availability.getText().toString());
         outState.putString("category", category.getText().toString());
-
-        if (imageMenuItemUri != Uri.EMPTY)
-            outState.putString("imageUri", imageMenuItemUri.toString());
-        else
-            outState.putString("imageUri", "");
-
     }
 
     private void updateFields(MenuItemRest u) {
-        Log.d("Update", u.name);
         name.setText(u.name);
         description.setText(u.description);
-        time.setText(u.ttl.toString());
-        price.setText(u.price.toString());
-        availability.setText(u.availability.toString());
-        loadSubItems(u.subItems);
-
+        price.setText(String.valueOf(u.price));
+        availability.setText(String.valueOf(u.availability));
+        //loadSubItems(u.subItems);
         category.setText(u.category);
-        Log.d("MENU: ", u.imgUrl);
-        imageMenuItemUri = Uri.parse(u.imgUrl);
-        imgProfile.setImageURI(Uri.parse(u.imgUrl));
 
-        if (imgProfile.getDrawable() == null) {
-            RestaurantDatabase.getInstance().downloadImage(currentUser.getUid(), "/images/menuItems/", u.imageName, imageUri -> {
-                if (imageUri != null) {
-                    if (imageUri == Uri.EMPTY || imageUri.toString().equals("")) {
-                        imageMenuItemUri = Uri.EMPTY;
-                        imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
-                    } else {
-                        Log.d("MADAPP", "Setting custom user image");
-                        Picasso.get().load(imageUri.toString()).into(imgProfile);
-
-                    }
+        if (u.imageName != null && !u.imageName.equals("")) {
+            if (imageMenuItemUri == null || imageMenuItemUri == Uri.EMPTY || imageMenuItemUri.equals(Uri.EMPTY)) {
+                if(imageLink != null) {
+                    Picasso.get().load(imageLink.toString()).into(imgProfile);
+                    return;
                 }
-            });
+                RestaurantDatabase.getInstance().downloadImage(restaurant.previewInfo.id, "menu", u.imageName, imageUri -> {
+                    if (imageUri == null || imageUri.equals(Uri.EMPTY)) {
+                        imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
+                        imageMenuItemUri = Uri.EMPTY;
+                    } else {
+                        Picasso.get().load(imageUri).into(imgProfile);
+                    }
+                });
+            } else {
+                Picasso.get().load(imageMenuItemUri.toString()).into(imgProfile);
+            }
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
         }
     }
 
@@ -325,12 +310,9 @@ public class NewMenuItemActivity extends AppCompatActivity {
                         }
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
-                            Log.d("PHOTO", " non null");
-
                             imageMenuItemUri = FileProvider.getUriForFile(NewMenuItemActivity.this,
                                     BuildConfig.APPLICATION_ID,
                                     photoFile);
-                            Log.d("PHOTO", " CONTINUO");
 
                             takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageMenuItemUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
@@ -371,15 +353,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
                 if (checkConstraints()) {
-
-                    if (index == null) {
-                        Log.d("INDEX1", "L'indice è:" + index);
-                        RestaurantDatabase.getInstance().addMenuItems(name.getText().toString(), description.getText().toString(), category.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageMenuItemUri.toString(), subItems, name.getText().toString() + "_" + imageMenuItemUri.getLastPathSegment());
-                    } else {
-                        Log.d("INDEX2", "L'indice è:" + index + "Nome: " + name.toString());
-                        RestaurantDatabase.getInstance().setMenuItems(index, name.getText().toString(), category.getText().toString(), description.getText().toString(), price.getText().toString(), availability.getText().toString(), time.getText().toString(), imageMenuItemUri.toString(), subItems, name.getText().toString() + "_" + imageMenuItemUri.getLastPathSegment());
-                    }
-
+                    setMenuItem();
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -391,9 +365,19 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
     }
 
+    public void setMenuItem() {
+        menuItem.restaurantId = currentUser.getUid();
+        menuItem.name = name.getText().toString();
+        menuItem.category = category.getText().toString();
+        menuItem.description = description.getText().toString();
+        menuItem.availability = Integer.parseInt(availability.getText().toString());
+        menuItem.price = Double.parseDouble(price.getText().toString());
+        RestaurantDatabase.getInstance().updateMenuItem(menuItem.restaurantId, menuItem, imageMenuItemUri);
+    }
+
     public boolean checkConstraints() {
         boolean result = true;
-        String nameString = "[a-zA-Z]+";
+        String nameString = "[a-zA-Z0-9\\w'-]+";
         String priceString = "([0-9][0-9]*)|([0-9][0-9]*\\.[0-9][0-9]*)";
         String timeString = "([0-9][0-9]*)";
 
@@ -412,10 +396,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
             result = false;
         }
 
-        if (!time.getText().toString().matches(timeString)) {
-            time.setError(getResources().getString(R.string.check_time));
-            result = false;
-        }
 
         if (!category.getText().toString().matches(nameString)) {
             category.setError(getResources().getString(R.string.check_category));
@@ -427,7 +407,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
             result = false;
 
         }
-
 
         return result;
     }

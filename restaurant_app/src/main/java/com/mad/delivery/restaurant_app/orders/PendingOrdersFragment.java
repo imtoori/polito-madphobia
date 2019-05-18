@@ -21,7 +21,6 @@ import com.mad.delivery.resources.Order;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
-import com.mad.delivery.restaurant_app.menu.MyOrderRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,11 @@
 package com.mad.delivery.restaurant_app;
 
 import android.net.Uri;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,13 +26,18 @@ import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
+import com.mad.delivery.restaurant_app.menu.OnMenuChanged;
+import com.mad.delivery.restaurant_app.menu.OnMenuReceived;
 
 import org.joda.time.DateTimeComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 final public class RestaurantDatabase {
@@ -67,7 +74,6 @@ final public class RestaurantDatabase {
         instance = null;
     }
 
-
     void updateToken(String id, String token) {
         restaurantRef.child(id).child("token").setValue(token);
     }
@@ -83,8 +89,74 @@ final public class RestaurantDatabase {
         }
     }
 
+    public void getMenu(String restaurantID, OnMenuReceived cb) {
+        if(restaurantID == null) {
+            return;
+        }
+
+        restaurantRef.child(restaurantID).child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> categories;
+                Map<String, List<MenuItemRest>> menu = new HashMap<>();
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                for (DataSnapshot snapshot : iterator) {
+                    MenuItemRest item = snapshot.getValue(MenuItemRest.class);
+                    if (item != null) {
+                        menu.putIfAbsent(item.category, new ArrayList<>());
+                        menu.get(item.category).add(item);
+                    }
+                }
+                categories = new ArrayList<>(menu.keySet());
+                cb.menuReceived(menu, categories);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.menuReceived(new HashMap<>(), new ArrayList<>());
+            }
+        });
+
+    }
+
+    public void removeMenuItem(String restaurantID, MenuItemRest item, OnMenuReceived cb) {
+        if(restaurantID == null) {
+            return;
+        }
+        if(item.id == null) {
+            return;
+        }
+
+        restaurantRef.child(restaurantID).child("menu").child(item.id).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                cb.itemRemoved(item);
+            }
+        });
+    }
+
+
+    public void updateMenuItem(String restaurantID, MenuItemRest menuItem, Uri imageMenuItem) {
+        if(restaurantID == null) {
+            return;
+        }
+        if(menuItem.id == null || menuItem.id.equals(""))
+            menuItem.id = restaurantRef.child(restaurantID).child("menu").push().getKey();
+
+        if (imageMenuItem == null || imageMenuItem.toString().equals("") || imageMenuItem.toString().contains("https:")) {
+            restaurantRef.child(restaurantID).child("menu").child(menuItem.id).setValue(menuItem);
+            return;
+        }
+
+        uploadImage(restaurantID, imageMenuItem, "menu", imageMenuItem.getLastPathSegment(), () -> {
+            menuItem.imageName = imageMenuItem.getLastPathSegment();
+            restaurantRef.child(restaurantID).child("menu").child(menuItem.id).setValue(menuItem);
+        });
+    }
+
+    // todo: to be deleted
     public void addMenuItems(String name, String description, String category, String price, String availability, String time, String imgUri, List<String> subItems, String imageName) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "", Uri.parse(imgUri), subItems, imageName);
+        MenuItemRest item = new MenuItemRest(name, description, Double.parseDouble(price), category, category, category, Integer.parseInt(availability));
         item.restaurantId = mAuth.getUid();
         item.id = menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").push().getKey();
         menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(item.id).setValue(item);
@@ -101,7 +173,7 @@ final public class RestaurantDatabase {
                     public void onSuccess(Uri uri) {
                         Uri downloadUrl = uri;
                         //Do what you want with the url
-                        item.imageDownload = downloadUrl.toString();
+                        //item.imageDownload = downloadUrl.toString();
                         // menuItemsRef.push().setValue(item);
 
                     }
@@ -198,13 +270,15 @@ final public class RestaurantDatabase {
     }
 
 
+    // todo: to be deleted
     public void setMenuItems(String id, String name, String category, String description, String price, String availability, String time, String imgUri, List<String> subItems, String imageName) {
-        MenuItemRest item = new MenuItemRest(name, category, description, Double.parseDouble(price), Integer.parseInt(availability), Integer.parseInt(time), imgUri, "", Uri.parse(imgUri), subItems, imageName);
+        MenuItemRest item = new MenuItemRest(name, description, Double.parseDouble(price), category, category, category, Integer.parseInt(availability));
         menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(id).setValue(item);
         //TODO add callback
     }
 
 
+    // todo: to be deleted
     public void getMenuItems(OnDataFetched<List<MenuItemRest>, String> onDataFetched) {
         menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").addValueEventListener(new ValueEventListener() {
             @Override
@@ -228,11 +302,6 @@ final public class RestaurantDatabase {
                 onDataFetched.onError(databaseError.getMessage());
             }
         });
-    }
-
-    public void removeMenuItem(MenuItemRest menuItemRest) {
-        menuItemsRef.child(mAuth.getUid()).child("profile").child("menuItems").child(menuItemRest.id).removeValue();
-        //TODO add callback
     }
 
     public MenuItemRest getMenuItem(String id, OnDataFetched<MenuItemRest, String> onDataFetched) {
