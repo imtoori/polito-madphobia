@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,7 +50,8 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
     private MyMenuItemCategoryRecyclerViewAdapter adapter;
     private Map<String, List<MenuItemRest>> menu;
     private List<String> categories;
-    private CardView cvEmpty, cvHeader, cvOffer;
+    private TextView tvEmptyMenu;
+    private CardView cvHeader, cvOffer;
     private Restaurant restaurant;
     private Button btnNewDish, btnNewOffer, btnCompleteOffer, btnCancelOffer;
     private TextView offerCount, tvOffersTitle, tvNoOffer;
@@ -86,7 +89,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         offerCount = v.findViewById(R.id.tv_offer_count);
         btnCompleteOffer = v.findViewById(R.id.btn_complete_offer);
         btnCancelOffer = v.findViewById(R.id.btn_cancel_offer);
-        cvEmpty = v.findViewById(R.id.empty_cardview);
+        tvEmptyMenu = v.findViewById(R.id.tv_no_menuitems);
         tvNoOffer = v.findViewById(R.id.tv_no_offer);
 
 
@@ -98,15 +101,18 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         menu = new HashMap<>();
         categories = new ArrayList<>();
         adapter = new MyMenuItemCategoryRecyclerViewAdapter(menu, categories, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager( new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.hasFixedSize();
+
 
         // myOffers contains all offers for this restaurant
         myOffers = new ArrayList<>();
         myOffersListAdapter = new OffersListAdapter(myOffers, this);
         offersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         offersRecyclerView.setAdapter(myOffersListAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(offersRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        offersRecyclerView.addItemDecoration(dividerItemDecoration);
 
         AlertDialog.Builder errorBuilder = new AlertDialog.Builder(getActivity());
         errorBuilder.setMessage(R.string.no_item_offer)
@@ -137,6 +143,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             tvOffersTitle.setVisibility(View.GONE);
             offersRecyclerView.setVisibility(View.GONE);
             tvNoOffer.setVisibility(View.GONE);
+
             offerMode = true;
             loadRestaurantMenu();
         });
@@ -146,7 +153,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             } else {
                 errorDialog.show();
             }
-
         });
         btnCancelOffer.setOnClickListener(view -> {
             cvOffer.setVisibility(View.GONE);
@@ -171,9 +177,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                     tvNoOffer.setVisibility(View.GONE);
                 }
         });
-
-
-
 
         return v;
     }
@@ -214,15 +217,11 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                     adapter.notifyDataSetChanged();
                 }
                 if (menu.size() == 0) {
-                    cvEmpty.setVisibility(View.VISIBLE);
+                    tvEmptyMenu.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
         });
-        /*if(offerMode) {
-            Log.d("MADAPP", "removing element from offer if exists");
-            offer.removeIf(i -> i.id.equals(item.id));
-            updateOfferItemsCount();
-        }*/
     }
 
     @Override
@@ -299,10 +298,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             }
         });
 
-
-
-
-
         RecyclerView offerRecyclerView = convertView.findViewById(R.id.offerRecyclerview);
         offerRecyclerView.setLayoutManager(new LinearLayoutManager(dialog.getContext()));
         offerRecyclerView.setAdapter(myOfferAdapter);
@@ -343,9 +338,11 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                 MenuFragment.this.categories.addAll(categories);
                 adapter.notifyDataSetChanged();
                 if(menu.size() != 0) {
-                    cvEmpty.setVisibility(View.GONE);
+                    tvEmptyMenu.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 } else {
-                    cvEmpty.setVisibility(View.VISIBLE);
+                    tvEmptyMenu.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
 

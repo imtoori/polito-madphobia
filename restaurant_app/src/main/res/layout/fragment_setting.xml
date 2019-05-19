@@ -8,6 +8,41 @@
     >
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_general"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:theme="@style/Widget.MaterialComponents.CardView"
+        app:cardElevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_general"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_general"
+                android:tint="@color/colorCompletedOrder" />
+
+            <TextView
+                android:id="@+id/tv_setting_general"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/setting_general"
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="@dimen/normalText" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/cv_profile"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

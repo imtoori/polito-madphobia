@@ -125,7 +125,7 @@
     <string name="changing_status_sentence">Next: </string>
     <string name="confirmed_order">%1$s</string>
     <string name="undo_confirm_order">Undo</string>
-    <string name="no_orders">Empty Folder</string>
+    <string name="no_orders">The menu is empty.</string>
     <string name="change_status_button">Change Status</string>
     <string name="delivery_confirm_error">Confirm or change the delivery time!</string>
     no_completed_orders
@@ -234,4 +234,9 @@
     <string name="no_item_offer">You haven\'t added any item yet!</string>
     <string name="no_offers">Currently there is no offer.</string>
     <string name="ok">OK</string>
+    <string name="setting_general">General</string>
+    <string name="visible">Visible</string>
+    <string name="visible_desc">By enabling this option, your restaurant will be public. It means that you user will be able to look at your menu and other options profile. In order to make your restaurant visible, you must complete your profile first and add some dishes to your menu.</string>
+    <string name="profile_status">Profile Status:</string>
+
 </resources>

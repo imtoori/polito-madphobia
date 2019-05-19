@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -298,6 +299,12 @@ final public class RestaurantDatabase {
             restaurantRef.child(r.previewInfo.id).setValue(r);
         });
 
+    }
+
+    public void updateRestaurantVisibility(String restaurantID, boolean value, OnFirebaseData<Boolean> cb) {
+        restaurantRef.child(restaurantID).child("visible").setValue(value, (databaseError, databaseReference) -> {
+            cb.onReceived(value);
+        });
     }
 
     public void putRestaurantIntoCategory(String idRestaurant, Set<String> categories) {

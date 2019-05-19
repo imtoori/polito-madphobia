@@ -23,11 +23,12 @@ public class Restaurant implements Serializable, Parcelable {
     public String city;
     public String openingHours;
     public Map<String, Boolean> categories;
-    public Map<String, MenuItemRest> menuItems;
+    public Map<String, MenuItemRest> menu;
     public Map<String, MenuOffer> offers;
     public String token;
     public Double latitude;
     public Double longitude;
+    public Boolean visible;
 
     public Restaurant() {}
     public Restaurant(String id, String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
@@ -40,7 +41,7 @@ public class Restaurant implements Serializable, Parcelable {
         this.city = city;
         this.openingHours=openingTime;
         this.categories = new HashMap<>();
-        this.menuItems = new HashMap<>();
+        this.menu = new HashMap<>();
         this.offers = new HashMap<>();
         this.token ="";
         previewInfo = new PreviewInfo();
@@ -53,6 +54,7 @@ public class Restaurant implements Serializable, Parcelable {
         previewInfo.minOrderCost = 0.0;
         this.latitude = 0.0;
         this.longitude = 0.0;
+        this.visible = false;
     }
 
     public Restaurant(Restaurant other) {
@@ -74,10 +76,11 @@ public class Restaurant implements Serializable, Parcelable {
         this.openingHours = other.openingHours;
         this.categories=other.categories;
         this.offers = other.offers;
-        this.menuItems = other.menuItems;
+        this.menu = other.menu;
         this.token = other.token;
         this.latitude = other.latitude;
         this.longitude = other.longitude;
+        this.visible = other.visible;
     }
 
     protected Restaurant(Parcel in) {
@@ -92,8 +95,8 @@ public class Restaurant implements Serializable, Parcelable {
         openingHours = in.readString();
         categories = new HashMap<>();
         in.readMap(categories,Boolean.class.getClassLoader());
-        menuItems = new HashMap<>();
-        in.readMap(menuItems, MenuItemRest.class.getClassLoader());
+        menu = new HashMap<>();
+        in.readMap(menu, MenuItemRest.class.getClassLoader());
         offers = new HashMap<>();
         in.readMap(offers, MenuOffer.class.getClassLoader());
         token = in.readString();
@@ -107,7 +110,7 @@ public class Restaurant implements Serializable, Parcelable {
         } else {
             longitude = in.readDouble();
         }
-
+         visible = in.readByte() != 0;
 
     }
 
@@ -123,7 +126,7 @@ public class Restaurant implements Serializable, Parcelable {
         dest.writeString(city);
         dest.writeString(openingHours);
         dest.writeMap(categories);
-        dest.writeMap(menuItems);
+        dest.writeMap(menu);
         dest.writeMap(offers);
         dest.writeString(token);
         if (latitude == null) {
@@ -138,6 +141,7 @@ public class Restaurant implements Serializable, Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(longitude);
         }
+        dest.writeByte((byte) (visible ? 1 : 0));
     }
 
     @Override
@@ -227,11 +231,11 @@ public class Restaurant implements Serializable, Parcelable {
     public void setCategories(Map<String, Boolean> categories) {
         this.categories = categories;
     }
-    public Map<String, MenuItemRest> getMenuItems() {
-        return menuItems;
+    public Map<String, MenuItemRest> getMenu() {
+        return menu;
     }
-    public void setMenuItems(Map<String, MenuItemRest> menuItems) {
-        this.menuItems = menuItems;
+    public void setMenu(Map<String, MenuItemRest> menu) {
+        this.menu = menu;
     }
     public String getToken() {
         return token;
@@ -267,6 +271,14 @@ public class Restaurant implements Serializable, Parcelable {
         this.offers = offers;
     }
 
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
@@ -279,10 +291,37 @@ public class Restaurant implements Serializable, Parcelable {
                 ", postCode='" + postCode + '\'' +
                 ", city='" + city + '\'' +
                 ", categories=" + categories +
-                ", menuItems=" + menuItems +
+                ", menu=" + menu +
                 ", token='" + token + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
+    }
+
+    public boolean isProfileComplete() {
+        if(previewInfo == null) {
+            Log.d("MADAPP", "previewinfo");
+            return false;
+        }
+        if(previewInfo.id == null || previewInfo.minOrderCost == null || previewInfo.deliveryCost == null || previewInfo.name == null || previewInfo.description == null) {
+            Log.d("MADAPP", "previewinfo2 " );
+            return false;
+        }
+        if(previewInfo.id.equals("") || previewInfo.name.equals("") || previewInfo.description.equals("")) {
+            Log.d("MADAPP", "previewinfo3");
+            return false;
+        }
+        if(phoneNumber == null || phoneNumber.equals("")) return false;
+        if(email == null || email.equals("")) return false;
+        if(road == null || road.equals("")) return false;
+        if(houseNumber == null || houseNumber.equals("")) return false;
+        if(doorPhone == null || doorPhone.equals("")) return false;
+        if(postCode == null || postCode.equals("")) return false;
+        if(city == null || city.equals("")) return false;
+        if(openingHours == null || openingHours.equals("")) return false;
+        if(categories == null || categories.size() == 0) return false;
+        if(menu == null || menu.size() == 0) return false;
+
+        return true;
     }
 }
