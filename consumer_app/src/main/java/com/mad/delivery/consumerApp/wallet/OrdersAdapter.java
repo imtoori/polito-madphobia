@@ -45,7 +45,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             ConsumerDatabase.getInstance().getRestourant(holder.order.restaurantId, new firebaseCallback<Restaurant>() {
                 @Override
                 public void onCallBack(Restaurant item) {
-                    holder.nameRestaurant.setText(item.name);
+                    holder.nameRestaurant.setText(item.previewInfo.name);
                     //TODO ripristinare le due righe successive
                     //if(item.imageUri != null && item.imageUri !="" && !item.imageUri.equals(Uri.EMPTY))
                       //  Picasso.get().load(item.previewInfo.imageDownload).into(holder.imgRestaurant);

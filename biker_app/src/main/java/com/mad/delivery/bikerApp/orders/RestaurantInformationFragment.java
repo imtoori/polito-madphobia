@@ -37,11 +37,11 @@ public class RestaurantInformationFragment extends Fragment {
             description = view.findViewById(R.id.main_description);
 
             u = getArguments().getParcelable("restaurant");
-            fullName.setText(u.name);
+            fullName.setText(u.previewInfo.name);
             phoneNumber.setText(u.phoneNumber);
             email.setText(u.email);
             deliveryAddress.setText(u.road + " " + u.houseNumber + ", " + u.postCode + " " + u.city + "(door " + u.doorPhone+ ")");
-            description.setText(u.description);
+            description.setText(u.previewInfo.description);
 
             return view;
         }

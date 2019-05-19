@@ -125,7 +125,7 @@ public class ConsumerDatabase {
         o.restaurantId = resturantId;
         o.status =OrderStatus.pending;
        flag=true;
-        myRef.child("users").child("restaurants").child(o.restaurantId).child("profile").runTransaction(new Transaction.Handler() {
+        myRef.child("users").child("restaurants").child(o.restaurantId).runTransaction(new Transaction.Handler() {
 
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
@@ -152,7 +152,7 @@ public class ConsumerDatabase {
                             });
                             if(flag){
                                 item.forEach(i->{
-                                    myRef.child("users").child("restaurants").child(o.restaurantId).child("profile").child("menuItems").child(i.id).setValue(i);
+                                    myRef.child("users").child("restaurants").child(o.restaurantId).child("menuItems").child(i.id).setValue(i);
                                 });
                                 myRef.child("orders").push().setValue(o);
                             }
@@ -182,7 +182,7 @@ public class ConsumerDatabase {
     }
 
     public void getRestourant(String resturantId, firebaseCallback<Restaurant> firebaseCallback){
-        myRef.child("users").child("restaurants").child(resturantId).child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("restaurants").child(resturantId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Restaurant rest = dataSnapshot.getValue(Restaurant.class);
@@ -236,7 +236,7 @@ public class ConsumerDatabase {
             } else {
                 // ask for restaurants
                 for(String restName : list) {
-                    myRef.child("users").child("restaurants").child(restName).child("profile").child("previewInfo").addListenerForSingleValueEvent(new ValueEventListener() {
+                    myRef.child("users").child("restaurants").child(restName).child("previewInfo").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             PreviewInfo restaurantPreview = dataSnapshot.getValue(PreviewInfo.class);
@@ -303,7 +303,7 @@ public class ConsumerDatabase {
 
     public void getRestaurantInfo(PreviewInfo previewInfo, onRestaurantInfoReceived cb) {
 
-        myRef.child("users").child("restaurants").child(previewInfo.id).child("profile").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("restaurants").child(previewInfo.id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Restaurant rest = dataSnapshot.getValue(Restaurant.class);
@@ -351,7 +351,7 @@ public class ConsumerDatabase {
     }
 
     public void getMenuItems(Order o,firebaseCallback<List<MenuItemRest>> firebaseCallback){
-        myRef.child("users").child("restaurants").child(o.restaurantId).child("profile").child("menuItems").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("restaurants").child(o.restaurantId).child("menuItems").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<MenuItemRest> MenuItems = new ArrayList<>();

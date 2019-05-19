@@ -33,7 +33,7 @@ public class RestaurantDescriptionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_description, container, false);
         restaurant = (Restaurant) getArguments().get("restaurant");
-        Log.d("MADAPP", restaurant.name);
+        Log.i("MADAPP", restaurant.previewInfo.name);
         description = view.findViewById(R.id.rest_description_content);
         ratingBar = view.findViewById(R.id.rateRestaurant);
         openingHours = view.findViewById(R.id.rest_opening_content);

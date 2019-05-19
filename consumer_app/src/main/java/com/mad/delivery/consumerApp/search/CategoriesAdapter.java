@@ -38,7 +38,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
-        Log.d("MADDD","Sono qui "+holder.category.name );
+        Log.i("MADAPP","Sono qui "+holder.category.name );
         Picasso.get().load(holder.category.imageURL).into(holder.imageCategory);
         holder.cvCategory.setBackground(holder.imageCategory.getDrawable());
         List<String> categories = new ArrayList<>();
@@ -48,7 +48,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    categories.add(holder.category.name);
+                    categories.add(holder.category.name.toLowerCase());
                     mListener.openCategory(categories, "", false, false);
                 }
             }

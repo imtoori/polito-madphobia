@@ -46,7 +46,7 @@ public class RestaurantInfoActivity extends AppCompatActivity {
 
                 pagerAdapter = new RestaurantInfoPageAdapter(getSupportFragmentManager(), this, restaurant);
                 mPager.setAdapter(pagerAdapter);
-                collapsingToolbarLayout.setTitle(restaurant.name);
+                collapsingToolbarLayout.setTitle(restaurant.previewInfo.name);
                 // Give the TabLayout the ViewPager
 
                 tabLayout.setupWithViewPager(mPager);
@@ -82,7 +82,7 @@ public class RestaurantInfoActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        Log.d("MADAPP", "onSupportNavigateUp");
+        Log.i("MADAPP", "onSupportNavigateUp");
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (fragments == 1) {
             finish();
@@ -96,7 +96,7 @@ public class RestaurantInfoActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d("MADAPP", "onBackPressed");
+        Log.i("MADAPP", "onBackPressed");
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (fragments == 1) {
             finish();
