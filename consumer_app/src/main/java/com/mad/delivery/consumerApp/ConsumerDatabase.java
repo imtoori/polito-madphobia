@@ -152,7 +152,7 @@ public class ConsumerDatabase {
                             });
                             if(flag){
                                 item.forEach(i->{
-                                    myRef.child("users").child("restaurants").child(o.restaurantId).child("menuItems").child(i.id).setValue(i);
+                                    myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
                                 });
                                 myRef.child("orders").push().setValue(o);
                             }
@@ -351,7 +351,7 @@ public class ConsumerDatabase {
     }
 
     public void getMenuItems(Order o,firebaseCallback<List<MenuItemRest>> firebaseCallback){
-        myRef.child("users").child("restaurants").child(o.restaurantId).child("menuItems").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<MenuItemRest> MenuItems = new ArrayList<>();
