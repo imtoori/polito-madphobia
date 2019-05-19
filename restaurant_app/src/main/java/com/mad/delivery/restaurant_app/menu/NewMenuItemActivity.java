@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -74,10 +75,13 @@ public class NewMenuItemActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newmenuitem);
+        Log.d("MADAPP", "onCreate called");
+        if(savedInstanceState != null) {
+            Log.d("MADAPP", "savedInstanceState is not null!");
+        }
         imageMenuItemUri = Uri.EMPTY;
         imageLink = Uri.EMPTY;
         myToolbar = findViewById(R.id.newmenuitem_toolbar);
-        setTitle("Create a new Dish");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -96,7 +100,19 @@ public class NewMenuItemActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, categories);
         category.setAdapter(adapter);
         category.setThreshold(1);
+        category.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b) category.showDropDown();
+            }
+        });
         menuItem = getIntent().getParcelableExtra("item");
+        if(menuItem == null) {
+            menuItem = new MenuItemRest();
+            setTitle("Create a new Dish");
+        } else {
+            setTitle("Edit Dish");
+        }
 
     }
 
@@ -109,14 +125,13 @@ public class NewMenuItemActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
         RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
             @Override
             public void onSuccess(Restaurant user) {
                 restaurant = user;
-                if(menuItem != null) {
+                if(menuItem != null && menuItem.id != null) {
                     updateFields(menuItem);
-                } else {
-                    menuItem = new MenuItemRest();
                 }
             }
 
@@ -130,18 +145,65 @@ public class NewMenuItemActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // invoked when the activity may be temporarily destroyed, save the instance state here
+        super.onSaveInstanceState(outState);
+        Log.d("MADAPP", "onSaveInstanceState called");
+        outState.putString("name", name.getText().toString());
+        outState.putString("description", description.getText().toString());
+        outState.putString("price", price.getText().toString());
+        outState.putString("availability", availability.getText().toString());
+        outState.putString("category", category.getText().toString());
+        if (imageMenuItemUri != Uri.EMPTY)
+            outState.putString("imageUri", imageMenuItemUri.toString());
+        else
+            outState.putString("imageUri", "");
+    }
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        //The system calls onRestoreInstanceState(), after the onStart() method,
+        //only if there is a saved state to restore,
+        //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("MADAPP", "onRestoreInstanceState called");
         menuItem.name = savedInstanceState.getString("name");
         menuItem.description = savedInstanceState.getString("description");
         menuItem.price = Double.parseDouble(savedInstanceState.getString("price"));
         menuItem.category = savedInstanceState.getString("category");
         menuItem.availability = Integer.parseInt(savedInstanceState.getString("availability"));
-        //  menuItem.imageUri = Uri.EMPTY;
-        //menuItem.subItems = savedInstanceState.getStringArrayList("subitems");
+        imageMenuItemUri = Uri.parse(savedInstanceState.getString("imageUri"));
         updateFields(menuItem);
+    }
 
+    private void updateFields(MenuItemRest u) {
+        name.setText(u.name);
+        description.setText(u.description);
+        price.setText(String.valueOf(u.price));
+        availability.setText(String.valueOf(u.availability));
+        //loadSubItems(u.subItems);
+        category.setText(u.category);
+
+        if (u.imageName != null && !u.imageName.equals("")) {
+            if (imageMenuItemUri == null || imageMenuItemUri == Uri.EMPTY || imageMenuItemUri.equals(Uri.EMPTY)) {
+                if(imageLink != null && !imageLink.equals(Uri.EMPTY)) {
+                    Picasso.get().load(imageLink.toString()).into(imgProfile);
+                    return;
+                }
+                RestaurantDatabase.getInstance().downloadImage(restaurant.previewInfo.id, "menu", u.imageName, imageUri -> {
+                    if (imageUri == null || imageUri.equals(Uri.EMPTY)) {
+                        imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
+                        imageMenuItemUri = Uri.EMPTY;
+                    } else {
+                        Picasso.get().load(imageUri).into(imgProfile);
+                    }
+                });
+            } else {
+                Picasso.get().load(imageMenuItemUri.toString()).into(imgProfile);
+            }
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
+        }
     }
 
     private Uri saveImage(Uri uriFrom, Activity activity) {
@@ -189,47 +251,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
         }
     }
 
-
-    protected void onSaveInstanceState(Bundle outState) {
-        // invoked when the activity may be temporarily destroyed, save the instance state here
-        super.onSaveInstanceState(outState);
-        outState.putString("name", name.getText().toString());
-        outState.putString("description", description.getText().toString());
-        outState.putString("price", price.getText().toString());
-        outState.putString("availability", availability.getText().toString());
-        outState.putString("category", category.getText().toString());
-    }
-
-    private void updateFields(MenuItemRest u) {
-        name.setText(u.name);
-        description.setText(u.description);
-        price.setText(String.valueOf(u.price));
-        availability.setText(String.valueOf(u.availability));
-        //loadSubItems(u.subItems);
-        category.setText(u.category);
-
-        if (u.imageName != null && !u.imageName.equals("")) {
-            if (imageMenuItemUri == null || imageMenuItemUri == Uri.EMPTY || imageMenuItemUri.equals(Uri.EMPTY)) {
-                if(imageLink != null && !imageLink.equals(Uri.EMPTY)) {
-                    Picasso.get().load(imageLink.toString()).into(imgProfile);
-                    return;
-                }
-                RestaurantDatabase.getInstance().downloadImage(restaurant.previewInfo.id, "menu", u.imageName, imageUri -> {
-                    if (imageUri == null || imageUri.equals(Uri.EMPTY)) {
-                        imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
-                        imageMenuItemUri = Uri.EMPTY;
-                    } else {
-                        Picasso.get().load(imageUri).into(imgProfile);
-                    }
-                });
-            } else {
-                Picasso.get().load(imageMenuItemUri.toString()).into(imgProfile);
-            }
-        } else {
-            imgProfile.setImageDrawable(getDrawable(R.drawable.restaurant_default));
-        }
-    }
-
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -237,7 +258,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

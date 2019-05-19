@@ -138,15 +138,11 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             offersRecyclerView.setVisibility(View.GONE);
             tvNoOffer.setVisibility(View.GONE);
             offerMode = true;
+            loadRestaurantMenu();
         });
         btnCompleteOffer.setOnClickListener(view -> {
             if(offer.size() != 0) {
                 createNewOffer();
-                offerMode = false;
-                cvOffer.setVisibility(View.GONE);
-                cvHeader.setVisibility(View.VISIBLE);
-                tvOffersTitle.setVisibility(View.VISIBLE);
-                offersRecyclerView.setVisibility(View.VISIBLE);
             } else {
                 errorDialog.show();
             }
@@ -160,6 +156,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             offer.clear();
             myOfferAdapter.notifyDataSetChanged();
             offerMode = false;
+            loadRestaurantMenu();
         });
 
 
@@ -221,6 +218,11 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                 }
             }
         });
+        /*if(offerMode) {
+            Log.d("MADAPP", "removing element from offer if exists");
+            offer.removeIf(i -> i.id.equals(item.id));
+            updateOfferItemsCount();
+        }*/
     }
 
     @Override
@@ -260,7 +262,8 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                 .setPositiveButton(R.string.save, null)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        loadRestaurantMenu();
+
                     }
                 });
         dialog = builder.create();
@@ -284,6 +287,11 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                     List<MenuItemRest> offerToSave = new ArrayList<>();
                     offerToSave.addAll(offer);
                     saveOffer(currentUser.getUid(), offerToSave, price.getText().toString(), time.getText().toString());
+                    offerMode = false;
+                    cvOffer.setVisibility(View.GONE);
+                    cvHeader.setVisibility(View.VISIBLE);
+                    tvOffersTitle.setVisibility(View.VISIBLE);
+                    offersRecyclerView.setVisibility(View.VISIBLE);
                     offer.clear();
                     updateOfferItemsCount();
                     dialog.dismiss();

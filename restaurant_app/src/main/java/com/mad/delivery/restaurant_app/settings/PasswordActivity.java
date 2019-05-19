@@ -12,14 +12,23 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 public class PasswordActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
@@ -29,6 +38,7 @@ public class PasswordActivity extends AppCompatActivity {
     EditText repeatnewP;
     Toolbar myToolbar;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +59,24 @@ public class PasswordActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
+        RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
+            @Override
+            public void onSuccess(Restaurant user) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -77,59 +100,48 @@ public class PasswordActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstraints()) {
-                    setPassword();
-                    sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-                    String p=sharedPref.getString("password", "");
-                    Toast.makeText(this, getResources().getString(R.string.saved_password), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                String email = currentUser.getEmail();
+                String oldPassword = currentP.getText().toString();
+                String newPassword = newP.getText().toString();
+                String repeatPassword = repeatnewP.getText().toString();
+
+                if (oldPassword.length() == 0) {
+                    currentP.setError("Your current password is empty.");
+                    return true;
                 }
+
+                // check if newP and repeatnewP are equals
+                if (!newPassword.equals(repeatPassword)) {
+                    repeatnewP.setError("The two passwords don't match.");
+                    return true;
+                }
+                if (newPassword.length() < 6) {
+                    newP.setError("Your password must be length atleast 6 characters.");
+                    return true;
+                }
+
+                AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
+                currentUser.reauthenticate(credential).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        currentUser.updatePassword(newPassword).addOnCompleteListener(innerTask -> {
+                            if (!innerTask.isSuccessful()) {
+                                //something goes worng
+                                currentP.setError("Your current password is wrong");
+                            } else {
+                                Toast.makeText(PasswordActivity.this, "Your password has been modified", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
+                        });
+                    } else {
+                        currentP.setError("Your current password is wrong");
+                    }
+                });
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setPassword() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        String p= newP.getText().toString();
-        editor.putString("password", p);
-        editor.commit();
-    }
-
-
-
-        public boolean checkConstraints(){
-        Pattern pattern;
-        Matcher matcher;
-        boolean result = true;
-
-        final String psswString = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$";
-        //deve contenere 1 lettera minuscola, una maiuscola e un numero. min 8 caratteri
-
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        String p=sharedPref.getString("password", "");
-        if(!currentP.getText().toString().equals(p)){
-            currentP.setError(getResources().getString(R.string.check_current_password));
-            result = false;
-        }
-
-        //CHECK CURRENT PASSWORD
-            pattern = Pattern.compile(psswString);
-            matcher = pattern.matcher(newP.getText().toString());
-
-            if(!matcher.matches()){
-            newP.setError(getResources().getString(R.string.check_password));
-            result = false;
-        }
-
-        if(!newP.getText().toString().equals(repeatnewP.getText().toString())) {
-            repeatnewP.setError(getResources().getString(R.string.check_password_repeat)+":"+newP.getText().toString());
-            result = false;
-        }
-
-        return result;
     }
 }
