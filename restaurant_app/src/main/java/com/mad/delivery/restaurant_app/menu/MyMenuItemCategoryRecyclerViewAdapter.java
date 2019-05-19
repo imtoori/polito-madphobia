@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +56,8 @@ public class MyMenuItemCategoryRecyclerViewAdapter extends RecyclerView.Adapter<
         holder.name.setText(categoryName);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         holder.recyclerView.setAdapter(new MenuItemAdapter(holder.menuItemsList, onMenuChanged));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(holder.recyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        holder.recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     @Override

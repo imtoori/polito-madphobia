@@ -1,6 +1,7 @@
 package com.mad.delivery.restaurant_app.menu;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,10 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.restaurant_app.OnImageDownloaded;
 import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +80,19 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
                 return false;
             }
         });
+
+        if(holder.mItem.imageName != null) {
+            if(!holder.mItem.imageName.equals("")) {
+                RestaurantDatabase.getInstance().downloadImage(holder.mItem.restaurantId, "menu", holder.mItem.imageName, imageURI -> {
+                    Picasso.get().load(imageURI.toString()).into(holder.menuItemImage);
+                });
+            }  else {
+                holder.menuItemImage.setImageDrawable(view.getResources().getDrawable(R.drawable.restaurant_default, null));
+            }
+        } else {
+            holder.menuItemImage.setImageDrawable(view.getResources().getDrawable(R.drawable.restaurant_default, null));
+        }
+
     }
 
     @Override

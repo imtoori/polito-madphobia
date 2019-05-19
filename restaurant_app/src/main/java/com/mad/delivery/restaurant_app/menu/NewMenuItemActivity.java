@@ -350,6 +350,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
                     setMenuItem();
                     Toast.makeText(this, "Dish has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("open", 0);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }

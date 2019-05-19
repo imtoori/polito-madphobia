@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -99,15 +101,18 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         menu = new HashMap<>();
         categories = new ArrayList<>();
         adapter = new MyMenuItemCategoryRecyclerViewAdapter(menu, categories, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager( new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.hasFixedSize();
+
 
         // myOffers contains all offers for this restaurant
         myOffers = new ArrayList<>();
         myOffersListAdapter = new OffersListAdapter(myOffers, this);
         offersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         offersRecyclerView.setAdapter(myOffersListAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(offersRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        offersRecyclerView.addItemDecoration(dividerItemDecoration);
 
         AlertDialog.Builder errorBuilder = new AlertDialog.Builder(getActivity());
         errorBuilder.setMessage(R.string.no_item_offer)
@@ -138,6 +143,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             tvOffersTitle.setVisibility(View.GONE);
             offersRecyclerView.setVisibility(View.GONE);
             tvNoOffer.setVisibility(View.GONE);
+
             offerMode = true;
             loadRestaurantMenu();
         });
@@ -147,7 +153,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             } else {
                 errorDialog.show();
             }
-
         });
         btnCancelOffer.setOnClickListener(view -> {
             cvOffer.setVisibility(View.GONE);
@@ -172,9 +177,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                     tvNoOffer.setVisibility(View.GONE);
                 }
         });
-
-
-
 
         return v;
     }
