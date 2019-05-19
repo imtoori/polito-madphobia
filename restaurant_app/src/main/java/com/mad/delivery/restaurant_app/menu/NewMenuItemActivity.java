@@ -97,21 +97,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
         category.setAdapter(adapter);
         category.setThreshold(1);
         menuItem = getIntent().getParcelableExtra("item");
-        if(menuItem != null) {
-            updateFields(menuItem);
-        } else {
-            menuItem = new MenuItemRest();
-        }
-
-
-        /*Intent intent = getIntent();
-        if (intent != null) {
-            String[] items = intent.getStringArrayExtra("menuitems");
-            if (items != null) {
-                List<String> strings = new ArrayList<>(Arrays.asList(items));
-                loadSubItems(strings);
-            }
-        }*/
 
     }
 
@@ -128,6 +113,11 @@ public class NewMenuItemActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Restaurant user) {
                 restaurant = user;
+                if(menuItem != null) {
+                    updateFields(menuItem);
+                } else {
+                    menuItem = new MenuItemRest();
+                }
             }
 
             @Override
@@ -138,34 +128,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
         });
 
     }
-
-/*    private void loadSubItems(List<String> items) {
-        if (items != null && items.size() > 0) {
-            category.setText(R.string.offer);
-            category.setEnabled(false);
-
-            CardView cardView = findViewById(R.id.items_card);
-            cardView.setVisibility(View.VISIBLE);
-            LinearLayout linearLayout = findViewById(R.id.item_layout);
-
-            for (String item : items) {
-                this.subItems.add(item);
-                RestaurantDatabase.getInstance().getMenuItem(item, new OnDataFetched<MenuItemRest, String>() {
-                    @Override
-                    public void onDataFetched(MenuItemRest menuItemRest) {
-                        TextView textView = new TextView(NewMenuItemActivity.this);
-                        textView.setText(" - " + menuItemRest.name);
-                        linearLayout.addView(textView);
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        Toast.makeText(NewMenuItemActivity.this, "Error reading data: " + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-    }*/
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -210,9 +172,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageMenuItemUri on ActivityResult: " + imageMenuItemUri.toString());
-                    if (imageMenuItemUri != null)
-                        Log.d("MADAPP", "i am here");
                     imageMenuItemUri = saveImage(imageMenuItemUri, NewMenuItemActivity.this);
                     imgProfile.setImageURI(imageMenuItemUri);
                 }
@@ -251,7 +210,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
         if (u.imageName != null && !u.imageName.equals("")) {
             if (imageMenuItemUri == null || imageMenuItemUri == Uri.EMPTY || imageMenuItemUri.equals(Uri.EMPTY)) {
-                if(imageLink != null) {
+                if(imageLink != null && !imageLink.equals(Uri.EMPTY)) {
                     Picasso.get().load(imageLink.toString()).into(imgProfile);
                     return;
                 }
@@ -377,7 +336,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
 
     public boolean checkConstraints() {
         boolean result = true;
-        String nameString = "[a-zA-Z0-9\\w'-]+";
+        String nameString = "[\\s\\w]+";
         String priceString = "([0-9][0-9]*)|([0-9][0-9]*\\.[0-9][0-9]*)";
         String timeString = "([0-9][0-9]*)";
 

@@ -1,6 +1,7 @@
 package com.mad.delivery.restaurant_app.menu;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,9 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.menu_item_layout, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+
+
         return new ViewHolder(view);
     }
 
@@ -41,7 +45,28 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         holder.menuItemImage.setImageDrawable(view.getResources().getDrawable(R.drawable.burger, null));
         holder.availability.setText(String.valueOf(item.availability));
         holder.clItem.setOnClickListener(view -> {
-            mListener.itemSelected(item);
+            if (!MenuFragment.offerIsEnabled()) {
+                mListener.itemSelected(item);
+                holder.star.setVisibility(View.GONE);
+            }
+        });
+
+        holder.clItem.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (MenuFragment.offerIsEnabled()) {
+                    holder.selected = !holder.selected;
+                    if (holder.selected) {
+                        holder.star.setVisibility(View.VISIBLE);
+                        mListener.addedToOffer(item);
+                    } else {
+                        holder.star.setVisibility(View.GONE);
+                        mListener.removedFromOffer(item);
+                    }
+                    return true;
+                }
+                return false;
+            }
         });
     }
 
@@ -51,7 +76,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder  {
         public final View mView;
         public final ConstraintLayout clItem;
         public final ImageView menuItemImage;
@@ -59,7 +84,9 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         public final TextView desc;
         public final ImageButton btnMinus;
         public final TextView availability;
+        public final ImageView star;
         public MenuItemRest mItem;
+        public boolean selected = false;
 
 
         public ViewHolder(View view) {
@@ -71,7 +98,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
             btnMinus = mView.findViewById(R.id.tv_removeMenuItem);
             availability = mView.findViewById(R.id.tv_menuItemAvailability);
             clItem = mView.findViewById(R.id.cl_dish_item);
-
+            star = mView.findViewById(R.id.img_star);
             btnMinus.setOnClickListener(view1 -> {
                 mListener.itemRemoved(mItem);
             });

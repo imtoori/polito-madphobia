@@ -222,4 +222,16 @@
     <string name="dish_desc">Add a description..</string>
     <string name="dish_price">Price</string>
     <string name="dish_availability">Availability</string>
+    <string name="offer_title">Add offer</string>
+    <string name="offer_count">%1$s item(s) added</string>
+    <string name="offer_menu_description">You are now entered in [offer mode]. You can add dishes with a special discount for a limited time!\nLong press on dishes to add them.\n Click on complete button when you\'re done.</string>
+    <string name="complete_offer">Complete</string>
+    <string name="overview_complete_offer">Offer Overview</string>
+    <string name="total_price">Total price</string>
+    <string name="overview_offer_price_desc">Add a cumulative price for your offer!</string>
+    <string name="overview_offer_time_desc">Your offer will be active for a limited time. You can chose how many hours!</string>
+    <string name="offer_time">Hours left</string>
+    <string name="no_item_offer">You haven\'t added any item yet!</string>
+    <string name="no_offers">Currently there is no offer.</string>
+    <string name="ok">OK</string>
 </resources>
