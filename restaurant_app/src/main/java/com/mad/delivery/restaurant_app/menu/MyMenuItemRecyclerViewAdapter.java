@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,9 +70,19 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        RestaurantDatabase.getInstance().removeMenuItem(mItem);
-                        menuItems.remove(mItem);
-                        notifyItemRemoved(position);
+                        RestaurantDatabase.getInstance().removeMenuItem(mItem.restaurantId, mItem, new OnMenuReceived() {
+                            @Override
+                            public void menuReceived(Map<String, List<MenuItemRest>> menu, List<String> categories) {
+                                // nothing
+                            }
+
+                            @Override
+                            public void itemRemoved(MenuItemRest item) {
+                                menuItems.remove(mItem);
+                                notifyItemRemoved(position);
+                            }
+                        });
+
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -83,11 +94,10 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
                 return true;
             }
         });
-        Uri url = Uri.parse(mItem.imgUrl);
+        Uri url = Uri.parse(mItem.imageName);
 
         if (url != Uri.EMPTY)
             holder.image.setImageURI(url);
-
 
         RestaurantDatabase.getInstance().downloadImage(authID, "/images/menuItems/", mItem.imageName, imageUri -> {
             if (imageUri != null) {
@@ -139,7 +149,7 @@ public class MyMenuItemRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuIt
             description = mView.findViewById(R.id.tv_menuItemsDescription);
             image = mView.findViewById(R.id.imageView2);
             price = mView.findViewById(R.id.tv_menuItemsPrice);
-            button = mView.findViewById(R.id.newMenuItem);
+            //button = mView.findViewById(R.id.newMenuItem);
             availability = mView.findViewById(R.id.tv_menuItemsAvailability);
         }
     }

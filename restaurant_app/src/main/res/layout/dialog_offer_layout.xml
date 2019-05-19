@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/overview_complete_offer"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/subtitle"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/offerRecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/overview_offer_price_desc"
+        android:textAlignment="center"
+        android:textSize="@dimen/normalText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/offerRecyclerview" />
+
+    <ImageView
+        android:id="@+id/complete_offer_icon_money"
+        android:layout_width="35dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_gradient"
+        android:contentDescription="@string/photo_toolbar"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        app:srcCompat="@drawable/ic_money" />
+
+    <EditText
+        android:id="@+id/complete_offer_price"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:autofillHints="@string/total_price"
+        android:gravity="center_vertical"
+        android:hint="@string/total_price"
+        android:inputType="numberDecimal"
+        android:maxLength="20"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/colorText"
+        android:textSize="@dimen/normalText"
+        app:layout_constraintBottom_toBottomOf="@+id/complete_offer_icon_money"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/complete_offer_icon_money"
+        app:layout_constraintTop_toTopOf="@+id/complete_offer_icon_money" />
+
+    <TextView
+        android:id="@+id/complete_offer_time_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/overview_offer_time_desc"
+        android:textAlignment="center"
+        android:textSize="@dimen/normalText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/complete_offer_price" />
+
+    <ImageView
+        android:id="@+id/complete_offer_icon_time"
+        android:layout_width="35dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_gradient"
+        android:contentDescription="@string/photo_toolbar"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/complete_offer_time_header"
+        app:layout_constraintTop_toBottomOf="@+id/complete_offer_time_header"
+        app:srcCompat="@drawable/ic_timer" />
+
+    <EditText
+        android:id="@+id/complete_offer_time"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:autofillHints="@string/offer_time"
+        android:gravity="center_vertical"
+        android:hint="@string/offer_time"
+        android:inputType="number"
+        android:maxLength="46"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/colorText"
+        android:textSize="@dimen/normalText"
+        app:layout_constraintBottom_toBottomOf="@+id/complete_offer_icon_time"
+        app:layout_constraintEnd_toEndOf="@+id/complete_offer_time_header"
+        app:layout_constraintStart_toEndOf="@+id/complete_offer_icon_time"
+        app:layout_constraintTop_toTopOf="@+id/complete_offer_icon_time" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

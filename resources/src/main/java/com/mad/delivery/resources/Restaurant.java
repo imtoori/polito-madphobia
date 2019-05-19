@@ -24,6 +24,7 @@ public class Restaurant implements Serializable, Parcelable {
     public String openingHours;
     public Map<String, Boolean> categories;
     public Map<String, MenuItemRest> menuItems;
+    public Map<String, MenuOffer> offers;
     public String token;
     public Double latitude;
     public Double longitude;
@@ -40,6 +41,7 @@ public class Restaurant implements Serializable, Parcelable {
         this.openingHours=openingTime;
         this.categories = new HashMap<>();
         this.menuItems = new HashMap<>();
+        this.offers = new HashMap<>();
         this.token ="";
         previewInfo = new PreviewInfo();
         previewInfo.id = id;
@@ -71,6 +73,7 @@ public class Restaurant implements Serializable, Parcelable {
         this.city = other.city;
         this.openingHours = other.openingHours;
         this.categories=other.categories;
+        this.offers = other.offers;
         this.menuItems = other.menuItems;
         this.token = other.token;
         this.latitude = other.latitude;
@@ -91,6 +94,8 @@ public class Restaurant implements Serializable, Parcelable {
         in.readMap(categories,Boolean.class.getClassLoader());
         menuItems = new HashMap<>();
         in.readMap(menuItems, MenuItemRest.class.getClassLoader());
+        offers = new HashMap<>();
+        in.readMap(offers, MenuOffer.class.getClassLoader());
         token = in.readString();
         if(in.readByte() == 0) {
             latitude = 0.0;
@@ -119,6 +124,7 @@ public class Restaurant implements Serializable, Parcelable {
         dest.writeString(openingHours);
         dest.writeMap(categories);
         dest.writeMap(menuItems);
+        dest.writeMap(offers);
         dest.writeString(token);
         if (latitude == null) {
             dest.writeByte((byte) 0);
@@ -251,6 +257,14 @@ public class Restaurant implements Serializable, Parcelable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public Map<String, MenuOffer> getOffers() {
+        return offers;
+    }
+
+    public void setOffers(Map<String, MenuOffer> offers) {
+        this.offers = offers;
     }
 
     @Override
