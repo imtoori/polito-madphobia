@@ -7,7 +7,7 @@
     tools:context=".settings.ProfileActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/mainActivityToolbar"
+        android:id="@+id/profile_toolbar"
         style="@style/AppTheme.ToolBar"
         app:navigationIcon="@drawable/ic_back"
         android:layout_width="match_parent"

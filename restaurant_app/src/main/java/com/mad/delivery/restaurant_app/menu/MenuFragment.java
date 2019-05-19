@@ -48,7 +48,8 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
     private MyMenuItemCategoryRecyclerViewAdapter adapter;
     private Map<String, List<MenuItemRest>> menu;
     private List<String> categories;
-    private CardView cvEmpty, cvHeader, cvOffer;
+    private TextView tvEmptyMenu;
+    private CardView cvHeader, cvOffer;
     private Restaurant restaurant;
     private Button btnNewDish, btnNewOffer, btnCompleteOffer, btnCancelOffer;
     private TextView offerCount, tvOffersTitle, tvNoOffer;
@@ -86,7 +87,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         offerCount = v.findViewById(R.id.tv_offer_count);
         btnCompleteOffer = v.findViewById(R.id.btn_complete_offer);
         btnCancelOffer = v.findViewById(R.id.btn_cancel_offer);
-        cvEmpty = v.findViewById(R.id.empty_cardview);
+        tvEmptyMenu = v.findViewById(R.id.tv_no_menuitems);
         tvNoOffer = v.findViewById(R.id.tv_no_offer);
 
 
@@ -214,15 +215,11 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                     adapter.notifyDataSetChanged();
                 }
                 if (menu.size() == 0) {
-                    cvEmpty.setVisibility(View.VISIBLE);
+                    tvEmptyMenu.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
         });
-        /*if(offerMode) {
-            Log.d("MADAPP", "removing element from offer if exists");
-            offer.removeIf(i -> i.id.equals(item.id));
-            updateOfferItemsCount();
-        }*/
     }
 
     @Override
@@ -299,10 +296,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             }
         });
 
-
-
-
-
         RecyclerView offerRecyclerView = convertView.findViewById(R.id.offerRecyclerview);
         offerRecyclerView.setLayoutManager(new LinearLayoutManager(dialog.getContext()));
         offerRecyclerView.setAdapter(myOfferAdapter);
@@ -343,9 +336,11 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                 MenuFragment.this.categories.addAll(categories);
                 adapter.notifyDataSetChanged();
                 if(menu.size() != 0) {
-                    cvEmpty.setVisibility(View.GONE);
+                    tvEmptyMenu.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 } else {
-                    cvEmpty.setVisibility(View.VISIBLE);
+                    tvEmptyMenu.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
 

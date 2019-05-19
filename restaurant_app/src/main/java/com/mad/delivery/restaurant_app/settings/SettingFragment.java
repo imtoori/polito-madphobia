@@ -14,16 +14,18 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 
 public class SettingFragment extends Fragment {
     public static final String SETTING_FRAGMENT_TAG = "settings_fragment";
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private CardView cvProfile, cvHour, cvPrivacy, cvLogout;
+    private CardView cvProfile, cvHour, cvPrivacy, cvLogout, cvGeneral;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -35,15 +37,28 @@ public class SettingFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
-        currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+
+        RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
+            @Override
+            public void onSuccess(Restaurant user) {
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -51,13 +66,21 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         cvProfile = view.findViewById(R.id.cv_profile);
-        //cvHour = view.findViewById(R.id.cv_hours);
+        cvGeneral = view.findViewById(R.id.cv_general);
         cvPrivacy = view.findViewById(R.id.cv_privacy);
-        //cvLanguage = view.findViewById(R.id.cv_language);
+        cvGeneral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), GeneralSettingActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+
         cvProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), ProfileActivity.class);
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
@@ -65,19 +88,12 @@ public class SettingFragment extends Fragment {
         cvPrivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), PasswordActivity.class);
+                Intent intent = new Intent(getContext(), PasswordActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
-/*        cvHour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), OpeningHoursActivity.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            }
-        });*/
+
         cvLogout = view.findViewById(R.id.cv_logout);
         cvLogout.setOnClickListener(v -> {
             mAuth.signOut();

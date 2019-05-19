@@ -117,6 +117,28 @@ public class NewMenuItemActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("open", 0);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("MADAPP", "onBackPressed");
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 1) {
+            finish();
+        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -141,7 +163,6 @@ public class NewMenuItemActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -251,13 +272,7 @@ public class NewMenuItemActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        return super.onSupportNavigateUp();
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

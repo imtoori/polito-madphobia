@@ -27,6 +27,7 @@ import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
+import com.mad.delivery.restaurant_app.auth.OnLogin;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -56,9 +57,11 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        myToolBar = findViewById(R.id.mainActivityToolbar);
+        myToolBar = findViewById(R.id.profile_toolbar);
         mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getResources().getString(R.string.profile_toolbar));
         name = findViewById(R.id.main_name);
         phoneNumber = findViewById(R.id.mainprofile_phone);
@@ -76,16 +79,26 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-// Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-        restaurant = new Restaurant();
-        restaurant.previewInfo = new PreviewInfo();
-        restaurant.previewInfo.id = currentUser.getUid();
-        getProfileData(currentUser.getUid());
+
+        RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
+            @Override
+            public void onSuccess(Restaurant user) {
+                restaurant = user;
+                getProfileData(currentUser.getUid());
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -103,6 +116,19 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("MADAPP", "onBackPressed");
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 1) {
+            finish();
+        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
