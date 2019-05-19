@@ -50,6 +50,14 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
                 holder.star.setVisibility(View.GONE);
             }
         });
+        if(MenuFragment.offerIsEnabled()) {
+            holder.btnMinus.setVisibility(View.GONE);
+        } else {
+            holder.btnMinus.setVisibility(View.VISIBLE);
+            holder.btnMinus.setOnClickListener(view1 -> {
+                mListener.itemRemoved(holder.mItem);
+            });
+        }
 
         holder.clItem.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -99,9 +107,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
             availability = mView.findViewById(R.id.tv_menuItemAvailability);
             clItem = mView.findViewById(R.id.cl_dish_item);
             star = mView.findViewById(R.id.img_star);
-            btnMinus.setOnClickListener(view1 -> {
-                mListener.itemRemoved(mItem);
-            });
+
         }
 
         @Override
