@@ -1,6 +1,7 @@
 package com.mad.delivery.resources;
 
 import android.net.Uri;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 
@@ -12,36 +13,38 @@ public class Biker implements Serializable {
     public String phoneNumber;
     public String email;
     public String description;
-    public String imageUri;
     public String registrationDate;
     public String imageName;
     public String id;
-    public String imageDownload;
     public Boolean status;
+    public Boolean visible;
 
-    public Biker(String name, String lastname, String phoneNumber, String emailAddress, String description,  Uri imageUri) {
+    public Biker(String name, String lastname, String phoneNumber, String emailAddress, String description) {
         this.name = name;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.description = description;
-        this.imageUri = imageUri.toString();
         this.registrationDate = new DateTime().toString();
-        this.imageName  = imageUri.getLastPathSegment();
+        this.imageName  = "";
         this.status = false;
+        this.visible = false;
     }
 
     public Biker() {
     }
 
     public Biker(Biker u) {
+        this.id = u.id;
+        this.registrationDate = u.registrationDate;
         this.name = u.name;
         this.lastname = u.lastname;
         this.phoneNumber = u.phoneNumber;
         this.email = u.email;
         this.description = u.description;
-        this.imageUri = u.imageUri;
         this.imageName = u.imageName;
+        this.status = u.status;
+        this.visible = u.visible;
     }
 
     public String getName() {
@@ -84,13 +87,6 @@ public class Biker implements Serializable {
         this.description = description;
     }
 
-    public String getImageUri() {
-        return imageUri;
-    }
-
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
-    }
 
     public String getRegistrationDate() {
         return registrationDate;
@@ -115,5 +111,54 @@ public class Biker implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    @Override
+    public String toString() {
+        return "Biker{" +
+                "name='" + name + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", description='" + description + '\'' +
+                ", registrationDate='" + registrationDate + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", id='" + id + '\'' +
+                ", status=" + status +
+                ", visible=" + visible +
+                '}';
+    }
+
+    public boolean isProfileComplete() {
+        if(id == null || id.equals("")) {
+            return false;
+        }
+        if(name== null || name.equals("")) {
+            return false;
+        }
+        if(lastname== null || lastname.equals("")) {
+            return false;
+        }
+
+        if(phoneNumber == null || phoneNumber.equals("")) return false;
+        if(email == null || email.equals("")) return false;
+
+        return true;
     }
 }

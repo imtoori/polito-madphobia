@@ -1,6 +1,5 @@
 package com.mad.delivery.bikerApp.settings;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -19,18 +18,18 @@ import androidx.core.app.ActivityOptionsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.resources.Biker;
-import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+
 public class ProfileActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Toolbar myToolBar;
     Menu menu;
     TextView name;
@@ -38,23 +37,26 @@ public class ProfileActivity extends AppCompatActivity {
     TextView emailAddress;
     TextView description;
     ImageView imgProfile;
-    Biker mUser=new Biker();
+    Biker biker;
+    private Uri imageLink;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        mAuth = FirebaseAuth.getInstance();
         myToolBar = findViewById(R.id.mainActivityToolbar);
         setSupportActionBar(myToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle(getResources().getString(R.string.profile_toolbar));
-        mAuth = FirebaseAuth.getInstance();
+
         name = findViewById(R.id.main_name);
         phoneNumber = findViewById(R.id.mainprofile_phone);
         emailAddress = findViewById(R.id.main_email);
         description = findViewById(R.id.main_description);
         imgProfile = findViewById(R.id.image_profile);
-        getProfileData();
     }
 
     @Override
@@ -62,11 +64,24 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+
+        BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
+            @Override
+            public void onSuccess(Biker user) {
+                biker = user;
+                getProfileData(currentUser.getUid());
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -80,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.putExtra("open", 1);
+        intent.putExtra("open", 2);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
@@ -104,8 +119,10 @@ public class ProfileActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_profile_option:
                 // start activity: EditProfileActivity
-
                 Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("user", (Serializable) biker);
+                intent.putExtra("imageLink", imageLink);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
@@ -114,62 +131,49 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void getProfileData() {
-        Database.getInstance().getBikerProfile(new FirebaseCallbackItem<Biker>(){
-            @Override
-            public void onCallback(Biker user) {
-                if(user.id!=null){
-                    mUser = new Biker(user);
-                    updateFields(mUser);
-                }
-                else{
-                    mUser  = new Biker("","","","","", Uri.EMPTY);
-                    updateFields(mUser);
-                }
-
+    private void getProfileData(String id) {
+        BikerDatabase.getInstance().getBikerProfile(id, r -> {
+            if (r != null) {
+                biker = new Biker(r);
+                Log.d("MADAPP", "Biker is not null");
+            } else {
+                biker = new Biker("", "", "", "", "");
+                biker.id = id;
+                Log.d("MADAPP", "Biker is null");
             }
+            updateFields(biker);
         });
+
     }
+
     private void updateFields(Biker u) {
+        Log.d("MADAPP", "Biker:" + u.toString());
         if (!u.name.equals(""))
             name.setText(u.name + " " + u.lastname);
         phoneNumber.setText(u.phoneNumber);
         emailAddress.setText(u.email);
         description.setText(u.description);
 
-
-        imgProfile.setImageURI(Uri.parse(u.imageUri));
-
-        if (imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName, "/images/profile/", new FirebaseCallbackItem<Uri>() {
-                @Override
-                public void onCallback(Uri item) {
-                    if (item != null) {
-                        if (item == Uri.EMPTY || item.toString().equals("")) {
-                            Log.d("MADAPP", "Setting user default image");
-
-                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-                        } else {
-                            Log.d("MADAPP", "Setting custom user image");
-                            Log.d("DOWNLOAD2", item.toString());
-
-                            // imgProfile.setImageURI(item);
-                            Picasso.get().load(item.toString()).into(imgProfile);
-
-                        }
-                    }
-
+        if (u.imageName != null && !u.imageName.equals("")) {
+            BikerDatabase.getInstance().downloadImage(u.id, "profile", u.imageName, imageUri -> {
+                if (imageUri == null || imageUri.toString().equals("") || imageUri.equals(Uri.EMPTY)) {
+                    imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                } else {
+                    Picasso.get().load(imageUri.toString()).into(imgProfile);
+                    imageLink = imageUri;
                 }
             });
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         }
     }
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        if(mUser.imageUri==null)
+        if (biker.imageName == null)
             intent.putExtra("imageUri", "");
         else
-            intent.putExtra("imageUri", mUser.imageUri.toString());
+            intent.putExtra("imageUri", biker.imageName.toString());
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string
         String transitionName = getString(R.string.transition_zoom);

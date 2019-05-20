@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
 
 import com.mad.delivery.bikerApp.R;
@@ -76,7 +76,7 @@ public class PreparingOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Database.getInstance().getPreparingOrders(new FirebaseCallback() {
+        BikerDatabase.getInstance().getPreparingOrders(new FirebaseCallback() {
             @Override
             public void onCallbak(List<Order> list) {
                 if(list.isEmpty())

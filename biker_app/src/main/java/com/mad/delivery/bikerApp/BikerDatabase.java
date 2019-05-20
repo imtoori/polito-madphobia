@@ -17,51 +17,77 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
 import com.mad.delivery.resources.Biker;
-import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.OnFirebaseData;
+import com.mad.delivery.resources.OnImageDownloaded;
+import com.mad.delivery.resources.OnImageUploaded;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.Restaurant;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
-final public class Database {
-    private static Database instance;
+final public class BikerDatabase {
+    private static BikerDatabase instance;
     private static Map<String, Order> orders;
     private static MyDateComparator myDateComparator;
     DatabaseReference ordersRef;
-    DatabaseReference profileRef;
     StorageReference storageRef;
     DatabaseReference myRef;
 
     FirebaseAuth mAuth;
 
-    public static Database getInstance() {
+    public static BikerDatabase getInstance() {
         if (instance == null) {
-            instance = new Database();
+            instance = new BikerDatabase();
         }
         return instance;
     }
 
-    private Database() {
+    private BikerDatabase() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         mAuth = FirebaseAuth.getInstance();
         ordersRef = database.getReference("orders");
-        profileRef = database.getReference("users/biker/"+mAuth.getUid());
-        storageRef = FirebaseStorage.getInstance().getReference().child("users/biker/"+ mAuth.getUid());
+        storageRef = FirebaseStorage.getInstance().getReference();
         myRef = database.getReference();
-
     }
+
+    public void checkLogin(String id, OnLogin<Biker> cb) {
+        if(id == null || id.equals("")) {
+            Log.d("MADAPP", "checkLogin: id null or empty" );
+            cb.onFailure();
+            return;
+        }
+        myRef.child("users").child("biker").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Biker rest = dataSnapshot.getValue(Biker.class);
+                    Log.d("MADAPP", "checkLogin: OK" );
+                    cb.onSuccess(rest);
+                } else {
+                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists." );
+
+                    cb.onFailure();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onFailure();
+            }
+        });
+    }
+
     public void getBikerStatus(FirebaseCallbackItem<Boolean> firebaseCallback){
         myRef.child("users").child("biker").child(mAuth.getUid()).child("profile").child("status").addValueEventListener(new ValueEventListener() {
             @Override
@@ -76,7 +102,6 @@ final public class Database {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -85,9 +110,8 @@ final public class Database {
         instance = null;
     }
 
-    void updateToken(String token) {
-        Log.d("TOKEN", token);
-        Database.getInstance().profileRef.child("token").setValue(token);
+    void updateToken(String id, String token) {
+        myRef.child("users").child("biker").child(id).child("token").setValue(token);
     }
 
     public  void update(Order o) {
@@ -107,9 +131,6 @@ final public class Database {
             return DateTimeComparator.getInstance().compare(second.orderFor, first.orderFor);
         }
     }
-
-
-
 
     public  List<Order> getPendingOrders(FirebaseCallback firebaseCallback) {
         List<Order> pendings = new ArrayList<>();
@@ -131,17 +152,9 @@ final public class Database {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
-   /*     for (Order o : orders.values()) {
-            if (o.status.equals(OrderStatus.pending)) pendings.add(o);
-        }
-        */
         Collections.sort(pendings, myDateComparator);
-
         return pendings;
     }
 
@@ -175,7 +188,7 @@ final public class Database {
 
     public  List<Order> getCompletedOrders(FirebaseCallback firebaseCallback) {
         if (instance == null) {
-            instance = new Database();
+            instance = new BikerDatabase();
         }
         List<Order> completed = new ArrayList<>();
         ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -203,92 +216,68 @@ final public class Database {
 
         return completed;
     }
-    public void getImage(String imageName,String path,FirebaseCallbackItem<Uri> UriImg) {
 
-        if (imageName==null||!imageName.equals("")) {
-            // Uri tmp = Uri.parse(imageName);
-            StorageReference profileRefStore = storageRef.child(path + imageName);
-            profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    // Got the download URL for 'users/me/profile.png'
-                    Log.d("DOWNLOAD",uri.toString());
-
-                    UriImg.onCallback(uri);
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                    UriImg.onCallback(Uri.EMPTY);
-                }
-            });
-        }
-    }
-
-    public void putBikerProfile(Biker user){
-
-        Uri file = Uri.parse(user.imageUri);
-        storageRef.child("images/profile/");
-        user.id= mAuth.getUid();
-        StorageReference profileRefStore = storageRef.child("images/profile/" + user.imageName);
-        profileRefStore.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-            {
-                profileRefStore.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Uri downloadUrl = uri;
-                        //Do what you want with the url
-                        user.imageDownload =downloadUrl.toString();
-                        profileRef.child("profile").setValue(user);
-
-                    }
-                });
-            }
-            });
-     //   profileRef.setValue("profile");
-        profileRef.child("profile").setValue(user);
-       // user.imageDownload = storageRef.child("images/profile/" + user.imageName).getDownloadUrl().toString();
-
-
-
-
-
-    }
-    public void getBikerProfile(FirebaseCallbackItem<Biker> firebaseCallbackUser) {
-        profileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void getBikerProfile(String id, OnFirebaseData<Biker> cb) {
+        myRef.child("users").child("biker").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("profile")) {
-                    dataSnapshot = dataSnapshot.child("profile");
+                if (dataSnapshot.exists()) {
                     Biker item = dataSnapshot.getValue(Biker.class);
                     if (item != null) {
-
-                        firebaseCallbackUser.onCallback(item);
-                    } else {
-                        //   userStringOnDataFetched.onError("data not found");
-                        Log.d("DATABASE: ", "SONO ENTRATO222");
-
+                        cb.onReceived(item);
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("DATABASE: ", "SONO ENTRATO");
-
             }
         });
-
     }
 
-    public void setBikerStatus(Boolean status){
-        profileRef.child("profile").child("status").setValue(status);
+    public void setBikerStatus(String bikerID, Boolean status){
+        if(bikerID == null) return;
+        myRef.child("users").child("biker").child(bikerID).child("status").setValue(status);
     }
 
+    public void downloadImage(String id, String path, String imageName, OnImageDownloaded uriImage) {
+        if (imageName == null || imageName.equals("")) {
+            uriImage.onReceived(Uri.EMPTY);
+            return;
+        }
+        StorageReference profileRefStore = storageRef.child("users").child("biker").child(id).child(path).child(imageName);
+        profileRefStore.getDownloadUrl().addOnSuccessListener(uri -> {
+            uriImage.onReceived(uri);
+        }).addOnFailureListener(exception -> {
+            exception.printStackTrace();
+            uriImage.onReceived(Uri.EMPTY);
+        });
+    }
+
+    public void uploadImage(String id, Uri uri, String path, String imageName, OnImageUploaded cb) {
+        StorageReference profileRefStore = storageRef.child("users").child("biker").child(id).child(path).child(imageName);
+        profileRefStore.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+            Log.d("MADAPP", "The image profile has been uploaded.");
+            cb.onFinished();
+        });
+    }
+
+    public void updateBikerProfile(Biker r, Uri image) {
+        if (image == null || image.toString().equals("") || image.toString().contains("https:")) {
+            myRef.child("users").child("biker").child(r.id).setValue(r);
+            return;
+        }
+
+        uploadImage(r.id, image, "profile", image.getLastPathSegment(), () -> {
+            r.imageName = image.getLastPathSegment();
+            myRef.child("users").child("biker").child(r.id).setValue(r);
+        });
+    }
+
+    public void updateBikerVisibility(String bikerID, boolean value, OnFirebaseData<Boolean> cb) {
+        myRef.child("users").child("biker").child(bikerID).child("visible").setValue(value, (databaseError, databaseReference) -> {
+            cb.onReceived(value);
+        });
+    }
 }
 
 

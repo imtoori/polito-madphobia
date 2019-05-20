@@ -158,10 +158,11 @@ public class RegisterFragment extends Fragment {
                             Log.d("MADAPP", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             myRef = db.getReference();
-                            Biker registered = new Biker();
+                            Biker registered = new Biker("", "", "", "", "");
                             registered.registrationDate = new DateTime().toString();
                             registered.email = emailAddress.getText().toString();
-                            myRef.child("users").child("biker").child(user.getUid()).child("register").setValue(registered);
+                            registered.id = user.getUid();
+                            myRef.child("users").child("biker").child(registered.id).setValue(registered);
 
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("user", registered);

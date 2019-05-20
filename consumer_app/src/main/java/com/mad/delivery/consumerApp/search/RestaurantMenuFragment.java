@@ -47,8 +47,8 @@ public class RestaurantMenuFragment extends Fragment {
         restaurant = (Restaurant) getArguments().get("restaurant");
         categories = new ArrayList<>();
         Map<String, List<MenuItemRest>> menus = new HashMap<>();
-        if(restaurant.menuItems != null) {
-            restaurant.menuItems.values().stream().forEach(item -> {
+        if(restaurant.menu != null) {
+            restaurant.menu.values().stream().forEach(item -> {
                 menus.putIfAbsent(item.category, new ArrayList<>());
                 List<MenuItemRest> menuList = menus.get(item.category);
                 menuList.add(item);

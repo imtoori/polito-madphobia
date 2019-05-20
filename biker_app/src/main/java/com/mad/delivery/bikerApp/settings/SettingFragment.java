@@ -13,17 +13,18 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.Database;
-import com.mad.delivery.bikerApp.HomeActivity;
+import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
+import com.mad.delivery.bikerApp.auth.OnLogin;
+import com.mad.delivery.resources.Biker;
 
 
 public class SettingFragment extends Fragment {
     public static final String SETTING_FRAGMENT_TAG = "settings_fragment";
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    private CardView cvProfile, cvPrivacy, cvLogout;
+    private CardView cvProfile, cvPrivacy, cvLogout, cvGeneral;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -32,14 +33,25 @@ public class SettingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mUser = mAuth.getCurrentUser();
-        if(mUser == null) {
-            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
-            Database.getInstance().reset();
-            getActivity().finish();
-            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+
+        BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
+            @Override
+            public void onSuccess(Biker user) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -48,7 +60,7 @@ public class SettingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         mAuth = FirebaseAuth.getInstance();
         cvProfile = view.findViewById(R.id.cv_profile);
-        //cvHour = view.findViewById(R.id.cv_hours);
+        cvGeneral = view.findViewById(R.id.cv_general);
         cvPrivacy = view.findViewById(R.id.cv_privacy);
         //cvLanguage = view.findViewById(R.id.cv_language);
         cvLogout = view.findViewById(R.id.cv_logout);
@@ -64,6 +76,14 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), PasswordActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+        cvGeneral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), GeneralSettingActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }

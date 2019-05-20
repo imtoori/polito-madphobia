@@ -21,6 +21,7 @@ import com.mad.delivery.bikerApp.orders.DetailOrderActivity;
 import com.mad.delivery.bikerApp.orders.OrderFragment;
 import com.mad.delivery.bikerApp.orders.PendingOrdersFragment;
 import com.mad.delivery.bikerApp.settings.SettingFragment;
+import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.bikerApp.start.StartFragment;
 
@@ -30,7 +31,6 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     int open = 1;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private FirebaseAuth mAuth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +106,9 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
             default:
                 navigation.setSelectedItemId(R.id.nav_orders);
         }
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> Database.getInstance().updateToken(instanceIdResult.getToken()));
-        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
+        // todo: enable notifications!!
+        //FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> BikerDatabase.getInstance().updateToken(mAuth.getCurrentUser().getUid(), instanceIdResult.getToken()));
+        //FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
     }
 
     @Override

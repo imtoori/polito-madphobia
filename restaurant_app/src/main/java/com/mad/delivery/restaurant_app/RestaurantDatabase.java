@@ -298,7 +298,6 @@ final public class RestaurantDatabase {
             r.previewInfo.imageName = image.getLastPathSegment();
             restaurantRef.child(r.previewInfo.id).setValue(r);
         });
-
     }
 
     public void updateRestaurantVisibility(String restaurantID, boolean value, OnFirebaseData<Boolean> cb) {
@@ -373,7 +372,6 @@ final public class RestaurantDatabase {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
     }
 
     public void getCategories(onAllCategoriesReceived cb) {

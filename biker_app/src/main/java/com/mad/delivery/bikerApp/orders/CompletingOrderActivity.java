@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
@@ -244,7 +244,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                 order = modifiedOrder;
-                Database.getInstance().update(order);
+                BikerDatabase.getInstance().update(order);
                 Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

@@ -1,78 +1,104 @@
 package com.mad.delivery.bikerApp.start;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mad.delivery.bikerApp.Database;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.bikerApp.auth.LoginActivity;
+import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.resources.Biker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 
 public class StartFragment extends Fragment {
     public static final String SETTING_FRAGMENT_TAG = "statistics_fragment";
-
     private TextView ordersTaken, earning, hours, kilometers;
     private Button status;
-    private boolean working = false;
-
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private CardView cvStats;
+    private LinearLayout visibleFolder;
+    private Biker biker;
     public StartFragment() {
         // Required empty public constructor
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_start, container, false);
         ordersTaken = view.findViewById(R.id.orders_taken);
         earning = view.findViewById(R.id.earnings);
+        cvStats = view.findViewById(R.id.cardView3);
         hours= view.findViewById(R.id.hours);
         kilometers = view.findViewById(R.id.kilometers);
+        visibleFolder = view.findViewById(R.id.ll_not_visible);
         status = view.findViewById(R.id.status);
-        ordersTaken.setEnabled(working);
-        earning.setEnabled(working);
-        hours.setEnabled(working);
-        kilometers.setEnabled(working);
-        Database.getInstance().getBikerStatus(new FirebaseCallbackItem<Boolean>() {
+        BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
             @Override
-            public void onCallback(Boolean Item) {
-                if(Item)
-                    status.setText(R.string.stop_work);
-                else
-                    status.setText(R.string.start_work);
-
-
-            }
-        });
-        Database.getInstance().setBikerStatus(working);
-        status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                working = !working;
-                ordersTaken.setEnabled(working);
-                earning.setEnabled(working);
-                hours.setEnabled(working);
-                kilometers.setEnabled(working);
-                if(working) {
-                    status.setText(R.string.start_work);
-                    Database.getInstance().setBikerStatus(!working);
+            public void onSuccess(Biker user) {
+                biker = user;
+                if(biker.visible) {
+                    status.setVisibility(View.VISIBLE);
+                    cvStats.setVisibility(View.VISIBLE);
+                    visibleFolder.setVisibility(View.GONE);
                 } else {
-                    status.setText(R.string.stop_work);
-                    Database.getInstance().setBikerStatus(!working);
-
+                    status.setVisibility(View.GONE);
+                    cvStats.setVisibility(View.GONE);
+                    visibleFolder.setVisibility(View.VISIBLE);
                 }
+                setStatus(biker.status);
+                status.setOnClickListener(v -> {
+                    biker.status = !biker.status;
+                    BikerDatabase.getInstance().setBikerStatus(biker.id, biker.status);
+                    setStatus(biker.status);
+                });
+
+
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
             }
         });
-
-
         return view;
+    }
+
+    public void setStatus(boolean st) {
+        if(st) {
+            status.setText("Stop");
+        } else {
+            status.setText("Start");
+        }
     }
 
 

@@ -98,8 +98,6 @@ public class EditProfileActivity extends AppCompatActivity {
             onRestoreInstanceState(savedInstanceState);
         }
 
-
-
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {

@@ -32,7 +32,6 @@ import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 public class PasswordActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Menu menu;
     EditText currentP;
     EditText newP;

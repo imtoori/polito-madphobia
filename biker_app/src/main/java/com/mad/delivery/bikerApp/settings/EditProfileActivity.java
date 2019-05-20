@@ -24,13 +24,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BuildConfig;
-import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
+import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -44,9 +44,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Menu menu;
-    Biker mUser;
+    Biker biker;
     FloatingActionButton btnCamera;
     EditText name;
     EditText lastname;
@@ -55,16 +54,18 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText description;
     ImageView imgProfile;
     Toolbar myToolbar;
-    Uri imageProfileUri;
+    Uri imageProfileLocalUri;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
     private FirebaseAuth mAuth;
+    private Uri imageLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
-        imageProfileUri = Uri.EMPTY;
+        imageProfileLocalUri = Uri.EMPTY;
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         mAuth = FirebaseAuth.getInstance();
@@ -76,9 +77,7 @@ public class EditProfileActivity extends AppCompatActivity {
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);
         description = findViewById(R.id.editprofile_description);
-
         imgProfile = findViewById(R.id.editprofile_imgprofile);
-
         btnCamera = findViewById(R.id.editprofile_btncamera);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,22 +88,23 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
-        } else {
-            getProfileData();
         }
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+        biker = new Biker();
+
+        Bundle bundle = getIntent().getExtras();
+        biker = (Biker) bundle.get("user");
+        imageLink = (Uri) bundle.get("imageLink");
+        Log.d("MADAPP", biker.toString());
+        getProfileData();
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -112,6 +112,13 @@ public class EditProfileActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
@@ -147,8 +154,8 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("phoneNumber", phoneNumber.getText().toString());
         outState.putString("emailAddress", emailAddress.getText().toString());
         outState.putString("description", description.getText().toString());
-        if (imageProfileUri != Uri.EMPTY)
-            outState.putString("imageUri", imageProfileUri.toString());
+        if (imageProfileLocalUri != Uri.EMPTY)
+            outState.putString("imageUri", imageProfileLocalUri.toString());
         else
             outState.putString("imageUri", "");
     }
@@ -159,15 +166,15 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new Biker();
+        biker = new Biker();
         Log.d("MADAPP", "SavedInstanceState contains data");
-        mUser.name = savedInstanceState.getString("name");
-        mUser.lastname = savedInstanceState.getString("lastname");
-        mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
-        mUser.email = savedInstanceState.getString("emailAddress");
-        mUser.description = savedInstanceState.getString("description");
-        mUser.imageUri = savedInstanceState.getString("imageUri");
-        updateFields(mUser);
+        biker.name = savedInstanceState.getString("name");
+        biker.lastname = savedInstanceState.getString("lastname");
+        biker.phoneNumber = savedInstanceState.getString("phoneNumber");
+        biker.email = savedInstanceState.getString("emailAddress");
+        biker.description = savedInstanceState.getString("description");
+        biker.imageName = savedInstanceState.getString("imageUri");
+        updateFields(biker);
     }
 
     @Override
@@ -176,19 +183,17 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageProfileUri on ActivityResult: " + imageProfileUri.toString());
-                    if (imageProfileUri != null)
-                        Log.d("MADAPP", "i am here");
-                    imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                    imgProfile.setImageURI(imageProfileUri);
+                    Log.d("MADAPP", "imageProfileLocalUri on ActivityResult: " + imageProfileLocalUri.toString());
+                    imageProfileLocalUri = saveImage(imageProfileLocalUri, EditProfileActivity.this);
+                    imgProfile.setImageURI(imageProfileLocalUri);
                 }
                 break;
             case GALLERY_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    imageProfileUri = data.getData();
-                    if (imageProfileUri != null) {
-                        imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                        imgProfile.setImageURI(imageProfileUri);
+                    imageProfileLocalUri = data.getData();
+                    if (imageProfileLocalUri != null) {
+                        imageProfileLocalUri = saveImage(imageProfileLocalUri, EditProfileActivity.this);
+                        imgProfile.setImageURI(imageProfileLocalUri);
                     } else {
                         imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
                     }
@@ -199,32 +204,23 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-
-        Database.getInstance().getBikerProfile(new FirebaseCallbackItem<Biker>(){
-            @Override
-            public void onCallback(Biker user) {
-                if(user.id!=null){
-                    mUser=new Biker(user);
-                    updateFields(mUser);
-                }
-
-            }
-        });
+        updateFields(biker);
     }
 
     private void setProfileData() {
-        Biker user  = new Biker(name.getText().toString(),
-                lastname.getText().toString(),
-                phoneNumber.getText().toString(),
-                emailAddress.getText().toString(),
-                description.getText().toString(),
-                imageProfileUri);
-        Database.getInstance().putBikerProfile(user);
+        biker.name = name.getText().toString();
+        biker.lastname = lastname.getText().toString();
+        biker.phoneNumber = phoneNumber.getText().toString();
+        biker.email = emailAddress.getText().toString();
+        biker.description = description.getText().toString();
+        if (!imageProfileLocalUri.equals(Uri.EMPTY)) {
+            biker.imageName = imageProfileLocalUri.getLastPathSegment();
+        }
+        BikerDatabase.getInstance().updateBikerProfile(biker, imageProfileLocalUri);
     }
 
     private File createImageFile() throws IOException {
         // Create an image file name
-
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 "profile_photo",  /* prefix */
@@ -259,13 +255,14 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
-                            imageProfileUri = FileProvider.getUriForFile(EditProfileActivity.this,
+                            imageProfileLocalUri = FileProvider.getUriForFile(EditProfileActivity.this,
                                     BuildConfig.APPLICATION_ID,
                                     photoFile);
-                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileUri);
+                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileLocalUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
-
                         }
+                    } else {
+                        Log.d("MADAPP", "Camera cancel key..");
                     }
 
                 } else if (options[item].equals("Choose from Gallery")) {
@@ -287,31 +284,25 @@ public class EditProfileActivity extends AppCompatActivity {
         emailAddress.setText(u.email);
         description.setText(u.description);
 
-        imageProfileUri = Uri.parse( mUser.imageUri);
-        imgProfile.setImageURI(Uri.parse(u.imageUri));
-
-        if(imgProfile.getDrawable() == null) {
-            Database.getInstance().getImage(u.imageName, "/images/profile/", new FirebaseCallbackItem<Uri>() {
-                @Override
-                public void onCallback(Uri item) {
-                    if (item != null) {
-                        if (item == Uri.EMPTY || item.toString().equals("")) {
-                            Log.d("MADAPP", "Setting user default image");
-                            imageProfileUri = Uri.EMPTY;
-
-                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-                        } else {
-                            Log.d("MADAPP", "Setting custom user image");
-                            //  imageProfileUri = item;
-                            // imgProfile.setImageURI(item);
-                            Picasso.get().load(item.toString()).into(imgProfile);
-                            // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
-
-                        }
-                    }
-
+        if (u.imageName != null && !u.imageName.equals("")) {
+            if (imageProfileLocalUri == null || imageProfileLocalUri == Uri.EMPTY || imageProfileLocalUri.equals(Uri.EMPTY)) {
+                if(imageLink != null) {
+                    Picasso.get().load(imageLink.toString()).into(imgProfile);
+                    return;
                 }
-            });
+                BikerDatabase.getInstance().downloadImage(u.id, "profile", u.imageName, imageUri -> {
+                    if (imageUri == null || imageUri.equals(Uri.EMPTY)) {
+                        imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        imageProfileLocalUri = Uri.EMPTY;
+                    } else {
+                        Picasso.get().load(imageUri).into(imgProfile);
+                    }
+                });
+            } else {
+                Picasso.get().load(imageProfileLocalUri.toString()).into(imgProfile);
+            }
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         }
     }
 
@@ -342,7 +333,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     public boolean checkConstraints() {
         boolean result = true;
-        String nameString = "[a-zA-Z]+";
+        String nameString = "[a-z\\sA-Z']+";
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString = "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
@@ -364,8 +355,6 @@ public class EditProfileActivity extends AppCompatActivity {
             phoneNumber.setError(getResources().getString(R.string.check_phone));
             result = false;
         }
-
-
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress.getText().toString()).matches()) {
             emailAddress.setError(getResources().getString(R.string.email));

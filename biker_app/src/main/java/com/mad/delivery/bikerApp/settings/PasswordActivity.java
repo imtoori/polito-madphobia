@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -15,52 +16,85 @@ import java.util.regex.Pattern;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.bikerApp.BikerDatabase;
+import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.bikerApp.auth.OnLogin;
+import com.mad.delivery.resources.Biker;
 
 public class PasswordActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Menu menu;
     EditText currentP;
     EditText newP;
     EditText repeatnewP;
     Toolbar myToolbar;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.input_password);
         myToolbar = (Toolbar) findViewById(R.id.inputpssw_toolbar);
         setTitle(getResources().getString(R.string.password_toolbar));
-        mAuth = FirebaseAuth.getInstance();
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         currentP = findViewById(R.id.old_pssw);
         newP = findViewById(R.id.new_pssw);
         repeatnewP = findViewById(R.id.new_pssw1);
+        mAuth = FirebaseAuth.getInstance();
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+
+        BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
+            @Override
+            public void onSuccess(Biker user) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.putExtra("open", 2);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("MADAPP", "onBackPressed");
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 1) {
+            finish();
+        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -75,60 +109,48 @@ public class PasswordActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
-                if(checkConstraints()) {
-                    setPassword();
-                    sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-                    String p=sharedPref.getString("password", "");
-                    Toast.makeText(this, getResources().getString(R.string.saved_password), Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                String email = currentUser.getEmail();
+                String oldPassword = currentP.getText().toString();
+                String newPassword = newP.getText().toString();
+                String repeatPassword = repeatnewP.getText().toString();
+
+                if (oldPassword.length() == 0) {
+                    currentP.setError("Your current password is empty.");
+                    return true;
                 }
+
+                // check if newP and repeatnewP are equals
+                if (!newPassword.equals(repeatPassword)) {
+                    repeatnewP.setError("The two passwords don't match.");
+                    return true;
+                }
+                if (newPassword.length() < 6) {
+                    newP.setError("Your password must be length atleast 6 characters.");
+                    return true;
+                }
+
+                AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
+                currentUser.reauthenticate(credential).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        currentUser.updatePassword(newPassword).addOnCompleteListener(innerTask -> {
+                            if (!innerTask.isSuccessful()) {
+                                //something goes worng
+                                currentP.setError("Your current password is wrong");
+                            } else {
+                                Toast.makeText(PasswordActivity.this, "Your password has been modified", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
+                        });
+                    } else {
+                        currentP.setError("Your current password is wrong");
+                    }
+                });
+
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-
-    private void setPassword() {
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        String p= newP.getText().toString();
-        editor.putString("password", p);
-        editor.commit();
-    }
-
-
-
-        public boolean checkConstraints(){
-        Pattern pattern;
-        Matcher matcher;
-        boolean result = true;
-
-        final String psswString = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$";
-        //deve contenere 1 lettera minuscola, una maiuscola e un numero. min 8 caratteri
-
-        sharedPref = this.getSharedPreferences("userProfile", Context.MODE_PRIVATE);
-        String p=sharedPref.getString("password", "");
-        if(!currentP.getText().toString().equals(p)){
-            currentP.setError(getResources().getString(R.string.check_current_password));
-            result = false;
-        }
-
-        //CHECK CURRENT PASSWORD
-            pattern = Pattern.compile(psswString);
-            matcher = pattern.matcher(newP.getText().toString());
-
-            if(!matcher.matches()){
-            newP.setError(getResources().getString(R.string.check_password));
-            result = false;
-        }
-
-        if(!newP.getText().toString().equals(repeatnewP.getText().toString())) {
-            repeatnewP.setError(getResources().getString(R.string.check_password_repeat)+":"+newP.getText().toString());
-            result = false;
-        }
-
-        return result;
     }
 }

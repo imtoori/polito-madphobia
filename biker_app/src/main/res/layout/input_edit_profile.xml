@@ -8,6 +8,7 @@
     android:clipChildren="false"
     android:orientation="vertical">
 
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,13 +36,15 @@
 
             <ImageView
                 android:id="@+id/editprofile_userimage"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="6dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/photo_toolbar"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
                 app:srcCompat="@drawable/ic_user" />
@@ -49,55 +52,59 @@
             <EditText
                 android:id="@+id/editprofile_name"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:autofillHints="@string/name"
                 android:gravity="center_vertical"
                 android:hint="@string/name"
                 android:inputType="textPersonName"
                 android:maxLength="46"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/editprofile_userimage"
                 app:layout_constraintStart_toEndOf="@+id/editprofile_userimage"
+                app:layout_constraintTop_toTopOf="@+id/editprofile_userimage"
                 card_view:layout_constraintEnd_toEndOf="parent" />
 
             <EditText
                 android:id="@+id/editprofile_lastname"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="4dp"
                 android:autofillHints="@string/lastname"
                 android:gravity="center_vertical"
                 android:hint="@string/lastname"
                 android:inputType="textPersonName"
                 android:maxLength="46"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/editprofile_name"
                 app:layout_constraintStart_toStartOf="@+id/editprofile_name"
                 app:layout_constraintTop_toBottomOf="@+id/editprofile_name" />
 
             <ImageView
                 android:id="@+id/editprofile_phone_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
-                android:layout_margin="6dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/phone_number"
-                app:layout_constraintBottom_toBottomOf="@+id/editprofile_phone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/editprofile_phone"
-                app:srcCompat="@drawable/ic_phone" />
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/editprofile_lastname"
+                app:srcCompat="@drawable/ic_phone"
+                card_view:layout_constraintStart_toStartOf="parent" />
 
             <EditText
                 android:id="@+id/editprofile_phone"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="0dp"
                 android:autofillHints="@string/phone_number"
                 android:gravity="center_vertical"
                 android:hint="@string/default_phone"
@@ -105,30 +112,32 @@
                 android:maxLength="20"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/editprofile_lastname"
-                app:layout_constraintTop_toBottomOf="@+id/editprofile_lastname" />
+                app:layout_constraintBottom_toBottomOf="@+id/editprofile_phone_image"
+                app:layout_constraintEnd_toEndOf="@+id/editprofile_name"
+                app:layout_constraintStart_toStartOf="@+id/editprofile_name"
+                app:layout_constraintTop_toTopOf="@+id/editprofile_phone_image" />
 
 
             <ImageView
                 android:id="@+id/editprofile_email_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
-                android:layout_margin="6dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/email"
-                app:layout_constraintBottom_toBottomOf="@+id/editprofile_email"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/editprofile_email"
+                app:layout_constraintTop_toBottomOf="@+id/editprofile_phone_image"
                 app:srcCompat="@drawable/ic_email" />
 
             <EditText
                 android:id="@+id/editprofile_email"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="0dp"
                 android:autofillHints="@string/email"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
@@ -137,9 +146,10 @@
                 android:maxLength="45"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/editprofile_email_image"
+                app:layout_constraintEnd_toEndOf="@+id/editprofile_phone"
                 app:layout_constraintStart_toStartOf="@+id/editprofile_phone"
-                app:layout_constraintTop_toBottomOf="@+id/editprofile_phone" />
+                app:layout_constraintTop_toTopOf="@+id/editprofile_email_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -171,11 +181,12 @@
 
             <ImageView
                 android:id="@+id/editprofile_description_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
-                android:layout_gravity="top"
-                android:layout_margin="6dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:background="@drawable/rounded_gradient"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/description"
                 app:srcCompat="@drawable/ic_description"

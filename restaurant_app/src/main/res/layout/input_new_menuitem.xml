@@ -165,7 +165,7 @@
                 android:autofillHints="@string/dish_availability"
                 android:gravity="center_vertical"
                 android:hint="@string/dish_availability"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 android:maxLength="46"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"

@@ -239,4 +239,8 @@
     <string name="visible_desc">By enabling this option, your restaurant will be public. It means that you user will be able to look at your menu and other options profile. In order to make your restaurant visible, you must complete your profile first and add some dishes to your menu.</string>
     <string name="profile_status">Profile Status:</string>
 
+
+    <string name="not_visible">This page can\'t be shown because your profile is not enabled. \nGo to <b>Setting</b>, then <b>General</b>, to enable your profile.</string>
+    <string name="biker_visible_desc">By enabling this option you\'ll be able to work. Remember that only if you click on Start button from your page, restaurant owners will be able to choose you. Complete your profile if you want to enable this option.</string>
+
 </resources>
