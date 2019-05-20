@@ -89,11 +89,12 @@ public class DetailOrderFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new ProductRecyclerViewAdapter(products));
         recyclerView.setNestedScrollingEnabled(false);
+
         cvAdminNotes = view.findViewById(R.id.cv_admin_notes_detail);
         serverNotes = view.findViewById(R.id.admin_notes_tv);
         if(order.serverNotes != null) {
             cvAdminNotes.setVisibility(View.VISIBLE);
-            serverNotes.setText(order.serverNotes);
+            serverNotes.setText(order.bikerNotes);
         } else {
             cvAdminNotes.setVisibility(View.GONE);
         }

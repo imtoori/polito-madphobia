@@ -43,7 +43,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         holder.nameRestaurant.setText(holder.restaurant.name);
         holder.descRestaurant.setText(holder.restaurant.description);
         holder.rbRestaurant.setRating(holder.restaurant.scoreValue);
-        if(holder.restaurant.imageURL != null)
+        if(holder.restaurant.imageName != null)
         //    holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.imageURL));
 //        Picasso.get().load(holder.restaurant.imageDownload).into( holder.imgRestaurant);
 

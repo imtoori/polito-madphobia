@@ -42,7 +42,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = orders.get(position);
-        holder.id.setText(holder.mItem.id);
+        holder.orderCode.setText(holder.mItem.id);
         holder.orderFrom.setText(holder.mItem.client.name);
         holder.requestedDelivery.setText(MyDateFormat.parse(new DateTime(holder.mItem.orderFor)));
         holder.status.setTextColor(getColor(holder.mItem.status));
@@ -89,7 +89,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView id;
+        public final TextView orderCode;
         public final TextView orderFrom;
         public final TextView orderDate;
         public final TextView products;
@@ -100,7 +100,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            id = mView.findViewById(R.id.tv_orderNumberValue);
+            orderCode= mView.findViewById(R.id.orderCode);
             orderFrom = mView.findViewById(R.id.tv_orderFromValue);
             requestedDelivery = mView.findViewById(R.id.tv_orderRequestedAtValue);
             orderDate =  mView.findViewById(R.id.tv_dateOrderForValue);
@@ -111,6 +111,7 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
         @Override
         public String toString() {
             return "ViewHolder{" +
+                    "orderCode=" + orderCode +
                     "orderFrom=" + orderFrom +
                     ", requestedDate=" + orderDate +
                     ", products=" + products +

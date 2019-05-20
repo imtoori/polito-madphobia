@@ -1,6 +1,7 @@
 package com.mad.delivery.consumerApp.wallet;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,9 +45,10 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             ConsumerDatabase.getInstance().getRestourant(holder.order.restaurantId, new firebaseCallback<Restaurant>() {
                 @Override
                 public void onCallBack(Restaurant item) {
-                    holder.nameRestaurant.setText(item.name);
-                    if(item.imageUri != null)
-                        Picasso.get().load(item.previewInfo.imageDownload).into(holder.imgRestaurant);
+                    holder.nameRestaurant.setText(item.previewInfo.name);
+                    //TODO ripristinare le due righe successive
+                    //if(item.imageUri != null && item.imageUri !="" && !item.imageUri.equals(Uri.EMPTY))
+                      //  Picasso.get().load(item.previewInfo.imageDownload).into(holder.imgRestaurant);
 
                 }
             });

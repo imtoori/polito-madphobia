@@ -46,7 +46,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         MenuItemRest item = items.get(index);
         holder.mItem = item;
         holder.name.setText(item.name);
-        //Log.d(TAG, "onBindViewHolder:" + holder.etQuantity);
+        //Log.i(TAG, "onBindViewHolder:" + holder.etQuantity);
 
     }
 

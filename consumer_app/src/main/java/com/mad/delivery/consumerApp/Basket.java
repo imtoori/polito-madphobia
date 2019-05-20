@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,7 +48,7 @@ import static java.security.AccessController.getContext;
 
 public class Basket extends AppCompatActivity implements TimePickerFragment.TimePickedListener {
     Menu menu;
-
+    Consumer consumer;
     TextView subtot;
     TextView del_fee;
     TextView tot;
@@ -65,6 +67,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     TextView pm;
     RadioButton credit;
     private FirebaseAuth mAuth;
+    CardView cv_error;
 
 
     interface ClickListener {
@@ -76,10 +79,10 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.basket_layout);
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.Toolbar);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
-
+        cv_error=findViewById(R.id.cardView_error);
         subtot = findViewById(R.id.subtotal_price);
         del_fee = findViewById(R.id.delivery_fee);
         tot = findViewById(R.id.total);
@@ -91,6 +94,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         pm = findViewById(R.id.pm);
         credit = findViewById(R.id.credit);
         payment_met = "cash";
+
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -113,7 +117,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         priceD = 0.0;
 
 
-        fee = ConsumerDatabase.getInstance().getRestaurantInLocal().deliveryCost;
+        fee = ConsumerDatabase.getInstance().getRestaurantInLocal().previewInfo.deliveryCost;
         products.forEach(p -> priceD += p.price * p.quantity);
 
         totD = priceD + fee;
@@ -166,7 +170,7 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                                                     else {
 
                                                         // Toast.makeText(this, "Non ci sono abbastanza prodotti", Toast.LENGTH_SHORT).show();
-                                                        Log.i("TAG", "Non ci sono abbastanza prodotti");
+                                                        Log.d("TAG", "Non ci sono abbastanza prodotti");
                                                     }
 
                                                 }
@@ -185,23 +189,23 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                                             else {
 
                                                 // Toast.makeText(this, "Non ci sono abbastanza prodotti", Toast.LENGTH_SHORT).show();
-                                                Log.i("TAG", "Non ci sono abbastanza prodotti");
+                                                Log.d("TAG", "Non ci sono abbastanza prodotti");
                                             }
                                         }
                                     });
 
 
-                                    Log.i("TAG", "Acquisto effettuato ");
+                                    Log.d("TAG", "Acquisto effettuato ");
                                /*     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     startActivity(intent);
                                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);*/
                                 } else {
-                                    Log.i("TAG", "Non hai abbastanza credito");
+                                    Log.d("TAG", "Non hai abbastanza credito");
                                 }
 
 
                             } else {
-                                Log.i("TAG", "Ti devi registrare");
+                                Log.d("TAG", "Ti devi registrare");
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
                                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -259,25 +263,25 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         boolean result = true;
         String checkString = "([A-Za-z0-9\'\\s-])+";
         String checkTime = "^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$";
+        String error="Attention:";
 
-        if (priceD <= 0 || totD<ConsumerDatabase.getInstance().getRestaurantInLocal().minOrderCost) {
-            tot.setError(getResources().getString(R.string.price_error));
+        if (priceD <= 0 || totD<ConsumerDatabase.getInstance().getRestaurantInLocal().previewInfo.minOrderCost) {
+            error=error+"\n"+getResources().getString(R.string.price_error);
             result = false;
         }
 
         if (!address.getText().toString().matches(checkString)) {
-            address.setError(getResources().getString(R.string.check_address));
+            error=error+"\n"+getResources().getString(R.string.check_address);
             result = false;
         }
         if (!time.getText().toString().matches(checkTime)) {
-            time.setError(getResources().getString(R.string.check_time));
+            error=error+"\n"+getResources().getString(R.string.check_time);
             result = false;
         }
-        else
-            time.setError(null);
+
 
         if (payment_met.equals("credit")) {
-            Log.i("TAG", "credito");
+            Log.d("TAG", "credito");
             ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
                 @Override
                 public void onCallBack(User user) {
@@ -285,20 +289,27 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                         credit.setEnabled(false);
                         rg.check(R.id.cash);
                         payment_met = "cash";
-                        Log.i("TAG", "change pm");
+                        Log.d("TAG", "change pm");
                     }
                     else if(user==null)
-                        Log.i("TAG", "user null");
+                        Log.d("TAG", "user null");
                     else
-                        Log.i("TAG", "credito sufficente");
+                        Log.d("TAG", "credito sufficente");
 
 
                 }
 
             });
         }
+        if(result==false){
+            TextView tv=findViewById(R.id.tv_error);
+            tv.setText(error);
+            cv_error.setVisibility(View.VISIBLE);
+        }
+        else
+            cv_error.setVisibility(View.GONE);
 
-    Log.i("TAG", "result="+result);
+    Log.d("TAG", "result="+result);
         return result;
 
     }

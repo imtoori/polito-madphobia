@@ -86,25 +86,6 @@ public class DetailOrderActivity extends AppCompatActivity {
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
-            case R.id.reject_order_option:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.rejecting_order_message_dialog)
-                        .setTitle(R.string.completing_order_title_dialog);
-
-                builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        order.status = OrderStatus.canceled;
-                        BikerDatabase.getInstance().update(order);
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, null);
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -74,7 +74,7 @@ public class RestaurantsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurants, container, false);
-        Log.d("MADAPP", "restaurantsFragment onCreateView");
+        Log.i("MADAPP", "restaurantsFragment onCreateView");
         recyclerView = view.findViewById(R.id.restaurant_rv);
         emptyFolder = view.findViewById(R.id.emptyfolder_cv);
         previews = new ArrayList<>();
@@ -89,11 +89,13 @@ public class RestaurantsFragment extends Fragment {
         try {
             categories = getArguments().getStringArrayList("categories");
             chosenCategories.addAll(categories);
+            Log.i("MADAPP", "restaurantffragment->"+chosenCategories);
             address = getArguments().getString("address");
             freeDelivery = getArguments().getBoolean("freeDelivery");
             minOrderCost = getArguments().getBoolean("minOrderCost");
         } catch(NullPointerException e) {
             // do nothing
+            Log.i("MADAPP", "restaurantffragment->no argument");
         }
         return view;
     }

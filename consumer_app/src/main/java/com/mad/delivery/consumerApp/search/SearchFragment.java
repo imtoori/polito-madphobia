@@ -181,9 +181,9 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     public void openCategory(List<String> chosenList, String address, boolean m, boolean d) {
         // if present, close the RestaurantsFragment
         Fragment fOpen = fm.findFragmentByTag(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
-        Log.d("MADAPP", fm.getFragments().toString());
+        Log.i("MADAPP", fm.getFragments().toString());
         if(fOpen != null) {
-            Log.d("MADAPP", "Closing restaurantsFragment..");
+            Log.i("MADAPP", "Closing restaurantsFragment..");
             fm.beginTransaction().remove(fOpen).commit();
         }
         filter.setVisibility(View.VISIBLE);

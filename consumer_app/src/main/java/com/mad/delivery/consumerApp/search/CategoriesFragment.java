@@ -64,9 +64,10 @@ public class CategoriesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
-        Log.d("MADAPP", "SearchFragment: onCREATED!");
+        Log.i("MADAPP", "CategoriesFragment: onCREATED!");
         myRef = db.getReference("categories");
         categories = new ArrayList<>();
+        Log.i("MADAPP", "categories->"+categories);
         categoriesAdapter = new CategoriesAdapter(categories, mListener);
 
     }
@@ -120,6 +121,7 @@ public class CategoriesFragment extends Fragment {
         void openCategory(List<String> chosen, String address, boolean m, boolean d);
         boolean getMinOrderCostParam();
         boolean getDeliveryCostParam();
+
     }
 
 }

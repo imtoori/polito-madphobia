@@ -27,6 +27,7 @@ import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.MyDateFormat;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 
@@ -71,7 +72,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         newStatus.setText(newStatusAsString);
         newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
         btnUndoDelivery = findViewById(R.id.btn_undo_delivery);
-        requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, modifiedOrder.orderFor));
+        requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(new DateTime(modifiedOrder.orderFor))));
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
@@ -179,9 +180,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                     cvDeliveryOptions.startAnimation(animShake);
                 }
                 return true;
-            case R.id.reject_order_option:
-                Log.d("MADAPP", "Reject option selected");
-                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -195,8 +194,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 return getResources().getColor(R.color.colorPreparingOrder, null);
             case ready:
                 return getResources().getColor(R.color.colorReadyOrder, null);
-            case canceled:
-                return getResources().getColor(R.color.colorCanceledOrder, null);
             case completed:
                 return getResources().getColor(R.color.colorCompletedOrder, null);
             default:
@@ -213,7 +210,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     }
 
     public void confirmDeliveryTime() {
-        requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, modifiedOrder.orderFor));
+        requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, MyDateFormat.parse(new DateTime(modifiedOrder.orderFor))));
         btnDeliveryTimeChange.setVisibility(View.GONE);
         btnConfirm.setVisibility(View.GONE);
         btnUndoDelivery.setVisibility(View.VISIBLE);

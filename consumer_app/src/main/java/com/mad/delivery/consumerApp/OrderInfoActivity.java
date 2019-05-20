@@ -34,7 +34,7 @@ public class OrderInfoActivity extends AppCompatActivity {
         order = ConsumerDatabase.getInstance().getOrder();
         setContentView(R.layout.activity_order_info);
         setTitle(getResources().getString(R.string.order_info_toolbar));
-        toolbar=findViewById(R.id.toolbar);
+        toolbar=findViewById(R.id.Toolbar);
         setSupportActionBar(toolbar);
         order_code=findViewById(R.id.order_code);
         subtot=findViewById(R.id.subtotal_price);
@@ -45,9 +45,9 @@ public class OrderInfoActivity extends AppCompatActivity {
         biker_note=findViewById(R.id.biker_note);
         client_note=findViewById(R.id.client_note);
         order_code.setText(order.id);
-        Double sub= order.totalPrice-order.restaurant.deliveryCost;
+        Double sub= order.totalPrice-order.restaurant.previewInfo.deliveryCost;
         subtot.setText(sub.toString());
-        del_fee.setText(order.restaurant.deliveryCost.toString());
+        del_fee.setText(order.restaurant.previewInfo.deliveryCost.toString());
         tot.setText(order.totalPrice.toString());
         address.setText(order.delivery);
         rest_note.setText(order.serverNotes);

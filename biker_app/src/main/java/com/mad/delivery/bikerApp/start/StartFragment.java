@@ -15,9 +15,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.R;
+<<<<<<< HEAD
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.auth.OnLogin;
+=======
+import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
+>>>>>>> a87719c5b486b5f44530eaa02e0877d1d465bca7
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Order;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,12 +35,19 @@ import androidx.fragment.app.Fragment;
 public class StartFragment extends Fragment {
     public static final String SETTING_FRAGMENT_TAG = "statistics_fragment";
     private TextView ordersTaken, earning, hours, kilometers;
+    private int n=0;
     private Button status;
+<<<<<<< HEAD
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private CardView cvStats;
     private LinearLayout visibleFolder;
     private Biker biker;
+=======
+    private boolean working = false;
+    private double singleImport=2.50, kilometer=0.00;
+
+>>>>>>> a87719c5b486b5f44530eaa02e0877d1d465bca7
     public StartFragment() {
         // Required empty public constructor
     }
@@ -80,8 +94,6 @@ public class StartFragment extends Fragment {
                     BikerDatabase.getInstance().setBikerStatus(biker.id, biker.status);
                     setStatus(biker.status);
                 });
-
-
             }
 
             @Override

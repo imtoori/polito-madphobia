@@ -57,8 +57,8 @@ public class RestaurantMenuFragment extends Fragment {
             });
         }
 
-        minOrder.setText(getResources().getString(R.string.min_order, String.valueOf(restaurant.minOrderCost)));
-        deliveryCost.setText(getResources().getString(R.string.delivery_cost, String.valueOf(restaurant.deliveryCost)));
+        minOrder.setText(getResources().getString(R.string.min_order, String.valueOf(restaurant.previewInfo.minOrderCost)));
+        deliveryCost.setText(getResources().getString(R.string.delivery_cost, String.valueOf(restaurant.previewInfo.deliveryCost)));
         mAdapter = new MenuCategoriesAdapter(categories);
 
         recyclerView =  view.findViewById(R.id.restaurant_menu_rv);
