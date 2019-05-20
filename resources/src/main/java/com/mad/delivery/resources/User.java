@@ -46,6 +46,7 @@ public class User implements Serializable, Parcelable {
     }
 
     public User(User u) {
+        this.id = u.id;
         this.name = u.name;
         this.lastName = u.lastName;
         this.phoneNumber = u.phoneNumber;

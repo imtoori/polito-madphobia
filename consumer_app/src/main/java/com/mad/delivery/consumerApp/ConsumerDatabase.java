@@ -25,6 +25,10 @@ import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.OnFirebaseData;
+import com.mad.delivery.resources.OnImageDownloaded;
+import com.mad.delivery.resources.OnImageUploaded;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.PreviewInfo;
@@ -75,12 +79,38 @@ public class ConsumerDatabase {
         mAuth = FirebaseAuth.getInstance();
         itemSelected = new HashMap<MenuItemRest,Integer>();
         resturantId ="";
-
     }
-
     public static ConsumerDatabase getInstance() {
         return instance;
     }
+
+    public void checkLogin(String id, OnLogin<User> cb) {
+        if(id == null || id.equals("")) {
+            Log.d("MADAPP", "checkLogin: id null or empty" );
+            cb.onFailure();
+            return;
+        }
+        myRef.child("users").child("customers").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    User rest = dataSnapshot.getValue(User.class);
+                    Log.d("MADAPP", "checkLogin: OK" );
+                    cb.onSuccess(rest);
+                } else {
+                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists." );
+                    cb.onFailure();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onFailure();
+            }
+        });
+    }
+
+
 
     public void reset() {
         instance = null;
@@ -328,6 +358,7 @@ public class ConsumerDatabase {
     }
 
     public void getCategories(onAllCategoriesReceived cb) {
+        Log.d("MADAPP", "getCategories is called..");
         Set<String> categories = new HashSet<>();
         myRef.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -597,6 +628,59 @@ public class ConsumerDatabase {
 
     public void setValueCredit(Double i){
         myRef.child("users").child("customers").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
+    }
+
+
+    public void getUserProfile(String id, OnFirebaseData<User> cb) {
+        myRef.child("users").child("customers").child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    User item = dataSnapshot.getValue(User.class);
+                    if (item != null) {
+                        Log.d("MADAPP", "getUserProfile returned: " + item.toString());
+                        cb.onReceived(item);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+    public void downloadImage(String id, String path, String imageName, OnImageDownloaded uriImage) {
+        if (imageName == null || imageName.equals("")) {
+            uriImage.onReceived(Uri.EMPTY);
+            return;
+        }
+        StorageReference profileRefStore = storageRef.child(id).child(path).child(imageName);
+        profileRefStore.getDownloadUrl().addOnSuccessListener(uri -> {
+            uriImage.onReceived(uri);
+        }).addOnFailureListener(exception -> {
+            exception.printStackTrace();
+            uriImage.onReceived(Uri.EMPTY);
+        });
+    }
+
+    public void uploadImage(String id, Uri uri, String path, String imageName, OnImageUploaded cb) {
+        StorageReference profileRefStore = storageRef.child(id).child(path).child(imageName);
+        profileRefStore.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+            Log.d("MADAPP", "The image profile has been uploaded.");
+            cb.onFinished();
+        });
+    }
+
+    public void updateUserProfile(User r, Uri image) {
+        Log.d("MADAPP", "arg=" + r.toString());
+        if (image == null || image.toString().equals("") || image.toString().contains("https:")) {
+            myRef.child("users").child("customers").child(r.id).setValue(r);
+            return;
+        }
+
+        uploadImage(r.id, image, "profile", image.getLastPathSegment(), () -> {
+            r.imageName = image.getLastPathSegment();
+            myRef.child("users").child("customers").child(r.id).setValue(r);
+        });
     }
 
 

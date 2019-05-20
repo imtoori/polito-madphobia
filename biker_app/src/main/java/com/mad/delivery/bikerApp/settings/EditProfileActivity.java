@@ -166,7 +166,6 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        biker = new Biker();
         Log.d("MADAPP", "SavedInstanceState contains data");
         biker.name = savedInstanceState.getString("name");
         biker.lastname = savedInstanceState.getString("lastname");

@@ -24,12 +24,14 @@ import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
+
 public class ProfileActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Toolbar myToolBar;
     Menu menu;
     TextView name;
@@ -38,19 +40,35 @@ public class ProfileActivity extends AppCompatActivity {
     TextView description;
     TextView road;
     ImageView imgProfile;
-    User mUser= new User ();
+    User user;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private Uri imageLink;
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
+        ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+            @Override
+            public void onSuccess(User u) {
+                user = u;
+                Log.d("MADAPP","calling getProfileData with " + currentUser.getUid());
+                getProfileData(currentUser.getUid());
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -69,18 +87,28 @@ public class ProfileActivity extends AppCompatActivity {
         road = findViewById(R.id.main_road);
 
         imgProfile = findViewById(R.id.image_profile);
-        getProfileData();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.putExtra("open", 1);
+        intent.putExtra("open", 2);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
     }
-
+    @Override
+    public void onBackPressed() {
+        Log.d("MADAPP", "onBackPressed");
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 1) {
+            finish();
+        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,6 +124,10 @@ public class ProfileActivity extends AppCompatActivity {
             case R.id.edit_profile_option:
                 // start activity: EditProfileActivity
                 Intent intent = new Intent(getApplicationContext(), EditProfileActivity.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("user", (Serializable) user);
+                intent.putExtra("imageLink", imageLink);
+
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
@@ -104,29 +136,24 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void getProfileData() {
-        ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>(){
-            @Override
-            public void onCallBack(User user) {
-                if(user!=null){
-
-                    mUser = new User(user);
-
-                    updateFields(mUser);
-                }
-                else{
-                    mUser  = new User("","","","","","","","", "","",Uri.EMPTY,"");
-                    updateFields(mUser);
-                }
-
+    private void getProfileData(String id) {
+        ConsumerDatabase.getInstance().getUserProfile(id, r -> {
+            if (r != null && r.name != null) {
+                user = new User(r);
+            } else {
+                user  = new User("","","",r.email,"","","","", "","",Uri.EMPTY,"");
+                user.id = r.id;
             }
-        });
+            Log.d("MADAPP", "user= "+user.toString());
+            updateFields(user);
+         });
     }
 
     private void updateFields(User u) {
         if(!u.name.equals("") || !u.lastName.equals(""))
             name.setText(u.name + " " + u.lastName);
         phoneNumber.setText(u.phoneNumber);
+        Log.d("MADAPP", "called update fields: " + u.toString());
         emailAddress.setText(u.email);
         description.setText(u.description);
         if (!u.road.equals("")) {
@@ -140,38 +167,27 @@ public class ProfileActivity extends AppCompatActivity {
             imgProfile.setImageURI(Uri.parse(u.imageUri));
         }
 
-        imgProfile.setImageURI(Uri.parse(u.imageUri));
-
-        if(imgProfile.getDrawable() == null) {
-            ConsumerDatabase.getInstance().getImage(u.imageName, "/images/profile/", new firebaseCallback<Uri>() {
-                @Override
-                public void onCallBack(Uri item) {
-                    if (item != null) {
-                        if (item == Uri.EMPTY || item.toString().equals("")) {
-                            Log.d("MADAPP", "Setting user default image");
-
-                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-                        } else {
-                            Log.d("MADAPP", "Setting custom user image");
-                            Log.d("DOWNLOAD2", item.toString());
-
-                            // imgProfile.setImageURI(item);
-                            Picasso.get().load(item.toString()).into(imgProfile);
-
-                        }
-                    }
+        if ( u.imageName != null && !u.imageName.equals("")) {
+            ConsumerDatabase.getInstance().downloadImage(u.id, "profile", u.imageName, imageUri -> {
+                if (imageUri == null || imageUri.toString().equals("") || imageUri.equals(Uri.EMPTY)) {
+                    imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                } else {
+                    Picasso.get().load(imageUri.toString()).into(imgProfile);
+                    imageLink = imageUri;
                 }
             });
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         }
     }
 
     public void zoomImage(View view) {
         // Ordinary Intent for launching a new activity
         Intent intent = new Intent(this, PhotoZoomActivity.class);
-        if(mUser.imageUri==null)
+        if(user.imageUri==null)
         intent.putExtra("imageUri", "");
         else
-            intent.putExtra("imageUri", mUser.imageUri.toString());
+            intent.putExtra("imageUri", user.imageUri.toString());
 
         intent.putExtra("className", this.getClass().getName());
         // Get the transition name from the string

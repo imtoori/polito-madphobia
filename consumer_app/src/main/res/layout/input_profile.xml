@@ -8,13 +8,15 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card_view:cardUseCompatPadding="true"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        card_view:cardElevation="4dp">
+        card_view:cardElevation="4dp"
+        app:cardCornerRadius="8dp"
+        card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,13 +36,15 @@
 
             <ImageView
                 android:id="@+id/main_user_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="6dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/photo_toolbar"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/personal_data_tv"
                 app:srcCompat="@drawable/ic_user" />
@@ -49,73 +53,74 @@
                 android:id="@+id/main_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:hint="@string/name"
-                android:padding="8dp"
                 android:maxLength="46"
+                android:padding="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
                 app:layout_constraintBottom_toBottomOf="@+id/main_user_image"
                 app:layout_constraintStart_toEndOf="@+id/main_user_image"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/personal_data_tv" />
+                card_view:layout_constraintTop_toTopOf="@+id/main_user_image" />
 
             <ImageView
                 android:id="@+id/main_phone_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
-                android:layout_margin="6dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/phone_number"
                 app:srcCompat="@drawable/ic_phone"
-                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintStart_toStartOf="@+id/main_user_image"
                 card_view:layout_constraintTop_toBottomOf="@+id/main_user_image" />
 
 
             <ImageView
                 android:id="@+id/main_email_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
-                android:layout_margin="6dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/email"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 app:srcCompat="@drawable/ic_email"
-                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="@+id/main_phone_image"
                 card_view:layout_constraintTop_toBottomOf="@+id/main_phone_image" />
 
             <TextView
                 android:id="@+id/main_email"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
                 android:ellipsize="end"
-                android:padding="8dp"
                 android:hint="@string/email"
                 android:maxLength="45"
+                android:padding="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
-                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintBottom_toBottomOf="@+id/main_email_image"
                 card_view:layout_constraintEnd_toEndOf="@+id/mainprofile_phone"
                 card_view:layout_constraintStart_toStartOf="@+id/mainprofile_phone"
-                card_view:layout_constraintTop_toBottomOf="@+id/mainprofile_phone" />
+                card_view:layout_constraintTop_toTopOf="@+id/main_email_image" />
 
             <TextView
                 android:id="@+id/mainprofile_phone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:hint="@string/default_phone"
                 android:padding="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
+                card_view:layout_constraintBottom_toBottomOf="@+id/main_phone_image"
                 card_view:layout_constraintEnd_toEndOf="@+id/main_name"
                 card_view:layout_constraintStart_toStartOf="@+id/main_name"
-                card_view:layout_constraintTop_toBottomOf="@+id/main_name" />
+                card_view:layout_constraintTop_toTopOf="@+id/main_phone_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -126,6 +131,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
+        app:cardCornerRadius="8dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -147,15 +153,15 @@
 
             <ImageView
                 android:id="@+id/main_location_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
-                android:layout_margin="6dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="32dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/delivery_desc"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 app:srcCompat="@drawable/ic_location"
-                card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/address_tv" />
 
@@ -163,9 +169,8 @@
                 android:id="@+id/main_road"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:ellipsize="end"
                 android:hint="@string/delivery"
@@ -177,7 +182,7 @@
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toEndOf="@+id/main_location_image"
-                card_view:layout_constraintTop_toBottomOf="@+id/address_tv" />
+                card_view:layout_constraintTop_toTopOf="@+id/main_location_image" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -189,6 +194,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
+        app:cardCornerRadius="8dp"
         card_view:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -209,13 +215,15 @@
 
             <ImageView
                 android:id="@+id/main_description_image"
-                android:layout_width="25dp"
-                android:layout_height="45dp"
-                android:layout_gravity="top"
-                android:layout_margin="6dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_gradient"
                 android:contentDescription="@string/description"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 app:srcCompat="@drawable/ic_description"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/desc_tv" />
@@ -225,18 +233,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:padding="8dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:hint="@string/description"
+                android:padding="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.51"
                 card_view:layout_constraintStart_toEndOf="@+id/main_description_image"
-                card_view:layout_constraintTop_toBottomOf="@+id/desc_tv" />
+                card_view:layout_constraintTop_toTopOf="@+id/main_description_image" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

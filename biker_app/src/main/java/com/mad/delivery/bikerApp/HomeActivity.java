@@ -92,20 +92,7 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
             }
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        Log.d("MADAPP", "Open=" + open);
-        switch(open) {
-            case 0:
-                navigation.setSelectedItemId(R.id.nav_statistics);
-                break;
-            case 1:
-                navigation.setSelectedItemId(R.id.nav_orders);
-                break;
-            case 2:
-                navigation.setSelectedItemId(R.id.nav_settings);
-                break;
-            default:
-                navigation.setSelectedItemId(R.id.nav_orders);
-        }
+
         // todo: enable notifications!!
         //FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> BikerDatabase.getInstance().updateToken(mAuth.getCurrentUser().getUid(), instanceIdResult.getToken()));
         //FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");

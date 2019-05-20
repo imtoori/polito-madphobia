@@ -28,6 +28,7 @@ import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
@@ -43,11 +44,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
-    SharedPreferences sharedPref;
     Menu menu;
-    User mUser;
+    User user;
     private FirebaseAuth mAuth;
-
     FloatingActionButton btnCamera;
     EditText name;
     EditText lastName;
@@ -61,16 +60,17 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText city;
     ImageView imgProfile;
     Toolbar myToolbar;
-    Uri imageProfileUri;
+    Uri imageProfileLocalUri;
     String currentPhotoPath;
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
+    private Uri imageLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        imageProfileUri = Uri.EMPTY;
+        imageProfileLocalUri = Uri.EMPTY;
         myToolbar = (Toolbar) findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
@@ -99,19 +99,20 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
-        } else {
-            getProfileData();
         }
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+        user = new User();
+
+        Bundle bundle = getIntent().getExtras();
+        user = (User) bundle.get("user");
+        imageLink = (Uri) bundle.get("imageLink");
+        Log.d("MADAPP", user.toString());
+        getProfileData();
     }
 
     @Override
@@ -124,15 +125,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d("MADAPP", "onBackPressed");
-        int fragments = getSupportFragmentManager().getBackStackEntryCount();
-        if (fragments == 1) {
-            finish();
-        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
@@ -174,8 +169,8 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
 
-        if (imageProfileUri != Uri.EMPTY)
-            outState.putString("imageUri", imageProfileUri.toString());
+        if (imageProfileLocalUri != Uri.EMPTY)
+            outState.putString("imageUri", imageProfileLocalUri.toString());
         else
             outState.putString("imageUri", "");
     }
@@ -186,20 +181,19 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new User();
         Log.d("MADAPP", "SavedInstanceState contains data");
-        mUser.name = savedInstanceState.getString("name");
-        mUser.lastName = savedInstanceState.getString("lastName");
-        mUser.phoneNumber = savedInstanceState.getString("phoneNumber");
-        mUser.email = savedInstanceState.getString("emailAddress");
-        mUser.description = savedInstanceState.getString("description");
-        mUser.road = savedInstanceState.getString("road");
-        mUser.houseNumber = savedInstanceState.getString("houseNumber");
-        mUser.doorPhone = savedInstanceState.getString("doorPhone");
-        mUser.postCode = savedInstanceState.getString("postCode");
-        mUser.city = savedInstanceState.getString("city");
-        mUser.imageUri = savedInstanceState.getString("imageUri");
-        updateFields(mUser);
+        user.name = savedInstanceState.getString("name");
+        user.lastName = savedInstanceState.getString("lastName");
+        user.phoneNumber = savedInstanceState.getString("phoneNumber");
+        user.email = savedInstanceState.getString("emailAddress");
+        user.description = savedInstanceState.getString("description");
+        user.road = savedInstanceState.getString("road");
+        user.houseNumber = savedInstanceState.getString("houseNumber");
+        user.doorPhone = savedInstanceState.getString("doorPhone");
+        user.postCode = savedInstanceState.getString("postCode");
+        user.city = savedInstanceState.getString("city");
+        user.imageUri = savedInstanceState.getString("imageUri");
+        updateFields(user);
     }
 
     @Override
@@ -208,19 +202,17 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (requestCode) {
             case CAMERA_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    Log.d("MADAPP", "imageProfileUri on ActivityResult: "+imageProfileUri.toString());
-                    if (imageProfileUri != null)
-                        Log.d("MADAPP", "i am here");
-                    imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                    imgProfile.setImageURI(imageProfileUri);
+                    Log.d("MADAPP", "imageProfileLocalUri on ActivityResult: " + imageProfileLocalUri.toString());
+                    imageProfileLocalUri = saveImage(imageProfileLocalUri, EditProfileActivity.this);
+                    imgProfile.setImageURI(imageProfileLocalUri);
                 }
                 break;
             case GALLERY_CODE:
                 if (resultCode == RESULT_OK && data != null) {
-                    imageProfileUri = data.getData();
-                    if (imageProfileUri != null) {
-                        imageProfileUri = saveImage(imageProfileUri, EditProfileActivity.this);
-                        imgProfile.setImageURI(imageProfileUri);
+                    imageProfileLocalUri = data.getData();
+                    if (imageProfileLocalUri != null) {
+                        imageProfileLocalUri = saveImage(imageProfileLocalUri, EditProfileActivity.this);
+                        imgProfile.setImageURI(imageProfileLocalUri);
                     } else {
                         imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
                     }
@@ -231,33 +223,24 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void getProfileData() {
-
-        ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>(){
-            @Override
-            public void onCallBack(User user) {
-                if(user!=null){
-                    mUser=new User(user);
-                    updateFields(mUser);
-                }
-
-            }
-        });
+        updateFields(user);
     }
 
     private void setProfileData() {
-        User user  = new User(name.getText().toString(),
-                lastName.getText().toString(),
-                phoneNumber.getText().toString(),
-                emailAddress.getText().toString(),
-                description.getText().toString(),
-                road.getText().toString(),
-                houseNumber.getText().toString(),
-                doorPhone.getText().toString(),
-                postCode.getText().toString(),
-                city.getText().toString(),
-                Uri.parse(imageProfileUri.toString()),
-                imageProfileUri.getLastPathSegment());
-        ConsumerDatabase.getInstance().putUserProfile(user);
+        user.name = name.getText().toString();
+        user.lastName = lastName.getText().toString();
+        user.phoneNumber = phoneNumber.getText().toString();
+        user.email =  emailAddress.getText().toString();
+        user.description = description.getText().toString();
+        user.road = road.getText().toString();
+        user.houseNumber = houseNumber.getText().toString();
+        user.doorPhone = doorPhone.getText().toString();
+        user.postCode = postCode.getText().toString();
+        user.city = city.getText().toString();
+        if (!imageProfileLocalUri.equals(Uri.EMPTY)) {
+            user.imageName = imageProfileLocalUri.getLastPathSegment();
+        }
+        ConsumerDatabase.getInstance().updateUserProfile(user, imageProfileLocalUri);
     }
 
     private File createImageFile() throws IOException {
@@ -297,13 +280,14 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
                         // Continue only if the File was successfully created
                         if (photoFile != null) {
-                            imageProfileUri = FileProvider.getUriForFile(EditProfileActivity.this,
+                            imageProfileLocalUri = FileProvider.getUriForFile(EditProfileActivity.this,
                                     BuildConfig.APPLICATION_ID,
                                     photoFile);
-                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileUri);
+                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, imageProfileLocalUri);
                             startActivityForResult(takePicture, CAMERA_CODE);
-
                         }
+                    } else {
+                        Log.d("MADAPP", "Camera cancel key..");
                     }
 
                 } else if (options[item].equals("Choose from Gallery")) {
@@ -330,30 +314,25 @@ public class EditProfileActivity extends AppCompatActivity {
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
 
-        imgProfile.setImageURI(Uri.parse(u.imageUri));
-
-        if(imgProfile.getDrawable() == null) {
-            ConsumerDatabase.getInstance().getImage(u.imageName,"/images/profile/", new firebaseCallback<Uri>() {
-                @Override
-                public void onCallBack(Uri item) {
-                    if (item != null) {
-                        if (item == Uri.EMPTY || item.toString().equals("")) {
-                            Log.d("MADAPP", "Setting user default image");
-                            imageProfileUri = Uri.EMPTY;
-
-                            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
-                        } else {
-                            Log.d("MADAPP", "Setting custom user image");
-                            //  imageProfileUri = item;
-                            // imgProfile.setImageURI(item);
-                            Picasso.get().load(item.toString()).into(imgProfile);
-                            // u.imageUri = saveImage(item,EditProfileActivity.this).toString();
-
-                        }
-                    }
-
+        if (u.imageName != null && !u.imageName.equals("")) {
+            if (imageProfileLocalUri == null || imageProfileLocalUri == Uri.EMPTY || imageProfileLocalUri.equals(Uri.EMPTY)) {
+                if(imageLink != null) {
+                    Picasso.get().load(imageLink.toString()).into(imgProfile);
+                    return;
                 }
-            });
+                ConsumerDatabase.getInstance().downloadImage(u.id, "profile", u.imageName, imageUri -> {
+                    if (imageUri == null || imageUri.equals(Uri.EMPTY)) {
+                        imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
+                        imageProfileLocalUri = Uri.EMPTY;
+                    } else {
+                        Picasso.get().load(imageUri).into(imgProfile);
+                    }
+                });
+            } else {
+                Picasso.get().load(imageProfileLocalUri.toString()).into(imgProfile);
+            }
+        } else {
+            imgProfile.setImageDrawable(getDrawable(R.drawable.user_default));
         }
 
     }

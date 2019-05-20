@@ -132,7 +132,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             }
         };
     ConsumerDatabase.getInstance().getCategories(set -> {
-            set.stream().forEach(n -> {
+            set.forEach(n -> {
                 Chip chip = new Chip(view.getContext());
                 chip.setText(n);
                 chip.setChipBackgroundColorResource(R.color.colorWhite);

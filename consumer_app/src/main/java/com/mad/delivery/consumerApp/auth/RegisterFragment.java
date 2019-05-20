@@ -155,12 +155,13 @@ public class RegisterFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("MADAPP", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseUser curUser = mAuth.getCurrentUser();
                             myRef = db.getReference();
                             User registered = new User();
                             registered.registrationDate = new DateTime().toString();
                             registered.email = emailAddress.getText().toString();
-                            myRef.child("users").child("customers").child(user.getUid()).child("register").setValue(registered);
+                            registered.id = curUser.getUid();
+                            myRef.child("users").child("customers").child(registered.id).setValue(registered);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("user", registered);
                             Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);

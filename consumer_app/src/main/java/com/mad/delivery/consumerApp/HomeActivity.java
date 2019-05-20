@@ -43,6 +43,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     DatabaseReference myRef;
+    int open = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,11 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         walletFragment = new WalletFragment();
         searchFragment = new SearchFragment();
         settingsFragment = new SettingsFragment();
-
+        if(getIntent().hasExtra("open")) {
+            open = getIntent().getIntExtra("open", 1);
+        } else {
+            Log.d("MADAPP", "NO open..");
+        }
         mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -91,7 +96,19 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
             }
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.nav_search);
+        switch(open) {
+            case 0:
+                navigation.setSelectedItemId(R.id.nav_menu);
+                break;
+            case 1:
+                navigation.setSelectedItemId(R.id.nav_search);
+                break;
+            case 2:
+                navigation.setSelectedItemId(R.id.nav_settings);
+                break;
+            default:
+                navigation.setSelectedItemId(R.id.nav_search);
+        }
     }
 
     @Override
