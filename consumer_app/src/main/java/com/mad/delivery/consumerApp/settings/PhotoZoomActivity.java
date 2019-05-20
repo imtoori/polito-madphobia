@@ -11,12 +11,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.auth.LoginActivity;
+import com.mad.delivery.resources.OnLogin;
+import com.mad.delivery.resources.User;
 
 public class PhotoZoomActivity extends AppCompatActivity  {
     final String DEBUG_TAG = "MAD-APP";
     private GestureDetector gestureDetector;
-
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     String className;
     Toolbar toolbar;
     ImageView imageProfile;
@@ -29,6 +36,7 @@ public class PhotoZoomActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mAuth = FirebaseAuth.getInstance();
 
 
         imageProfile = findViewById(R.id.image_profile_zoom);
@@ -50,6 +58,30 @@ public class PhotoZoomActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                getBack(className);
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
+        ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+            @Override
+            public void onSuccess(User user) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
             }
         });
     }

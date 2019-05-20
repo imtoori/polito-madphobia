@@ -141,7 +141,12 @@ public class Restaurant implements Serializable, Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(longitude);
         }
-        dest.writeByte((byte) (visible ? 1 : 0));
+        if (visible == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeSerializable(visible);
+        }
     }
 
     @Override

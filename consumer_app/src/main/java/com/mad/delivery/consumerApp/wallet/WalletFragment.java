@@ -26,6 +26,7 @@ import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.consumerApp.search.CategoriesFragment;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Product;
@@ -65,6 +66,30 @@ public class WalletFragment extends Fragment {
     public WalletFragment() {
         setHasOptionsMenu(true);
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+        }
+
+        ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+            @Override
+            public void onSuccess(User user) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

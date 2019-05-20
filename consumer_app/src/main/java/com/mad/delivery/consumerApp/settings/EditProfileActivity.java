@@ -23,12 +23,15 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.consumerApp.BuildConfig;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
@@ -65,6 +68,7 @@ public class EditProfileActivity extends AppCompatActivity {
     final int GALLERY_CODE = 1;
     final int CAMERA_CODE = 2;
     private Uri imageLink;
+    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +105,23 @@ public class EditProfileActivity extends AppCompatActivity {
             onRestoreInstanceState(savedInstanceState);
         }
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else {
+            ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+                @Override
+                public void onSuccess(User u) {
+                }
+
+                @Override
+                public void onFailure() {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+
         }
         user = new User();
 
@@ -173,6 +190,12 @@ public class EditProfileActivity extends AppCompatActivity {
             outState.putString("imageUri", imageProfileLocalUri.toString());
         else
             outState.putString("imageUri", "");
+    }
+
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+
     }
 
     @Override

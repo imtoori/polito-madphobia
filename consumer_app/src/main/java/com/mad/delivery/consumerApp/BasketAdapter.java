@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -18,11 +17,11 @@ public class BasketAdapter extends RecyclerView.Adapter<com.mad.delivery.consume
 
     private List<Product> products;
     private View view;
-    Basket.ClickListener listener;
+    BasketActivity.ClickListener listener;
 
 
 
-    public BasketAdapter(List<Product> items, Basket.ClickListener listener) {
+    public BasketAdapter(List<Product> items, BasketActivity.ClickListener listener) {
         products = items;
         this.listener = listener;
 

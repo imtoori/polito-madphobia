@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -37,6 +39,7 @@ import com.google.firebase.database.Transaction;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Product;
@@ -46,13 +49,13 @@ import com.mad.delivery.resources.User;
 import static java.security.AccessController.getContext;
 
 
-public class Basket extends AppCompatActivity implements TimePickerFragment.TimePickedListener {
+public class BasketActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener {
     Menu menu;
-    Consumer consumer;
+    User consumer;
     TextView subtot;
     TextView del_fee;
     TextView tot;
-    EditText address;
+    AutoCompleteTextView address;
     TextView time;
     String payment_met;
     RadioGroup rg;
@@ -68,7 +71,9 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     RadioButton credit;
     private FirebaseAuth mAuth;
     CardView cv_error;
-
+    ArrayAdapter<String> adapter;
+    List<String> myDeliveryAddresses;
+    FirebaseUser currentUser;
 
     interface ClickListener {
         void onItemClicked(Double position);
@@ -94,9 +99,19 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
         pm = findViewById(R.id.pm);
         credit = findViewById(R.id.credit);
         payment_met = "cash";
+        myDeliveryAddresses = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, myDeliveryAddresses);
+        address.setAdapter(adapter);
+        address.setThreshold(1);
+        address.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b) address.showDropDown();
+            }
+        });
+
 
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(RadioGroup rg, int checkedId) {
                 // find which radio button is selected
@@ -106,7 +121,6 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
                     payment_met = "cash";
                 }
             }
-
         });
 
 
@@ -222,11 +236,24 @@ public class Basket extends AppCompatActivity implements TimePickerFragment.Time
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
+        ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+            @Override
+            public void onSuccess(User user) {
+                // do nothing
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
