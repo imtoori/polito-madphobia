@@ -107,7 +107,7 @@
         <activity
             android:name=".settings.ProfileActivity"
             android:parentActivityName=".HomeActivity"></activity>
-        <activity android:name=".settings.ProfileActivity"></activity>
+
         <activity
             android:name=".settings.PasswordActivity"
             android:parentActivityName=".auth.LoginActivity" />
