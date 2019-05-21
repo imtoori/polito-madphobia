@@ -277,7 +277,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                             modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                             Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                             order = modifiedOrder;
-                            Database.getInstance().update(modifiedOrder);
+                            RestaurantDatabase.getInstance().update(modifiedOrder);
                         }
 
                         @Override

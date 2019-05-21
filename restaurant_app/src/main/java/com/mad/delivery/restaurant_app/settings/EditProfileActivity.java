@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.Nullable;
@@ -182,11 +183,13 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
                 if (checkConstraints()) {
+
                     try {
                         setProfileData();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(intent);
@@ -225,7 +228,7 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
-        mUser = new Restaurant();
+        restaurant = new Restaurant();
         Log.d("MADAPP", "SavedInstanceState contains data");
         restaurant.previewInfo.name = savedInstanceState.getString("name");
         restaurant.phoneNumber = savedInstanceState.getString("phoneNumber");
@@ -273,7 +276,7 @@ public class EditProfileActivity extends AppCompatActivity {
         updateFields(restaurant);
     }
 
-    private void setProfileData() {
+    private void setProfileData() throws IOException {
         if (restaurant.previewInfo == null) restaurant.previewInfo = new PreviewInfo();
         restaurant.previewInfo.name = name.getText().toString();
         restaurant.email = emailAddress.getText().toString();

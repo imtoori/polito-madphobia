@@ -156,7 +156,6 @@ public class ConsumerDatabase {
 
     public void putOrder(Order o,Context context,firebaseCallback<Boolean> firebaseCallback) throws IOException {
         o.clientId =mAuth.getUid();
-        o.restaurantId = resturantId;
         o.status =OrderStatus.pending;
 
         Geocoder geocoder = new Geocoder(context);
@@ -625,11 +624,11 @@ public class ConsumerDatabase {
     }
 
     public void getUserId(firebaseCallback<User> firebaseCallbackUser) {
+        Log.d("TAG:","mauth:  "+mAuth.getUid());
         myRef.child("users").child("customers").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("profile")) {
-                    dataSnapshot = dataSnapshot.child("profile");
+
                     User item = dataSnapshot.getValue(User.class);
                     if (item != null) {
 
@@ -643,7 +642,7 @@ public class ConsumerDatabase {
                         Log.d("DATABASE: ", "Elemento nullo");
 
                     }
-                }
+
             }
 
             @Override

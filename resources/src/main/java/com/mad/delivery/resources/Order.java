@@ -41,6 +41,7 @@ public class Order implements Parcelable {
         this.orderDate = new DateTime().toString();
         this.restaurant = r;
         this.orderFor = orderFor;
+        this.restaurantId =r.previewInfo.id;
         this.delivery=delivery;
         this.paymentMethod = paymentMethod;
 //        products.forEach(p->Log.d("MADD",p.name+" "+p.quantity + " " + p.price));
@@ -62,6 +63,7 @@ public class Order implements Parcelable {
         estimatedDelivery = other.estimatedDelivery;
         clientNotes = other.clientNotes;
         serverNotes = other.serverNotes;
+        this.restaurantId = other.restaurantId;
         this.delivery= other.delivery;
         bikerNotes = other.bikerNotes;
         paymentMethod = other.paymentMethod;
