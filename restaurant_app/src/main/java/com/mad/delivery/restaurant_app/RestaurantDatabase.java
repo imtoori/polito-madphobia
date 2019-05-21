@@ -38,9 +38,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 
 final public class RestaurantDatabase {
     private static RestaurantDatabase instance;
@@ -429,18 +431,23 @@ final public class RestaurantDatabase {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                TreeMap<String,Double> bikerIdDistance = new TreeMap<>();
                 List<String> bikerIds = new ArrayList<>();
-                if (dataSnapshot.exists()) {
+
+
+                if(dataSnapshot.exists()) {
 
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if (snapshot.getValue(Biker.class).status = true)
-                            bikerIds.add(snapshot.getKey());
+                        if(snapshot.getValue(Biker.class).status=true)
+                        bikerIds.add(snapshot.getKey());
+                        bikerIdDistance.put(snapshot.getKey(),Haversine.distance(restaurant.latitude,restaurant.longitude,snapshot.getValue(Biker.class).latitude,snapshot.getValue(Biker.class).longitude));
 
 
                     }
                 }
-                firebaseCallback.onCallbackList(bikerIds);
+
+                firebaseCallback.onCallback(bikerIdDistance.firstKey());
             }
 
 

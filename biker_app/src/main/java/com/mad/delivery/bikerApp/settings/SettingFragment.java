@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BikerDatabase;
+import com.mad.delivery.bikerApp.Database;
+import com.mad.delivery.bikerApp.HomeActivity;
+import com.mad.delivery.bikerApp.MapsActivity;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.auth.OnLogin;
@@ -24,7 +27,7 @@ public class SettingFragment extends Fragment {
     public static final String SETTING_FRAGMENT_TAG = "settings_fragment";
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    private CardView cvProfile, cvPrivacy, cvLogout, cvGeneral;
+    private CardView cvProfile, cvPrivacy, cvLogout,cvMaps,cvGeneral;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -64,6 +67,7 @@ public class SettingFragment extends Fragment {
         cvPrivacy = view.findViewById(R.id.cv_privacy);
         //cvLanguage = view.findViewById(R.id.cv_language);
         cvLogout = view.findViewById(R.id.cv_logout);
+        cvMaps = view.findViewById(R.id.cv_maps);
         cvProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +101,11 @@ public class SettingFragment extends Fragment {
 
         });
 
+        cvMaps.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
         return view;
     }
 

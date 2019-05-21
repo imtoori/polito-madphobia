@@ -269,22 +269,19 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                     RestaurantDatabase.getInstance().getBikerId(new FireBaseCallBack<String>() {
                         @Override
                         public void onCallback(String user) {
+
+                            modifiedOrder.bikerId = user;
+
+                            modifiedOrder.restaurantId =order.restaurantId;
+                            myRef.child("orders").child(modifiedOrder.id).child("bikerId").setValue(modifiedOrder.bikerId);
+                            modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
+                            Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
+                            order = modifiedOrder;
+                            Database.getInstance().update(modifiedOrder);
                         }
 
                         @Override
                         public void onCallbackList(List<String> list) {
-                            if(!list.isEmpty()) {
-                                int n = rand.nextInt(list.size());
-                                Log.d("MADDAPP", "item: " + list.get(n) + " n: " + n);
-                                modifiedOrder.bikerId = list.get(n);
-
-                                 modifiedOrder.restaurantId =order.restaurantId;
-                                myRef.child("orders").child(modifiedOrder.id).child("bikerId").setValue(modifiedOrder.bikerId);
-                                modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
-                                Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
-                                order = modifiedOrder;
-                                RestaurantDatabase.getInstance().update(modifiedOrder);
-                            }
 
                         }
                     });

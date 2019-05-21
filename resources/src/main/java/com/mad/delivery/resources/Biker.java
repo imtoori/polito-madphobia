@@ -17,6 +17,8 @@ public class Biker implements Serializable {
     public String imageName;
     public String id;
     public Boolean status;
+    public Double latitude;
+    public Double longitude;
     public Boolean visible;
 
     public Biker(String name, String lastname, String phoneNumber, String emailAddress, String description) {
@@ -29,6 +31,8 @@ public class Biker implements Serializable {
         this.imageName  = "";
         this.status = false;
         this.visible = false;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     public Biker() {
@@ -45,6 +49,8 @@ public class Biker implements Serializable {
         this.imageName = u.imageName;
         this.status = u.status;
         this.visible = u.visible;
+        this.latitude = u.latitude;
+        this.longitude = u.latitude;
     }
 
     public String getName() {
@@ -160,5 +166,21 @@ public class Biker implements Serializable {
         if(email == null || email.equals("")) return false;
 
         return true;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

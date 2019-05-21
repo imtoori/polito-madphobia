@@ -1,9 +1,12 @@
 package com.mad.delivery.resources;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.Serializable;
