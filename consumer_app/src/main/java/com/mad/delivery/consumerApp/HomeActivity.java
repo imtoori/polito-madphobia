@@ -140,7 +140,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     @Override
     public void openOrder() {
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
-
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

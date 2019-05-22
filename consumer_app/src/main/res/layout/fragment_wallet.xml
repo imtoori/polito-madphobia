@@ -55,8 +55,11 @@ tools:context=".wallet.WalletFragment">
         android:id="@+id/cv_credit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
+        android:layout_marginStart="8dp"
         android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,26 +81,31 @@ tools:context=".wallet.WalletFragment">
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/Credit"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/bigTitle" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/Total"
-                android:textSize="@dimen/description" />
-            <TextView
-                android:id="@+id/total_credit"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="@string/null_value"
-                android:textSize="@dimen/description" />
+                android:layout_marginTop="4dp">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Total"
+                    android:textSize="@dimen/normalText"
+                    android:textColor="@color/colorText"/>
+
+                <TextView
+                    android:id="@+id/total_credit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/null_value"
+                    android:textSize="@dimen/normalText" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,7 +116,7 @@ tools:context=".wallet.WalletFragment">
                 android:textSize="@dimen/description" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <EditText
@@ -117,8 +125,9 @@ tools:context=".wallet.WalletFragment">
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
+
                     android:hint="@string/enter_code"
-                    android:textSize="@dimen/description"/>
+                    android:textSize="@dimen/normalText" />
 
                 <ImageButton
                     android:id="@+id/done_code"
@@ -128,9 +137,10 @@ tools:context=".wallet.WalletFragment">
                     android:layout_margin="6dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
+                    android:background="@drawable/card_view_border"
                     android:clickable="true"
-                    android:background="@color/colorAccent"
                     android:contentDescription="@string/photo_toolbar"
+                    android:elevation="4dp"
                     app:srcCompat="@drawable/ic_done" />
 
             </LinearLayout>
@@ -146,7 +156,7 @@ tools:context=".wallet.WalletFragment">
         android:layout_marginEnd="16dp"
         android:visibility="gone"
         android:text="@string/nav_orders"
-        android:textSize="@dimen/normalText"
+        android:textSize="@dimen/subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_credit" />

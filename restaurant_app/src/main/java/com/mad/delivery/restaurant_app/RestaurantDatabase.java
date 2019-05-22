@@ -276,7 +276,7 @@ final public class RestaurantDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if (o.status.toString().equals("preparing")) {
+                        if (o.status.toString().equals("preparing") || o.status.toString().equals("ready") ) {
                             o.id = issue.getKey();
                             preparing.add(o);
                         }
@@ -308,7 +308,7 @@ final public class RestaurantDatabase {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
 
-                        if (o.status.toString().equals("completed")) {
+                        if (o.status.toString().equals("completed") || o.status.toString().equals("canceled") ) {
                             o.id = issue.getKey();
                             completed.add(o);
                         }
