@@ -61,13 +61,7 @@ public class MapViewFragment extends Fragment {
         listPoints = new ArrayList<>();
         r = getArguments().getParcelable("restaurant");
         c = getArguments().getParcelable("client");
-        BikerDatabase.getInstance().getBikerPosition(new OnFirebaseData<LatLng>() {
-            @Override
-            public void onReceived(LatLng item) {
 
-                b=item;
-            }
-        });
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -87,13 +81,6 @@ public class MapViewFragment extends Fragment {
                 // For showing a move to my location button
                //mMap.setMyLocationEnabled(true);
 
-                // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(b.latitude, b.longitude);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 mMap.getUiSettings().setZoomControlsEnabled(true);
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -116,9 +103,34 @@ public class MapViewFragment extends Fragment {
                 String url = getRequestUrl(r, c);
                 TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
                 taskRequestDirections.execute(url);
-                String url2 = getRequestUrl(b, r);
                 TaskRequestDirections taskRequestDirections2 = new TaskRequestDirections();
-                taskRequestDirections2.execute(url2);
+                MarkerOptions markerOptionsB = new MarkerOptions();
+
+                BikerDatabase.getInstance().getBikerPosition(new OnFirebaseData<LatLng>() {
+                    @Override
+                    public void onReceived(LatLng item) {
+
+                        b=item;
+                        markerOptionsB.position(b).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+
+                        String url2 = getRequestUrl(b, r);
+                        mMap.clear();
+                        mMap.addMarker(markerOptionsC);
+                        mMap.addMarker(markerOptionsR);
+                        mMap.addMarker(markerOptionsB);
+                        new TaskRequestDirections().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,url2);
+                        new TaskRequestDirections().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,url);
+                        // For dropping a marker at a point on the Map
+
+
+                        // For zooming automatically to the location of the marker
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(b).zoom(12).build();
+
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+
+                    }
+                });
 
             }
         });
