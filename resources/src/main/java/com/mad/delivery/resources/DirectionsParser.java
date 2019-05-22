@@ -1,4 +1,4 @@
-package com.mad.delivery.bikerApp;
+package com.mad.delivery.resources;
 
 import com.google.android.gms.maps.model.LatLng;
 

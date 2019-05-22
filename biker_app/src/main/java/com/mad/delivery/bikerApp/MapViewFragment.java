@@ -2,7 +2,6 @@ package com.mad.delivery.bikerApp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -27,9 +26,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.DirectionsParser;
 import com.mad.delivery.resources.OnFirebaseData;
-import com.mad.delivery.resources.Restaurant;
 
 import org.json.JSONException;
 import org.json.JSONObject;

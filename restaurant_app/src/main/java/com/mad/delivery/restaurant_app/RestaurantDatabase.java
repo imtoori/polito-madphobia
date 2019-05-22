@@ -464,30 +464,48 @@ final public class RestaurantDatabase {
         void onCompleted(List<String> categories);
 
     }
+    public void getBikersClosest(FireBaseCallBack<TreeMap<Double,Biker>> firebaseCallback) {
+        myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                TreeMap<Double,Biker> bikerIdDistance = new TreeMap<>();
+                if(dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : iterator) {
+                        if(snapshot.getValue(Biker.class).status=true) {
+                            Log.d("TAG:", restaurant.toString());
+                            bikerIdDistance.put(Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude),snapshot.getValue(Biker.class));
+                        }
+                    }
+                }
+                firebaseCallback.onCallback(bikerIdDistance);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("DATABASE: ", "Dato cancellato");
+
+            }
+        });
+    }
 
 
     public void getBikerId(FireBaseCallBack<String> firebaseCallback) {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                TreeMap<String,Double> bikerIdDistance = new TreeMap<>();
+                TreeMap<Double,String> bikerIdDistance = new TreeMap<>();
                 List<String> bikerIds = new ArrayList<>();
-
-
                 if(dataSnapshot.exists()) {
-
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
                         if(snapshot.getValue(Biker.class).status=true)
                         bikerIds.add(snapshot.getKey());
                         Log.d("TAG:",restaurant.toString());
-                        bikerIdDistance.put(snapshot.getKey(),Haversine.distance(restaurant.latitude,restaurant.longitude,snapshot.getValue(Biker.class).latitude,snapshot.getValue(Biker.class).longitude));
-
-
+                        bikerIdDistance.put(Haversine.distance(restaurant.latitude,restaurant.longitude,snapshot.getValue(Biker.class).latitude,snapshot.getValue(Biker.class).longitude),snapshot.getKey());
                     }
                 }
 
-                firebaseCallback.onCallback(bikerIdDistance.firstKey());
+                firebaseCallback.onCallback(bikerIdDistance.firstEntry().getValue());
             }
 
 
