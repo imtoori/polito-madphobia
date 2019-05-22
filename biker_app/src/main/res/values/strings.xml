@@ -181,4 +181,7 @@
     <string name="Orders">Orders:</string>
     <string name="Status">Status</string>
     <string name="nav_statistics">My Page</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="maps"> Posizione</string>
 </resources>

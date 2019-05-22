@@ -38,9 +38,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 
 final public class RestaurantDatabase {
     private static RestaurantDatabase instance;
@@ -52,6 +55,7 @@ final public class RestaurantDatabase {
     private DatabaseReference myRef;
     private StorageReference storageRef;
     private FirebaseAuth mAuth;
+    private static Restaurant restaurant;
 
     public static RestaurantDatabase getInstance() {
         if (instance == null) {
@@ -70,6 +74,43 @@ final public class RestaurantDatabase {
         ordersRef = database.getReference("orders");
         storageRef = FirebaseStorage.getInstance().getReference();
         categoriesRef = database.getReference().child("categories");
+
+        getRestaurantProfile(new FireBaseCallBack<Restaurant>() {
+            @Override
+            public void onCallback(Restaurant user) {
+                restaurant=user;
+            }
+
+            @Override
+            public void onCallbackList(List<Restaurant> list) {
+
+            }
+        });
+    }
+
+    private void getRestaurantProfile(FireBaseCallBack<Restaurant> restaurantFireBaseCallBack) {
+        restaurantRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                    Restaurant item = dataSnapshot.getValue(Restaurant.class);
+                    if (item != null) {
+                        restaurantFireBaseCallBack.onCallback(item);
+                    } else {
+                        //   userStringOnDataFetched.onError("data not found");
+                        Log.d("DATABASE: ", "Elemento nullo");
+                    }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("DATABASE: ", "SONO ENTRATO");
+
+            }
+        });
+
     }
 
     public void reset() {
@@ -429,18 +470,24 @@ final public class RestaurantDatabase {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                TreeMap<String,Double> bikerIdDistance = new TreeMap<>();
                 List<String> bikerIds = new ArrayList<>();
-                if (dataSnapshot.exists()) {
+
+
+                if(dataSnapshot.exists()) {
 
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if (snapshot.getValue(Biker.class).status = true)
-                            bikerIds.add(snapshot.getKey());
+                        if(snapshot.getValue(Biker.class).status=true)
+                        bikerIds.add(snapshot.getKey());
+                        Log.d("TAG:",restaurant.toString());
+                        bikerIdDistance.put(snapshot.getKey(),Haversine.distance(restaurant.latitude,restaurant.longitude,snapshot.getValue(Biker.class).latitude,snapshot.getValue(Biker.class).longitude));
 
 
                     }
                 }
-                firebaseCallback.onCallbackList(bikerIds);
+
+                firebaseCallback.onCallback(bikerIdDistance.firstKey());
             }
 
 

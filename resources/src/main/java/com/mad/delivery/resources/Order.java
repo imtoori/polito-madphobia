@@ -29,6 +29,8 @@ public class Order implements Parcelable {
     public String bikerId;
     public String clientId;
     public String delivery;
+    public Double latitude;
+    public Double longitude;
 
     public Order(){}
 
@@ -39,12 +41,15 @@ public class Order implements Parcelable {
         this.orderDate = new DateTime().toString();
         this.restaurant = r;
         this.orderFor = orderFor;
+        this.restaurantId =r.previewInfo.id;
         this.delivery=delivery;
         this.paymentMethod = paymentMethod;
 //        products.forEach(p->Log.d("MADD",p.name+" "+p.quantity + " " + p.price));
         this.totalPrice=0.0;
         products.forEach(p->this.totalPrice+=p.price*p.quantity);
         totalPrice+=restaurant.previewInfo.deliveryCost;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
     }
 
     public Order(Order other) {
@@ -58,10 +63,14 @@ public class Order implements Parcelable {
         estimatedDelivery = other.estimatedDelivery;
         clientNotes = other.clientNotes;
         serverNotes = other.serverNotes;
+        this.restaurantId = other.restaurantId;
         this.delivery= other.delivery;
         bikerNotes = other.bikerNotes;
         paymentMethod = other.paymentMethod;
         this.totalPrice = other.totalPrice;
+        this.latitude = other.latitude;
+        this.longitude = other.latitude;
+
     }
 
 
@@ -87,6 +96,16 @@ public class Order implements Parcelable {
         restaurantId = in.readString();
         bikerId = in.readString();
         clientId = in.readString();
+        if (in.readByte() == 0) {
+            latitude = null;
+        } else {
+            latitude = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            longitude = null;
+        } else {
+            longitude = in.readDouble();
+        }
     }
 
     @Override
@@ -113,6 +132,18 @@ public class Order implements Parcelable {
         dest.writeString(restaurantId);
         dest.writeString(bikerId);
         dest.writeString(clientId);
+        if (latitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(latitude);
+        }
+        if (longitude == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(longitude);
+        }
     }
 
     @Override
@@ -305,6 +336,22 @@ public class Order implements Parcelable {
 
     public static Creator<Order> getCREATOR() {
         return CREATOR;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     @Override

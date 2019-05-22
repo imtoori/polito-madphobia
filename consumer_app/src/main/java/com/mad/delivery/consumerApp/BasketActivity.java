@@ -20,6 +20,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import androidx.appcompat.widget.Toolbar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,7 +91,7 @@ public class BasketActivity extends AppCompatActivity implements TimePickerFragm
         cv_error=findViewById(R.id.cardView_error);
         subtot = findViewById(R.id.subtotal_price);
         del_fee = findViewById(R.id.delivery_fee);
-        tot = findViewById(R.id.total);
+        tot = findViewById(R.id.total); ///TODO Spacchettare address in via numero e città
         address = findViewById(R.id.address);
         time = findViewById(R.id.time);
         payment = findViewById(R.id.button);
@@ -165,15 +166,16 @@ public class BasketActivity extends AppCompatActivity implements TimePickerFragm
                 if (checkConstraints()) {
                     ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
                         @Override
-                        public void onCallBack(User item) {
+                        public void onCallBack(User item) throws IOException {
+                            Log.d("TAG: ",item +" "+item.lastName);
                             if (item != null && item.lastName != null) {
                                 order = new Order(item, ConsumerDatabase.getInstance().getRestaurantInLocal(), products, "", payment_met, address.getText().toString());
                                 order.orderDate = new DateTime().toString();
                                 order.orderFor = datetime.toString();
 
                                 order.setClientNotes(notes.getText().toString());
-                                if (order.totalPrice <= item.credit && payment_met.equals("credit")) {
-                                    ConsumerDatabase.getInstance().putOrder(order, new firebaseCallback<Boolean>() {
+                                if (payment_met.equals("credit") &&  order.totalPrice <= item.credit ) {
+                                    ConsumerDatabase.getInstance().putOrder(order, BasketActivity.this,new firebaseCallback<Boolean>() {
                                                 @Override
                                                 public void onCallBack(Boolean item) {
                                                     if(item) {
@@ -192,7 +194,7 @@ public class BasketActivity extends AppCompatActivity implements TimePickerFragm
 
 
                                 } else if (payment_met.equals("cash")) {
-                                    ConsumerDatabase.getInstance().putOrder(order, new firebaseCallback<Boolean>() {
+                                    ConsumerDatabase.getInstance().putOrder(order,BasketActivity.this, new firebaseCallback<Boolean>() {
                                         @Override
                                         public void onCallBack(Boolean item) {
                                             if(item) {

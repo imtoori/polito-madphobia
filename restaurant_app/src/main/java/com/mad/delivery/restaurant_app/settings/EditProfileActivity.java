@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +42,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.Nullable;
@@ -180,7 +183,13 @@ public class EditProfileActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.edit_profile_done:
                 if (checkConstraints()) {
-                    setProfileData();
+
+                    try {
+                        setProfileData();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     Toast.makeText(this, "Your profile has been saved", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(intent);
@@ -219,6 +228,7 @@ public class EditProfileActivity extends AppCompatActivity {
         //only if there is a saved state to restore,
         //so you do not need to check whether the Bundle is null:
         super.onRestoreInstanceState(savedInstanceState);
+        restaurant = new Restaurant();
         Log.d("MADAPP", "SavedInstanceState contains data");
         restaurant.previewInfo.name = savedInstanceState.getString("name");
         restaurant.phoneNumber = savedInstanceState.getString("phoneNumber");
@@ -266,7 +276,7 @@ public class EditProfileActivity extends AppCompatActivity {
         updateFields(restaurant);
     }
 
-    private void setProfileData() {
+    private void setProfileData() throws IOException {
         if (restaurant.previewInfo == null) restaurant.previewInfo = new PreviewInfo();
         restaurant.previewInfo.name = name.getText().toString();
         restaurant.email = emailAddress.getText().toString();
@@ -285,6 +295,21 @@ public class EditProfileActivity extends AppCompatActivity {
         restaurant.previewInfo.deliveryCost = Double.valueOf(deliveryCost.getText().toString());
         restaurant.previewInfo.minOrderCost = Double.valueOf(minOrder.getText().toString());
         if (restaurant.categories == null) restaurant.categories = new HashMap<>();
+        //Transform address in latitude and longitude
+        Geocoder geocoder = new Geocoder(this);
+        List<Address> addresses;
+        addresses = geocoder.getFromLocationName(road.getText().toString() + houseNumber.getText().toString() + city.getText().toString(), 1);
+        if(addresses.size() > 0) {
+            Log.d("Address1: ",road.getText().toString() + houseNumber.getText().toString() + city.getText().toString());
+
+            Double latitude= addresses.get(0).getLatitude();
+            Double longitude= addresses.get(0).getLongitude();
+            Log.d("Address2: ",latitude.toString()+" "+longitude.toString());
+
+            restaurant.latitude=latitude;
+            restaurant.longitude=longitude;
+        }
+
         RestaurantDatabase.getInstance().updateRestaurantProfile(restaurant, imageProfileLocalUri);
         RestaurantDatabase.getInstance().putRestaurantIntoCategory(restaurant.previewInfo.id, restaurant.categories.keySet());
     }

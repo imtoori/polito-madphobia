@@ -1,9 +1,12 @@
 package com.mad.delivery.resources;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -93,25 +96,19 @@ public class Restaurant implements Serializable, Parcelable {
         postCode = in.readString();
         city = in.readString();
         openingHours = in.readString();
-        categories = new HashMap<>();
-        in.readMap(categories,Boolean.class.getClassLoader());
-        menu = new HashMap<>();
-        in.readMap(menu, MenuItemRest.class.getClassLoader());
-        offers = new HashMap<>();
-        in.readMap(offers, MenuOffer.class.getClassLoader());
         token = in.readString();
-        if(in.readByte() == 0) {
-            latitude = 0.0;
+        if (in.readByte() == 0) {
+            latitude = null;
         } else {
             latitude = in.readDouble();
         }
-        if(in.readByte() == 0) {
-            longitude = 0.0;
+        if (in.readByte() == 0) {
+            longitude = null;
         } else {
             longitude = in.readDouble();
         }
-         visible = in.readByte() != 0;
-
+        byte tmpVisible = in.readByte();
+        visible = tmpVisible == 0 ? null : tmpVisible == 1;
     }
 
     @Override
@@ -125,9 +122,6 @@ public class Restaurant implements Serializable, Parcelable {
         dest.writeString(postCode);
         dest.writeString(city);
         dest.writeString(openingHours);
-        dest.writeMap(categories);
-        dest.writeMap(menu);
-        dest.writeMap(offers);
         dest.writeString(token);
         if (latitude == null) {
             dest.writeByte((byte) 0);
@@ -141,12 +135,7 @@ public class Restaurant implements Serializable, Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(longitude);
         }
-        if (visible == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeSerializable(visible);
-        }
+        dest.writeByte((byte) (visible == null ? 0 : visible ? 1 : 2));
     }
 
     @Override

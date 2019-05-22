@@ -1,7 +1,12 @@
 package com.mad.delivery.consumerApp;
 
+import android.content.Intent;
+import android.hardware.usb.UsbRequest;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.util.Log;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +38,7 @@ import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 import com.mad.delivery.resources.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -144,10 +150,25 @@ public class ConsumerDatabase {
         return itemSelected;
     }
 
-    public void putOrder(Order o,firebaseCallback<Boolean> firebaseCallback){
+    public void putOrder(Order o,Context context,firebaseCallback<Boolean> firebaseCallback) throws IOException {
         o.clientId =mAuth.getUid();
-        o.restaurantId = resturantId;
         o.status =OrderStatus.pending;
+
+        Geocoder geocoder = new Geocoder(context);
+        List<Address> addresses;
+        addresses = geocoder.getFromLocationName(o.delivery.toString(), 1);
+        if(addresses.size() > 0) {
+            Double latitude= addresses.get(0).getLatitude();
+            Double longitude= addresses.get(0).getLongitude();
+            Log.d("Address2: ",latitude.toString()+" "+longitude.toString());
+
+            o.latitude=latitude;
+            o.longitude=longitude;
+        }
+
+
+
+
        flag=true;
         myRef.child("users").child("restaurants").child(o.restaurantId).runTransaction(new Transaction.Handler() {
 
@@ -161,7 +182,7 @@ public class ConsumerDatabase {
 
                     getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
                         @Override
-                        public void onCallBack(List<MenuItemRest> item) {
+                        public void onCallBack(List<MenuItemRest> item) throws IOException {
                             item.forEach(i->{
                                 o.products.forEach(p->{
                                     Log.d("TRANS", "id menuItems "+i.id +" id prodotto "+p.idItem +" quantità prodotto: "+p.quantity +" quantità items "+ i.availability );
@@ -212,7 +233,11 @@ public class ConsumerDatabase {
                 Restaurant rest = dataSnapshot.getValue(Restaurant.class);
                 Log.d("MADAPP", "inside db: " + rest.toString());
                 if(rest != null) {
-                    firebaseCallback.onCallBack(rest);
+                    try {
+                        firebaseCallback.onCallBack(rest);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Log.d("MADAPP", "restaurant is null");
                 }
@@ -395,7 +420,11 @@ public class ConsumerDatabase {
 
                     }
                 }
-                firebaseCallback.onCallBack(MenuItems);
+                try {
+                    firebaseCallback.onCallBack(MenuItems);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
 
@@ -425,8 +454,12 @@ public class ConsumerDatabase {
 
                     }
                 }
-                firebaseCallback.onCallBack(bikerIds);
+                try {
+                    firebaseCallback.onCallBack(bikerIds);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
 
 
             @Override
@@ -449,14 +482,22 @@ public class ConsumerDatabase {
                     // Got the download URL for 'users/me/profile.png'
                     Log.d("DOWNLOAD",uri.toString());
 
-                    firebaseCallback.onCallBack(uri);
+                    try {
+                        firebaseCallback.onCallBack(uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle any errors
-                    firebaseCallback.onCallBack(Uri.EMPTY);
+                    try {
+                        firebaseCallback.onCallBack(Uri.EMPTY);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
@@ -479,7 +520,11 @@ public class ConsumerDatabase {
                         }
                     }
                 }
-                firebaseCallback.onCallBack(completed);
+                try {
+                    firebaseCallback.onCallBack(completed);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -506,7 +551,11 @@ public class ConsumerDatabase {
 
                     }
                 }
-                firebaseCallback.onCallBack(completed);
+                try {
+                    firebaseCallback.onCallBack(completed);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -526,7 +575,11 @@ public class ConsumerDatabase {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         CreditCode o = issue.getValue(CreditCode.class);
                         if(o.code.equals(code)){
-                            firebaseCallback.onCallBack(o);
+                            try {
+                                firebaseCallback.onCallBack(o);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
                         }
                     }
@@ -567,21 +620,25 @@ public class ConsumerDatabase {
     }
 
     public void getUserId(firebaseCallback<User> firebaseCallbackUser) {
+        Log.d("TAG:","mauth:  "+mAuth.getUid());
         myRef.child("users").child("customers").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("profile")) {
-                    dataSnapshot = dataSnapshot.child("profile");
+
                     User item = dataSnapshot.getValue(User.class);
                     if (item != null) {
 
-                        firebaseCallbackUser.onCallBack(item);
+                        try {
+                            firebaseCallbackUser.onCallBack(item);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         //   userStringOnDataFetched.onError("data not found");
                         Log.d("DATABASE: ", "Elemento nullo");
 
                     }
-                }
+
             }
 
             @Override
@@ -603,10 +660,18 @@ public class ConsumerDatabase {
                if (dataSnapshot.hasChild("profile")) {
                    Double credit = dataSnapshot.child("profile").child("credit").getValue(Double.class);
                    setValueCredit(credit+i);
-                   firebaseCallback.onCallBack(true);
+                   try {
+                       firebaseCallback.onCallBack(true);
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
                }
                else{
-                   firebaseCallback.onCallBack(false);
+                   try {
+                       firebaseCallback.onCallBack(false);
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
                }
            }
 
