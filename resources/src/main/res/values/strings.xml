@@ -251,4 +251,5 @@
     <string name="back">Back</string>
     <string name="dialog_shopping_cart_preview">My Order Preview</string>
     <string name="dialog_shopping_cart_empty">Your shopping cart is empty.</string>
+    <string name="user_map_info">Map</string>
 </resources>

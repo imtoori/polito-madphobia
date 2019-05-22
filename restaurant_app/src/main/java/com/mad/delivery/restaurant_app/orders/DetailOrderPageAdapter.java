@@ -26,25 +26,27 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch(position) {
-            case 1:
-                MapBikersViewFragment uiFrag = new MapBikersViewFragment();
-                Bundle bundle = new Bundle();
-                LatLng r = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
-                bundle.putParcelable("restaurant", r);
-                uiFrag.setArguments(bundle);
-                return uiFrag;
-            /*case 1:
-                UserInformationFragment uiFrag = new UserInformationFragment();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("client", order.client);
-                uiFrag.setArguments(bundle);
-                return uiFrag;*/
             case 0:
                 DetailOrderFragment doFrag = new DetailOrderFragment();
                 Bundle doBundle = new Bundle();
                 doBundle.putParcelable("order", order);
                 doFrag.setArguments(doBundle);
                 return doFrag;
+            case 1:
+                UserInformationFragment uiFrag = new UserInformationFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("client", order.client);
+                uiFrag.setArguments(bundle);
+                return uiFrag;
+            case 2:
+                MapBikersViewFragment mapFrag = new MapBikersViewFragment();
+                Bundle bnd = new Bundle();
+                LatLng r = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
+                bnd.putParcelable("restaurant", r);
+                mapFrag.setArguments(bnd);
+                return mapFrag;
+
+
             default:
                 return null;
         }
@@ -54,10 +56,12 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
         switch(position) {
-            case 1:
-                return context.getString(R.string.user_info_order);
             case 0:
                 return context.getString(R.string.detail_order_info);
+            case 1:
+                return context.getString(R.string.user_info_order);
+            case 2:
+                return context.getString(R.string.user_map_info);
             default:
                 return null;
         }
@@ -65,7 +69,7 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }
 
