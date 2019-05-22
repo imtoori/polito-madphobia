@@ -1,7 +1,5 @@
 package com.mad.delivery.consumerApp;
 
-import android.content.Intent;
-import android.hardware.usb.UsbRequest;
 import android.net.Uri;
 import android.util.Log;
 
@@ -22,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.OnFirebaseData;
@@ -35,15 +32,12 @@ import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 import com.mad.delivery.resources.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ConsumerDatabase {
     public static ConsumerDatabase instance = new ConsumerDatabase();
@@ -170,8 +164,8 @@ public class ConsumerDatabase {
                         public void onCallBack(List<MenuItemRest> item) {
                             item.forEach(i->{
                                 o.products.forEach(p->{
-                                    Log.d("TRANS", "id menuItems "+i.id +" id prodotto "+p.idMenuItems +" quantità prodotto: "+p.quantity +" quantità items "+ i.availability );
-                                    if(i.id.equals(p.idMenuItems)) {
+                                    Log.d("TRANS", "id menuItems "+i.id +" id prodotto "+p.idItem +" quantità prodotto: "+p.quantity +" quantità items "+ i.availability );
+                                    if(i.id.equals(p.idItem)) {
                                         if (p.quantity > i.availability)
                                             flag = false;
                                         else
@@ -392,8 +386,8 @@ public class ConsumerDatabase {
                     for (DataSnapshot snapshot : iterator) {
                         MenuItemRest m = snapshot.getValue(MenuItemRest.class);
                         o.products.forEach(p->{
-                            Log.d("TRANS", "id prodotto: "+p.idMenuItems+" id item "+m.id);
-                            if(p.idMenuItems.equals(m.id))
+                            Log.d("TRANS", "id prodotto: "+p.idItem +" id item "+m.id);
+                            if(p.idItem.equals(m.id))
                                 MenuItems.add(m);
                         });
 

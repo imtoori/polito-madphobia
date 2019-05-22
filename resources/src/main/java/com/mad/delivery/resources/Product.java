@@ -3,19 +3,30 @@ package com.mad.delivery.resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Product implements Parcelable {
+import java.io.Serializable;
+
+public class Product implements Serializable, Parcelable {
     public String name;
     public Integer quantity;
     public double price;
-    public String idMenuItems;
+    public String idItem;
 
-    public Product(String name, Integer quantity, double price,String idMenuItems) {
+    public Product(String name, Integer quantity, double price,String idItem) {
 
         this.name = name;
         this.quantity = quantity;
         this.price = price;
-        this.idMenuItems = idMenuItems;
+        this.idItem = idItem;
     }
+
+    public Product(MenuItemRest item, Integer quantity) {
+        this.name = item.name;
+        this.idItem = item.id;
+        this.quantity = quantity;
+        this.price = (Double) item.price * quantity;
+    }
+
+
 
     public Product() {}
 
@@ -23,7 +34,7 @@ public class Product implements Parcelable {
         name = in.readString();
         quantity = in.readInt();
         price = in.readDouble();
-        idMenuItems = in.readString();
+        idItem = in.readString();
     }
 
     @Override
@@ -31,7 +42,7 @@ public class Product implements Parcelable {
         dest.writeString(name);
         dest.writeInt(quantity);
         dest.writeDouble(price);
-        dest.writeString(idMenuItems);
+        dest.writeString(idItem);
     }
 
     @Override
@@ -78,7 +89,15 @@ public class Product implements Parcelable {
     public static Creator<Product> getCREATOR() {
         return CREATOR;
     }
+    public void addProduct(MenuItemRest item, Integer q) {
+        this.quantity += q;
+        this.price += item.price * q;
+    }
 
+    public void delProduct(MenuItemRest item, Integer q) {
+        this.quantity -= q;
+        this.price -= item.price * q;
+    }
     @Override
     public String toString() {
         return "Product{" +

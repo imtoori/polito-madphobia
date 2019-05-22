@@ -23,12 +23,21 @@ import java.util.Map;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHolder> {
-    private final int MAX_LIMIT_ORDER = 100;
+    private final int MAX_LIMIT_ORDER = 99;
     private List<MenuItemRest> items;
     private View view;
     private HashMap<MenuItemRest,Integer> itemsSelected;
-    public MenuItemAdapter(List<MenuItemRest> items) {
+    private MenuItemAdapter.OnItemSelected mListener;
+
+    interface OnItemSelected {
+        void itemAdded(MenuItemRest item);
+        void itemRemoved(MenuItemRest item);
+    }
+
+
+    public MenuItemAdapter(List<MenuItemRest> items, MenuItemAdapter.OnItemSelected listener) {
         this.items = items;
+        this.mListener = listener;
     }
 
     public HashMap<MenuItemRest,Integer> getItemSelected(){
@@ -80,7 +89,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
                     Integer qty = Integer.valueOf(etQuantity.getText().toString());
                     if(qty < MAX_LIMIT_ORDER) {
                         qty++;
-
+                        mListener.itemAdded(mItem);
                         ConsumerDatabase.getInstance().setItemSelected(mItem,qty);
                         etQuantity.setText(qty.toString());
 
@@ -94,6 +103,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
                     Integer qty = Integer.valueOf(etQuantity.getText().toString());
                     if(qty > 0) {
                         qty--;
+                        mListener.itemRemoved(mItem);
                         ConsumerDatabase.getInstance().setItemSelected(mItem,qty);
                         etQuantity.setText(qty.toString());
 

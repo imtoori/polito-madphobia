@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp.search;
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +24,10 @@ public class MenuCategoriesAdapter extends RecyclerView.Adapter<MenuCategoriesAd
 
     private List<MenuCategory> categories;
     private View view;
-    public MenuCategoriesAdapter(List<MenuCategory> categories) {
+    private MenuItemAdapter.OnItemSelected context;
+    public MenuCategoriesAdapter(List<MenuCategory> categories, MenuItemAdapter.OnItemSelected context) {
         this.categories = categories;
+        this.context = context;
     }
 
 
@@ -42,7 +45,7 @@ public class MenuCategoriesAdapter extends RecyclerView.Adapter<MenuCategoriesAd
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        holder.recyclerView.setAdapter(new MenuItemAdapter(holder.category.items));
+        holder.recyclerView.setAdapter(new MenuItemAdapter(holder.category.items, context));
 
     }
 

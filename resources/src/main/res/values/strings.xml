@@ -243,4 +243,8 @@
     <string name="not_visible">This page can\'t be shown because your profile is not enabled. \nGo to <b>Setting</b>, then <b>General</b>, to enable your profile.</string>
     <string name="biker_visible_desc">By enabling this option you\'ll be able to work. Remember that only if you click on Start button from your page, restaurant owners will be able to choose you. Complete your profile if you want to enable this option.</string>
 
+    <string name="login_required_cart">To complete the order you must be logged in.</string>
+    <string name="back">Back</string>
+    <string name="dialog_shopping_cart_preview">My Order Preview</string>
+    <string name="dialog_shopping_cart_empty">Your shopping cart is empty.</string>
 </resources>
