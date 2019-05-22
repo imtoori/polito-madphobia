@@ -68,7 +68,7 @@
         <activity android:name=".settings.ProfileActivity" />
         <activity android:name=".auth.LoginActivity" />
         <activity android:name=".OrderInfoActivity"/>
-        <activity android:name=".BasketActivity"/>
+        <activity android:name=".search.Order.BasketActivity"/>
         <activity android:name=".settings.PasswordActivity" />
     </application>
 

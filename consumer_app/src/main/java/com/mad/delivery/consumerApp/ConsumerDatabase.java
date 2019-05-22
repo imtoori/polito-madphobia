@@ -166,9 +166,6 @@ public class ConsumerDatabase {
             o.longitude=longitude;
         }
 
-
-
-
        flag=true;
         myRef.child("users").child("restaurants").child(o.restaurantId).runTransaction(new Transaction.Handler() {
 
@@ -205,10 +202,6 @@ public class ConsumerDatabase {
                         }
                     });
                 }
-
-
-
-
 
                 if(flag)
                 return Transaction.success(mutableData);

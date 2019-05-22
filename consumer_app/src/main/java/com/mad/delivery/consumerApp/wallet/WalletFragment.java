@@ -202,12 +202,10 @@ public class WalletFragment extends Fragment {
         ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
             @Override
             public void onCallBack(User user) {
-                if (user != null)
-                    totalCredit.setText(user.credit.toString());
+                if (user != null && user.credit != null)
+                    totalCredit.setText(String.valueOf(user.credit));
                 else
                     totalCredit.setText(R.string.null_value);
-
-
             }
         });
     }

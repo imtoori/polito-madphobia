@@ -1,14 +1,14 @@
-package com.mad.delivery.consumerApp.search;
+package com.mad.delivery.consumerApp.search.Order;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.Product;
 
 import java.util.List;
@@ -16,8 +16,10 @@ import java.util.List;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHolder> {
     private List<Product> items;
     private View view;
-    public ProductsAdapter(List<Product> items) {
+    private OnProductListener myListener;
+    public ProductsAdapter(List<Product> items, OnProductListener myListener) {
         this.items = items;
+        this.myListener = myListener;
     }
 
     @Override
@@ -35,8 +37,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         Product item = items.get(index);
         holder.mItem = item;
         holder.name.setText(item.name);
-        holder.quantity.setText(String.valueOf(item.quantity));
-        holder.totalPrice.setText("€ " + String.valueOf(item.price));
+        holder.quantity.setText("x" +item.quantity);
+        holder.totalPrice.setText("€ " + item.price);
     }
 
     @Override
@@ -49,6 +51,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         public final TextView name;
         public final TextView totalPrice;
         public final TextView quantity;
+        public final ImageButton remove;
         public Product mItem;
 
         public ViewHolder(View view) {
@@ -57,7 +60,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             name = mView.findViewById(R.id.product_name);
             totalPrice = mView.findViewById(R.id.product_totalprice);
             quantity = mView.findViewById(R.id.product_quantity);
+            remove = mView.findViewById(R.id.btn_delete);
 
+            remove.setOnClickListener(v -> {
+                myListener.onRemoved(mItem);
+            });
         }
 
         @Override

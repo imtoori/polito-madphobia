@@ -3,21 +3,19 @@ package com.mad.delivery.consumerApp.search;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
@@ -27,10 +25,12 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mad.delivery.consumerApp.BasketActivity;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
+import com.mad.delivery.consumerApp.search.Order.BasketActivity;
+import com.mad.delivery.consumerApp.search.Order.OnProductListener;
+import com.mad.delivery.consumerApp.search.Order.ProductsAdapter;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.PreviewInfo;
@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RestaurantInfoActivity extends AppCompatActivity implements MenuItemAdapter.OnItemSelected {
+public class RestaurantInfoActivity extends AppCompatActivity implements MenuItemAdapter.OnItemSelected, OnProductListener {
     private ViewPager mPager;
     private PagerAdapter pagerAdapter;
     private TabLayout tabLayout;
@@ -55,10 +55,15 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
     private int itemsNumber = 0;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    Button btnNext;
     private User user;
     AlertDialog dialog;
     Map<String, Product> myOrder;
+    List<Product> orderList;
     private ProductsAdapter myOrderAdapter;
+
+    // dialog items
+    TextView deliveryFee, totalPrice;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +132,6 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         });
         return super.onPrepareOptionsMenu(menu);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_restaurant_info, menu);
@@ -209,10 +213,10 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View convertView = LayoutInflater.from(this).inflate(R.layout.dialog_shoppingcart_preview, null);
-        TextView deliveryFee = convertView.findViewById(R.id.preview_deliverycost_value);
-        TextView totalPrice = convertView.findViewById(R.id.preview_totalprice);
+        deliveryFee = convertView.findViewById(R.id.preview_deliverycost_value);
+        totalPrice = convertView.findViewById(R.id.preview_totalprice);
         Button btnLogin = convertView.findViewById(R.id.btn_login);
-        Button btnNext = convertView.findViewById(R.id.btn_next);
+        btnNext = convertView.findViewById(R.id.btn_next);
         Button btnBack = convertView.findViewById(R.id.btn_back);
         if(user == null) {
             btnLogin.setVisibility(View.VISIBLE);
@@ -221,10 +225,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
             btnLogin.setVisibility(View.GONE);
             btnNext.setVisibility(View.VISIBLE);
         }
-        deliveryFee.setText("€ "+restaurant.previewInfo.deliveryCost);
-        double tp = 0.0;
-        tp = myOrder.entrySet().stream().mapToDouble(i -> i.getValue().price).sum() + restaurant.previewInfo.deliveryCost;
-        totalPrice.setText("€ " + tp);
+        computeTotalPrice();
         builder.setView(convertView);
         dialog = builder.create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -237,6 +238,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
                 btnNext.setOnClickListener(v -> {
                     Intent intent = new Intent(RestaurantInfoActivity.this, BasketActivity.class);
                     intent.putExtra("myOrder", (Serializable) myOrder);
+                    intent.putExtra("restaurant", (Parcelable) restaurant);
                     startActivity(intent);
                 });
                 btnLogin.setOnClickListener(v -> {
@@ -249,9 +251,36 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
 
         RecyclerView previewCartRecyclerView = convertView.findViewById(R.id.cartRecyclerView);
         previewCartRecyclerView.setLayoutManager(new LinearLayoutManager(dialog.getContext()));
-        myOrderAdapter = new ProductsAdapter(new ArrayList<>(myOrder.values()));
+        orderList = new ArrayList<>(myOrder.values());
+        myOrderAdapter = new ProductsAdapter(orderList, this);
         previewCartRecyclerView.setAdapter(myOrderAdapter);
         previewCartRecyclerView.hasFixedSize();
         dialog.show();
+    }
+
+    @Override
+    public void onRemoved(Product p) {
+        orderList.removeIf(item -> item.idItem.equals(p.idItem));
+        myOrder.remove(p.idItem);
+        myOrderAdapter.notifyDataSetChanged();
+        computeTotalPrice();
+        itemsNumber -= p.quantity;
+        updateShoppingCartIcon(itemsNumber);
+        if(myOrder.size() == 0) {
+            btnNext.setEnabled(false);
+        }
+    }
+
+    public void computeTotalPrice() {
+        deliveryFee.setText("€ "+restaurant.previewInfo.deliveryCost);
+        double tp = 0.0;
+        tp = myOrder.entrySet().stream().mapToDouble(i -> i.getValue().price).sum() + restaurant.previewInfo.deliveryCost;
+
+        if(restaurant.previewInfo.minOrderCost > tp) {
+            double remainder = restaurant.previewInfo.minOrderCost - tp;
+            tp += remainder;
+        }
+        totalPrice.setText("€ " + tp);
+
     }
 }
