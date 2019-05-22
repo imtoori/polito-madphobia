@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.restaurant_app.MapBikersViewFragment;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.UserInformationFragment;
 
@@ -25,11 +27,18 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 1:
+                MapBikersViewFragment uiFrag = new MapBikersViewFragment();
+                Bundle bundle = new Bundle();
+                LatLng r = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
+                bundle.putParcelable("restaurant", r);
+                uiFrag.setArguments(bundle);
+                return uiFrag;
+            /*case 1:
                 UserInformationFragment uiFrag = new UserInformationFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("client", order.client);
                 uiFrag.setArguments(bundle);
-                return uiFrag;
+                return uiFrag;*/
             case 0:
                 DetailOrderFragment doFrag = new DetailOrderFragment();
                 Bundle doBundle = new Bundle();

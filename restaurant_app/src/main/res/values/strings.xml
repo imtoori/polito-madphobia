@@ -168,6 +168,7 @@
     <string name="items_in_the_offer">Items in the offer</string>
 
     <string name="opening_hours_full">Lunedì: chiuso\nMartedì: chiuso\nMercoledì: chiuso\nGiovedì: chiuso\nVenerdì: chiuso\nSabato: chiuso\nDomenica: chiuso\n</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>
