@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -276,6 +277,26 @@ final public class BikerDatabase {
     public void updateBikerVisibility(String bikerID, boolean value, OnFirebaseData<Boolean> cb) {
         myRef.child("users").child("biker").child(bikerID).child("visible").setValue(value, (databaseError, databaseReference) -> {
             cb.onReceived(value);
+        });
+    }
+
+    public void getBikerPosition(OnFirebaseData<LatLng> latLng){
+        myRef.child("users").child("biker").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Biker item = dataSnapshot.getValue(Biker.class);
+                    if (item != null) {
+                        LatLng latLang = new LatLng(item.latitude,item.longitude);
+                        latLng.onReceived(latLang);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
     }
 }

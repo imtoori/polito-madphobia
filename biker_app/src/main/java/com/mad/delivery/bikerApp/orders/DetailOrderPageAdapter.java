@@ -7,7 +7,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseReference;
+import com.mad.delivery.bikerApp.BikerDatabase;
+import com.mad.delivery.bikerApp.MapViewFragment;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.Order;
 
 public class DetailOrderPageAdapter extends FragmentPagerAdapter {
@@ -35,12 +40,21 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
                 doBundle.putParcelable("order", order);
                 doFrag.setArguments(doBundle);
                 return doFrag;
-            case 2:
-                RestaurantInformationFragment resFrag = new RestaurantInformationFragment();
+            /*case 2:
+                RestaurantformationFragment resFrag = new RestaurantformationFragment();
                 Bundle rbundle = new Bundle();
                 rbundle.putParcelable("restaurant", order.restaurant);
                 resFrag.setArguments(rbundle);
-                return resFrag;
+                return resFrag;*/
+            case 2:
+            MapViewFragment resFrag = new MapViewFragment();
+            Bundle rbundle = new Bundle();
+            LatLng latLngR = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
+            LatLng latLngC = new LatLng(order.latitude,order.longitude);
+            rbundle.putParcelable("restaurant", latLngR);
+            rbundle.putParcelable("client", latLngC);
+            resFrag.setArguments(rbundle);
+            return resFrag;
             default:
                 return null;
         }

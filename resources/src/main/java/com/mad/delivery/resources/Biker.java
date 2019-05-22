@@ -3,6 +3,8 @@ package com.mad.delivery.resources;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -33,6 +35,7 @@ public class Biker implements Serializable {
         this.visible = false;
         this.latitude = 0.0;
         this.longitude = 0.0;
+
     }
 
     public Biker() {
