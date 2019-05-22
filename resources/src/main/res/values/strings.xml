@@ -112,6 +112,7 @@
     <string name="prefix_products">This order contains</string>
     <string name="suffix_products">products.</string>
     <string name="completing_order">Completing Order</string>
+    <string name="complete_order">Complete your order!</string>
 
     <!-- Completing Order Activity -->
     <string name="delivery_options">Delivery</string>
@@ -161,6 +162,8 @@
     <string name="closed">Closed</string>
     <string name="day1">Monday:</string>
     <string name="Delivery_time">Delivery time</string>
+    <string name="pay_cash">Pay with cash</string>
+    <string name="pay_credit">Pay with credit</string>
     <string name="start_time">Start time</string>
     <string name="Opening_hours">Opening hours</string>
     <string name="opening_hours">Opening hours</string>
@@ -228,6 +231,7 @@
     <string name="complete_offer">Complete</string>
     <string name="overview_complete_offer">Offer Overview</string>
     <string name="total_price">Total price</string>
+    <string name="info">Info</string>
     <string name="overview_offer_price_desc">Add a cumulative price for your offer!</string>
     <string name="overview_offer_time_desc">Your offer will be active for a limited time. You can chose how many hours!</string>
     <string name="offer_time">Hours left</string>
@@ -243,4 +247,9 @@
     <string name="not_visible">This page can\'t be shown because your profile is not enabled. \nGo to <b>Setting</b>, then <b>General</b>, to enable your profile.</string>
     <string name="biker_visible_desc">By enabling this option you\'ll be able to work. Remember that only if you click on Start button from your page, restaurant owners will be able to choose you. Complete your profile if you want to enable this option.</string>
 
+    <string name="login_required_cart">To complete the order you must be logged in.</string>
+    <string name="back">Back</string>
+    <string name="dialog_shopping_cart_preview">My Order Preview</string>
+    <string name="dialog_shopping_cart_empty">Your shopping cart is empty.</string>
+    <string name="user_map_info">Map</string>
 </resources>

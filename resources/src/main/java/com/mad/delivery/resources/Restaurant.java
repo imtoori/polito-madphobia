@@ -297,11 +297,11 @@ public class Restaurant implements Serializable, Parcelable {
             Log.d("MADAPP", "previewinfo");
             return false;
         }
-        if(previewInfo.id == null || previewInfo.minOrderCost == null || previewInfo.deliveryCost == null || previewInfo.name == null || previewInfo.description == null) {
+        if(previewInfo.id == null || previewInfo.minOrderCost == null || previewInfo.deliveryCost == null || previewInfo.name == null) {
             Log.d("MADAPP", "previewinfo2 " );
             return false;
         }
-        if(previewInfo.id.equals("") || previewInfo.name.equals("") || previewInfo.description.equals("")) {
+        if(previewInfo.id.equals("") || previewInfo.name.equals("")) {
             Log.d("MADAPP", "previewinfo3");
             return false;
         }

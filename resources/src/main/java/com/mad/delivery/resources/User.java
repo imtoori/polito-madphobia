@@ -23,7 +23,7 @@ public class User implements Serializable, Parcelable {
     public String city;
     public String id;
     public String imageName;
-    public Integer credit;
+    public Double credit;
 
     public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String imageName) {
         this.name = name;
@@ -39,7 +39,7 @@ public class User implements Serializable, Parcelable {
         this.imageUri = imageUri.toString();
         this.registrationDate = new DateTime().toString();
         this.imageName = imageName;
-        this.credit =0;
+        this.credit = 10.00;
     }
 
     public User() {
@@ -59,6 +59,7 @@ public class User implements Serializable, Parcelable {
         this.city = u.city;
         this.imageUri = u.imageUri;
         this.imageName = u.imageName;
+        this.credit = u.credit;
     }
 
 
@@ -80,7 +81,7 @@ public class User implements Serializable, Parcelable {
         if (in.readByte() == 0) {
             credit = null;
         } else {
-            credit = in.readInt();
+            credit = in.readDouble();
         }
     }
 
@@ -104,7 +105,7 @@ public class User implements Serializable, Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(credit);
+            dest.writeDouble(credit);
         }
     }
 
@@ -258,11 +259,11 @@ public class User implements Serializable, Parcelable {
         this.imageName = imageName;
     }
 
-    public Integer getCredit() {
+    public Double getCredit() {
         return credit;
     }
 
-    public void setCredit(Integer credit) {
+    public void setCredit(Double credit) {
         this.credit = credit;
     }
 

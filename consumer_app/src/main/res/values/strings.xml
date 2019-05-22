@@ -65,7 +65,7 @@
     <string name="cash">cash</string>
     <string name="time_format">hh:mm</string>
     <string name="datatime_format">dd/mm/yyyy-hh:mm</string>
-    <string name="Basket_toolbar">Basket</string>
+    <string name="Basket_toolbar">My Shopping Cart</string>
     <string name="datatime_secect">Click here to select delivery time!</string>
     <string name="hint_client_note">Insert here your notes!</string>
     <string name="order_info_toolbar">Order info</string>
@@ -78,5 +78,7 @@
     <string name="empty_basket_error">Basket is empty</string>
     <string name="credit_error">Credit (Error)</string>
     <string name="price_error">Error min order cost</string>
+    <string name="invalid_address">Insert a valid Delivery address</string>
+    <string name="invalid_time">Invalid Delivery Time</string>
 
 </resources>

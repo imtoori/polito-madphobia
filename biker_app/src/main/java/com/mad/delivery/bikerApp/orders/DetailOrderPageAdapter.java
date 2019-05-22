@@ -40,21 +40,21 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
                 doBundle.putParcelable("order", order);
                 doFrag.setArguments(doBundle);
                 return doFrag;
-            /*case 2:
-                RestaurantformationFragment resFrag = new RestaurantformationFragment();
+            case 2:
+                RestaurantInformationFragment resFrag = new RestaurantInformationFragment();
                 Bundle rbundle = new Bundle();
                 rbundle.putParcelable("restaurant", order.restaurant);
                 resFrag.setArguments(rbundle);
-                return resFrag;*/
-            case 2:
-            MapViewFragment resFrag = new MapViewFragment();
-            Bundle rbundle = new Bundle();
+                return resFrag;
+            case 3:
+            MapViewFragment mapFrag = new MapViewFragment();
+            Bundle bnd = new Bundle();
             LatLng latLngR = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
             LatLng latLngC = new LatLng(order.latitude,order.longitude);
-            rbundle.putParcelable("restaurant", latLngR);
-            rbundle.putParcelable("client", latLngC);
-            resFrag.setArguments(rbundle);
-            return resFrag;
+                bnd.putParcelable("restaurant", latLngR);
+                bnd.putParcelable("client", latLngC);
+                mapFrag.setArguments(bnd);
+            return mapFrag;
             default:
                 return null;
         }
@@ -70,6 +70,8 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
                 return context.getString(R.string.detail_order_info);
             case 2:
                 return context.getString(R.string.detail_restaurant_info);
+            case 3:
+                return context.getString(R.string.user_map_info);
             default:
                 return null;
         }
@@ -77,7 +79,7 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 }
 

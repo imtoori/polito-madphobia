@@ -2,9 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mad.delivery.consumerApp.search.RestaurantInfoActivity">
+
     <item
         android:id="@+id/option_shopping"
         android:title="@string/option_shopping"
-        android:icon="@drawable/ic_basket"
+        app:actionLayout="@layout/shopping_cart_icon_layout"
         app:showAsAction="ifRoom" />
 </menu>

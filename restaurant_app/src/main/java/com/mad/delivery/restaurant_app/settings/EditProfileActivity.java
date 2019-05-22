@@ -40,6 +40,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -111,6 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         restaurant = (Restaurant) bundle.get("user");
+        if(restaurant.categories == null) restaurant.categories = new HashMap<>();
         imageLink = (Uri) bundle.get("imageLink");
         Log.d("MADAPP", restaurant.toString());
         RestaurantDatabase.getInstance().getCategories(innerSet -> {

@@ -68,6 +68,7 @@ public class GeneralSettingActivity extends AppCompatActivity {
                 public void onSuccess(Restaurant user) {
                     Log.d("MADAPP", "User "+ user.previewInfo.id + " have logged in.");
                     restaurant = user;
+                    Log.d("MADAPP", "checking if profile is complete returned:" + restaurant.isProfileComplete());
                     if(restaurant.isProfileComplete()) {
                         tvCompleted.setText("complete");
                         tvCompleted.setTextColor(getColor(R.color.colorGreen));
