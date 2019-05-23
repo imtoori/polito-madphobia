@@ -85,6 +85,10 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         adminNotesLt.setDuration(500);
         adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
 
+        if(order.status.equals("preparing") || order.status.equals("ready") || order.status.equals("pending"))
+            cvChangeStatus.setVisibility(View.GONE);
+        else
+            cvChangeStatus.setVisibility(View.VISIBLE);
         LayoutTransition deliveryLt =  cvDeliveryOptions.getLayoutTransition();
         deliveryLt.setDuration(500);
         deliveryLt.enableTransitionType(LayoutTransition.CHANGING);
@@ -196,6 +200,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 return getResources().getColor(R.color.colorReadyOrder, null);
             case completed:
                 return getResources().getColor(R.color.colorCompletedOrder, null);
+            case delivered:
+                return getResources().getColor(R.color.colorDeliveredOrder, null);
             default:
                 return getResources().getColor(R.color.colorCanceledOrder, null);
         }

@@ -85,8 +85,7 @@
 
         <activity android:name=".orders.CompletingOrderActivity" />
         <activity
-            android:name=".settings.PhotoZoomActivity"
-            android:parentActivityName=".settings.EditProfileActivity">
+            android:name=".settings.PhotoZoomActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -94,8 +93,7 @@
                 android:value="com.mad.delivery.bikerApp.settings.EditProfileActivity" />
         </activity>
         <activity
-            android:name=".settings.EditProfileActivity"
-            android:parentActivityName=".settings.ProfileActivity">
+            android:name=".settings.EditProfileActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -103,15 +101,12 @@
                 android:value="com.mad.delivery.bikerApp.settings.ProfileActivity" />
         </activity>
         <activity
-            android:name=".settings.ProfileActivity"
-            android:parentActivityName=".HomeActivity"></activity>
+            android:name=".settings.ProfileActivity"></activity>
 
         <activity
-            android:name=".settings.PasswordActivity"
-            android:parentActivityName=".auth.LoginActivity" />
+            android:name=".settings.PasswordActivity" />
         <activity
-            android:name=".orders.DetailOrderActivity"
-            android:parentActivityName=".HomeActivity" />
+            android:name=".orders.DetailOrderActivity" />
 
     </application>
 
