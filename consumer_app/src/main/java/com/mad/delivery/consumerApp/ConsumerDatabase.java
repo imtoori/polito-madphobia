@@ -151,12 +151,9 @@ public class ConsumerDatabase {
     }
 
     public void putOrder(Order o,Context context,firebaseCallback<Boolean> firebaseCallback) throws IOException {
-        o.clientId =mAuth.getUid();
-        o.status =OrderStatus.pending;
-
         Geocoder geocoder = new Geocoder(context);
         List<Address> addresses;
-        addresses = geocoder.getFromLocationName(o.delivery.toString(), 1);
+        addresses = geocoder.getFromLocationName(o.delivery, 1);
         if(addresses.size() > 0) {
             Double latitude= addresses.get(0).getLatitude();
             Double longitude= addresses.get(0).getLongitude();
@@ -165,18 +162,14 @@ public class ConsumerDatabase {
             o.latitude=latitude;
             o.longitude=longitude;
         }
-
        flag=true;
         myRef.child("users").child("restaurants").child(o.restaurantId).runTransaction(new Transaction.Handler() {
-
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
                 if(mutableData.getValue()==null) {
                     Log.d("TRANS", "mutable null");
-                }
-                else {
+                } else {
                     Log.d("TRANS", "mutable not null");
-
                     getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
                         @Override
                         public void onCallBack(List<MenuItemRest> item) throws IOException {
@@ -207,7 +200,6 @@ public class ConsumerDatabase {
                 return Transaction.success(mutableData);
                 else
                     return Transaction.abort();
-
             }
 
             @Override

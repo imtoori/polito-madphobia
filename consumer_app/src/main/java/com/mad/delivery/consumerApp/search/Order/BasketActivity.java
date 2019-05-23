@@ -1,5 +1,7 @@
 package com.mad.delivery.consumerApp.search.Order;
 
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
@@ -35,11 +38,14 @@ import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.resources.OnLogin;
+import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Product;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +65,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     EditText notes;
     Button btnCompleteOrder;
     ChipGroup chipGroup;
+    private DateTime orderFor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,24 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         notes = findViewById(R.id.notes);
         btnCompleteOrder = findViewById(R.id.button_complete_order);
 
+        when.setOnClickListener((view) -> {
+            Calendar mcurrentTime = Calendar.getInstance();
+            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            int minute = mcurrentTime.get(Calendar.MINUTE);
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                    when.setText( selectedHour + ":" + selectedMinute);
+                    orderFor = new DateTime();
+                    orderFor = orderFor.hourOfDay().setCopy(selectedHour);
+                    orderFor = orderFor.minuteOfHour().setCopy(selectedMinute);
+                }
+            }, hour, minute, true);//Yes 24 hour time
+            mTimePicker.setTitle("Select Delivery Time");
+            mTimePicker.show();
+        });
+
         try {
             myOrder = new ArrayList<>(((Map<String, Product>) getIntent().getExtras().get("myOrder")).values());
         } catch (NullPointerException e) {
@@ -89,14 +114,12 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         }
 
         restaurant = getIntent().getParcelableExtra("restaurant");
-
         myOrderAdapter = new ProductsAdapter(myOrder, this);
         rvOrder.setLayoutManager(new LinearLayoutManager(this));
         rvOrder.hasFixedSize();
         rvOrder.setAdapter(myOrderAdapter);
         computeTotalPrice();
         chipGroup.setSingleSelection(true);
-
 
         CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -120,9 +143,24 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         btnCompleteOrder.setOnClickListener(v -> {
             boolean valid = checkConstraints();
             if(valid) {
-                // todo store myOrder
-                Log.d("MADAPP", "Order is being saved");
-                Toast.makeText(this, "Order is ready to be saved. But this function need to be implemented.", Toast.LENGTH_SHORT).show();
+                String paymentMethod = "";
+                if(checkedChip.getText().toString().equals(getString(R.string.pay_cash))) paymentMethod = "cash";
+                else if(checkedChip.getText().toString().equals(getString(R.string.pay_cash))) paymentMethod = "credit";
+                else paymentMethod = "";
+
+                Order order = new Order(user, restaurant, myOrder, orderFor.toString(), paymentMethod, where.getText().toString());
+                try {
+                    ConsumerDatabase.getInstance().putOrder(order, this, success -> {
+                        if(success) {
+                            Toast.makeText(this, "Your order has been received.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "An error occurred. Items you ordered may not be available anymore.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } catch (IOException e) {
+                    Toast.makeText(this, "An error occurred. Items you ordered may not be available anymore.", Toast.LENGTH_SHORT).show();
+                }
+
             } else {
                 Toast.makeText(this, "Please fill all fields with valid data", Toast.LENGTH_SHORT).show();
             }

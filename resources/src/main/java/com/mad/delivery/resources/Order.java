@@ -42,9 +42,9 @@ public class Order implements Parcelable {
         this.restaurant = r;
         this.orderFor = orderFor;
         this.restaurantId =r.previewInfo.id;
+        this.clientId = u.id;
         this.delivery=delivery;
         this.paymentMethod = paymentMethod;
-//        products.forEach(p->Log.d("MADD",p.name+" "+p.quantity + " " + p.price));
         this.totalPrice=0.0;
         products.forEach(p->this.totalPrice+=p.price*p.quantity);
         totalPrice+=restaurant.previewInfo.deliveryCost;
