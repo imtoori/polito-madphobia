@@ -53,7 +53,7 @@
     <string name="Credit">Credit</string>
     <string name="Total">Total:</string>
     <string name="enter_code">Enter your credit code</string>
-    <string name="credit_description">Your credit can be used as payment on your order</string>
+    <string name="credit_description">Your credit can be used as payment on your order.</string>
     <string name="data">Date:</string>
     <string name="order_summary">Order summary</string>
     <string name="subtotal">SUBTOTAL</string>
@@ -80,5 +80,7 @@
     <string name="price_error">Error min order cost</string>
     <string name="invalid_address">Insert a valid Delivery address</string>
     <string name="invalid_time">Invalid Delivery Time</string>
+    <string name="euro">Euro</string>
+    <string name="use">USE</string>
 
 </resources>

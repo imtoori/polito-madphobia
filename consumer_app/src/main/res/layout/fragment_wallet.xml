@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-tools:context=".wallet.WalletFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".wallet.WalletFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/no_login_cv"
@@ -55,13 +55,8 @@ tools:context=".wallet.WalletFragment">
         android:id="@+id/cv_credit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -75,75 +70,76 @@ tools:context=".wallet.WalletFragment">
             android:layout_marginBottom="8dp"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/Credit"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/bigTitle" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/total_credit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Total"
-                    android:textSize="@dimen/normalText"
-                    android:textColor="@color/colorText"/>
-
-                <TextView
-                    android:id="@+id/total_credit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/null_value"
-                    android:textSize="@dimen/normalText" />
-
-            </LinearLayout>
+                android:text="@string/null_value"
+                android:textColor="@color/colorWhite"
+                android:textAlignment="center"
+                android:textSize="50dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:text="@string/euro"
+                android:textColor="@color/colorWhite"
+                android:textAlignment="center"
+                android:textSize="@dimen/normalText" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="50dp"
+                android:textColor="@color/colorWhite"
                 android:text="@string/credit_description"
+                android:textAlignment="center"
                 android:textSize="@dimen/description" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
                     android:id="@+id/credit_code"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="4dp"
-
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:hint="@string/enter_code"
-                    android:textSize="@dimen/normalText" />
+                    android:textSize="@dimen/normalText"
+                    android:textColorHint="@color/colorWhite"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/done_code"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
+                <Button
                     android:id="@+id/done_code"
-                    android:layout_width="35dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_margin="6dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/card_view_border"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/colorPrimaryDark"
                     android:clickable="true"
-                    android:contentDescription="@string/photo_toolbar"
                     android:elevation="4dp"
-                    app:srcCompat="@drawable/ic_done" />
+                    android:text="@string/use"
+                    android:textSize="@dimen/description"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/credit_code"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -154,9 +150,9 @@ tools:context=".wallet.WalletFragment">
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:visibility="gone"
         android:text="@string/nav_orders"
         android:textSize="@dimen/subtitle"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cv_credit" />
