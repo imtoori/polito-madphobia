@@ -38,8 +38,8 @@ public class LocationTracker extends Service implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
     private static int DISPLACEMENT = 0;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -236,8 +236,8 @@ public class LocationTracker extends Service implements
 
     @Override
     public void onDestroy() {
-     //   WakeLocker.releasePartialLock();
         super.onDestroy();
+        stopLocationService(this);
     }
 
     @Override
