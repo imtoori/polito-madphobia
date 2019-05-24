@@ -66,6 +66,7 @@ public class StartFragment extends Fragment {
         kilometers = view.findViewById(R.id.kilometers);
         visibleFolder = view.findViewById(R.id.ll_not_visible);
         status = view.findViewById(R.id.status);
+
         BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
             @Override
             public void onSuccess(Biker user) {
@@ -79,6 +80,11 @@ public class StartFragment extends Fragment {
                     cvStats.setVisibility(View.GONE);
                     visibleFolder.setVisibility(View.VISIBLE);
                 }
+
+                ordersTaken.setText(biker.order_count.toString());
+                earning.setText(biker.earning.toString());
+                kilometers.setText(biker.km.toString());
+                hours.setText(biker.hours.toString());
                 setStatus(biker.status);
                 status.setOnClickListener(v -> {
                     biker.status = !biker.status;
