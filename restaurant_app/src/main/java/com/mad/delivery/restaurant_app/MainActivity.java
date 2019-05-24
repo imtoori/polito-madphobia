@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
         if (getIntent().hasExtra("open")) {
             open = getIntent().getIntExtra("open", 1);
         } else {

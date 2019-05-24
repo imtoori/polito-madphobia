@@ -50,6 +50,8 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 124);
 
         db = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();

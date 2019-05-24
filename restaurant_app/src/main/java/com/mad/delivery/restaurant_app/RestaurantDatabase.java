@@ -89,9 +89,10 @@ final public class RestaurantDatabase {
     }
 
     private void getRestaurantProfile(FireBaseCallBack<Restaurant> restaurantFireBaseCallBack) {
-        restaurantRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if(mAuth.getUid()!=null) {
+            restaurantRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
                     Restaurant item = dataSnapshot.getValue(Restaurant.class);
@@ -102,15 +103,15 @@ final public class RestaurantDatabase {
                         Log.d("DATABASE: ", "Elemento nullo");
                     }
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("DATABASE: ", "SONO ENTRATO");
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d("DATABASE: ", "SONO ENTRATO");
 
-            }
-        });
-
+                }
+            });
+        }
     }
 
     public void reset() {

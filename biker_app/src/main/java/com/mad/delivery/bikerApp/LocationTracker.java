@@ -38,9 +38,9 @@ public class LocationTracker extends Service implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 1000;
-    private static int DISPLACEMENT = 0;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 30000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = 30000;
+    private static int DISPLACEMENT = 100;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
@@ -82,7 +82,7 @@ public class LocationTracker extends Service implements
     private Notification createNotification(Context context, String channelid,int type) {
         try {
             return new NotificationCompat.Builder(context,channelid)
-                    .setContentText("TEST")
+                    .setContentText("Location activated")
                     .setOnlyAlertOnce(true)
                     .setOngoing(true)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
