@@ -72,14 +72,11 @@ public final class GPSTracker implements LocationListener {
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             Log.v("isNetworkEnabled", "=" + isNetworkEnabled);
-            Log.d("CA0","fff");
 
             if (isGPSEnabled == false && isNetworkEnabled == false) {
                 // no network provider fis enabled
-                Log.d("CA1","f");
 
             } else {
-                Log.d("CA2","ff");
 
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
@@ -112,16 +109,8 @@ public final class GPSTracker implements LocationListener {
                 if (isGPSEnabled) {
                     location = null;
                     if (location == null) {
-                        Log.d("HERE :","dddd");
                         if (checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(mContext,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            Log.d("HERE2:","dddd");
-                            // TODO: Consider calling
-                            //    Activity#requestPermissions
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for Activity#requestPermissions for more details.
+
                             return null;
                         }
                         locationManager.requestLocationUpdates(

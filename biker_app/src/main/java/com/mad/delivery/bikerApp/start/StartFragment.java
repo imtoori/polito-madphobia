@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.FirebaseCallbackItem;
+import com.mad.delivery.bikerApp.LocationTracker;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.auth.OnLogin;
@@ -98,9 +99,14 @@ public class StartFragment extends Fragment {
 
     public void setStatus(boolean st) {
         if(st) {
+            getActivity().stopService(new Intent(getActivity(), LocationTracker.class));
+
             status.setText("Stop");
         } else {
+            getActivity().startService(new Intent(getActivity(), LocationTracker.class));
+
             status.setText("Start");
+
         }
     }
 
