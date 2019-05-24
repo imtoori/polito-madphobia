@@ -35,7 +35,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener {
+public class CompletingOrderActivity extends AppCompatActivity implements  ListDialog.ListDialogListener {
     private Toolbar myToolBar;
     private Order modifiedOrder;
     private DateTime oldDateTime;
@@ -46,14 +46,12 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     Button  btnAdd, btnChangeStatus;
     private Order order;
     private AlertDialog confirmOrderDialog;
-    private boolean orderIsConfirmed;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_completing_order);
-        orderIsConfirmed = false;
         myToolBar = findViewById(R.id.detailToolbar);
         setSupportActionBar(myToolBar);
         order = getIntent().getParcelableExtra("order");
@@ -147,13 +145,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.send_order:
-                if(orderIsConfirmed) {
-                    confirmOrderDialog.show();
-                } else {
-                    final Animation animShake = AnimationUtils.loadAnimation(this, R.anim.shake_effect);
-                    animShake.setInterpolator(new AccelerateDecelerateInterpolator());
-                    cvDeliveryOptions.startAnimation(animShake);
-                }
+                confirmOrderDialog.show();
                 return true;
 
             default:
@@ -186,19 +178,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         timeFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    public void confirmDeliveryTime() {
-        requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, MyDateFormat.parse(new DateTime(modifiedOrder.orderFor))));
-        orderIsConfirmed = true;
-    }
 
-    @Override
-    public void onTimePicked(int h, int m) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
-        DateTime dt = new DateTime(modifiedOrder.orderFor);
-        modifiedOrder.orderFor = dt.hourOfDay().setCopy(h).toString();
-        modifiedOrder.orderFor = dt.minuteOfHour().setCopy(m).toString();
-        confirmDeliveryTime();
-    }
+
+
 
     private AlertDialog createDialog(int titleResource, int messageResource) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
