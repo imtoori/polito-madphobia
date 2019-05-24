@@ -192,15 +192,24 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                if (addresses.size()>0) {
+                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                    String city = addresses.get(0).getLocality();
+                    String state = addresses.get(0).getAdminArea();
+                    String country = addresses.get(0).getCountryName();
+                    String postalCode = addresses.get(0).getPostalCode();
+                    String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                    Log.d("ADDRESS:", address + " " + city + " " + state + " " + country + " " + postalCode + " " + knownName);
+                    deliveryAddressText.setText(address);
+                }
+                else {
+                    Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
 
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-                Log.d("ADDRESS:",address+" "+city+" "+state+" "+country+" "+postalCode+" "+knownName);
-                deliveryAddressText.setText(address);
+                }
+            }
+            else {
+                Toast.makeText(this, "Your gps is disabled", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

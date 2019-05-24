@@ -20,6 +20,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -133,6 +134,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    if (addresses.size()>0) {
 
                     String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                     String city = addresses.get(0).getLocality();
@@ -142,7 +144,17 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
                     Log.d("ADDRESS:",address+" "+city+" "+state+" "+country+" "+postalCode+" "+knownName);
                     deliveryAddress.setText(address);
+                    }
+                    else {
+                        Toast.makeText(getContext(), "Your address isn't found", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
+                else {
+                    Toast.makeText(getContext(), "Your gps is disabled", Toast.LENGTH_SHORT).show();
+
+                }
+
             }
         });
         CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {
