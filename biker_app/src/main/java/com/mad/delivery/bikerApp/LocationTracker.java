@@ -247,6 +247,7 @@ public class LocationTracker extends Service implements
 
     public void stopLocationService(Context context) {
         try {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             stopForeground(true);
             stopSelf();
         } catch (Exception e) {
