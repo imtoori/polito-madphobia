@@ -47,14 +47,10 @@ public class DayOfWeekAdapter extends RecyclerView.Adapter<DayOfWeekAdapter.View
         }
     }
 
-
-
     @Override
     public int getItemCount() {
         return days.size();
     }
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements HoursAdapter.OnHoursChanges {
         public final View mView;

@@ -21,13 +21,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.restaurant_app.MapBikersViewFragment;
+import com.mad.delivery.restaurant_app.OnBikerChanged;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.ListDialog;
@@ -43,21 +47,23 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.Random;
 
-public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener {
+public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener, OnBikerChanged {
     private Toolbar myToolBar;
     private FirebaseDatabase db;
     private DatabaseReference myRef;
     private Order modifiedOrder;
     private DateTime oldDateTime;
     private EditText adminNotes;
-    CardView cvDeliveryOptions, cvAdminNotes, cvChangeStatus;
-    TextView requestedDeliveryTime, currentStatus, newStatus, confirmError;
+    CardView cvDeliveryOptions, cvAdminNotes, cvChangeStatus, cvSelectBiker;
+    TextView requestedDeliveryTime, currentStatus, newStatus, confirmError, selectedBikerTv, errorBiker;
     ImageView imageConfirmError;
-    Button btnDeliveryTimeChange, btnConfirm, btnAdd, btnUndoDelivery, btnChangeStatus;
+    Button btnDeliveryTimeChange, btnConfirm, btnAdd, btnUndoDelivery, btnChangeStatus, btnSelectBiker;
     private Order order;
     private AlertDialog confirmOrderDialog;
-    private boolean orderIsConfirmed;
+    private boolean orderIsConfirmed, bikerIsSelected;
     private FirebaseAuth mAuth;
+    private Biker selectedBiker;
+    MapBikersViewFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         myRef = db.getReference();
         setContentView(R.layout.activity_completing_order);
         orderIsConfirmed = false;
+        bikerIsSelected = false;
         myToolBar = findViewById(R.id.detailToolbar);
         setSupportActionBar(myToolBar);
         mAuth = FirebaseAuth.getInstance();
@@ -80,6 +87,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         newStatus = findViewById(R.id.tv_new_status);
         confirmError = findViewById(R.id.tv_confirm_delivery_error);
         imageConfirmError = findViewById(R.id.img_confirm_delivery_error);
+        errorBiker = findViewById(R.id.tv_error_select_biker);
         String newStatusAsString = ListDialog.getStatusAsList(modifiedOrder.status).get(0);
         newStatus.setText(newStatusAsString);
         newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
@@ -87,12 +95,19 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
+
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
+        cvSelectBiker = findViewById(R.id.cv_select_biker);
         cvAdminNotes  = findViewById(R.id.cv_admin_notes);
         cvChangeStatus = findViewById(R.id.cv_status_change);
         adminNotes = findViewById(R.id.et_admin_notes);
         if(order.serverNotes != null && !order.serverNotes.equals("")) adminNotes.setText(order.serverNotes);
         btnChangeStatus = findViewById(R.id.btn_change_status);
+        btnSelectBiker = findViewById(R.id.btn_select_biker);
+        btnSelectBiker.setOnClickListener(v -> {
+            openSelectBikerDialog();
+        });
+        selectedBikerTv = findViewById(R.id.tv_select_biker);
         LayoutTransition adminNotesLt =  cvAdminNotes.getLayoutTransition();
         adminNotesLt.setDuration(500);
         adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
@@ -104,7 +119,18 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         LayoutTransition changeStatusLt =  cvChangeStatus.getLayoutTransition();
         changeStatusLt.setDuration(500);
         changeStatusLt.enableTransitionType(LayoutTransition.CHANGING);
-
+        if(!currentStatus.getText().equals("pending")) {
+            // the biker has been already selected .. so let's disable the choice
+            bikerIsSelected = true;
+            btnSelectBiker.setEnabled(false);
+            Log.d("MADAPP", "Biker ID is = " + order.bikerId);
+            RestaurantDatabase.getInstance().getBiker(order.bikerId, selBiker -> {
+                if(selBiker != null)
+                    selectedBikerTv.setText(selBiker.name + " " + selBiker.lastname);
+                else
+                    selectedBikerTv.setText("No biker selected");
+            });
+        }
         oldDateTime = new DateTime(modifiedOrder.orderFor);
         confirmOrderDialog = createDialog(R.string.completing_order_title_dialog, R.string.completing_order_message_dialog);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +175,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 newFragment.show(getSupportFragmentManager(), "listStatus");
             }
         });
-
     }
 
     @Override
@@ -195,14 +220,20 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.send_order:
-                if(orderIsConfirmed) {
+                if(orderIsConfirmed && bikerIsSelected) {
                     confirmOrderDialog.show();
                 } else {
-                    confirmError.setVisibility(View.VISIBLE);
-                    imageConfirmError.setVisibility(View.VISIBLE);
                     final Animation animShake = AnimationUtils.loadAnimation(this, R.anim.shake_effect);
                     animShake.setInterpolator(new AccelerateDecelerateInterpolator());
-                    cvDeliveryOptions.startAnimation(animShake);
+                    if(!orderIsConfirmed) {
+                        confirmError.setVisibility(View.VISIBLE);
+                        imageConfirmError.setVisibility(View.VISIBLE);
+                        cvDeliveryOptions.startAnimation(animShake);
+                    }
+                    if(!bikerIsSelected) {
+                        errorBiker.setVisibility(View.VISIBLE);
+                        cvSelectBiker.startAnimation(animShake);
+                    }
                 }
                 return true;
             case R.id.reject_order_option:
@@ -233,7 +264,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     public void showTimePickerDialog(View v) {
         DialogFragment timeFragment = new TimePickerFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("datetime", modifiedOrder.orderFor);
+        bundle.putSerializable("datetime", new DateTime(modifiedOrder.orderFor));
         timeFragment.setArguments(bundle);
         timeFragment.show(getSupportFragmentManager(), "timePicker");
     }
@@ -250,8 +281,10 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void onTimePicked(int h, int m) {
-         DateTime.parse(modifiedOrder.orderFor).hourOfDay().setCopy(h);
-        DateTime.parse(modifiedOrder.orderFor).minuteOfHour().setCopy(m);
+        DateTime newDate = new DateTime(modifiedOrder.orderFor);
+        newDate = newDate.hourOfDay().setCopy(h);
+        newDate = newDate.minuteOfHour().setCopy(m);
+        modifiedOrder.orderFor = newDate.toString();
         confirmDeliveryTime();
     }
 
@@ -264,36 +297,18 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 modifiedOrder.serverNotes = adminNotes.getText().toString();
 
                 if(newStatus.getText().toString().equals("preparing")){
-                    Random rand = new Random();
-
-                    RestaurantDatabase.getInstance().getBikerId(new FireBaseCallBack<String>() {
-                        @Override
-                        public void onCallback(String user) {
-
-                            modifiedOrder.bikerId = user;
-
-                            modifiedOrder.restaurantId =order.restaurantId;
-                            myRef.child("orders").child(modifiedOrder.id).child("bikerId").setValue(modifiedOrder.bikerId);
-                            modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
-                            Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
-                            order = modifiedOrder;
-                            RestaurantDatabase.getInstance().update(modifiedOrder);
-                        }
-
-                        @Override
-                        public void onCallbackList(List<String> list) {
-
-                        }
-                    });
+                    modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
+                    Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
+                    order = modifiedOrder;
+                    RestaurantDatabase.getInstance().update(modifiedOrder);
                 }
                 else{
                     modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                     Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                     order = modifiedOrder;
                     RestaurantDatabase.getInstance().update(modifiedOrder);
-
+                    btnSelectBiker.setEnabled(false);
                 }
-
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -309,5 +324,25 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     public void onElementChoosen(OrderStatus s) {
         newStatus.setTextColor(getColor(s));
         newStatus.setText(s.toString());
+    }
+
+
+    public void openSelectBikerDialog() {
+        LatLng r = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
+        mapFragment = MapBikersViewFragment.newInstance(r);
+        mapFragment.show(getSupportFragmentManager(), "mapFragment");
+    }
+
+    @Override
+    public void selected(Biker biker) {
+        mapFragment.dismiss();
+        selectedBiker = biker;
+        modifiedOrder.bikerId = selectedBiker.id;
+        Log.d("MADAPP", selectedBiker.toString());
+        selectedBikerTv.setText(selectedBiker.name + " " + selectedBiker.lastname);
+        if(selectedBiker != null) {
+            bikerIsSelected = true;
+            errorBiker.setVisibility(View.GONE);
+        }
     }
 }

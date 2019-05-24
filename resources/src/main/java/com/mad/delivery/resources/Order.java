@@ -11,7 +11,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order implements Parcelable {
+public class Order implements Parcelable, Comparable<Order> {
     public String id;
     public User client;
     public Restaurant restaurant;
@@ -375,5 +375,10 @@ public class Order implements Parcelable {
                 ", bikerId='" + bikerId + '\'' +
                 ", clientId='" + clientId + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Order order) {
+        return this.orderFor.compareTo(order.orderFor);
     }
 }

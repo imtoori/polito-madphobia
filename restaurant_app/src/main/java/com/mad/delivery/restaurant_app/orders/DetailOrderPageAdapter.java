@@ -1,6 +1,7 @@
 package com.mad.delivery.restaurant_app.orders;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,7 +12,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.restaurant_app.MapBikersViewFragment;
 import com.mad.delivery.restaurant_app.R;
-import com.mad.delivery.restaurant_app.UserInformationFragment;
 
 public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     private Context context;
@@ -36,17 +36,9 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
                 UserInformationFragment uiFrag = new UserInformationFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("client", order.client);
+                bundle.putString("delivery", order.delivery);
                 uiFrag.setArguments(bundle);
                 return uiFrag;
-            case 2:
-                MapBikersViewFragment mapFrag = new MapBikersViewFragment();
-                Bundle bnd = new Bundle();
-                LatLng r = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
-                bnd.putParcelable("restaurant", r);
-                mapFrag.setArguments(bnd);
-                return mapFrag;
-
-
             default:
                 return null;
         }
@@ -60,8 +52,6 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
                 return context.getString(R.string.detail_order_info);
             case 1:
                 return context.getString(R.string.user_info_order);
-            case 2:
-                return context.getString(R.string.user_map_info);
             default:
                 return null;
         }
@@ -69,7 +59,7 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 }
 

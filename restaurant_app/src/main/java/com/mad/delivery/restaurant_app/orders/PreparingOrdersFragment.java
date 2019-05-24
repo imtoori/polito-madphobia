@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
@@ -36,6 +37,7 @@ public class PreparingOrdersFragment extends Fragment {
     private ImageView noOrderImg;
     private TextView noOrderTv;
     List<Order> orders;
+    Restaurant restaurant;
     MyOrderRecyclerViewAdapter ordersAdapter;
     public PreparingOrdersFragment() {
         // Required empty public constructor
@@ -60,42 +62,30 @@ public class PreparingOrdersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rl_preparing);
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
-        Log.d("MADAPP", "Preparing: onCreateView called");
         orders = new ArrayList<>();
         //showEmptyFolder();
-        Log.d("MADAPP", "Preparing: orders size = " + orders.size());
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
 
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);
+        restaurant =(Restaurant) getArguments().get("restaurant");
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-         RestaurantDatabase.getInstance().getPreparingOrders(new FireBaseCallBack<Order>() {
-             @Override
-             public void onCallback(Order user) {
 
-             }
-
-             @Override
-             public void onCallbackList(List<Order> list) {
-                 if(list.isEmpty())
-                     showEmptyFolder();
-                 else {
-                     Log.d("CALL", list.toString());
-                     orders = list;
-                     ordersAdapter.orders = orders;
-                     ordersAdapter.notifyDataSetChanged();
-                 }
-             }
-
-
+        RestaurantDatabase.getInstance().getPreparingAndReadyOrders(restaurant.previewInfo.id, list -> {
+            if(list.isEmpty())
+                showEmptyFolder();
+            else {
+                orders = list;
+                ordersAdapter.orders = orders;
+                ordersAdapter.notifyDataSetChanged();
+            }
         });
-
     }
 
     @Override

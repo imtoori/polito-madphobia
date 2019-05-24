@@ -1,4 +1,4 @@
-package com.mad.delivery.restaurant_app;
+package com.mad.delivery.restaurant_app.orders;
 
 
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.mad.delivery.resources.Customer;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.User;
+import com.mad.delivery.restaurant_app.R;
 
 
 /**
@@ -26,6 +27,7 @@ public class UserInformationFragment extends Fragment {
     private TextView deliveryAddress;
     private TextView description;
     private User u;
+    private String delivery;
 
     public UserInformationFragment() {
         // Required empty public constructor
@@ -43,10 +45,11 @@ public class UserInformationFragment extends Fragment {
         description = view.findViewById(R.id.main_description);
 
         u = getArguments().getParcelable("client");
+        delivery = (String) getArguments().get("delivery");
         fullName.setText(u.name + " " + u.lastName);
         phoneNumber.setText(u.phoneNumber);
         email.setText(u.email);
-        deliveryAddress.setText(u.road + " " + u.houseNumber + ", " + u.postCode + " " + u.city + "(door " + u.doorPhone+ ")");
+        deliveryAddress.setText(delivery);
         description.setText(u.description);
 
         return view;

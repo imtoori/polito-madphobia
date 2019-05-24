@@ -10,14 +10,14 @@
     <string name="save">save</string>
     <string name="next">Next</string>
     <string name="reject">Reject</string>
-    <string name="order">Order</string>
+    <string name="order">order</string>
     <string name="persona_data">Personal Data</string>
 
     <string name="imageprofile_desc">Image Profile</string>
     <string name="your_name">Your name</string>
     <string name="name">Name</string>
     <string name="lastname">Last Name</string>
-
+    <string name="order_from_title">Order from</string>
     <string name="default_phone">+39 123 444 5555</string>
     <string name="phone_number">Phone Number</string>
     <string name="your_email">Your Email Address</string>
@@ -252,4 +252,6 @@
     <string name="dialog_shopping_cart_preview">My Order Preview</string>
     <string name="dialog_shopping_cart_empty">Your shopping cart is empty.</string>
     <string name="user_map_info">Map</string>
+    <string name="available_bikers">Available Bikers</string>
+    <string name="select_biker">Select biker</string>
 </resources>

@@ -31,6 +31,7 @@ import com.mad.delivery.restaurant_app.auth.OnLogin;
 import com.mad.delivery.restaurant_app.menu.OnMenuChanged;
 import com.mad.delivery.restaurant_app.menu.OnMenuReceived;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 
 import java.util.ArrayList;
@@ -128,7 +129,8 @@ final public class RestaurantDatabase {
     class MyDateComparator implements Comparator<Order> {
         @Override
         public int compare(Order first, Order second) {
-            return DateTimeComparator.getInstance().compare(second.orderFor, first.orderFor);
+            //return DateTimeComparator.getInstance().compare(new DateTime(second.orderFor), new DateTime(first.orderFor));
+            return second.orderFor.compareTo(first.orderFor);
         }
     }
 
@@ -240,11 +242,11 @@ final public class RestaurantDatabase {
         });
     }
 
-    public List<Order> getPendingOrders(FireBaseCallBack<Order> firebaseCallback) {
+    public void getPendingOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
         List<Order> pendings = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
@@ -255,75 +257,68 @@ final public class RestaurantDatabase {
                         }
                     }
                 }
-                firebaseCallback.onCallbackList(pendings);
+                Collections.sort(pendings, myDateComparator);
+                cb.onReceived(pendings);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(pendings);
             }
         });
-        Collections.sort(pendings, myDateComparator);
-        return pendings;
     }
 
-    public List<Order> getPreparingOrders(FireBaseCallBack<Order> firebaseCallback) {
+    public void getPreparingAndReadyOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
         List<Order> preparing = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if (o.status.toString().equals("preparing")) {
+                        if (o.status.toString().equals("preparing") || o.status.toString().equals("ready")) {
                             o.id = issue.getKey();
                             preparing.add(o);
                         }
                     }
                 }
-                firebaseCallback.onCallbackList(preparing);
+                Log.d("PREP", preparing.toString());
+                Collections.sort(preparing, myDateComparator);
+                cb.onReceived(preparing);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(preparing);
             }
         });
-
-        return preparing;
-
     }
 
-    public List<Order> getCompletedOrders(FireBaseCallBack<Order> firebaseCallback) {
-        if (instance == null) {
-            instance = new RestaurantDatabase();
-        }
+    public void getCompletedOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
         List<Order> completed = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-
-                        if (o.status.toString().equals("completed")) {
+                        if (o.status.toString().equals("completed") || o.status.toString().equals("canceled") || o.status.toString().equals("delivered")) {
                             o.id = issue.getKey();
                             completed.add(o);
                         }
                     }
                 }
-                firebaseCallback.onCallbackList(completed);
+                Collections.sort(completed, myDateComparator);
+                cb.onReceived(completed);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(completed);
             }
         });
-
-        return completed;
     }
 
 
@@ -512,7 +507,30 @@ final public class RestaurantDatabase {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("DATABASE: ", "Dato cancellato");
+            }
+        });
+    }
 
+    public void getBiker(String id, OnFirebaseData<Biker> cb) {
+        if(id == null || id.equals("")) {
+            cb.onReceived(null);
+            return;
+        }
+        myRef.child("users").child("biker").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    Biker b = dataSnapshot.getValue(Biker.class);
+                    cb.onReceived(b);
+                } else {
+                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists." );
+                    cb.onReceived(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(null);
             }
         });
     }

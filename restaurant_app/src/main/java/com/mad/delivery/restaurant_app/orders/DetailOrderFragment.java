@@ -61,15 +61,17 @@ public class DetailOrderFragment extends Fragment {
         Log.d("ORDER: in openOrder1",order.toString());
 
         Log.d("TAFF","Status "+order.status.toString().toLowerCase());
-        arrived.setText(order.orderDate);
-        requested.setText(order.orderFor);
+        arrived.setText(MyDateFormat.parse(new DateTime(order.orderDate)));
+        requested.setText(MyDateFormat.parse(new DateTime(order.orderFor)));
 
       //  arrived.setText(order.orderDate);
        // requested.setText(order.orderFor);
         status.setText(order.status.toString().toLowerCase());
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
-        clientNotes.setText(order.clientNotes);
+        if(order.clientNotes == null || order.clientNotes.equals("")) {
+            clientNotes.setText("No notes");
+        }
         products = order.products;
         recyclerView = view.findViewById(R.id.rl_products);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

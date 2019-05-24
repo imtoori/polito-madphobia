@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
@@ -37,6 +38,7 @@ public class PendingOrdersFragment extends Fragment {
     private ImageView noOrderImg;
     private TextView noOrderTv;
     List<Order> orders;
+    private Restaurant restaurant;
     MyOrderRecyclerViewAdapter ordersAdapter;
 
     public PendingOrdersFragment() {
@@ -57,35 +59,25 @@ public class PendingOrdersFragment extends Fragment {
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);
+        restaurant = (Restaurant) getArguments().get("restaurant");
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("QQQQQQ", "PENDING ORDER FRAGMENT");
 
-        RestaurantDatabase.getInstance().getPendingOrders(new FireBaseCallBack<Order>() {
-            @Override
-            public void onCallback(Order user) {
-
-            }
-
-
-            @Override
-            public void onCallbackList(List<Order> list) {
-                if(list.isEmpty())
-                     showEmptyFolder();
-                else {
-                    Log.d("CALL", list.toString());
-                    orders = list;
-                    ordersAdapter.orders = orders;
-                    ordersAdapter.notifyDataSetChanged();
-                }
+        RestaurantDatabase.getInstance().getPendingOrders(restaurant.previewInfo.id, list -> {
+            if(list.isEmpty())
+                showEmptyFolder();
+            else {
+                orders = list;
+                ordersAdapter.orders = orders;
+                ordersAdapter.notifyDataSetChanged();
             }
         });
 
-        recyclerView.getAdapter().notifyDataSetChanged();
+
 
     }
 
