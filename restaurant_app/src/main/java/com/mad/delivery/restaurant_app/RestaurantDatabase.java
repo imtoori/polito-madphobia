@@ -284,7 +284,6 @@ final public class RestaurantDatabase {
                         }
                     }
                 }
-                Log.d("PREP", preparing.toString());
                 Collections.sort(preparing, myDateComparator);
                 cb.onReceived(preparing);
             }

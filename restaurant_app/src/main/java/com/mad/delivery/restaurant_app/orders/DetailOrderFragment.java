@@ -71,6 +71,8 @@ public class DetailOrderFragment extends Fragment {
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
         if(order.clientNotes == null || order.clientNotes.equals("")) {
             clientNotes.setText("No notes");
+        } else {
+            clientNotes.setText(order.clientNotes);
         }
         products = order.products;
         recyclerView = view.findViewById(R.id.rl_products);
