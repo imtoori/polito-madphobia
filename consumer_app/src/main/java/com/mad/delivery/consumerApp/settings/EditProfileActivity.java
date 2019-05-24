@@ -1,11 +1,13 @@
 package com.mad.delivery.consumerApp.settings;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -44,6 +46,8 @@ import java.io.InputStream;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -121,7 +125,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-
         }
         user = new User();
 
@@ -130,6 +133,11 @@ public class EditProfileActivity extends AppCompatActivity {
         imageLink = (Uri) bundle.get("imageLink");
         Log.d("MADAPP", user.toString());
         getProfileData();
+
+        if (ContextCompat.checkSelfPermission(EditProfileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(EditProfileActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_CODE);
+        }
     }
 
     @Override

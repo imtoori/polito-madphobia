@@ -65,7 +65,6 @@ public class PreparingOrdersFragment extends Fragment {
         orders = new ArrayList<>();
         //showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
-
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);
@@ -76,13 +75,13 @@ public class PreparingOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         RestaurantDatabase.getInstance().getPreparingAndReadyOrders(restaurant.previewInfo.id, list -> {
             if(list.isEmpty())
                 showEmptyFolder();
             else {
-                orders = list;
-                ordersAdapter.orders = orders;
+                orders.clear();
+                orders.addAll(list);
+                Log.d("MADAPP", "orderlist updated"  + orders.size());
                 ordersAdapter.notifyDataSetChanged();
             }
         });

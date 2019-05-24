@@ -245,7 +245,7 @@ final public class RestaurantDatabase {
 
     public void getPendingOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
         List<Order> pendings = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -271,7 +271,8 @@ final public class RestaurantDatabase {
 
     public void getPreparingAndReadyOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
         List<Order> preparing = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
+
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -297,7 +298,7 @@ final public class RestaurantDatabase {
 
     public void getCompletedOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
         List<Order> completed = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
