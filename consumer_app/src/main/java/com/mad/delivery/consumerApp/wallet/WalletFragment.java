@@ -142,8 +142,8 @@ public class WalletFragment extends Fragment {
 
                 @Override
                 public void onFailure() {
-                    Intent intent = new Intent(getContext(), LoginActivity.class);
-                    startActivity(intent);
+                    cvNoLogin = v.findViewById(R.id.no_login_cv);
+                    cvNoLogin.setVisibility(View.VISIBLE);
                 }
             });
 
