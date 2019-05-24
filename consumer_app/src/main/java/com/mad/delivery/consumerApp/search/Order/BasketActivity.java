@@ -323,6 +323,9 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         if(checkedChip == null) {
             return false;
         }
+        if (user.name==null || user.phoneNumber==null){
+            return false;
+        }
         return true;
     }
 
