@@ -39,5 +39,8 @@ dependencies {
     implementation 'joda-time:joda-time:2.9.4'
     implementation project(':resources')
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+
 
 }

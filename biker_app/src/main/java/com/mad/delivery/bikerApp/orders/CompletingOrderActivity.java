@@ -41,9 +41,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     private DateTime oldDateTime;
     private EditText adminNotes;
     CardView cvDeliveryOptions, cvAdminNotes, cvChangeStatus;
-    TextView requestedDeliveryTime, currentStatus, newStatus, confirmError;
-    ImageView imageConfirmError;
-    Button btnDeliveryTimeChange, btnConfirm, btnAdd, btnUndoDelivery, btnChangeStatus;
+    TextView requestedDeliveryTime, currentStatus, newStatus;
+
+    Button  btnAdd, btnChangeStatus;
     private Order order;
     private AlertDialog confirmOrderDialog;
     private boolean orderIsConfirmed;
@@ -61,17 +61,12 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         mAuth = FirebaseAuth.getInstance();
         setTitle(getResources().getString(R.string.completing_order) + " " + modifiedOrder.id);
         requestedDeliveryTime = findViewById(R.id.tv_delivery_options_sentence);
-        btnDeliveryTimeChange = findViewById(R.id.delivery_opt_change);
-        btnConfirm = findViewById(R.id.delivery_opt_confirm);
         btnAdd = findViewById(R.id.delivery_admin_notes);
         currentStatus = findViewById(R.id.tv_current_statusValue);
         newStatus = findViewById(R.id.tv_new_status);
-        confirmError = findViewById(R.id.tv_confirm_delivery_error);
-        imageConfirmError = findViewById(R.id.img_confirm_delivery_error);
         String newStatusAsString = ListDialog.getStatusAsList(modifiedOrder.status).get(0);
         newStatus.setText(newStatusAsString);
         newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
-        btnUndoDelivery = findViewById(R.id.btn_undo_delivery);
         requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(new DateTime(modifiedOrder.orderFor))));
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
@@ -85,6 +80,11 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         adminNotesLt.setDuration(500);
         adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
 
+        if(order.status.equals(OrderStatus.preparing) || order.status.equals(OrderStatus.ready) || order.status.equals(OrderStatus.pending))
+            cvChangeStatus.setVisibility(View.GONE);
+        else
+            cvChangeStatus.setVisibility(View.VISIBLE);
+
         LayoutTransition deliveryLt =  cvDeliveryOptions.getLayoutTransition();
         deliveryLt.setDuration(500);
         deliveryLt.enableTransitionType(LayoutTransition.CHANGING);
@@ -95,30 +95,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
         oldDateTime = new DateTime(modifiedOrder.orderFor);
         confirmOrderDialog = createDialog(R.string.completing_order_title_dialog, R.string.completing_order_message_dialog);
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirmDeliveryTime();
-            }
-        });
-        btnUndoDelivery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                modifiedOrder.orderFor = oldDateTime.toString();
-                requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, modifiedOrder.orderFor));
-                btnDeliveryTimeChange.setVisibility(View.VISIBLE);
-                btnConfirm.setVisibility(View.VISIBLE);
-                btnUndoDelivery.setVisibility(View.GONE);
-                orderIsConfirmed = false;
 
-            }
-        });
-        btnDeliveryTimeChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showTimePickerDialog(view);
-            }
-        });
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,8 +150,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 if(orderIsConfirmed) {
                     confirmOrderDialog.show();
                 } else {
-                    confirmError.setVisibility(View.VISIBLE);
-                    imageConfirmError.setVisibility(View.VISIBLE);
                     final Animation animShake = AnimationUtils.loadAnimation(this, R.anim.shake_effect);
                     animShake.setInterpolator(new AccelerateDecelerateInterpolator());
                     cvDeliveryOptions.startAnimation(animShake);
@@ -196,6 +171,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 return getResources().getColor(R.color.colorReadyOrder, null);
             case completed:
                 return getResources().getColor(R.color.colorCompletedOrder, null);
+            case delivered:
+                return getResources().getColor(R.color.colorDeliveredOrder, null);
             default:
                 return getResources().getColor(R.color.colorCanceledOrder, null);
         }
@@ -211,11 +188,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     public void confirmDeliveryTime() {
         requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, MyDateFormat.parse(new DateTime(modifiedOrder.orderFor))));
-        btnDeliveryTimeChange.setVisibility(View.GONE);
-        btnConfirm.setVisibility(View.GONE);
-        btnUndoDelivery.setVisibility(View.VISIBLE);
-        confirmError.setVisibility(View.GONE);
-        imageConfirmError.setVisibility(View.GONE);
         orderIsConfirmed = true;
     }
 

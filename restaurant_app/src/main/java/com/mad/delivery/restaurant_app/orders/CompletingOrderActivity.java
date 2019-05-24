@@ -100,6 +100,10 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         cvSelectBiker = findViewById(R.id.cv_select_biker);
         cvAdminNotes  = findViewById(R.id.cv_admin_notes);
         cvChangeStatus = findViewById(R.id.cv_status_change);
+        if(order.status.equals(OrderStatus.completed)||order.status.equals(OrderStatus.delivered))
+            cvChangeStatus.setVisibility(View.GONE);
+        else
+            cvChangeStatus.setVisibility(View.VISIBLE);
         adminNotes = findViewById(R.id.et_admin_notes);
         if(order.serverNotes != null && !order.serverNotes.equals("")) adminNotes.setText(order.serverNotes);
         btnChangeStatus = findViewById(R.id.btn_change_status);
@@ -256,6 +260,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 return getResources().getColor(R.color.colorCanceledOrder, null);
             case completed:
                 return getResources().getColor(R.color.colorCompletedOrder, null);
+            case delivered:
+                return  getResources().getColor(R.color.colorDeliveredOrder, null);
             default:
                 return getResources().getColor(R.color.colorCanceledOrder, null);
         }

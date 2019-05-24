@@ -49,6 +49,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         tabLayout = findViewById(R.id.detail_header);
         tabLayout.setupWithViewPager(mPager);
+
     }
 
     @Override
@@ -87,6 +88,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.order_detail_menu, menu);
         return true;
+
     }
 
     @Override

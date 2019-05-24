@@ -15,6 +15,7 @@
     <color name="colorReadyOrder">#0BD626</color>
     <color name="colorCanceledOrder">#A39797</color>
     <color name="colorCompletedOrder">#2B2B2B</color>
+    <color name="colorDeliveredOrder">#FF9800</color>
     <color name="colorUserInputNoFocus">#FF4E4E4E</color>
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorRed">#FA0000</color>

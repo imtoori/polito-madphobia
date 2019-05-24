@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,6 +26,7 @@ import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.OnImageUploaded;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Restaurant;
 
 import org.joda.time.DateTimeComparator;
@@ -142,7 +144,7 @@ final public class BikerDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o.status.toString().equals("pending")) {
+                        if(o.status.equals(OrderStatus.preparing)||o.status.equals(OrderStatus.ready)) {
                             o.id = issue.getKey();
                             pendings.add(o);
                         }
@@ -169,7 +171,7 @@ final public class BikerDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o.status.toString().equals("preparing")||o.status.toString().equals("ready")) {
+                        if(o.status.equals(OrderStatus.completed)) {
                             o.id = issue.getKey();
                             preparing.add(o);
                         }
@@ -200,7 +202,7 @@ final public class BikerDatabase {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
 
-                        if(o.status.toString().equals("completed")||o.status.toString().equals("canceled")) {
+                        if(o.status.equals(OrderStatus.delivered)) {
                             o.id = issue.getKey();
                             completed.add(o);
                         }
@@ -298,6 +300,10 @@ final public class BikerDatabase {
 
             }
         });
+    }
+    public void setBikerPosition(Double lat,Double lon){
+        myRef.child("users").child("biker").child(mAuth.getUid()).child("latitude").setValue(lat);
+        myRef.child("users").child("biker").child(mAuth.getUid()).child("longitude").setValue(lon);
     }
 }
 

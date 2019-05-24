@@ -642,8 +642,8 @@ public class ConsumerDatabase {
 
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               if (dataSnapshot.hasChild("profile")) {
-                   Double credit = dataSnapshot.child("profile").child("credit").getValue(Double.class);
+               if (dataSnapshot.hasChild("credit")) {
+                   Double credit = dataSnapshot.child("credit").getValue(Double.class);
                    setValueCredit(credit+i);
                    try {
                        firebaseCallback.onCallBack(true);
@@ -671,7 +671,7 @@ public class ConsumerDatabase {
     }
 
     public void setValueCredit(Double i){
-        myRef.child("users").child("customers").child(mAuth.getUid()).child("profile").child("credit").setValue(i);
+        myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").setValue(i);
     }
 
 

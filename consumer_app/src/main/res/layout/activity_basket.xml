@@ -191,6 +191,7 @@
                     app:layout_constraintTop_toTopOf="@+id/img_delivery" />
 
                 <ImageView
+                    android:id="@+id/imageView_get_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
@@ -214,7 +215,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/img_delivery"
                     app:srcCompat="@drawable/ic_clock" />
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/actv_time_delivery"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

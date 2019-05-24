@@ -59,9 +59,10 @@ public class WalletFragment extends Fragment {
     private CardView cvNoLogin, cvCredit;
     private Button btnLogin;
 
+
     RecyclerView recyclerView;
     TextView totalCredit, textView;
-
+    EditText Creditcode;
 
     public WalletFragment() {
         setHasOptionsMenu(true);
@@ -135,7 +136,7 @@ public class WalletFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             cvCredit.setVisibility(View.VISIBLE);
             textView.setVisibility(View.VISIBLE);
-            EditText Creditcode = v.findViewById(R.id.credit_code);
+            Creditcode = v.findViewById(R.id.credit_code);
 
 
             checkCredit();
@@ -156,17 +157,16 @@ public class WalletFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                ConsumerDatabase.getInstance().checkCreditCode("TO10", new firebaseCallback<CreditCode>() {
-                    //TODO rimuovere codice TO10 dal codice
+                ConsumerDatabase.getInstance().checkCreditCode(Creditcode.getText().toString(), new firebaseCallback<CreditCode>() {
                     @Override
                     public void onCallBack(CreditCode item) {
                         Double val = item.value;
+                        Log.i("MADD","val->"+val);
                         ConsumerDatabase.getInstance().updateCreditCustomer(item.value, new firebaseCallback<Boolean>() {
                             @Override
                             public void onCallBack(Boolean item) {
                                 if (item) {
                                     Log.d("MADD", "Il tuo conto è stato aumentato di " + val);
-                                    //TODO inserire interrogazione al db su totalCredit
                                     checkCredit();
                                     Toast.makeText(getContext(), getString(R.string.IncreasedCredit) + " " + val, Toast.LENGTH_LONG).show();
                                 } else {
@@ -202,10 +202,12 @@ public class WalletFragment extends Fragment {
         ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
             @Override
             public void onCallBack(User user) {
-                if (user != null && user.credit != null)
-                    totalCredit.setText(String.valueOf(user.credit));
+                if (user != null && user.credit!=null)
+                    totalCredit.setText(user.credit.toString());
                 else
                     totalCredit.setText(R.string.null_value);
+
+
             }
         });
     }

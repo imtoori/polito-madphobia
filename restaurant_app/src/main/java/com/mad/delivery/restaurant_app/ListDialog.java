@@ -62,6 +62,8 @@ public class ListDialog extends DialogFragment {
                 break;
             case canceled:
                 list.add(OrderStatus.pending.toString());
+            case delivered:
+                list.add(OrderStatus.delivered.toString());
                 break;
             default:
                 list.addAll(Arrays.asList(OrderStatus.pending.toString(), OrderStatus.preparing.toString(), OrderStatus.ready.toString(), OrderStatus.completed.toString(), OrderStatus.canceled.toString()));

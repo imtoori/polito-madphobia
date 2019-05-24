@@ -5,7 +5,9 @@
     android:id="@+id/cv_order"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="4dp"
+    android:layout_marginEnd="8dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -23,8 +25,9 @@
 
         <ImageView
             android:id="@+id/imgRestaurant"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_margin="8dp"
             android:fitsSystemWindows="true"
             android:scaleType="centerCrop"
             android:src="@drawable/restaurant_default"
@@ -33,9 +36,9 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,46 +51,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:alpha="1"
                 android:text="name"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/normalText" />
+                android:textSize="@dimen/normalText"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
-                android:alpha="1"
-                android:text="@string/price"
-                android:textColor="@color/colorText"
-                android:textSize="@dimen/description" />
 
             <TextView
                 android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:alpha="1"
                 android:text="@string/status"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="@dimen/description"
+                app:layout_constraintBottom_toTopOf="@+id/price"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameRestaurant" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                android:alpha="1"
+                android:text="@string/price"
                 android:textColor="@color/colorText"
-                android:textSize="@dimen/description" />
+                android:textSize="@dimen/description"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
                 android:alpha="1"
                 android:text="@string/data"
-                android:textColor="@color/colorText"
-                android:textSize="@dimen/description" />
-        </LinearLayout>
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="@dimen/description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

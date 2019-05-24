@@ -59,8 +59,8 @@
 
     <!-- Orders Fragment -->
     <string name="pending_orders">In Attesa</string>
-    <string name="preparing_orders">In preparazione</string>
-    <string name="completed_orders">Completati</string>
+    <string name="preparing_orders">In Consegna</string>
+    <string name="completed_orders">Consegnati</string>
     <string name="order_number">Ordine </string>
     <string name="order_requested_at">Consegna: </string>
     <string name="order_from">Da: </string>
@@ -108,6 +108,29 @@
     <string name="send">Si</string>
     <string name="cancel">Cancella</string>
 
+    <!-- Login & Registration-->
+    <string name="registration">Registrazione</string>
+    <string name="password_confirm">Conferma Password</string>
+    <string name="sign_in">Accedi</string>
+    <string name="sign_up">Registrati</string>
+    <string name="no_account_yet">Non hai un account?\nCrealo ora!</string>
+    <string name="already_account">Hai già un account?</string>
+    <string name="login_error_nodata">Email e/o Password non devono essere vuote</string>
+    <string name="login_error_password_not_equal">Password e conferma Password devono essere uguali</string>
+    <string name="login_error_fail">Email e/o password non sono corrette</string>
+    <string name="login_error_email_empty">Email non deve essere vuota</string>
+    <string name="login_error_password_empty">Password non deve essere vuota</string>
+    <string name="register_email_empty">Email non deve essere vuota</string>
+    <string name="register_pwd_empty">Password non deve essere vuota</string>
+    <string name="register_pwdc_empty">Password di conferma non deve essere vuota</string>
+    <string name="register_email_bad_formatted">indirizzo Email non valido</string>
+    <string name="register_pwd_too_weak">Password deve essere lunga almeno 6 caratteri</string>
+    <string name="register_email_already_used">Indirizzo email già utilizzato</string>
+    <string name="register_generic_error">An error occurred. Retry in some minutes.</string>
+    <string name="wait">Loading...</string>
+    <string name="invalid_data">Perfavore contralla email e password</string>
+    <string name="passwords_does_not_match">Le due password non corrispondono</string>
+
     <!--Setting Menu-->
     <string name="setting_profile">Profilo</string>
     <string name="setting_privacy">Privacy</string>
@@ -134,7 +157,6 @@
     <string name="day5">Venerdi:    </string>
     <string name="day6">Sabato:    </string>
     <string name="day7">Domenica:    </string>
-    <string name="check_time">Formato tempo non valido(hh:mm-hh:mm)</string>
     <string name="list_openinghours">Orari di apertura</string>
     <string name="saved_password">La tua password è stata salvata</string>
     <string name="setting_openinghours">Orari Apertura e Chiusura</string>
@@ -166,4 +188,6 @@
     <string name="Orders">Orders:</string>
     <string name="Status">Status</string>
 
+    <!--maps-->
+    <string name="maps"> Posizione</string>
 </resources>

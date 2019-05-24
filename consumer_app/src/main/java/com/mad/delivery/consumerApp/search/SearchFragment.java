@@ -1,6 +1,7 @@
 package com.mad.delivery.consumerApp.search;
-import android.content.Context;
 import android.content.res.ColorStateList;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,7 +10,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,23 +18,21 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
-import com.mad.delivery.resources.GridRecyclerView;
+import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.resources.RestaurantCategory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -44,12 +42,14 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private FragmentManager fm;
     private FragmentTransaction ft;
     private ImageButton search;
+    private ImageButton location;
     private CategoriesFragment catFragment;
     private RestaurantsFragment restaurantsFragment;
     private CardView filter;
     private Chip delivery, minorder;
     private ChipGroup chipGroup;
     private String address = "";
+    private EditText deliveryAddress;
     private Set<String> chosen;
 
     private boolean freeDelivery, minOrderCost;
@@ -68,6 +68,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         delivery = view.findViewById(R.id.deliverychip);
         minorder = view.findViewById(R.id.minorderchip);
         chipGroup = view.findViewById(R.id.chip_group);
+        location = view.findViewById(R.id.location_img);
+        deliveryAddress= view.findViewById(R.id.delivery_address_et);
         chosen = new HashSet<>();
         freeDelivery = false;
         minOrderCost = false;
@@ -110,6 +112,49 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             @Override
             public void onClick(View view) {
                 openCategory(null, "", minOrderCost, freeDelivery);
+            }
+        });
+
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GPSTracker gps = new GPSTracker(getContext());
+                if(gps.isGPSEnabled){
+                    Geocoder geocoder;
+                    List<Address> addresses = new ArrayList<>();
+                    geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+                    try {
+                        Double latitude = gps.getLatitude();
+                        Double longitude = gps.getLongitude();
+                        Log.d("latitude: ",latitude.toString());
+                        Log.d("longitude: ",longitude.toString());
+
+                        addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (addresses.size()>0) {
+
+                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                    String city = addresses.get(0).getLocality();
+                    String state = addresses.get(0).getAdminArea();
+                    String country = addresses.get(0).getCountryName();
+                    String postalCode = addresses.get(0).getPostalCode();
+                    String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                    Log.d("ADDRESS:",address+" "+city+" "+state+" "+country+" "+postalCode+" "+knownName);
+                    deliveryAddress.setText(address);
+                    }
+                    else {
+                        Toast.makeText(getContext(), "Your address isn't found", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+                else {
+                    Toast.makeText(getContext(), "Your gps is disabled", Toast.LENGTH_SHORT).show();
+
+                }
+
             }
         });
         CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {

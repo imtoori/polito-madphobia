@@ -76,19 +76,16 @@
 
         <activity android:name=".orders.CompletingOrderActivity" />
         <activity
-            android:name=".settings.PhotoZoomActivity"
-            android:parentActivityName=".settings.ProfileActivity" />
+            android:name=".settings.PhotoZoomActivity" />
         <activity
-            android:name=".settings.EditProfileActivity"
-            android:parentActivityName=".settings.ProfileActivity" />
+            android:name=".settings.EditProfileActivity"/>
         <activity android:name=".settings.ProfileActivity" />
         <activity android:name=".settings.PasswordActivity" />
         <activity android:name=".settings.LanguageActivity" />
         <activity android:name=".settings.GeneralSettingActivity" />
         <activity android:name=".menu.NewMenuItemActivity" />
         <activity
-            android:name=".orders.DetailOrderActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".orders.DetailOrderActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

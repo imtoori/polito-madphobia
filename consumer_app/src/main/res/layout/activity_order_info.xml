@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:orientation="vertical">
 
@@ -134,6 +135,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/Total"
                     android:textSize="@dimen/normalText"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -144,18 +146,11 @@
                     android:layout_height="wrap_content"
                     android:text="@string/null_value"
                     android:textSize="@dimen/normalText"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delivery"
-                android:layout_marginBottom="8dp"
-                android:textSize="@dimen/description" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -163,6 +158,91 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:paddingTop="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/delivery_desc"
+                    android:tint="@color/colorSecondaryText"
+                    app:srcCompat="@drawable/ic_location" />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/delivery"
+                    android:textSize="@dimen/description" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/delivery_desc"
+                    android:tint="@color/colorSecondaryText"
+                    app:srcCompat="@drawable/ic_price" />
+
+                <TextView
+                    android:id="@+id/payment_method"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/pay_method"
+                    android:textSize="@dimen/description" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/delivery_desc"
+                    android:tint="@color/colorSecondaryText"
+                    app:srcCompat="@drawable/ic_event" />
+
+                <TextView
+                    android:id="@+id/data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/datatime_format"
+                    android:textSize="@dimen/description" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_restaurant_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -177,19 +257,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/restaurant_note"
-                android:textSize="@dimen/normalText" />
+                android:textSize="@dimen/normalText"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/rest_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/description" />
+                android:textSize="@dimen/description"
+                android:layout_marginStart="8dp"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_biker_note"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp">
@@ -207,19 +291,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/biker_notes"
-                android:textSize="@dimen/normalText" />
+                android:textSize="@dimen/normalText"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/biker_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/description" />
+                android:textSize="@dimen/description"
+                android:layout_marginStart="8dp"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_client_note"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp">
@@ -237,13 +325,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/client_note"
-                android:textSize="@dimen/normalText" />
+                android:textSize="@dimen/normalText"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/client_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/description" />
+                android:textSize="@dimen/description"
+                android:layout_marginStart="8dp"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

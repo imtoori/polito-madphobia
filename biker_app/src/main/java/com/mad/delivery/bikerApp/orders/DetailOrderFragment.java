@@ -113,6 +113,8 @@ public class DetailOrderFragment extends Fragment {
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);
             case completed:
                 return view.getResources().getColor(R.color.colorCompletedOrder, null);
+            case delivered:
+                return view.getResources().getColor(R.color.colorDeliveredOrder, null);
             default:
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);
         }

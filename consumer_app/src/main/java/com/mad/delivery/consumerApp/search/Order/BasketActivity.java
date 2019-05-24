@@ -4,6 +4,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -31,11 +34,13 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.TimePickerFragment;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
@@ -47,6 +52,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -59,8 +65,11 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     private User user;
     private List<Product> myOrder;
     private Restaurant restaurant;
+    private ImageView deliveryAddressButton;
+    private TextView deliveryAddressText;
     TextView deliveryFee, minOrder, totalCost, minOrderTitle;
-    AutoCompleteTextView where, when;
+    AutoCompleteTextView where;
+    EditText when;
     Chip cash, credit, checkedChip;
     EditText notes;
     Button btnCompleteOrder;
@@ -73,6 +82,8 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_basket);
         toolbar = findViewById(R.id.myToolbar);
+        deliveryAddressButton =findViewById(R.id.imageView_get_location);
+        deliveryAddressText = findViewById(R.id.actv_delivery_address);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
         chipGroup = findViewById(R.id.chip_group);
@@ -88,22 +99,27 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         notes = findViewById(R.id.notes);
         btnCompleteOrder = findViewById(R.id.button_complete_order);
 
-        when.setOnClickListener((view) -> {
-            Calendar mcurrentTime = Calendar.getInstance();
-            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-            int minute = mcurrentTime.get(Calendar.MINUTE);
-            TimePickerDialog mTimePicker;
-            mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    when.setText( selectedHour + ":" + selectedMinute);
-                    orderFor = new DateTime();
-                    orderFor = orderFor.hourOfDay().setCopy(selectedHour);
-                    orderFor = orderFor.minuteOfHour().setCopy(selectedMinute);
+        when.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b) {
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    int minute = mcurrentTime.get(Calendar.MINUTE);
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(BasketActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            when.setText( selectedHour + ":" + selectedMinute);
+                            orderFor = new DateTime();
+                            orderFor = orderFor.hourOfDay().setCopy(selectedHour);
+                            orderFor = orderFor.minuteOfHour().setCopy(selectedMinute);
+                        }
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setTitle("Select Delivery Time");
+                    mTimePicker.show();
                 }
-            }, hour, minute, true);//Yes 24 hour time
-            mTimePicker.setTitle("Select Delivery Time");
-            mTimePicker.show();
+            }
         });
 
         try {
@@ -153,6 +169,10 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                     ConsumerDatabase.getInstance().putOrder(order, this, success -> {
                         if(success) {
                             Toast.makeText(this, "Your order has been received.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                            intent.putExtra("open", 1);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else {
                             Toast.makeText(this, "An error occurred. Items you ordered may not be available anymore.", Toast.LENGTH_SHORT).show();
                         }
@@ -163,6 +183,44 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
 
             } else {
                 Toast.makeText(this, "Please fill all fields with valid data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        deliveryAddressButton.setOnClickListener(v->{
+            GPSTracker gps = new GPSTracker(BasketActivity.this);
+            if(gps.isGPSEnabled){
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<>();
+                geocoder = new Geocoder(BasketActivity.this, Locale.getDefault());
+
+                try {
+                    Double latitude = gps.getLatitude();
+                    Double longitude = gps.getLongitude();
+                    Log.d("latitude: ",latitude.toString());
+                    Log.d("longitude: ",longitude.toString());
+
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (addresses.size()>0) {
+                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                    String city = addresses.get(0).getLocality();
+                    String state = addresses.get(0).getAdminArea();
+                    String country = addresses.get(0).getCountryName();
+                    String postalCode = addresses.get(0).getPostalCode();
+                    String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                    Log.d("ADDRESS:", address + " " + city + " " + state + " " + country + " " + postalCode + " " + knownName);
+                    deliveryAddressText.setText(address);
+                }
+                else {
+                    Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+            else {
+                Toast.makeText(this, "Your gps is disabled", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

@@ -3,9 +3,11 @@ package com.mad.delivery.bikerApp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,8 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 124);
         setContentView(R.layout.activity_home);
         mAuth = FirebaseAuth.getInstance();
 
@@ -91,6 +95,20 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
                 return false;
             }
         };
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        switch (open) {
+            case 0:
+                navigation.setSelectedItemId(R.id.nav_statistics);
+                break;
+            case 1:
+                navigation.setSelectedItemId(R.id.nav_orders);
+                break;
+            case 2:
+                navigation.setSelectedItemId(R.id.nav_settings);
+                break;
+            default:
+                navigation.setSelectedItemId(R.id.nav_orders);
+        }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // todo: enable notifications!!

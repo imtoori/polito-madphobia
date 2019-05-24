@@ -17,9 +17,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.resources.MyDateFormat;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
 import com.squareup.picasso.Picasso;
+
+import org.joda.time.DateTime;
 
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
@@ -54,9 +57,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             });
             int price = 0;
 
-            holder.price.setText("Price: "+ holder.order.totalPrice.toString());
-            holder.data.setText("Date: "+ holder.order.orderFor);
-            holder.status.setText("Delivery: "+ holder.order.status.toString());
+            holder.price.setText(holder.order.totalPrice.toString()+"€");
+            holder.data.setText(MyDateFormat.parse(new DateTime(holder.order.orderFor)));
+            holder.status.setText(holder.order.status.toString());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override

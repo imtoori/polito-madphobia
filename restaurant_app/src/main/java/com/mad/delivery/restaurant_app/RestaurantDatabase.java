@@ -90,9 +90,10 @@ final public class RestaurantDatabase {
     }
 
     private void getRestaurantProfile(FireBaseCallBack<Restaurant> restaurantFireBaseCallBack) {
-        restaurantRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if(mAuth.getUid()!=null) {
+            restaurantRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
                     Restaurant item = dataSnapshot.getValue(Restaurant.class);
@@ -103,15 +104,15 @@ final public class RestaurantDatabase {
                         Log.d("DATABASE: ", "Elemento nullo");
                     }
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("DATABASE: ", "SONO ENTRATO");
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d("DATABASE: ", "SONO ENTRATO");
 
-            }
-        });
-
+                }
+            });
+        }
     }
 
     public void reset() {
@@ -304,6 +305,7 @@ final public class RestaurantDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
+
                         if (o.status.toString().equals("completed") || o.status.toString().equals("canceled") || o.status.toString().equals("delivered")) {
                             o.id = issue.getKey();
                             completed.add(o);

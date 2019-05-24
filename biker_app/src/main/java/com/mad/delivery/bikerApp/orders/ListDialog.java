@@ -50,19 +50,22 @@ public class ListDialog extends DialogFragment {
         List<String> list = new ArrayList<>();
         switch(initial) {
             case pending:
-                list.addAll(Arrays.asList(OrderStatus.preparing.toString(), OrderStatus.ready.toString(), OrderStatus.completed.toString()));
+                list.add(OrderStatus.pending.toString());
                 break;
             case preparing:
-                list.addAll(Arrays.asList(OrderStatus.ready.toString(), OrderStatus.completed.toString()));
+                list.add(OrderStatus.preparing.toString());
                 break;
             case ready:
-                list.addAll(Arrays.asList(OrderStatus.completed.toString()));
+                list.add(OrderStatus.ready.toString());
                 break;
             case completed:
-                list.add(OrderStatus.completed.toString());
+                list.add(OrderStatus.delivered.toString());
+                break;
+            case delivered:
+                list.add(OrderStatus.delivered.toString());
                 break;
             default:
-                list.addAll(Arrays.asList(OrderStatus.pending.toString(), OrderStatus.preparing.toString(), OrderStatus.ready.toString(), OrderStatus.completed.toString()));
+                list.addAll(Arrays.asList(OrderStatus.delivered.toString()));
         }
         return list;
     }
