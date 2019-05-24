@@ -72,7 +72,7 @@ public class StartFragment extends Fragment {
             @Override
             public void onSuccess(Biker user) {
                 biker = user;
-                if(biker.visible) {
+                if(biker != null && biker.visible) {
                     status.setVisibility(View.VISIBLE);
                     cvStats.setVisibility(View.VISIBLE);
                     visibleFolder.setVisibility(View.GONE);

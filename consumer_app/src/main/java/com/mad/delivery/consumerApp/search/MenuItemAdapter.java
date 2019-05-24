@@ -55,6 +55,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         MenuItemRest item = items.get(index);
         holder.mItem = item;
         holder.name.setText(item.name);
+        holder.price.setText("€ " + item.price);
         //Log.i(TAG, "onBindViewHolder:" + holder.etQuantity);
 
     }
@@ -71,6 +72,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         public final TextView desc;
         public final ImageButton btnPlus, btnMinus;
         public final TextView etQuantity;
+        public final TextView price;
         public MenuItemRest mItem;
 
         public ViewHolder(View view) {
@@ -82,6 +84,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
             btnPlus = mView.findViewById(R.id.btn_add_item);
             btnMinus = mView.findViewById(R.id.btn_rem_item);
             etQuantity = mView.findViewById(R.id.tv_menuitem_qty);
+            price = mView.findViewById(R.id.tv_price);
 
             btnPlus.setOnClickListener(new View.OnClickListener() {
                 @Override

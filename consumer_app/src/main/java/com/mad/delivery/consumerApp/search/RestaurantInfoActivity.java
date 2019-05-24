@@ -61,6 +61,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
     Map<String, Product> myOrder;
     List<Product> orderList;
     private ProductsAdapter myOrderAdapter;
+    private PreviewInfo previewInfo;
 
     // dialog items
     TextView deliveryFee, totalPrice;
@@ -69,7 +70,6 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_info);
         mAuth = FirebaseAuth.getInstance();
-        PreviewInfo previewInfo;
         Toolbar toolbar = findViewById(R.id.toolbar);
         collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
@@ -81,16 +81,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         try {
             Bundle bundle = getIntent().getExtras();
             previewInfo = (PreviewInfo) bundle.get("restaurant");
-            ConsumerDatabase.getInstance().getRestaurantInfo(previewInfo, (rest) -> {
-                restaurant = rest;
-
-                pagerAdapter = new RestaurantInfoPageAdapter(getSupportFragmentManager(), this, restaurant);
-                mPager.setAdapter(pagerAdapter);
-                collapsingToolbarLayout.setTitle(restaurant.previewInfo.name);
-                // Give the TabLayout the ViewPager
-
-                tabLayout.setupWithViewPager(mPager);
-            });
+            loadRestaurantInfo(false);
 
         } catch (NullPointerException e) {
             // do nothing
@@ -267,7 +258,8 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         itemsNumber -= p.quantity;
         updateShoppingCartIcon(itemsNumber);
         if(myOrder.size() == 0) {
-            btnNext.setEnabled(false);
+            dialog.dismiss();
+            loadRestaurantInfo(true);
         }
     }
 
@@ -282,5 +274,21 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         }
         totalPrice.setText("€ " + tp);
 
+    }
+
+    private void loadRestaurantInfo(boolean restaurantMenu) {
+        ConsumerDatabase.getInstance().getRestaurantInfo(previewInfo, (rest) -> {
+            restaurant = rest;
+
+            pagerAdapter = new RestaurantInfoPageAdapter(getSupportFragmentManager(), this, restaurant);
+            mPager.setAdapter(pagerAdapter);
+            collapsingToolbarLayout.setTitle(restaurant.previewInfo.name);
+            // Give the TabLayout the ViewPager
+
+            tabLayout.setupWithViewPager(mPager);
+            if(restaurantMenu) {
+                tabLayout.selectTab(tabLayout.getTabAt(1));
+            }
+        });
     }
 }

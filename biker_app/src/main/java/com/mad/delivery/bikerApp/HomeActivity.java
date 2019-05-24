@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
+import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.bikerApp.orders.DetailOrderActivity;
 import com.mad.delivery.bikerApp.orders.OrderFragment;
 import com.mad.delivery.bikerApp.orders.PendingOrdersFragment;
@@ -33,6 +34,7 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     int open = 1;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,9 +113,7 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // todo: enable notifications!!
-        //FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> BikerDatabase.getInstance().updateToken(mAuth.getCurrentUser().getUid(), instanceIdResult.getToken()));
-        //FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
+
     }
 
     @Override
@@ -147,13 +147,29 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+
+
+        BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
+            @Override
+            public void onSuccess(Biker user) {
+                // do nothing
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> BikerDatabase.getInstance().updateToken(mAuth.getCurrentUser().getUid(), instanceIdResult.getToken()));
+                FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
+            }
+
+            @Override
+            public void onFailure() {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 
     @Override
     public void openOrder(Order order) {
