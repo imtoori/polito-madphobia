@@ -46,7 +46,7 @@ public class Order implements Parcelable, Comparable<Order> {
         this.delivery=delivery;
         this.paymentMethod = paymentMethod;
         this.totalPrice=0.0;
-        products.forEach(p->this.totalPrice+=p.price*p.quantity);
+        products.forEach(p->this.totalPrice+=p.price);
         totalPrice+=restaurant.previewInfo.deliveryCost;
         this.latitude = 0.0;
         this.longitude = 0.0;

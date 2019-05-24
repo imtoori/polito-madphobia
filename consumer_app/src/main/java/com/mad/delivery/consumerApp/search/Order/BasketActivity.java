@@ -165,6 +165,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                 else paymentMethod = "";
 
                 Order order = new Order(user, restaurant, myOrder, orderFor.toString(), paymentMethod, where.getText().toString());
+                order.clientNotes=notes.getText().toString();
                 try {
                     ConsumerDatabase.getInstance().putOrder(order, this, success -> {
                         if(success) {
@@ -321,6 +322,9 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
             return false;
         }
         if(checkedChip == null) {
+            return false;
+        }
+        if (user.name==null || user.phoneNumber==null){
             return false;
         }
         return true;
