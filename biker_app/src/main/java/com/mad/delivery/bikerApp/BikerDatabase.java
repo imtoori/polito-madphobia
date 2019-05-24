@@ -301,6 +301,10 @@ final public class BikerDatabase {
             }
         });
     }
+    public void setBikerPosition(Double lat,Double lon){
+        myRef.child("users").child("biker").child(mAuth.getUid()).child("latitude").setValue(lat);
+        myRef.child("users").child("biker").child(mAuth.getUid()).child("longitude").setValue(lon);
+    }
 }
 
 
