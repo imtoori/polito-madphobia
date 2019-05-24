@@ -73,24 +73,8 @@ public class WalletFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
-        }
 
-        ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
-            @Override
-            public void onSuccess(User user) {
-                // do nothing
-            }
 
-            @Override
-            public void onFailure() {
-                Intent intent = new Intent(getContext(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -133,24 +117,38 @@ public class WalletFragment extends Fragment {
             cvNoLogin.setVisibility(View.VISIBLE);
 
         } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            cvCredit.setVisibility(View.VISIBLE);
-            textView.setVisibility(View.VISIBLE);
-            Creditcode = v.findViewById(R.id.credit_code);
 
-
-            checkCredit();
-            List<Order> orders = new ArrayList<>();
-
-            ConsumerDatabase.getInstance().getAllCostumerOrders(new firebaseCallback<List<Order>>() {
+            ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
                 @Override
-                public void onCallBack(List<Order> item) {
-                    OrdersAdapter ordersAdapter = new OrdersAdapter(item, mListener);
-                    recyclerView.hasFixedSize();
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    recyclerView.setAdapter(ordersAdapter);
+                public void onSuccess(User user) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    cvCredit.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.VISIBLE);
+                    Creditcode = v.findViewById(R.id.credit_code);
+
+
+                    checkCredit();
+                    List<Order> orders = new ArrayList<>();
+                    ConsumerDatabase.getInstance().getAllCostumerOrders(new firebaseCallback<List<Order>>() {
+                        @Override
+                        public void onCallBack(List<Order> item) {
+                            OrdersAdapter ordersAdapter = new OrdersAdapter(item, mListener);
+                            recyclerView.hasFixedSize();
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setAdapter(ordersAdapter);
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure() {
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
                 }
             });
+
+
+
 
         }
         v.findViewById(R.id.done_code).setOnClickListener(new View.OnClickListener() {
