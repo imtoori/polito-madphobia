@@ -4,6 +4,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -31,6 +34,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.TimePickerFragment;
@@ -47,6 +51,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -59,6 +64,8 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     private User user;
     private List<Product> myOrder;
     private Restaurant restaurant;
+    private ImageView deliveryAddressButton;
+    private TextView deliveryAddressText;
     TextView deliveryFee, minOrder, totalCost, minOrderTitle;
     AutoCompleteTextView where, when;
     Chip cash, credit, checkedChip;
@@ -73,6 +80,8 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_basket);
         toolbar = findViewById(R.id.myToolbar);
+        deliveryAddressButton =findViewById(R.id.img_delivery);
+        deliveryAddressText = findViewById(R.id.actv_delivery_address);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
         chipGroup = findViewById(R.id.chip_group);
@@ -163,6 +172,35 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
 
             } else {
                 Toast.makeText(this, "Please fill all fields with valid data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        deliveryAddressButton.setOnClickListener(v->{
+            GPSTracker gps = new GPSTracker(BasketActivity.this);
+            if(gps.isGPSEnabled){
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<>();
+                geocoder = new Geocoder(BasketActivity.this, Locale.getDefault());
+
+                try {
+                    Double latitude = gps.getLatitude();
+                    Double longitude = gps.getLongitude();
+                    Log.d("latitude: ",latitude.toString());
+                    Log.d("longitude: ",longitude.toString());
+
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+                Log.d("ADDRESS:",address+" "+city+" "+state+" "+country+" "+postalCode+" "+knownName);
+                deliveryAddressText.setText(address);
             }
         });
     }
