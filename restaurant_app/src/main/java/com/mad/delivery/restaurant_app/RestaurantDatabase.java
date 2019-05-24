@@ -326,16 +326,33 @@ final public class RestaurantDatabase {
 
     public void updateRestaurantProfile(Restaurant r, Uri image) {
         Log.d("MADAPP", "## UpdateRestaurantProfile: " + r.toString());
-        if (image == null || image.toString().equals("") || image.toString().contains("https:")) {
-            restaurantRef.child(r.previewInfo.id).setValue(r);
-            Log.d("MADAPP", "restaurant ID= " + r.previewInfo.id);
-            return;
-        }
+        getMenu(r.previewInfo.id, new OnMenuReceived() {
+            @Override
+            public void menuReceived(Map<String, List<MenuItemRest>> menu, List<String> categories) {
+                if(r.menu == null) r.menu = new HashMap<>();
+                menu.entrySet().stream().forEach((entry) -> {
+                    entry.getValue().stream().forEach(m -> {
+                        r.menu.put(m.id, m);
+                    });
+                });
+                if (image == null || image.toString().equals("") || image.toString().contains("https:")) {
+                    restaurantRef.child(r.previewInfo.id).setValue(r);
+                    return;
+                }
 
-        uploadImage(r.previewInfo.id, image, "profile", image.getLastPathSegment(), () -> {
-            r.previewInfo.imageName = image.getLastPathSegment();
-            restaurantRef.child(r.previewInfo.id).setValue(r);
+                uploadImage(r.previewInfo.id, image, "profile", image.getLastPathSegment(), () -> {
+                    r.previewInfo.imageName = image.getLastPathSegment();
+                    restaurantRef.child(r.previewInfo.id).setValue(r);
+                });
+            }
+
+            @Override
+            public void itemRemoved(MenuItemRest item) {
+
+            }
         });
+
+
     }
 
     public void updateRestaurantVisibility(String restaurantID, boolean value, OnFirebaseData<Boolean> cb) {

@@ -109,7 +109,6 @@ public class EditProfileActivity extends AppCompatActivity {
             startActivity(intent);
         }
         restaurant = new Restaurant();
-
         Bundle bundle = getIntent().getExtras();
         restaurant = (Restaurant) bundle.get("user");
         if(restaurant.categories == null) restaurant.categories = new HashMap<>();
@@ -127,6 +126,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 chip.setRippleColorResource(R.color.colorPrimaryDark);
                 chip.setCheckedIconVisible(false);
                 chip.setChipIconTintResource(R.color.colorPrimary);
+                Log.d("MADAPP", restaurant.categories.toString());
                 if(restaurant.categories != null) {
                     if (restaurant.categories.containsKey(n.toLowerCase())) {
                         chip.setChecked(true);

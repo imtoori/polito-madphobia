@@ -96,6 +96,9 @@ public class Restaurant implements Serializable, Parcelable {
         postCode = in.readString();
         city = in.readString();
         openingHours = in.readString();
+        categories = in.readHashMap(Boolean.class.getClassLoader());
+        menu = in.readHashMap(MenuItemRest.class.getClassLoader());
+        offers = in.readHashMap(MenuItemRest.class.getClassLoader());
         token = in.readString();
         if (in.readByte() == 0) {
             latitude = null;
@@ -122,6 +125,9 @@ public class Restaurant implements Serializable, Parcelable {
         dest.writeString(postCode);
         dest.writeString(city);
         dest.writeString(openingHours);
+        dest.writeMap(categories);
+        dest.writeMap(menu);
+        dest.writeMap(offers);
         dest.writeString(token);
         if (latitude == null) {
             dest.writeByte((byte) 0);
