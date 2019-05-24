@@ -43,9 +43,9 @@
     <string name="check_email">Email Address not valid</string>
 
     <!-- Login & Registration-->
-    <string name="login">Login</string>
+    <string name="login" translatable="false">Login</string>
     <string name="registration">Registration</string>
-    <string name="password">Password</string>
+    <string name="password" translatable="false">Password</string>
     <string name="password_confirm">Password Confirm</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
@@ -181,7 +181,11 @@
     <string name="Orders">Orders:</string>
     <string name="Status">Status</string>
     <string name="nav_statistics">My Page</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps" translatable="false">Map</string>
 
-    <string name="maps"> Posizione</string>
+    <string name="maps">Position</string>
+
+    <!--menu-->
+    <string name="category">Category</string>
+    <string name="availability">Availability</string>
 </resources>

@@ -82,10 +82,10 @@ public class StartFragment extends Fragment {
                     visibleFolder.setVisibility(View.VISIBLE);
                 }
 
-                ordersTaken.setText(biker.order_count.toString());
-                earning.setText(biker.earning.toString());
-                kilometers.setText(biker.km.toString());
-                hours.setText(biker.hours.toString());
+                //ordersTaken.setText(biker.order_count.toString());
+                //earning.setText(biker.earning.toString());
+                //kilometers.setText(biker.km.toString());
+                //hours.setText(biker.hours.toString());
                 setStatus(biker.status);
                 status.setOnClickListener(v -> {
                     biker.status = !biker.status;

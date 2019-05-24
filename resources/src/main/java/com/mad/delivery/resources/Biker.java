@@ -22,10 +22,10 @@ public class Biker implements Serializable {
     public Double latitude;
     public Double longitude;
     public Boolean visible;
-    public Integer order_count;
-    public Double km;
-    public Double earning;
-    public Double hours;
+   // public Integer order_count;
+   // public Double km;
+    //public Double earning;
+    //public Double hours;
 
     public Biker(String name, String lastname, String phoneNumber, String emailAddress, String description) {
         this.name = name;
@@ -37,10 +37,10 @@ public class Biker implements Serializable {
         this.imageName  = "";
         this.status = false;
         this.visible = false;
-        this.order_count=0;
-        this.km=0.00;
-        this.earning=0.00;
-        this.hours=0.00;
+        //this.order_count=0;
+        //this.km=0.00;
+        //this.earning=0.00;
+        //this.hours=0.00;
         this.latitude = 0.0;
         this.longitude = 0.0;
 
@@ -60,10 +60,10 @@ public class Biker implements Serializable {
         this.imageName = u.imageName;
         this.status = u.status;
         this.visible = u.visible;
-        this.order_count= u.order_count;
-        this.km=u.km;
-        this.earning=u.earning;
-        this.hours=u.hours;
+        //this.order_count= u.order_count;
+        //this.km=u.km;
+        //this.earning=u.earning;
+        //this.hours=u.hours;
         this.latitude = u.latitude;
         this.longitude = u.latitude;
     }
@@ -150,7 +150,7 @@ public class Biker implements Serializable {
         this.visible = visible;
     }
 
-    public Integer getOrderCount() {
+    /*public Integer getOrderCount() {
         return order_count;
     }
 
@@ -179,7 +179,7 @@ public class Biker implements Serializable {
     public void setHours(Double hours) {
         this.hours = hours;
     }
-
+*/
     @Override
     public String toString() {
         return "Biker{" +
@@ -193,10 +193,6 @@ public class Biker implements Serializable {
                 ", id='" + id + '\'' +
                 ", status=" + status +
                 ", visible=" + visible +
-                ", orderCounter=" + order_count +
-                ", km=" + km +
-                ", earning=" + earning +
-                ", hours=" + hours +
                 '}';
     }
 
