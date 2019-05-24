@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
+
 import android.animation.LayoutTransition;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,7 +44,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     CardView cvDeliveryOptions, cvAdminNotes, cvChangeStatus;
     TextView requestedDeliveryTime, currentStatus, newStatus;
 
-    Button  btnAdd, btnChangeStatus;
+    Button btnAdd, btnChangeStatus;
     private Order order;
     private AlertDialog confirmOrderDialog;
     private boolean orderIsConfirmed;
@@ -71,25 +72,26 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
-        cvAdminNotes  = findViewById(R.id.cv_admin_notes);
+        cvAdminNotes = findViewById(R.id.cv_admin_notes);
         cvChangeStatus = findViewById(R.id.cv_status_change);
         adminNotes = findViewById(R.id.et_admin_notes);
-        if(order.bikerNotes != null && !order.bikerNotes.equals("")) adminNotes.setText(order.bikerNotes);
+        if (order.bikerNotes != null && !order.bikerNotes.equals(""))
+            adminNotes.setText(order.bikerNotes);
         btnChangeStatus = findViewById(R.id.btn_change_status);
-        LayoutTransition adminNotesLt =  cvAdminNotes.getLayoutTransition();
+        LayoutTransition adminNotesLt = cvAdminNotes.getLayoutTransition();
         adminNotesLt.setDuration(500);
         adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
 
-        if(order.status.equals(OrderStatus.preparing) || order.status.equals(OrderStatus.ready) || order.status.equals(OrderStatus.pending))
+        if (order.status.equals(OrderStatus.preparing) || order.status.equals(OrderStatus.ready) || order.status.equals(OrderStatus.pending))
             cvChangeStatus.setVisibility(View.GONE);
         else
             cvChangeStatus.setVisibility(View.VISIBLE);
 
-        LayoutTransition deliveryLt =  cvDeliveryOptions.getLayoutTransition();
+        LayoutTransition deliveryLt = cvDeliveryOptions.getLayoutTransition();
         deliveryLt.setDuration(500);
         deliveryLt.enableTransitionType(LayoutTransition.CHANGING);
 
-        LayoutTransition changeStatusLt =  cvChangeStatus.getLayoutTransition();
+        LayoutTransition changeStatusLt = cvChangeStatus.getLayoutTransition();
         changeStatusLt.setDuration(500);
         changeStatusLt.enableTransitionType(LayoutTransition.CHANGING);
 
@@ -147,15 +149,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.send_order:
-                if(orderIsConfirmed) {
-                    confirmOrderDialog.show();
-                } else {
-                    final Animation animShake = AnimationUtils.loadAnimation(this, R.anim.shake_effect);
-                    animShake.setInterpolator(new AccelerateDecelerateInterpolator());
-                    cvDeliveryOptions.startAnimation(animShake);
-                }
+                confirmOrderDialog.show();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -207,8 +202,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         builder.setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 //modifiedOrder.bikerId =order.bikerId;
-                modifiedOrder.bikerId =order.bikerId;
-                modifiedOrder.restaurantId =order.restaurantId;
+                modifiedOrder.bikerId = order.bikerId;
+                modifiedOrder.restaurantId = order.restaurantId;
                 modifiedOrder.bikerNotes = adminNotes.getText().toString();
                 modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
