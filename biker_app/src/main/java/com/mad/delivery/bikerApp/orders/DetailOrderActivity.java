@@ -17,6 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BikerDatabase;
+import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
 import com.mad.delivery.resources.Order;
@@ -62,7 +63,8 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.putExtra("open", 1);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();

@@ -92,6 +92,20 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
             }
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        switch (open) {
+            case 0:
+                navigation.setSelectedItemId(R.id.nav_statistics);
+                break;
+            case 1:
+                navigation.setSelectedItemId(R.id.nav_orders);
+                break;
+            case 2:
+                navigation.setSelectedItemId(R.id.nav_settings);
+                break;
+            default:
+                navigation.setSelectedItemId(R.id.nav_orders);
+        }
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // todo: enable notifications!!
         //FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> BikerDatabase.getInstance().updateToken(mAuth.getCurrentUser().getUid(), instanceIdResult.getToken()));
