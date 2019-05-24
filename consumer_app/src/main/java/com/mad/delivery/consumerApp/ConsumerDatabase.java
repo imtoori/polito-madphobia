@@ -171,55 +171,88 @@ public class ConsumerDatabase {
                     Log.d("TRANS", "mutable null");
                 } else {
                     Log.d("TRANS", "mutable not null");
-                    myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot!=null){
-                                Double d = dataSnapshot.getValue(Double.class);
-                                Log.d("TRANS", "credito "+d.toString()+" tot: "+o.totalPrice);
-                                if(d>o.totalPrice){
-                                    getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
-                                        @Override
-                                        public void onCallBack(List<MenuItemRest> item) throws IOException {
-                                            item.forEach(i->{
-                                                o.products.forEach(p->{
-                                                    Log.d("TRANS", "id menuItems "+i.id +" id prodotto "+p.idItem +" quantità prodotto: "+p.quantity +" quantità items "+ i.availability );
-                                                    if(i.id.equals(p.idItem)) {
-                                                        if (p.quantity > i.availability)
-                                                            flag = false;
-                                                        else
-                                                            i.availability -= p.quantity;
-                                                    }
-                                                });
+                    Log.e("CREDIT: ","method "+o.paymentMethod);
 
-                                            });
-                                            if(flag){
-                                                item.forEach(i->{
-                                                    myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
-                                                });
-                                                myRef.child("orders").push().setValue(o);
-                                                myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").setValue(d-o.totalPrice);                                            }
+                    if(o.paymentMethod.matches("credit")) {
+                        Log.e("CREDIT: ","credit "+o.totalPrice.toString());
+                        myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot != null) {
+                                    Double d = dataSnapshot.getValue(Double.class);
+                                    Log.d("TRANS", "credito " + d.toString() + " tot: " + o.totalPrice);
 
-                                            firebaseCallback2.onCallBack(flag);
+                                    if (d > o.totalPrice) {
+                                        getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
+                                            @Override
+                                            public void onCallBack(List<MenuItemRest> item) throws IOException {
+                                                item.forEach(i -> {
+                                                    o.products.forEach(p -> {
+                                                        Log.d("TRANS", "id menuItems " + i.id + " id prodotto " + p.idItem + " quantità prodotto: " + p.quantity + " quantità items " + i.availability);
+                                                        if (i.id.equals(p.idItem)) {
+                                                            if (p.quantity > i.availability)
+                                                                flag = false;
+                                                            else
+                                                                i.availability -= p.quantity;
+                                                        }
+                                                    });
+
+                                                });
+                                                if (flag) {
+                                                    item.forEach(i -> {
+                                                        myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
+                                                    });
+                                                    myRef.child("orders").push().setValue(o);
+                                                    myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").setValue(d - o.totalPrice);
+                                                }
+
+                                                firebaseCallback2.onCallBack(flag);
+                                            }
+                                        });
+
+                                    } else {
+                                        try {
+                                            firebaseCallback2.onCallBack(false);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
                                         }
-                                    });
-
-                                }
-                                else {
-                                    try {
-                                        firebaseCallback2.onCallBack(false);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
                                     }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
+                    else if(o.paymentMethod.matches("cash")){
+                        getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
+                            @Override
+                            public void onCallBack(List<MenuItemRest> item) throws IOException {
+                                item.forEach(i -> {
+                                    o.products.forEach(p -> {
+                                        Log.d("TRANS", "id menuItems " + i.id + " id prodotto " + p.idItem + " quantità prodotto: " + p.quantity + " quantità items " + i.availability);
+                                        if (i.id.equals(p.idItem)) {
+                                            if (p.quantity > i.availability)
+                                                flag = false;
+                                            else
+                                                i.availability -= p.quantity;
+                                        }
+                                    });
+
+                                });
+                                if (flag) {
+                                    item.forEach(i -> {
+                                        myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
+                                    });
+                                    myRef.child("orders").push().setValue(o);
+                                }
+
+                                firebaseCallback2.onCallBack(flag);
+                            }
+                        });
+                    }
 
                 }
 

@@ -162,7 +162,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                 String paymentMethod = "";
                 if(checkedChip.getText().toString().equals(getString(R.string.pay_cash))) paymentMethod = "cash";
                 else if(checkedChip.getText().toString().equals(getString(R.string.pay_credit))) paymentMethod = "credit";
-                else paymentMethod = "";
+                else paymentMethod = "cash";
 
                 Order order = new Order(user, restaurant, myOrder, orderFor.toString(), paymentMethod, where.getText().toString());
                 order.clientNotes=notes.getText().toString();
