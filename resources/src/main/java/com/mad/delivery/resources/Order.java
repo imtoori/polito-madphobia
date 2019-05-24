@@ -69,7 +69,8 @@ public class Order implements Parcelable, Comparable<Order> {
         paymentMethod = other.paymentMethod;
         this.totalPrice = other.totalPrice;
         this.latitude = other.latitude;
-        this.longitude = other.latitude;
+        this.longitude = other.longitude;
+        this.bikerId = other.bikerId;
 
     }
 
