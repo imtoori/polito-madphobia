@@ -71,9 +71,7 @@ public class Order implements Parcelable, Comparable<Order> {
         this.latitude = other.latitude;
         this.longitude = other.longitude;
         this.bikerId = other.bikerId;
-
     }
-
 
     protected Order(Parcel in) {
         id = in.readString();
@@ -183,7 +181,6 @@ public class Order implements Parcelable, Comparable<Order> {
     }
 
     public void update(Order other) {
-
         this.id = other.id;
         this.client = other.client;
         this.products = other.products;
@@ -197,6 +194,8 @@ public class Order implements Parcelable, Comparable<Order> {
         bikerNotes= other.bikerNotes;
         delivery=other.delivery;
         restaurantId = other.restaurantId;
+        latitude = other.latitude;
+        longitude = other.longitude;
     }
 
     public String getId() {
