@@ -68,7 +68,7 @@ public class DetailOrderFragment extends Fragment {
         Order order = (Order) getArguments().get("order");
         requested.setText(MyDateFormat.parse(new DateTime(order.orderFor)));
         restAdd.setText(order.restaurant.road + " " + order.restaurant.houseNumber + ", " + order.restaurant.postCode + " " + order.restaurant.city + "(door " + order.restaurant.doorPhone+ ")");
-        custAdd.setText(order.client.road + " " + order.client.houseNumber + ", " + order.client.postCode + " " + order.client.city + "(door " + order.client.doorPhone+ ")");
+        custAdd.setText(order.delivery );
         status.setText(order.status.toString().toLowerCase());
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
