@@ -77,6 +77,8 @@ public class MyOrderRecyclerViewAdapter extends RecyclerView.Adapter<MyOrderRecy
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);
             case completed:
                 return view.getResources().getColor(R.color.colorCompletedOrder, null);
+            case delivered:
+                return view.getResources().getColor(R.color.colorDeliveredOrder, null);
             default:
                 return view.getResources().getColor(R.color.colorCanceledOrder, null);
         }

@@ -85,10 +85,13 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         adminNotesLt.setDuration(500);
         adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
 
-        if(order.status.equals("preparing") || order.status.equals("ready") || order.status.equals("pending"))
+        if(order.status.equals(OrderStatus.preparing) || order.status.equals(OrderStatus.ready) || order.status.equals(OrderStatus.pending)) {
+            Log.i("MADAPP", "status->(not visible) " + order.status);
             cvChangeStatus.setVisibility(View.GONE);
-        else
-            cvChangeStatus.setVisibility(View.VISIBLE);
+        }
+        else {   cvChangeStatus.setVisibility(View.VISIBLE);
+            Log.i("MADAPP", "status->( visible) "+order.status);}
+
         LayoutTransition deliveryLt =  cvDeliveryOptions.getLayoutTransition();
         deliveryLt.setDuration(500);
         deliveryLt.enableTransitionType(LayoutTransition.CHANGING);

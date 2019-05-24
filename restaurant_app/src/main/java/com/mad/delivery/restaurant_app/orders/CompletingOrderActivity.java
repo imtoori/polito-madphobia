@@ -225,6 +225,8 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 return getResources().getColor(R.color.colorCanceledOrder, null);
             case completed:
                 return getResources().getColor(R.color.colorCompletedOrder, null);
+            case delivered:
+                return  getResources().getColor(R.color.colorDeliveredOrder, null);
             default:
                 return getResources().getColor(R.color.colorCanceledOrder, null);
         }

@@ -308,7 +308,7 @@ final public class RestaurantDatabase {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
 
-                        if (o.status.toString().equals("completed") || o.status.toString().equals("canceled") ) {
+                        if (o.status.toString().equals("completed") || o.status.toString().equals("canceled") || o.status.toString().equals("delivered")) {
                             o.id = issue.getKey();
                             completed.add(o);
                         }
