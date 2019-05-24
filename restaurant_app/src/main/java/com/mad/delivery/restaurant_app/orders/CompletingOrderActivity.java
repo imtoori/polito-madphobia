@@ -78,7 +78,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         mAuth = FirebaseAuth.getInstance();
         order = getIntent().getParcelableExtra("order");
         modifiedOrder = new Order(order);
-        setTitle(getResources().getString(R.string.completing_order) + " " + modifiedOrder.id);
+        setTitle(getResources().getString(R.string.complete_order) + " " + modifiedOrder.client.name + " " + modifiedOrder.client.lastName);
         requestedDeliveryTime = findViewById(R.id.tv_delivery_options_sentence);
         btnDeliveryTimeChange = findViewById(R.id.delivery_opt_change);
         btnConfirm = findViewById(R.id.delivery_opt_confirm);

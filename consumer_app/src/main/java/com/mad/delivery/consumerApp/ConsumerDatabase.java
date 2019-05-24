@@ -163,6 +163,7 @@ public class ConsumerDatabase {
             o.longitude=longitude;
         }
        flag=true;
+
         myRef.child("users").child("restaurants").child(o.restaurantId).runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
@@ -176,7 +177,6 @@ public class ConsumerDatabase {
                             if (dataSnapshot!=null){
                                 Double d = dataSnapshot.getValue(Double.class);
                                 Log.d("TRANS", "credito "+d.toString()+" tot: "+o.totalPrice);
-
                                 if(d>o.totalPrice){
                                     getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
                                         @Override

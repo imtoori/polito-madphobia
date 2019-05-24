@@ -111,7 +111,7 @@
     <string name="additions">Additions:</string>
     <string name="prefix_products">This order contains</string>
     <string name="suffix_products">products.</string>
-    <string name="completing_order">Completing Order</string>
+    <string name="completing_order">Order from </string>
     <string name="complete_order">Complete your order!</string>
 
     <!-- Completing Order Activity -->

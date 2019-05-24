@@ -315,7 +315,6 @@ public class Restaurant implements Serializable, Parcelable {
         if(email == null || email.equals("")) return false;
         if(road == null || road.equals("")) return false;
         if(houseNumber == null || houseNumber.equals("")) return false;
-        if(doorPhone == null || doorPhone.equals("")) return false;
         if(postCode == null || postCode.equals("")) return false;
         if(city == null || city.equals("")) return false;
         if(openingHours == null || openingHours.equals("")) return false;
