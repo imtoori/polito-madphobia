@@ -25,7 +25,7 @@ public class SettingFragment extends Fragment {
     public static final String SETTING_FRAGMENT_TAG = "settings_fragment";
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private CardView cvProfile, cvHour, cvPrivacy, cvLogout, cvGeneral;
+    private CardView cvProfile, cvHour, cvPrivacy, cvLogout, cvGeneral, cvReviews;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -68,6 +68,7 @@ public class SettingFragment extends Fragment {
         cvProfile = view.findViewById(R.id.cv_profile);
         cvGeneral = view.findViewById(R.id.cv_general);
         cvPrivacy = view.findViewById(R.id.cv_privacy);
+        cvReviews  =view.findViewById(R.id.cv_reviews);
         cvGeneral.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +102,13 @@ public class SettingFragment extends Fragment {
             startActivity(intent);
             RestaurantDatabase.getInstance().reset();
             getActivity().finish();
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+        });
+
+        cvReviews.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity().getApplicationContext(), ReviewsActivity.class);
+            startActivity(intent);
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         });

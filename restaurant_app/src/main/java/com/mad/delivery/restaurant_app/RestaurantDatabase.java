@@ -22,6 +22,7 @@ import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Feedback;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.MenuOffer;
 import com.mad.delivery.resources.Order;
@@ -580,7 +581,28 @@ final public class RestaurantDatabase {
             }
         });
     }
+    public void getReviews(String restaurantID, OnFirebaseData< Feedback> cb) {
+        myRef.child("feedbacks").orderByChild("restaurantID").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Feedback o = issue.getValue(Feedback.class);
+                        if(o != null) {
+                            Log.d("MADAPP", o.toString());
+                            cb.onReceived(o);
+                        }
 
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
 
 }
 

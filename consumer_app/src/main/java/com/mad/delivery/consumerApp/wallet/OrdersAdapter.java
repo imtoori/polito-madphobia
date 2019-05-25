@@ -19,6 +19,7 @@ import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.resources.MyDateFormat;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Restaurant;
 import com.squareup.picasso.Picasso;
 
@@ -27,7 +28,7 @@ import org.joda.time.DateTime;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
-        private List<Order> orders;
+        public List<Order> orders;
         private View view;
         private final WalletFragment.OnOrderSelected mListener;
 
@@ -49,17 +50,24 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 @Override
                 public void onCallBack(Restaurant item) {
                     holder.nameRestaurant.setText(item.previewInfo.name);
+                    int price = 0;
+
+                    holder.price.setText(holder.order.totalPrice.toString()+"€");
+                    holder.data.setText(MyDateFormat.parse(new DateTime(holder.order.orderFor)));
+                    holder.status.setText(holder.order.status.toString());
+                    if(holder.order.status.equals(OrderStatus.delivered) && holder.order.feedbackIsPossible) {
+                        holder.imgFeedback.setVisibility(View.VISIBLE);
+                        holder.imgFeedback.setOnClickListener( v -> {
+                            mListener.openFeedbackDialog(holder.order);
+                        });
+                    }
                     //TODO ripristinare le due righe successive
                     //if(item.imageUri != null && item.imageUri !="" && !item.imageUri.equals(Uri.EMPTY))
                       //  Picasso.get().load(item.previewInfo.imageDownload).into(holder.imgRestaurant);
 
                 }
             });
-            int price = 0;
 
-            holder.price.setText(holder.order.totalPrice.toString()+"€");
-            holder.data.setText(MyDateFormat.parse(new DateTime(holder.order.orderFor)));
-            holder.status.setText(holder.order.status.toString());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,6 +94,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             public final TextView data;
             public final TextView status;
             public final ImageView imgRestaurant;
+            public final ImageView imgFeedback;
 
             public Order order;
 
@@ -97,6 +106,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 data = mView.findViewById(R.id.data);
                 status=mView.findViewById(R.id.status);
                 imgRestaurant = mView.findViewById(R.id.imgRestaurant);
+                imgFeedback = mView.findViewById(R.id.image_feedback);
 
 
             }

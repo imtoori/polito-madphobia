@@ -55,6 +55,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import org.joda.time.DateTime;
+
 public class EditProfileActivity extends AppCompatActivity {
     Menu menu;
     Restaurant restaurant;
@@ -72,6 +74,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private CompoundButton.OnCheckedChangeListener filterChipListener;
     private Uri imageLink;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +87,7 @@ public class EditProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         mAuth = FirebaseAuth.getInstance();
+
         name = findViewById(R.id.editprofile_name);
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);

@@ -58,8 +58,8 @@ public class WalletFragment extends Fragment {
     private FirebaseUser currentUser;
     private CardView cvNoLogin, cvCredit;
     private Button btnLogin;
-
-
+    OrdersAdapter ordersAdapter;
+    List<Order> orders;
     RecyclerView recyclerView;
     TextView totalCredit, textView;
     EditText Creditcode;
@@ -108,16 +108,21 @@ public class WalletFragment extends Fragment {
 
         currentUser = mAuth.getCurrentUser();
         recyclerView = v.findViewById(R.id.orders_rv);
+        recyclerView.hasFixedSize();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         textView = v.findViewById(R.id.textView4);
         cvCredit = v.findViewById(R.id.cv_credit);
         totalCredit = v.findViewById(R.id.total_credit);
         btnLogin = v.findViewById(R.id.btn_login);
+        orders = new ArrayList<>();
+        ordersAdapter = new OrdersAdapter(orders, mListener);
+
+        recyclerView.setAdapter(ordersAdapter);
         if (currentUser == null) {
             cvNoLogin = v.findViewById(R.id.no_login_cv);
             cvNoLogin.setVisibility(View.VISIBLE);
 
         } else {
-
             ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
                 @Override
                 public void onSuccess(User user) {
@@ -126,17 +131,11 @@ public class WalletFragment extends Fragment {
                     textView.setVisibility(View.VISIBLE);
                     Creditcode = v.findViewById(R.id.credit_code);
 
-
                     checkCredit();
-                    List<Order> orders = new ArrayList<>();
-                    ConsumerDatabase.getInstance().getAllCostumerOrders(new firebaseCallback<List<Order>>() {
-                        @Override
-                        public void onCallBack(List<Order> item) {
-                            OrdersAdapter ordersAdapter = new OrdersAdapter(item, mListener);
-                            recyclerView.hasFixedSize();
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                            recyclerView.setAdapter(ordersAdapter);
-                        }
+
+                    ConsumerDatabase.getInstance().getAllCostumerOrders(user.id, o -> {
+                        orders.add(o);
+                        ordersAdapter.notifyDataSetChanged();
                     });
                 }
 
@@ -194,6 +193,7 @@ public class WalletFragment extends Fragment {
 
     public interface OnOrderSelected {
         void openOrder();
+        void openFeedbackDialog(Order o);
     }
 
     public void checkCredit() {

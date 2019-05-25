@@ -61,7 +61,7 @@
     <!-- Navigation -->
     <string name="nav_menu">Menu</string>
     <string name="nav_orders">Orders</string>
-    <string name="nav_settings">Settings</string>
+    <string name="nav_settings">My Account</string>
 
     <!-- Orders Fragment -->
     <string name="pending_orders">Pending</string>

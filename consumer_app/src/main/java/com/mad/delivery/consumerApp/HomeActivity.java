@@ -29,6 +29,7 @@ import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
 import com.mad.delivery.consumerApp.settings.SettingsFragment;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
+import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.PreviewInfo;
 
 public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
@@ -43,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     FirebaseAuth mAuth;
     FirebaseUser mUser;
     DatabaseReference myRef;
+    private FeedBackFragment feedbackFragment;
     int open = 1;
 
 
@@ -147,6 +149,12 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void openFeedbackDialog(Order o) {
+        feedbackFragment = FeedBackFragment.newInstance(o);
+        feedbackFragment.show(getSupportFragmentManager(), "feedbackFragment");
     }
 
     @Override

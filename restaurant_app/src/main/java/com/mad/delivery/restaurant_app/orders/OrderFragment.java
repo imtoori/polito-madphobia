@@ -69,7 +69,9 @@ public class OrderFragment extends Fragment {
         if (currentUser == null) {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
+            return;
         }
+
 
         RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
             @Override
