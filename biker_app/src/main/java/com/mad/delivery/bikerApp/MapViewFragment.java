@@ -91,10 +91,10 @@ public class MapViewFragment extends Fragment {
 
                 MarkerOptions markerOptionsR = new MarkerOptions();
                 markerOptionsR.position(r);
-                markerOptionsR.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                markerOptionsR.title("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 MarkerOptions markerOptionsC = new MarkerOptions();
                 markerOptionsC.position(c);
-                markerOptionsC.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                markerOptionsC.title("Customer").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                 mMap.addMarker(markerOptionsC);
                 mMap.addMarker(markerOptionsR);
@@ -109,7 +109,7 @@ public class MapViewFragment extends Fragment {
                     public void onReceived(LatLng item) {
 
                         b=item;
-                        markerOptionsB.position(b).title("Marker Title").snippet("Marker Description").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        markerOptionsB.position(b).title("Biker").snippet("Marker Description").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
 
                         String url2 = getRequestUrl(b, r);
                         mMap.clear();
