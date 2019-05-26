@@ -17,7 +17,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
+import com.mad.delivery.bikerApp.orders.OrderFragment;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.OnImageUploaded;
@@ -37,6 +39,7 @@ final public class BikerDatabase {
     private static BikerDatabase instance;
     private static Map<String, Order> orders;
     private static MyDateComparator myDateComparator;
+    private final double REVENUE_FOR_SINGLE_RIDE = 2.5;
     DatabaseReference ordersRef;
     StorageReference storageRef;
     DatabaseReference myRef;
@@ -298,6 +301,54 @@ final public class BikerDatabase {
     public void setBikerPosition(Double lat, Double lon) {
         myRef.child("users").child("biker").child(mAuth.getUid()).child("latitude").setValue(lat);
         myRef.child("users").child("biker").child(mAuth.getUid()).child("longitude").setValue(lon);
+    }
+
+    public void getDistanceRide(FirebaseCallbackItem<Double> firebaseCallbackItem){
+        myRef.child("users").child("orders").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double distance =0.0;
+                if(dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : iterator) {
+                        if(snapshot.getValue(Order.class).bikerId.matches(mAuth.getUid())) {
+                            distance+=snapshot.getValue(Order.class).distanceRide;
+                        }
+                    }
+                }
+                firebaseCallbackItem.onCallback(distance);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void getCashBiker(FirebaseCallbackItem<Double> firebaseCallbackItem){
+        myRef.child("users").child("orders").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Double cash =0.0;
+                if(dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : iterator) {
+                        if(snapshot.getValue(Order.class).bikerId.matches(mAuth.getUid())) {
+                            cash+=REVENUE_FOR_SINGLE_RIDE;
+                        }
+                    }
+                }
+                firebaseCallbackItem.onCallback(cash);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }
 

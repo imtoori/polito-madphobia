@@ -366,7 +366,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         String res[]=result.split(",");
         Double min=Double.parseDouble(res[0])/60;
         Double dist=Double.parseDouble(res[1])/1000;
-        Log.d("distance: ", "dist: "+dist.toString());
         modifiedOrder.distanceRide+=dist;
 
 
