@@ -3,6 +3,11 @@ package com.mad.delivery.bikerApp.orders;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,15 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
 import com.mad.delivery.resources.Order;
 
 import java.util.ArrayList;
@@ -51,7 +49,7 @@ public class PendingOrdersFragment extends Fragment {
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         orders = new ArrayList<>();
-     //   showEmptyFolder();
+        //   showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -62,18 +60,12 @@ public class PendingOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        BikerDatabase.getInstance().getPendingOrders(new FirebaseCallback() {
-            @Override
-            public void onCallbak(List<Order> list) {
-                if(list.isEmpty())
-                    showEmptyFolder();
-                else {
-                    orders.addAll(list);
-                    //ordersAdapter.orders = orders;
-                    ordersAdapter.notifyDataSetChanged();
-                }
-            }
-        });        recyclerView.getAdapter().notifyDataSetChanged();
+        BikerDatabase.getInstance().getPendingOrders(list -> {
+            orders.clear();
+            orders.addAll(list);
+            showEmptyFolder();
+            ordersAdapter.notifyDataSetChanged();
+        });
         //showEmptyFolder();
     }
 
@@ -99,7 +91,7 @@ public class PendingOrdersFragment extends Fragment {
     }
 
     private void showEmptyFolder() {
-        if(orders.size() == 0) {
+        if (orders.size() == 0) {
             noOrderImg.setVisibility(View.VISIBLE);
             noOrderTv.setVisibility(View.VISIBLE);
         } else {

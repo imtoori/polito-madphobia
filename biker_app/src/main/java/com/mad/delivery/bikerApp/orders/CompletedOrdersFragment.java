@@ -3,13 +3,6 @@ package com.mad.delivery.bikerApp.orders;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.R;
-import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
 import com.mad.delivery.resources.Order;
 
 import java.util.ArrayList;
@@ -37,6 +35,7 @@ public class CompletedOrdersFragment extends Fragment {
     private TextView noOrderTv;
     private List<Order> orders;
     private MyOrderRecyclerViewAdapter ordersAdapter;
+
     public CompletedOrdersFragment() {
         // Required empty public constructor
     }
@@ -62,7 +61,7 @@ public class CompletedOrdersFragment extends Fragment {
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         Log.d("MADAPP", "Completed: onCreateView called");
         orders = new ArrayList<>();
-      //  showEmptyFolder();
+        //  showEmptyFolder();
         Log.d("MADAPP", "Completed: orders size = " + orders.size());
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
 
@@ -70,7 +69,7 @@ public class CompletedOrdersFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(ordersAdapter);
 
-        for(Order o : orders ) {
+        for (Order o : orders) {
             Log.d("MADAPP", o.toString());
         }
         return view;
@@ -79,21 +78,13 @@ public class CompletedOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        BikerDatabase.getInstance().getCompletedOrders(new FirebaseCallback() {
-            @Override
-            public void onCallbak(List<Order> list) {
-                if(list.isEmpty())
-                    showEmptyFolder();
-                else {
-                    Log.d("CALL", list.toString());
-                    orders.addAll(list);
-                //    ordersAdapter.orders = orders;
-                    ordersAdapter.notifyDataSetChanged();
-                }
-            }
+        BikerDatabase.getInstance().getCompletedOrders(list -> {
+            orders.clear();
+            orders.addAll(list);
+            showEmptyFolder();
+            ordersAdapter.notifyDataSetChanged();
         });
-        recyclerView.getAdapter().notifyDataSetChanged();
-     //   showEmptyFolder();
+        //   showEmptyFolder();
     }
 
     @Override
@@ -103,7 +94,7 @@ public class CompletedOrdersFragment extends Fragment {
     }
 
     private void showEmptyFolder() {
-        if(orders.size() == 0) {
+        if (orders.size() == 0) {
             noOrderImg.setVisibility(View.VISIBLE);
             noOrderTv.setVisibility(View.VISIBLE);
         } else {
