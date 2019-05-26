@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp.search;
 import android.content.res.ColorStateList;
+import android.graphics.LinearGradient;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -51,7 +52,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private String address = "";
     private EditText deliveryAddress;
     private Set<String> chosen;
-
+    private Double latitude;
+    private Double longitude;
     private boolean freeDelivery, minOrderCost;
     public SearchFragment() {
         // Required empty public constructor
@@ -125,8 +127,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     geocoder = new Geocoder(getContext(), Locale.getDefault());
 
                     try {
-                        Double latitude = gps.getLatitude();
-                        Double longitude = gps.getLongitude();
+                         latitude = gps.getLatitude();
+                         longitude = gps.getLongitude();
                         Log.d("latitude: ",latitude.toString());
                         Log.d("longitude: ",longitude.toString());
 
@@ -214,6 +216,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
+
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
@@ -239,6 +242,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
+        bundle.putDouble("latitude",latitude);
+        bundle.putDouble("longitude",longitude);
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);

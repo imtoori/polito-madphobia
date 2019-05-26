@@ -1,15 +1,11 @@
 package com.mad.delivery.restaurant_app;
 
 import android.net.Uri;
-import android.util.ArrayMap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,31 +14,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.MenuOffer;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
-import com.mad.delivery.restaurant_app.menu.OnMenuChanged;
 import com.mad.delivery.restaurant_app.menu.OnMenuReceived;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 

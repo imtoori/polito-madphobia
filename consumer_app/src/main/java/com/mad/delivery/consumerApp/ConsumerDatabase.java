@@ -26,6 +26,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.CreditCode;
+import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnImageDownloaded;
@@ -47,6 +48,7 @@ import java.util.Set;
 
 public class ConsumerDatabase {
     public static ConsumerDatabase instance = new ConsumerDatabase();
+    private final Double DISTANCE_CUSTOMER_RESTOURANT=2.0;
     private FirebaseDatabase db;
     private DatabaseReference myRef;
     private StorageReference storageRef;
@@ -323,25 +325,30 @@ public class ConsumerDatabase {
         return restaurantIds;
     }
 
-    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d,  final onPreviewRestaurantsReceived firebaseCallback) {
+    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d,Double latitude,Double longitude,  final onPreviewRestaurantsReceived firebaseCallback) {
         getRestaurantsIds(chosen, list -> {
             if(list.isEmpty()) {
                 // show empty icon
             } else {
                 // ask for restaurants
                 for(String restName : list) {
-                    myRef.child("users").child("restaurants").child(restName).child("previewInfo").addListenerForSingleValueEvent(new ValueEventListener() {
+                    myRef.child("users").child("restaurants").child(restName).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            PreviewInfo restaurantPreview = dataSnapshot.getValue(PreviewInfo.class);
-                            if (restaurantPreview != null) {
-                                if(m && restaurantPreview.minOrderCost != 0) {
+                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                            Haversine h = new Haversine();
+
+                            if (restaurant != null) {
+                                if(m && restaurant.previewInfo.minOrderCost != 0) {
                                     return;
                                 }
-                                if(d && restaurantPreview.deliveryCost != 0) {
+                                if(d && restaurant.previewInfo.deliveryCost != 0) {
                                     return;
                                 }
-                                firebaseCallback.onCallback(restaurantPreview);
+                                Log.d("NULL","rest: "+restaurant.latitude + restaurant.longitude+latitude+longitude);
+                                if(restaurant.latitude==null||restaurant.longitude==null||h.distance(latitude,longitude,restaurant.latitude,restaurant.longitude)>DISTANCE_CUSTOMER_RESTOURANT)
+                                    return;
+                                firebaseCallback.onCallback(restaurant.previewInfo);
                             }
                         }
                         @Override
