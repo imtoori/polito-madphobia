@@ -5,10 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,7 +15,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.bikerApp.callBack.FirebaseCallback;
 import com.mad.delivery.resources.Biker;
@@ -27,9 +23,9 @@ import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.OnImageUploaded;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
-import com.mad.delivery.resources.Restaurant;
 
 import org.joda.time.DateTimeComparator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,20 +61,20 @@ final public class BikerDatabase {
     }
 
     public void checkLogin(String id, OnLogin<Biker> cb) {
-        if(id == null || id.equals("")) {
-            Log.d("MADAPP", "checkLogin: id null or empty" );
+        if (id == null || id.equals("")) {
+            Log.d("MADAPP", "checkLogin: id null or empty");
             cb.onFailure();
             return;
         }
         myRef.child("users").child("biker").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     Biker rest = dataSnapshot.getValue(Biker.class);
-                    Log.d("MADAPP", "checkLogin: OK" );
+                    Log.d("MADAPP", "checkLogin: OK");
                     cb.onSuccess(rest);
                 } else {
-                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists." );
+                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists.");
 
                     cb.onFailure();
                 }
@@ -91,13 +87,13 @@ final public class BikerDatabase {
         });
     }
 
-    public void getBikerStatus(FirebaseCallbackItem<Boolean> firebaseCallback){
+    public void getBikerStatus(FirebaseCallbackItem<Boolean> firebaseCallback) {
         myRef.child("users").child("biker").child(mAuth.getUid()).child("profile").child("status").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    Boolean b =dataSnapshot.getValue(Boolean.class);
-                    if(b!=null){
+                if (dataSnapshot.exists()) {
+                    Boolean b = dataSnapshot.getValue(Boolean.class);
+                    if (b != null) {
                         firebaseCallback.onCallback(b);
                     }
                 }
@@ -109,6 +105,7 @@ final public class BikerDatabase {
         });
 
     }
+
     public void reset() {
         instance = null;
     }
@@ -117,13 +114,13 @@ final public class BikerDatabase {
         myRef.child("users").child("biker").child(id).child("token").setValue(token);
     }
 
-    public  void update(Order o) {
+    public void update(Order o) {
      /*   Order old = orders.get(o.id);
         if (old != null) {
             Log.d("MADAPP", "Order with ID " + o.id + " has been updated.");
             old.update(o);
         }*/
-        o.bikerId =mAuth.getUid();
+        o.bikerId = mAuth.getUid();
         ordersRef.child(o.id).setValue(o);
 
     }
@@ -135,21 +132,22 @@ final public class BikerDatabase {
         }
     }
 
-    public  List<Order> getPendingOrders(FirebaseCallback firebaseCallback) {
-        List<Order> pendings = new ArrayList<>();
-        ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void getPendingOrders(FirebaseCallback firebaseCallback) {
+        ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Order> pendings = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o.status.equals(OrderStatus.preparing)||o.status.equals(OrderStatus.ready)) {
+                        if (o.status.equals(OrderStatus.preparing) || o.status.equals(OrderStatus.ready)) {
                             o.id = issue.getKey();
                             pendings.add(o);
                         }
                     }
                 }
+                Collections.sort(pendings, myDateComparator);
                 firebaseCallback.onCallbak(pendings);
             }
 
@@ -157,26 +155,25 @@ final public class BikerDatabase {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        Collections.sort(pendings, myDateComparator);
-        return pendings;
     }
 
 
-    public  List<Order> getPreparingOrders(FirebaseCallback firebaseCallback) {
-        List<Order> preparing = new ArrayList<>();
-        ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void getPreparingOrders(FirebaseCallback firebaseCallback) {
+        ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Order> preparing = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o.status.equals(OrderStatus.completed)) {
+                        if (o.status.equals(OrderStatus.completed)) {
                             o.id = issue.getKey();
                             preparing.add(o);
                         }
                     }
                 }
+                Collections.sort(preparing, myDateComparator);
                 firebaseCallback.onCallbak(preparing);
             }
 
@@ -185,29 +182,26 @@ final public class BikerDatabase {
 
             }
         });
-
-        return preparing;
     }
 
-    public  List<Order> getCompletedOrders(FirebaseCallback firebaseCallback) {
-        if (instance == null) {
-            instance = new BikerDatabase();
-        }
-        List<Order> completed = new ArrayList<>();
-        ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void getCompletedOrders(FirebaseCallback firebaseCallback) {
+        ordersRef.orderByChild("bikerId").equalTo(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Order> completed = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
 
-                        if(o.status.equals(OrderStatus.delivered)) {
+                        if (o.status.equals(OrderStatus.delivered)) {
                             o.id = issue.getKey();
                             completed.add(o);
                         }
                     }
                 }
+
+                Collections.sort(completed, myDateComparator);
                 firebaseCallback.onCallbak(completed);
             }
 
@@ -216,8 +210,6 @@ final public class BikerDatabase {
 
             }
         });
-
-        return completed;
     }
 
     public void getBikerProfile(String id, OnFirebaseData<Biker> cb) {
@@ -231,14 +223,15 @@ final public class BikerDatabase {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
 
-    public void setBikerStatus(String bikerID, Boolean status){
-        if(bikerID == null) return;
+    public void setBikerStatus(String bikerID, Boolean status) {
+        if (bikerID == null) return;
         myRef.child("users").child("biker").child(bikerID).child("status").setValue(status);
     }
 
@@ -282,14 +275,14 @@ final public class BikerDatabase {
         });
     }
 
-    public void getBikerPosition(OnFirebaseData<LatLng> latLng){
+    public void getBikerPosition(OnFirebaseData<LatLng> latLng) {
         myRef.child("users").child("biker").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Biker item = dataSnapshot.getValue(Biker.class);
                     if (item != null) {
-                        LatLng latLang = new LatLng(item.latitude,item.longitude);
+                        LatLng latLang = new LatLng(item.latitude, item.longitude);
                         latLng.onReceived(latLang);
                     }
                 }
@@ -301,7 +294,8 @@ final public class BikerDatabase {
             }
         });
     }
-    public void setBikerPosition(Double lat,Double lon){
+
+    public void setBikerPosition(Double lat, Double lon) {
         myRef.child("users").child("biker").child(mAuth.getUid()).child("latitude").setValue(lat);
         myRef.child("users").child("biker").child(mAuth.getUid()).child("longitude").setValue(lon);
     }

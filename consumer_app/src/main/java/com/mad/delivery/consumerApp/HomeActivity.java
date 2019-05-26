@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
@@ -114,6 +115,8 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
             default:
                 navigation.setSelectedItemId(R.id.nav_search);
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.status");
     }
 
     @Override
