@@ -1,4 +1,4 @@
-package com.mad.delivery.restaurant_app;
+package com.mad.delivery.resources;
 
 
     public class Haversine {

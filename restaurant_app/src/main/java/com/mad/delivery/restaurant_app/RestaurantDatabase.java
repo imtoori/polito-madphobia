@@ -16,6 +16,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.MenuOffer;
 import com.mad.delivery.resources.Order;

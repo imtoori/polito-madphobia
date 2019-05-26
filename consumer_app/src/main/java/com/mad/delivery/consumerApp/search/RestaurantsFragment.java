@@ -42,6 +42,8 @@ public class RestaurantsFragment extends Fragment {
     private boolean freeDelivery = false, minOrderCost = false;
     private Set<String> chosenCategories;
     private String address = "";
+    private Double latitude;
+    private Double longitude;
     public RestaurantsFragment() {
         // Required empty public constructor
     }
@@ -83,7 +85,8 @@ public class RestaurantsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(restaurantAdapter);
         chosenCategories = new HashSet<>();
-
+        latitude = getArguments().getDouble("latitude");
+        longitude = getArguments().getDouble("longitude");
         List<String> categories = new ArrayList<>();
 
         try {
@@ -93,6 +96,8 @@ public class RestaurantsFragment extends Fragment {
             address = getArguments().getString("address");
             freeDelivery = getArguments().getBoolean("freeDelivery");
             minOrderCost = getArguments().getBoolean("minOrderCost");
+
+
         } catch(NullPointerException e) {
             // do nothing
             Log.i("MADAPP", "restaurantffragment->no argument");
@@ -104,7 +109,7 @@ public class RestaurantsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery, preview -> {
+        ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery,latitude,longitude, preview -> {
             previews.add(preview);
             restaurantAdapter.notifyDataSetChanged();
             if(previews.size() == 0) {
