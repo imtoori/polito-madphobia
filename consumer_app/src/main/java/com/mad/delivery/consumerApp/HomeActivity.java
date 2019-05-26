@@ -116,7 +116,9 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
                 navigation.setSelectedItemId(R.id.nav_search);
         }
 
-        FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.status");
+        String topic = mAuth.getUid() + ".order.status";
+        Log.d("FCM", "subscribe to " + topic);
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
     }
 
     @Override

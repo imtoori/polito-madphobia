@@ -128,14 +128,20 @@ public class WalletFragment extends Fragment {
 
 
                     checkCredit();
-                    List<Order> orders = new ArrayList<>();
+
+
+                    List<Order> items = new ArrayList<>();
+                    OrdersAdapter ordersAdapter = new OrdersAdapter(items, mListener);
+                    recyclerView.hasFixedSize();
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerView.setAdapter(ordersAdapter);
+
                     ConsumerDatabase.getInstance().getAllCostumerOrders(new firebaseCallback<List<Order>>() {
                         @Override
-                        public void onCallBack(List<Order> item) {
-                            OrdersAdapter ordersAdapter = new OrdersAdapter(item, mListener);
-                            recyclerView.hasFixedSize();
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                            recyclerView.setAdapter(ordersAdapter);
+                        public void onCallBack(List<Order> newItems) {
+                            items.clear();
+                            items.addAll(newItems);
+                            recyclerView.getAdapter().notifyDataSetChanged();
                         }
                     });
                 }
