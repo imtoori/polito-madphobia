@@ -330,6 +330,9 @@ public class ConsumerDatabase {
             if(list.isEmpty()) {
                 // show empty icon
             } else {
+                Log.e("LAT: ","---"+latitude);
+                Log.e("LON: ","---"+longitude);
+
                 // ask for restaurants
                 for(String restName : list) {
                     myRef.child("users").child("restaurants").child(restName).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -345,8 +348,7 @@ public class ConsumerDatabase {
                                 if(d && restaurant.previewInfo.deliveryCost != 0) {
                                     return;
                                 }
-                                Log.d("NULL","rest: "+restaurant.latitude + restaurant.longitude+latitude+longitude);
-                                if(restaurant.latitude==null||restaurant.longitude==null||h.distance(latitude,longitude,restaurant.latitude,restaurant.longitude)>DISTANCE_CUSTOMER_RESTOURANT)
+                                if(latitude!=null&&longitude!=null&&latitude!=0.0&&longitude!=0.0&&h.distance(latitude,longitude,restaurant.latitude,restaurant.longitude)>DISTANCE_CUSTOMER_RESTOURANT)
                                     return;
                                 firebaseCallback.onCallback(restaurant.previewInfo);
                             }

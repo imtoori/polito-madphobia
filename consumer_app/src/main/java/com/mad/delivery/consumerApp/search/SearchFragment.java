@@ -242,7 +242,9 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
+        if(latitude!=null)
         bundle.putDouble("latitude",latitude);
+        if(longitude!=null)
         bundle.putDouble("longitude",longitude);
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();

@@ -168,7 +168,7 @@ public class MapViewFragment extends Fragment {
         //Set value enable the sensor
         String sensor = "sensor=false";
         //Mode for find direction
-        String mode = "mode=driving";
+        String mode = "mode=cycling";
         //Build the full param
         String param = str_org + "&" + str_dest + "&" + sensor +"&key=AIzaSyAj4L1Hg27z0qYn7XjOOv-ekqUSoBIlpJI"+ "&" + mode;
         //Output format

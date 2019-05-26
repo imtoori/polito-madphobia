@@ -31,6 +31,8 @@ public class Order implements Parcelable, Comparable<Order> {
     public String delivery;
     public Double latitude;
     public Double longitude;
+    public Double distanceRide;
+
 
     public Order(){}
 
@@ -50,6 +52,7 @@ public class Order implements Parcelable, Comparable<Order> {
         totalPrice+=restaurant.previewInfo.deliveryCost;
         this.latitude = 0.0;
         this.longitude = 0.0;
+        this.distanceRide = 0.0;
     }
 
     public Order(Order other) {
@@ -71,6 +74,7 @@ public class Order implements Parcelable, Comparable<Order> {
         this.latitude = other.latitude;
         this.longitude = other.longitude;
         this.bikerId = other.bikerId;
+        this.distanceRide = other.distanceRide;
     }
 
     protected Order(Parcel in) {
@@ -104,6 +108,11 @@ public class Order implements Parcelable, Comparable<Order> {
             longitude = null;
         } else {
             longitude = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            distanceRide = null;
+        } else {
+            distanceRide = in.readDouble();
         }
     }
 
@@ -142,6 +151,12 @@ public class Order implements Parcelable, Comparable<Order> {
         } else {
             dest.writeByte((byte) 1);
             dest.writeDouble(longitude);
+        }
+        if (distanceRide == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(distanceRide);
         }
     }
 
@@ -196,6 +211,7 @@ public class Order implements Parcelable, Comparable<Order> {
         restaurantId = other.restaurantId;
         latitude = other.latitude;
         longitude = other.longitude;
+        distanceRide = other.distanceRide;
     }
 
     public String getId() {
