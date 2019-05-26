@@ -1,15 +1,11 @@
 package com.mad.delivery.restaurant_app;
 
 import android.net.Uri;
-import android.util.ArrayMap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,9 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.MenuOffer;
@@ -28,21 +22,14 @@ import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
-import com.mad.delivery.restaurant_app.menu.OnMenuChanged;
 import com.mad.delivery.restaurant_app.menu.OnMenuReceived;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -64,6 +51,7 @@ final public class RestaurantDatabase {
         }
         return instance;
     }
+
     private RestaurantDatabase() {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -79,7 +67,7 @@ final public class RestaurantDatabase {
         getRestaurantProfile(new FireBaseCallBack<Restaurant>() {
             @Override
             public void onCallback(Restaurant user) {
-                restaurant=user;
+                restaurant = user;
             }
 
             @Override
@@ -90,7 +78,7 @@ final public class RestaurantDatabase {
     }
 
     private void getRestaurantProfile(FireBaseCallBack<Restaurant> restaurantFireBaseCallBack) {
-        if(mAuth.getUid()!=null) {
+        if (mAuth.getUid() != null) {
             restaurantRef.child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -136,7 +124,7 @@ final public class RestaurantDatabase {
     }
 
     public void updateOffer(String restaurantID, MenuOffer menuOffer, OnFirebaseData<MenuOffer> cb) {
-        if(restaurantID == null) {
+        if (restaurantID == null) {
             return;
         }
         menuOffer.id = restaurantRef.child(restaurantID).child("offers").push().getKey();
@@ -145,7 +133,7 @@ final public class RestaurantDatabase {
     }
 
     public void removeMenuOffer(String restaurantID, MenuOffer item, OnFirebaseData<MenuOffer> cb) {
-        if(restaurantID == null) {
+        if (restaurantID == null) {
             return;
         }
         restaurantRef.child(restaurantID).child("offers").child(item.id).removeValue(new DatabaseReference.CompletionListener() {
@@ -157,7 +145,7 @@ final public class RestaurantDatabase {
     }
 
     public void getOffers(String restaurantID, OnFirebaseData<List<MenuOffer>> cb) {
-        if(restaurantID == null) {
+        if (restaurantID == null) {
             return;
         }
         restaurantRef.child(restaurantID).child("offers").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -167,7 +155,7 @@ final public class RestaurantDatabase {
                 Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                 for (DataSnapshot snapshot : iterator) {
                     MenuOffer item = snapshot.getValue(MenuOffer.class);
-                    if(item != null) {
+                    if (item != null) {
                         offers.add(item);
                     }
                 }
@@ -182,7 +170,7 @@ final public class RestaurantDatabase {
     }
 
     public void getMenu(String restaurantID, OnMenuReceived cb) {
-        if(restaurantID == null) {
+        if (restaurantID == null) {
             return;
         }
         restaurantRef.child(restaurantID).child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -210,12 +198,11 @@ final public class RestaurantDatabase {
     }
 
 
-
     public void removeMenuItem(String restaurantID, MenuItemRest item, OnMenuReceived cb) {
-        if(restaurantID == null) {
+        if (restaurantID == null) {
             return;
         }
-        if(item.id == null) {
+        if (item.id == null) {
             return;
         }
         restaurantRef.child(restaurantID).child("menu").child(item.id).removeValue(new DatabaseReference.CompletionListener() {
@@ -227,10 +214,10 @@ final public class RestaurantDatabase {
     }
 
     public void updateMenuItem(String restaurantID, MenuItemRest menuItem, Uri imageMenuItem) {
-        if(restaurantID == null) {
+        if (restaurantID == null) {
             return;
         }
-        if(menuItem.id == null || menuItem.id.equals(""))
+        if (menuItem.id == null || menuItem.id.equals(""))
             menuItem.id = restaurantRef.child(restaurantID).child("menu").push().getKey();
 
         if (imageMenuItem == null || imageMenuItem.toString().equals("") || imageMenuItem.toString().contains("https:")) {
@@ -244,10 +231,10 @@ final public class RestaurantDatabase {
     }
 
     public void getPendingOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
-        List<Order> pendings = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Order> pendings = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
@@ -264,17 +251,16 @@ final public class RestaurantDatabase {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                cb.onReceived(pendings);
             }
         });
     }
 
     public void getPreparingAndReadyOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
-        List<Order> preparing = new ArrayList<>();
 
-        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Order> preparing = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
@@ -291,16 +277,15 @@ final public class RestaurantDatabase {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                cb.onReceived(preparing);
             }
         });
     }
 
     public void getCompletedOrders(String restaurantID, OnFirebaseData<List<Order>> cb) {
-        List<Order> completed = new ArrayList<>();
-        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+        ordersRef.orderByChild("restaurantId").equalTo(restaurantID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Order> completed = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
@@ -318,7 +303,6 @@ final public class RestaurantDatabase {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                cb.onReceived(completed);
             }
         });
     }
@@ -329,7 +313,7 @@ final public class RestaurantDatabase {
         getMenu(r.previewInfo.id, new OnMenuReceived() {
             @Override
             public void menuReceived(Map<String, List<MenuItemRest>> menu, List<String> categories) {
-                if(r.menu == null) r.menu = new HashMap<>();
+                if (r.menu == null) r.menu = new HashMap<>();
                 menu.entrySet().stream().forEach((entry) -> {
                     entry.getValue().stream().forEach(m -> {
                         r.menu.put(m.id, m);
@@ -423,6 +407,7 @@ final public class RestaurantDatabase {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -478,22 +463,24 @@ final public class RestaurantDatabase {
         void onCompleted(List<String> categories);
 
     }
-    public void getBikersClosest(FireBaseCallBack<TreeMap<Double,Biker>> firebaseCallback) {
+
+    public void getBikersClosest(FireBaseCallBack<TreeMap<Double, Biker>> firebaseCallback) {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                TreeMap<Double,Biker> bikerIdDistance = new TreeMap<>();
-                if(dataSnapshot.exists()) {
+                TreeMap<Double, Biker> bikerIdDistance = new TreeMap<>();
+                if (dataSnapshot.exists()) {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if(snapshot.getValue(Biker.class).status=true) {
+                        if (snapshot.getValue(Biker.class).status = true) {
                             Log.d("TAG:", restaurant.toString());
-                            bikerIdDistance.put(Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude),snapshot.getValue(Biker.class));
+                            bikerIdDistance.put(Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude), snapshot.getValue(Biker.class));
                         }
                     }
                 }
                 firebaseCallback.onCallback(bikerIdDistance);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("DATABASE: ", "Dato cancellato");
@@ -507,15 +494,15 @@ final public class RestaurantDatabase {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                TreeMap<Double,String> bikerIdDistance = new TreeMap<>();
+                TreeMap<Double, String> bikerIdDistance = new TreeMap<>();
                 List<String> bikerIds = new ArrayList<>();
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if(snapshot.getValue(Biker.class).status=true)
-                        bikerIds.add(snapshot.getKey());
-                        Log.d("TAG:",restaurant.toString());
-                        bikerIdDistance.put(Haversine.distance(restaurant.latitude,restaurant.longitude,snapshot.getValue(Biker.class).latitude,snapshot.getValue(Biker.class).longitude),snapshot.getKey());
+                        if (snapshot.getValue(Biker.class).status = true)
+                            bikerIds.add(snapshot.getKey());
+                        Log.d("TAG:", restaurant.toString());
+                        bikerIdDistance.put(Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude), snapshot.getKey());
                     }
                 }
 
@@ -531,18 +518,18 @@ final public class RestaurantDatabase {
     }
 
     public void getBiker(String id, OnFirebaseData<Biker> cb) {
-        if(id == null || id.equals("")) {
+        if (id == null || id.equals("")) {
             cb.onReceived(null);
             return;
         }
         myRef.child("users").child("biker").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     Biker b = dataSnapshot.getValue(Biker.class);
                     cb.onReceived(b);
                 } else {
-                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists." );
+                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists.");
                     cb.onReceived(null);
                 }
             }
@@ -555,20 +542,20 @@ final public class RestaurantDatabase {
     }
 
     public void checkLogin(String id, OnLogin<Restaurant> cb) {
-        if(id == null || id.equals("")) {
-            Log.d("MADAPP", "checkLogin: id null or empty" );
+        if (id == null || id.equals("")) {
+            Log.d("MADAPP", "checkLogin: id null or empty");
             cb.onFailure();
             return;
         }
         myRef.child("users").child("restaurants").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     Restaurant rest = dataSnapshot.getValue(Restaurant.class);
-                    Log.d("MADAPP", "checkLogin: OK" );
+                    Log.d("MADAPP", "checkLogin: OK");
                     cb.onSuccess(rest);
                 } else {
-                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists." );
+                    Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists.");
 
                     cb.onFailure();
                 }
