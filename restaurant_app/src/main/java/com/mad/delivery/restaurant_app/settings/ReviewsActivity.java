@@ -109,7 +109,6 @@ public class ReviewsActivity extends AppCompatActivity {
                     reviews.add(r);
                     reviewsAdapter.notifyDataSetChanged();
                 });
-
             }
 
             @Override
