@@ -748,6 +748,22 @@ public class ConsumerDatabase {
                     cb.onReceived(false);
                     return;
                 }
+                getRestourant(o.restaurantId, r -> {
+                    if(r != null) {
+                        if(r.previewInfo.scoreValue == null) {
+                            r.previewInfo.scoreValue = (feedback.serviceRestaurantVote + feedback.foodVote) / 2;
+                            r.previewInfo.scoreCount = 1;
+                        } else {
+                            if(r.previewInfo.scoreCount == null) r.previewInfo.scoreCount = 0;
+                            r.previewInfo.scoreValue = (r.previewInfo.scoreValue * r.previewInfo.scoreCount) + ((feedback.serviceRestaurantVote + feedback.foodVote) / 2);
+                            r.previewInfo.scoreCount++;
+                            r.previewInfo.scoreValue = r.previewInfo.scoreValue / r.previewInfo.scoreCount;
+                        }
+                        myRef.child("users").child("restaurants").child(r.previewInfo.id).child("previewInfo").child("scoreValue").setValue(r.previewInfo.scoreValue);
+                        myRef.child("users").child("restaurants").child(r.previewInfo.id).child("previewInfo").child("scoreCount").setValue(r.previewInfo.scoreCount);
+                    }
+                });
+
                 myRef.child("orders").child(o.id).child("feedbackIsPossible").setValue(false);
                 String id = myRef.child("feedbacks").push().getKey();
                 feedback.id = id;
@@ -818,6 +834,28 @@ public class ConsumerDatabase {
         uploadImage(r.id, image, "profile", image.getLastPathSegment(), () -> {
             r.imageName = image.getLastPathSegment();
             myRef.child("users").child("customers").child(r.id).setValue(r);
+        });
+    }
+
+    public void getReviews(String restaurantID, OnFirebaseData< Feedback> cb) {
+        myRef.child("feedbacks").orderByChild("restaurantID").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Feedback o = issue.getValue(Feedback.class);
+                        if(o != null) {
+                            cb.onReceived(o);
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
     }
 

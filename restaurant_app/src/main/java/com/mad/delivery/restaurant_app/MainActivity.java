@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                 public void onSuccess(Restaurant user) {
                     Log.d("MADAPP", "User "+ user.previewInfo.id + " have logged in.");
                     restaurant = user;
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(currentUser.getUid(), instanceIdResult.getToken()));
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(user.previewInfo.id, instanceIdResult.getToken()));
                     FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
                 }
 

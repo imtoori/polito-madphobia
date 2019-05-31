@@ -17,8 +17,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.PreviewInfo;
@@ -48,6 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -81,6 +86,7 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         imageProfileLocalUri = Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
+
         myToolbar = findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
@@ -163,12 +169,12 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         getProfileData();
-
-        if (ContextCompat.checkSelfPermission(EditProfileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(EditProfileActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_CODE);
+        if(!checkPermissions()) {
+            requestPermissions();
         }
+
     }
+
 
 
     @Override
@@ -510,6 +516,50 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return result;
     }
+
+    private boolean checkPermissions() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA}, CAMERA_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case CAMERA_CODE:
+                boolean camera = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if(!camera) {
+                    showMessageOKCancel();
+                }
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    private void showMessageOKCancel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
+        View root = getLayoutInflater().inflate(R.layout.dialog_ok_cancel, null);
+        builder.setView(root);
+        Button btnUnderstand = root.findViewById(R.id.btn_continue);
+        Button btnChange = root.findViewById(R.id.btn_grant);
+        AlertDialog dialog = builder.create();
+        btnUnderstand.setOnClickListener( v -> {
+            btnCamera.setVisibility(View.GONE);
+            dialog.dismiss();
+        });
+        btnChange.setOnClickListener( v -> {
+            requestPermissions();
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+
+
 
 
 }

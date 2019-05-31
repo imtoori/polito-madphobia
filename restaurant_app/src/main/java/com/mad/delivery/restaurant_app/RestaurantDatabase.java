@@ -121,6 +121,7 @@ final public class RestaurantDatabase {
     }
 
     void updateToken(String id, String token) {
+        Log.d("MADAPP", "id=" + id  +" , token=" + token);
         restaurantRef.child(id).child("token").setValue(token);
     }
 
