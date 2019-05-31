@@ -169,6 +169,10 @@
 
     <string name="opening_hours_full">Lunedì: chiuso\nMartedì: chiuso\nMercoledì: chiuso\nGiovedì: chiuso\nVenerdì: chiuso\nSabato: chiuso\nDomenica: chiuso\n</string>
     <string name="title_activity_maps">Map</string>
+    <string name="setting_popular">Popular</string>
+    <string name="most_popular_meals">Most popular meals</string>
+    <string name="most_popular_timing_order">Most popular timing order</string>
+    <string name="popular_toolbar">Popular</string>
 
 
 </resources>

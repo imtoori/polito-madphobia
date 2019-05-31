@@ -71,6 +71,7 @@
         </provider>
 
         <activity android:name=".orders.CompletingOrderActivity" />
+        <activity android:name=".settings.PopularSettingActivity" />
         <activity
             android:name=".settings.PhotoZoomActivity"
             android:parentActivityName=".settings.ProfileActivity" />
