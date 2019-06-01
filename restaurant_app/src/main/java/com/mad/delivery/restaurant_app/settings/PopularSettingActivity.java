@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -15,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.MainActivity;
+import com.mad.delivery.restaurant_app.OnFirebaseData;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
@@ -120,42 +122,43 @@ public class PopularSettingActivity extends AppCompatActivity {
         BarChart chart_timing = (BarChart) findViewById(R.id.barchart_timing);
 
         //TODO: INSERIRE IN TIMING COPPIE (ORA, VALORE) !!VUOLE DEI FLOAT
-        List<BarEntry> timing = new ArrayList<>();
-        timing.add(new BarEntry(0f, 30f));
-        timing.add(new BarEntry(1f, 75f));
-        timing.add(new BarEntry(8f, 60f));
-        timing.add(new BarEntry(12f, 50f));
-        timing.add(new BarEntry(15f, 50f));
-        timing.add(new BarEntry(18f, 70f));
-        timing.add(new BarEntry(23f, 60f));
+
+        RestaurantDatabase.getInstance().getPopularTiming(new OnFirebaseData<List<BarEntry>>() {
+            @Override
+            public void onReceived(List<BarEntry> item) {
+                List<BarEntry> timing = new ArrayList<>();
+                timing.addAll(item);
+                BarDataSet set_timing = new BarDataSet(timing, "Number of Order");
+                set_timing.setColors(Color.RED);
+                BarData data_timing = new BarData(set_timing);
+                data_timing.setBarWidth(0.9f); // set custom bar width
+                chart_timing.setData(data_timing);
+                chart_timing.setFitBars(true); // make the x-axis fit exactly all bars
+                chart_timing.invalidate(); // refresh
+                chart_timing.setDrawBarShadow(false);
+                chart_timing.setDrawValueAboveBar(true); //visualizza valore sopra
+
+                XAxis xAxis_timing = chart_timing.getXAxis();
+                xAxis_timing.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis_timing.setDrawGridLines(false);
+                xAxis_timing.setGranularity(1f);
+                xAxis_timing.setLabelCount(12);
 
 
-        BarDataSet set_timing = new BarDataSet(timing, "Number of Order");
-        set_timing.setColors(Color.RED);
-        BarData data_timing = new BarData(set_timing);
-        data_timing.setBarWidth(0.9f); // set custom bar width
-        chart_timing.setData(data_timing);
-        chart_timing.setFitBars(true); // make the x-axis fit exactly all bars
-        chart_timing.invalidate(); // refresh
-        chart_timing.setDrawBarShadow(false);
-        chart_timing.setDrawValueAboveBar(true); //visualizza valore sopra
+                YAxis leftAxis_timing = chart_timing.getAxisLeft();
+                leftAxis_timing.setLabelCount(8, false);
+                leftAxis_timing.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+                leftAxis_timing.setSpaceTop(15f);
+                leftAxis_timing.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        XAxis xAxis_timing = chart_timing.getXAxis();
-        xAxis_timing.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis_timing.setDrawGridLines(false);
-        xAxis_timing.setGranularity(1f);
-        xAxis_timing.setLabelCount(12);
+                chart_timing.getAxisRight().setEnabled(false);
+                chart_timing.getLegend().setEnabled(false);
+                chart_timing.getDescription().setEnabled(false);
+            }
+        });
 
 
-        YAxis leftAxis_timing = chart_timing.getAxisLeft();
-        leftAxis_timing.setLabelCount(8, false);
-        leftAxis_timing.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis_timing.setSpaceTop(15f);
-        leftAxis_timing.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        chart_timing.getAxisRight().setEnabled(false);
-        chart_timing.getLegend().setEnabled(false);
-        chart_timing.getDescription().setEnabled(false);
 
 
     }
