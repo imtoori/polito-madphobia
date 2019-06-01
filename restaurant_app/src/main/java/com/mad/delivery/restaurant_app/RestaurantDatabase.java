@@ -43,11 +43,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 final public class RestaurantDatabase {
     private static RestaurantDatabase instance;
@@ -634,6 +636,34 @@ final public class RestaurantDatabase {
             }
         });
     }
+    public void getPopularDish(OnFirebaseData<TreeMap<String,Integer>> callBack){
+        TreeMap<String,Integer> treeMap  = new TreeMap<>();
+        myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                        o.products.forEach(product -> {
+                            if(treeMap.containsKey(product.name))
+                                treeMap.replace(product.name,treeMap.get(product.name)+product.quantity);
+                            else
+                                treeMap.put(product.name,product.quantity);
+                        });
+                    }
+
+                    callBack.onReceived(treeMap);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        }
 
 }
 
