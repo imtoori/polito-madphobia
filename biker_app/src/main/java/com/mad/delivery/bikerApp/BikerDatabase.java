@@ -304,15 +304,17 @@ final public class BikerDatabase {
     }
 
     public void getDistanceRide(FirebaseCallbackItem<Double> firebaseCallbackItem){
-        myRef.child("users").child("orders").addValueEventListener(new ValueEventListener() {
+        myRef.child("orders").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double distance =0.0;
                 if(dataSnapshot.exists()) {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if(snapshot.getValue(Order.class).bikerId.matches(mAuth.getUid())) {
-                            distance+=snapshot.getValue(Order.class).distanceRide;
+                        if(snapshot.getValue(Order.class).bikerId!=null&&snapshot.getValue(Order.class).distanceRide!=null) {
+                            if (snapshot.getValue(Order.class).bikerId.matches(mAuth.getUid())) {
+                                distance += snapshot.getValue(Order.class).distanceRide;
+                            }
                         }
                     }
                 }
@@ -328,19 +330,46 @@ final public class BikerDatabase {
     }
 
     public void getCashBiker(FirebaseCallbackItem<Double> firebaseCallbackItem){
-        myRef.child("users").child("orders").addValueEventListener(new ValueEventListener() {
+        myRef.child("orders").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Double cash =0.0;
                 if(dataSnapshot.exists()) {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if(snapshot.getValue(Order.class).bikerId.matches(mAuth.getUid())) {
-                            cash+=REVENUE_FOR_SINGLE_RIDE;
+                        if(snapshot.getValue(Order.class).bikerId!=null) {
+                            if (snapshot.getValue(Order.class).bikerId.matches(mAuth.getUid())) {
+                                cash += REVENUE_FOR_SINGLE_RIDE;
+                            }
                         }
                     }
                 }
                 firebaseCallbackItem.onCallback(cash);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+    public void getOrdersTaken(FirebaseCallbackItem<Integer> firebaseCallback){
+        myRef.child("orders").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer value =0;
+                if(dataSnapshot.exists()) {
+                    Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                    for (DataSnapshot snapshot : iterator) {
+                        if(snapshot.getValue(Order.class).bikerId!=null) {
+                            if (snapshot.getValue(Order.class).bikerId.matches(mAuth.getUid())) {
+                                value++;
+                            }
+                        }
+                    }
+                }
+                firebaseCallback.onCallback(value);
             }
 
             @Override
