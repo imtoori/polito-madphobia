@@ -46,13 +46,13 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private CategoriesFragment catFragment;
     private RestaurantsFragment restaurantsFragment;
     private CardView filter;
-    private Chip delivery, minorder;
+    private Chip delivery, minorder, review;
     private ChipGroup chipGroup;
     private String address = "";
     private EditText deliveryAddress;
     private Set<String> chosen;
 
-    private boolean freeDelivery, minOrderCost;
+    private boolean freeDelivery, minOrderCost, reviewFlag;
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -67,17 +67,19 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         filter = view.findViewById(R.id.cv_filters);
         delivery = view.findViewById(R.id.deliverychip);
         minorder = view.findViewById(R.id.minorderchip);
+        review=view.findViewById(R.id.order_review);
         chipGroup = view.findViewById(R.id.chip_group);
         location = view.findViewById(R.id.location_img);
         deliveryAddress= view.findViewById(R.id.delivery_address_et);
         chosen = new HashSet<>();
         freeDelivery = false;
         minOrderCost = false;
+        reviewFlag=false;
 
         delivery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                applyFilters(minOrderCost, b);
+                applyFilters(minOrderCost, b, reviewFlag);
                 if(b) {
                     delivery.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     delivery.setTextColor(getResources().getColor(R.color.colorWhite, null));
@@ -94,7 +96,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         minorder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                applyFilters(b, freeDelivery);
+                applyFilters(b, freeDelivery, reviewFlag);
                 if(b) {
                     minOrderCost = true;
                     minorder.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
@@ -105,6 +107,23 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     minorder.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
                     minorder.setTextColor(getResources().getColor(R.color.colorPrimary, null));
                     minorder.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                }
+            }
+        });
+        review.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                applyFilters(minOrderCost, freeDelivery, b);
+                if(b) {
+                    reviewFlag = true;
+                    review.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    review.setTextColor(getResources().getColor(R.color.colorWhite, null));
+                    review.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                } else {
+                    reviewFlag = false;
+                    review.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+                    review.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+                    review.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                 }
             }
         });
@@ -173,7 +192,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
                     chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                 }
-                applyFilters(minOrderCost, freeDelivery);
+                applyFilters(minOrderCost, freeDelivery, reviewFlag);
             }
         };
     ConsumerDatabase.getInstance().getCategories(set -> {
@@ -207,13 +226,15 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.commit();
     }
 
-    public void applyFilters(boolean m, boolean d) {
+    public void applyFilters(boolean m, boolean d, boolean r) {
         restaurantsFragment = new RestaurantsFragment();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("categories", new ArrayList<>(chosen));
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
+        bundle.putBoolean("orderByReviews", r);
+        Log.i("MADAPP", "order by review->"+ r);
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
@@ -239,6 +260,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
+        bundle.putBoolean("orderByReviews", reviewFlag);
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);

@@ -82,5 +82,6 @@
     <string name="invalid_time">Invalid Delivery Time</string>
     <string name="euro">Euro</string>
     <string name="use">USE</string>
+    <string name="order_by">Order by</string>
 
 </resources>

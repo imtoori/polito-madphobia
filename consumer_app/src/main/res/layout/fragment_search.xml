@@ -92,8 +92,8 @@
             android:id="@+id/cv_filters"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
             android:visibility="gone"
+            app:cardCornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cv_search"
@@ -164,14 +164,53 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/deliverychip"
                     app:layout_constraintTop_toBottomOf="@+id/deliverychip" />
 
+
+                <TextView
+                    android:id="@+id/ordertv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/order_by"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/subtitle"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/order_review"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chip_group" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/order_review"
+                    style="@style/Theme.MaterialComponents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:checkable="true"
+                    android:text="@string/reviews"
+                    android:textColor="@color/colorPrimary"
+                    app:checkedIconEnabled="false"
+                    app:chipBackgroundColor="@color/colorWhite"
+                    app:chipIcon="@drawable/ic_feedback"
+                    app:chipIconTint="@color/colorPrimary"
+                    app:chipStrokeColor="@color/colorPrimary"
+                    app:chipStrokeWidth="0.1dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/ordertv"
+                    app:layout_constraintStart_toEndOf="@+id/ordertv"
+                    app:layout_constraintTop_toTopOf="@+id/ordertv"
+                    app:layout_constraintVertical_bias="0.27999997"
+                    app:rippleColor="@color/colorPrimaryDark" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
 
         <RelativeLayout
             android:id="@+id/childfrag_container"
