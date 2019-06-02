@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,16 +37,19 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 final public class RestaurantDatabase {
     private static RestaurantDatabase instance;
@@ -604,6 +608,62 @@ final public class RestaurantDatabase {
             }
         });
     }
+
+    public void getPopularTiming(OnFirebaseData<List<BarEntry>> cb){
+        myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer hour [] = new Integer [24];
+                Arrays.fill(hour,0);
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                            hour[DateTime.parse(o.orderFor).getHourOfDay()]++;
+
+                    }
+                    List <BarEntry> list = new ArrayList<>();
+                    for (Integer i=0;i<hour.length;i++){
+                        list.add(new BarEntry((float)i,(float)hour[i]));
+                    }
+                    cb.onReceived(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void getPopularDish(OnFirebaseData<TreeMap<String,Integer>> callBack){
+        TreeMap<String,Integer> treeMap  = new TreeMap<>();
+        myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                        o.products.forEach(product -> {
+                            if(treeMap.containsKey(product.name))
+                                treeMap.replace(product.name,treeMap.get(product.name)+product.quantity);
+                            else
+                                treeMap.put(product.name,product.quantity);
+                        });
+                    }
+
+                    callBack.onReceived(treeMap);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        }
 
 }
 
