@@ -52,7 +52,7 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
         favorite.add("Ik57NIUC0CVrkznG0GxpczGwlOp1");
 
 
-        restaurantsAdapter = new RestaurantsAdapter(restaurant, favorite,  this);
+        restaurantsAdapter = new RestaurantsAdapter(restaurant, favorite,  this, getResources().getDrawable(R.drawable.restaurant_default, null));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(restaurantsAdapter);
     }
