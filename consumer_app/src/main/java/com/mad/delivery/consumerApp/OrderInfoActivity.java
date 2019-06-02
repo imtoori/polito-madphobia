@@ -2,6 +2,7 @@ package com.mad.delivery.consumerApp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -39,7 +40,7 @@ public class OrderInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        order = ConsumerDatabase.getInstance().getOrder();
+        order = getIntent().getParcelableExtra("order");
         setContentView(R.layout.activity_order_info);
         setTitle(getResources().getString(R.string.order_info_toolbar));
         toolbar=findViewById(R.id.Toolbar);
@@ -98,10 +99,26 @@ public class OrderInfoActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.putExtra("open", 0);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
     }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("MADAPP", "onBackPressed");
+        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        if (fragments == 1) {
+            finish();
+        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
 
 
 }

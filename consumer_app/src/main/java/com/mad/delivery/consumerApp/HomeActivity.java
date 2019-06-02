@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,9 +29,12 @@ import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
 import com.mad.delivery.consumerApp.settings.SettingsFragment;
+import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.PreviewInfo;
+
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
     Toolbar myToolbar;
@@ -51,10 +55,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 123);
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 124);
-
+        Log.d("MADAPP", "HomeActivity onCreate");
         db = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -68,6 +69,10 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         walletFragment = new WalletFragment();
         searchFragment = new SearchFragment();
         settingsFragment = new SettingsFragment();
+        if(savedInstanceState != null) {
+            Log.d("MADAPP", "savedInstanceState is not null");
+            open = savedInstanceState.getInt("open");
+        }
         if(getIntent().hasExtra("open")) {
             open = getIntent().getIntExtra("open", 1);
         } else {
@@ -78,22 +83,25 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_menu:
+                        open = 0;
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, walletFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_search:
+                        open = 1;
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, searchFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_settings:
+                        open = 2;
                         ft = fm.beginTransaction();
-                        ft.addToBackStack(null);
+                        //ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.frag_container, settingsFragment);
                         ft.commit();
@@ -102,6 +110,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
                 return false;
             }
         };
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         switch(open) {
             case 0:
@@ -116,6 +125,8 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
             default:
                 navigation.setSelectedItemId(R.id.nav_search);
         }
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 124);
     }
 
     @Override
@@ -124,6 +135,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (searchFragment != null && searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
             searchFragment.getChildFragmentManager().popBackStack();
+            searchFragment.closeFilters();
             return;
         }
         if (fragments == 1) {
@@ -135,6 +147,17 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("open", open);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        open = (int) savedInstanceState.getInt("open");
+    }
 
     @Override
     public void openRestaurant(PreviewInfo previewInfo) {
@@ -145,8 +168,9 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     }
 
     @Override
-    public void openOrder() {
+    public void openOrder(Order o) {
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
+        intent.putExtra("order", o);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
@@ -155,6 +179,27 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     public void openFeedbackDialog(Order o) {
         feedbackFragment = FeedBackFragment.newInstance(o);
         feedbackFragment.show(getSupportFragmentManager(), "feedbackFragment");
+    }
+
+    @Override
+    public void loadOrders(String id) {
+        Log.d("MADAPP", "loadOrders called");
+        Log.d("MADAPP", "walletFragment:" + walletFragment.toString());
+        ConsumerDatabase.getInstance().getAllCostumerOrders(id, o -> {
+
+            if(o == null) {
+                walletFragment.noOrder.setVisibility(View.VISIBLE);
+                walletFragment.recyclerView.setVisibility(View.INVISIBLE);
+            } else {
+                walletFragment.orders.clear();
+                walletFragment.ordersAdapter.notifyDataSetChanged();
+                walletFragment.orders.add(o);
+                walletFragment.ordersAdapter.notifyDataSetChanged();
+                walletFragment.noOrder.setVisibility(View.INVISIBLE);
+                walletFragment.recyclerView.setVisibility(View.VISIBLE);
+            }
+            walletFragment.pgBar.setVisibility(View.INVISIBLE);
+        });
     }
 
     @Override
@@ -201,10 +246,13 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
 
     private void startInstalledAppDetailsActivity() {
         Intent i = new Intent();
+
         i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         i.addCategory(Intent.CATEGORY_DEFAULT);
         i.setData(Uri.parse("package:" + getPackageName()));
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
+
+
 }

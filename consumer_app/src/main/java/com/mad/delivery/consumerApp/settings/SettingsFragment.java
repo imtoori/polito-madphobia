@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 
@@ -93,7 +94,7 @@ public class SettingsFragment extends Fragment {
         cvLogout = view.findViewById(R.id.cv_logout);
         cvLogout.setOnClickListener(v -> {
             mAuth.signOut();
-            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
             startActivity(intent);
             ConsumerDatabase.getInstance().reset();
             getActivity().finish();

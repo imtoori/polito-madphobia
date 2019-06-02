@@ -1,4 +1,5 @@
 package com.mad.delivery.consumerApp.search;
+
 import android.content.res.ColorStateList;
 import android.location.Address;
 import android.location.Geocoder;
@@ -30,9 +31,11 @@ import com.mad.delivery.consumerApp.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -51,8 +54,10 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private String address = "";
     private EditText deliveryAddress;
     private Set<String> chosen;
+    private Map<String, Chip> chipMap;
 
     private boolean freeDelivery, minOrderCost;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -61,7 +66,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.grid_layout_animation_from_bottom);
         search = view.findViewById(R.id.search_imgbtn);
         filter = view.findViewById(R.id.cv_filters);
@@ -69,7 +74,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         minorder = view.findViewById(R.id.minorderchip);
         chipGroup = view.findViewById(R.id.chip_group);
         location = view.findViewById(R.id.location_img);
-        deliveryAddress= view.findViewById(R.id.delivery_address_et);
+        deliveryAddress = view.findViewById(R.id.delivery_address_et);
+        chipMap = new HashMap<>();
         chosen = new HashSet<>();
         freeDelivery = false;
         minOrderCost = false;
@@ -78,7 +84,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 applyFilters(minOrderCost, b);
-                if(b) {
+                if (b) {
                     delivery.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     delivery.setTextColor(getResources().getColor(R.color.colorWhite, null));
                     delivery.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
@@ -91,11 +97,12 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                 }
             }
         });
+
         minorder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 applyFilters(b, freeDelivery);
-                if(b) {
+                if (b) {
                     minOrderCost = true;
                     minorder.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     minorder.setTextColor(getResources().getColor(R.color.colorWhite, null));
@@ -119,7 +126,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             @Override
             public void onClick(View v) {
                 GPSTracker gps = new GPSTracker(getContext());
-                if(gps.isGPSEnabled){
+                if (gps.isGPSEnabled) {
                     Geocoder geocoder;
                     List<Address> addresses = new ArrayList<>();
                     geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -127,32 +134,24 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     try {
                         Double latitude = gps.getLatitude();
                         Double longitude = gps.getLongitude();
-                        Log.d("latitude: ",latitude.toString());
-                        Log.d("longitude: ",longitude.toString());
+                        Log.d("latitude: ", latitude.toString());
+                        Log.d("longitude: ", longitude.toString());
 
                         addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (addresses.size()>0) {
-
-                    String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                    String city = addresses.get(0).getLocality();
-                    String state = addresses.get(0).getAdminArea();
-                    String country = addresses.get(0).getCountryName();
-                    String postalCode = addresses.get(0).getPostalCode();
-                    String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-                    Log.d("ADDRESS:",address+" "+city+" "+state+" "+country+" "+postalCode+" "+knownName);
-                    deliveryAddress.setText(address);
-                    }
-                    else {
+                    if (addresses.size() > 0) {
+                        String city = addresses.get(0).getLocality();
+                        String address = addresses.get(0).getThoroughfare() + ", " + addresses.get(0).getFeatureName();
+                        String country = addresses.get(0).getCountryCode();
+                        String postalCode = addresses.get(0).getPostalCode();
+                        deliveryAddress.setText(address + ", " + postalCode + ", " + city + ", " + country);
+                    } else {
                         Toast.makeText(getContext(), "Your address isn't found", Toast.LENGTH_SHORT).show();
-
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(getContext(), "Your gps is disabled", Toast.LENGTH_SHORT).show();
-
                 }
 
             }
@@ -162,7 +161,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Chip chip = (Chip) buttonView;
 
-                if(isChecked) {
+                if (isChecked) {
                     chosen.add(chip.getText().toString().toLowerCase());
                     chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
@@ -176,10 +175,11 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                 applyFilters(minOrderCost, freeDelivery);
             }
         };
-    ConsumerDatabase.getInstance().getCategories(set -> {
+        ConsumerDatabase.getInstance().getCategories(set -> {
             set.forEach(n -> {
                 Chip chip = new Chip(view.getContext());
                 chip.setText(n);
+                chipMap.put(n, chip);
                 chip.setChipBackgroundColorResource(R.color.colorWhite);
                 chip.setChipStrokeWidth((float) 0.1);
                 chip.setChipStrokeColorResource(R.color.colorPrimary);
@@ -226,10 +226,17 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     public void openCategory(List<String> chosenList, String address, boolean m, boolean d) {
         // if present, close the RestaurantsFragment
         Fragment fOpen = fm.findFragmentByTag(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
-        Log.i("MADAPP", fm.getFragments().toString());
-        if(fOpen != null) {
+        if (fOpen != null) {
             Log.i("MADAPP", "Closing restaurantsFragment..");
             fm.beginTransaction().remove(fOpen).commit();
+        }
+        if(chosenList != null) {
+            for (String s : chosenList) {
+                Chip selectedChip = chipMap.get(s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase());
+                if (selectedChip != null) {
+                    selectedChip.setChecked(true);
+                }
+            }
         }
         filter.setVisibility(View.VISIBLE);
         restaurantsFragment = new RestaurantsFragment();
@@ -247,6 +254,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.commit();
     }
 
+
+
     @Override
     public boolean getDeliveryCostParam() {
         return freeDelivery;
@@ -255,5 +264,10 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     @Override
     public boolean getMinOrderCostParam() {
         return minOrderCost;
+    }
+
+    @Override
+    public void closeFilters() {
+        filter.setVisibility(View.GONE);
     }
 }

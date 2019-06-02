@@ -53,7 +53,7 @@
     <string name="Credit">Credit</string>
     <string name="Total">Total:</string>
     <string name="enter_code">Enter your credit code</string>
-    <string name="credit_description">Your credit can be used as payment on your order.</string>
+    <string name="credit_description">This credit can be used to pay orders.</string>
     <string name="data">Date:</string>
     <string name="order_summary">Order summary</string>
     <string name="subtotal">SUBTOTAL</string>

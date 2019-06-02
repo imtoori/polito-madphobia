@@ -3,6 +3,7 @@ package com.mad.delivery.consumerApp.search.Order;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.location.Address;
 import android.location.Geocoder;
@@ -58,6 +59,8 @@ import java.util.Map;
 
 public class BasketActivity extends AppCompatActivity implements OnProductListener  {
     private FirebaseAuth mAuth;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
     private Toolbar toolbar;
     private FirebaseUser currentUser;
     private ProductsAdapter myOrderAdapter;
@@ -66,7 +69,6 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     private List<Product> myOrder;
     private Restaurant restaurant;
     private ImageView deliveryAddressButton;
-    private TextView deliveryAddressText;
     TextView deliveryFee, minOrder, totalCost, minOrderTitle;
     AutoCompleteTextView where;
     EditText when;
@@ -75,15 +77,17 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     Button btnCompleteOrder;
     ChipGroup chipGroup;
     private DateTime orderFor;
+    CompletingOrderDialogFragment sendingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_basket);
+        sharedPref = getSharedPreferences("basket", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
         toolbar = findViewById(R.id.myToolbar);
         deliveryAddressButton =findViewById(R.id.imageView_get_location);
-        deliveryAddressText = findViewById(R.id.actv_delivery_address);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
         chipGroup = findViewById(R.id.chip_group);
@@ -159,6 +163,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         btnCompleteOrder.setOnClickListener(v -> {
             boolean valid = checkConstraints();
             if(valid) {
+
                 String paymentMethod = "";
                 if(checkedChip.getText().toString().equals(getString(R.string.pay_cash))) paymentMethod = "cash";
                 else if(checkedChip.getText().toString().equals(getString(R.string.pay_credit))) paymentMethod = "credit";
@@ -166,22 +171,8 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
 
                 Order order = new Order(user, restaurant, myOrder, orderFor.toString(), paymentMethod, where.getText().toString());
                 order.clientNotes=notes.getText().toString();
-                try {
-                    ConsumerDatabase.getInstance().putOrder(order, this, success -> {
-                        if(success) {
-                            Toast.makeText(this, "Your order has been received.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                            intent.putExtra("open", 1);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        } else {
-                            Toast.makeText(this, "An error occurred. Items you ordered may not be available anymore.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } catch (IOException e) {
-                    Toast.makeText(this, "An error occurred. Items you ordered may not be available anymore.", Toast.LENGTH_SHORT).show();
-                }
-
+                sendingFragment = CompletingOrderDialogFragment.newInstance(order);
+                sendingFragment.show(getSupportFragmentManager(), "sendingFragment");
             } else {
                 Toast.makeText(this, "Please fill all fields with valid data", Toast.LENGTH_SHORT).show();
             }
@@ -212,7 +203,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                     String postalCode = addresses.get(0).getPostalCode();
                     String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
                     Log.d("ADDRESS:", address + " " + city + " " + state + " " + country + " " + postalCode + " " + knownName);
-                    deliveryAddressText.setText(address);
+                    where.setText(address);
                 }
                 else {
                     Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
@@ -324,7 +315,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         if(checkedChip == null) {
             return false;
         }
-        if (user.name==null || user.phoneNumber==null){
+        if(user.name==null || user.phoneNumber==null){
             return false;
         }
         return true;

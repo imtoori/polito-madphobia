@@ -46,28 +46,18 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         @Override
         public void onBindViewHolder(final OrdersAdapter.ViewHolder holder, int position) {
             holder.order = orders.get(position);
-            ConsumerDatabase.getInstance().getRestourant(holder.order.restaurantId, new firebaseCallback<Restaurant>() {
-                @Override
-                public void onCallBack(Restaurant item) {
-                    holder.nameRestaurant.setText(item.previewInfo.name);
-                    int price = 0;
-
-                    holder.price.setText(holder.order.totalPrice.toString()+"€");
-                    holder.data.setText(MyDateFormat.parse(new DateTime(holder.order.orderFor)));
-                    holder.status.setText(holder.order.status.toString());
-                    if(holder.order.status.equals(OrderStatus.delivered) && holder.order.feedbackIsPossible) {
-                        holder.imgFeedback.setVisibility(View.VISIBLE);
-                        holder.imgFeedback.setOnClickListener( v -> {
-                            mListener.openFeedbackDialog(holder.order);
-                        });
-                    }
-                    //TODO ripristinare le due righe successive
-                    //if(item.imageUri != null && item.imageUri !="" && !item.imageUri.equals(Uri.EMPTY))
-                      //  Picasso.get().load(item.previewInfo.imageDownload).into(holder.imgRestaurant);
-
-                }
-            });
-
+            holder.nameRestaurant.setText(holder.order.restaurant.previewInfo.name);
+            holder.price.setText(holder.order.totalPrice.toString()+"€");
+            holder.data.setText(MyDateFormat.parse(new DateTime(holder.order.orderFor)));
+            holder.status.setText(holder.order.status.toString());
+            if(holder.order.status.equals(OrderStatus.delivered) && holder.order.feedbackIsPossible) {
+                holder.imgFeedback.setVisibility(View.VISIBLE);
+                holder.imgFeedback.setOnClickListener( v -> {
+                    mListener.openFeedbackDialog(holder.order);
+                });
+            } else {
+                holder.imgFeedback.setVisibility(View.GONE);
+            }
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,8 +65,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                     if (null != mListener) {
                         // Notify the active callbacks interface (the activity, if the
                         // fragment is attached to one) that an item has been selected.
-                        ConsumerDatabase.getInstance().setOrder(holder.order);
-                        mListener.openOrder();
+                        mListener.openOrder(holder.order);
                     }
                 }
             });
