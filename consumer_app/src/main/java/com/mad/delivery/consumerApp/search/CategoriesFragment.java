@@ -71,7 +71,6 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         myRef = db.getReference("categories");

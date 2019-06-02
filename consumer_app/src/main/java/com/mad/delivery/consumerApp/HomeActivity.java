@@ -131,8 +131,9 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
 
     @Override
     public void onBackPressed() {
-        Log.d("MADAPP", "onBackPressed");
-        int fragments = getSupportFragmentManager().getBackStackEntryCount();
+        int fragments = getFragmentManager().getBackStackEntryCount();
+        Log.d("MADAPP", "onBackPressed, fragments " + fragments);
+
         if (searchFragment != null && searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
             searchFragment.getChildFragmentManager().popBackStack();
             searchFragment.closeFilters();
@@ -183,8 +184,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
 
     @Override
     public void loadOrders(String id) {
-        Log.d("MADAPP", "loadOrders called");
-        Log.d("MADAPP", "walletFragment:" + walletFragment.toString());
         ConsumerDatabase.getInstance().getAllCostumerOrders(id, o -> {
 
             if(o == null) {
@@ -216,7 +215,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_login:
-                Log.d("MADAPP", "Opening Login Activity");
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

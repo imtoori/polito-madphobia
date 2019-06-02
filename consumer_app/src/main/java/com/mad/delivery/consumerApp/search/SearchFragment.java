@@ -225,9 +225,10 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     @Override
     public void openCategory(List<String> chosenList, String address, boolean m, boolean d) {
         // if present, close the RestaurantsFragment
+        Log.d("MADAPP", "opening Category Fragment");
         Fragment fOpen = fm.findFragmentByTag(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
         if (fOpen != null) {
-            Log.i("MADAPP", "Closing restaurantsFragment..");
+            Log.d("MADAPP", "opening Category Fragment: Already present. Removing..");
             fm.beginTransaction().remove(fOpen).commit();
         }
         if(chosenList != null) {
@@ -253,8 +254,6 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.replace(R.id.childfrag_container, restaurantsFragment);
         ft.commit();
     }
-
-
 
     @Override
     public boolean getDeliveryCostParam() {
