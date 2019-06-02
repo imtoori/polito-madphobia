@@ -40,7 +40,7 @@ public class RestaurantsFragment extends Fragment {
     private RestaurantsFragment.OnRestaurantSelected mListener;
     private List<PreviewInfo> previews;
     private CardView emptyFolder;
-    private boolean freeDelivery = false, minOrderCost = false;
+    private boolean freeDelivery = false, minOrderCost = false, reviewFlag=false;
     private Set<String> chosenCategories;
     private String address = "";
     private ProgressBar pgBar;
@@ -81,7 +81,14 @@ public class RestaurantsFragment extends Fragment {
         emptyFolder = view.findViewById(R.id.emptyfolder_cv);
         pgBar = view.findViewById(R.id.pg_bar);
         previews = new ArrayList<>();
-        restaurantAdapter = new RestaurantsAdapter(previews, mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
+        previews.sort(( z1, z2) -> (Double.compare(z1.scoreValue,z2.scoreValue)));
+
+
+        //TODO: inserire in favorite l'interrogazione al db
+        List <String> favorite= new ArrayList<String>();
+        favorite.add("Ik57NIUC0CVrkznG0GxpczGwlOp1");
+
+        restaurantAdapter = new RestaurantsAdapter(previews, favorite,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(restaurantAdapter);
@@ -95,6 +102,7 @@ public class RestaurantsFragment extends Fragment {
             Log.i("MADAPP", "restaurantffragment->"+chosenCategories);
             address = getArguments().getString("address");
             freeDelivery = getArguments().getBoolean("freeDelivery");
+            reviewFlag=getArguments().getBoolean("orderByReviews");
             minOrderCost = getArguments().getBoolean("minOrderCost");
         } catch(NullPointerException e) {
             // do nothing
@@ -119,6 +127,8 @@ public class RestaurantsFragment extends Fragment {
                 emptyFolder.setVisibility(View.VISIBLE);
             } else {
                 emptyFolder.setVisibility(View.GONE);
+                if(reviewFlag==true)
+                    previews.sort(( z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
             }
         });
 

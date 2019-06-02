@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mad.delivery.consumerApp.HomeActivity">
-
     <item
-        android:id="@+id/nav_favorite"
+        android:id="@+id/nav_login"
         android:title="@string/login"
-        android:icon="@drawable/ic_favorite_white"
+        android:icon="@drawable/ic_account"
         app:showAsAction="ifRoom"
         />
 </menu>
