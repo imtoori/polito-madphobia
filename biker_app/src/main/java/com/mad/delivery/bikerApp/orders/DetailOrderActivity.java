@@ -39,8 +39,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
         order  = bundle.getParcelable("order");
-        Log.d("MADAPP", "order in DetailOrderActivity : " + order.toString());
-        setTitle(getResources().getString(R.string.order) + " " + order.id);
+        setTitle(getResources().getString(R.string.order) + " from " + order.client.name + " " +order.client.lastName.substring(0, 1) + ".");
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.detail_order_pager);
         pagerAdapter = new DetailOrderPageAdapter(getSupportFragmentManager(), this, order);
@@ -72,7 +71,9 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.order_detail_menu, menu);
+        if(order.status.equals(OrderStatus.completed)) {
+            getMenuInflater().inflate(R.menu.order_detail_menu, menu);
+        }
         return true;
     }
 

@@ -38,11 +38,11 @@ public class OrdersTabsPageAdapter extends FragmentPagerAdapter {
         // Generate title based on item position
         switch(position) {
             case 0:
-                return context.getString(R.string.pending_orders);
+                return context.getString(R.string.waiting);
             case 1:
-                return context.getString(R.string.preparing_orders);
+                return context.getString(R.string.assigned);
             case 2:
-                return context.getString(R.string.completed_orders);
+                return context.getString(R.string.delivered);
             default:
                 return null;
         }

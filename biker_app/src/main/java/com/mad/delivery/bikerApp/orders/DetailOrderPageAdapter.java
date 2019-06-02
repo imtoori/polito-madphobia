@@ -1,4 +1,5 @@
 package com.mad.delivery.bikerApp.orders;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -18,20 +19,27 @@ import com.mad.delivery.resources.Order;
 public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     private Context context;
     private Order order;
+    LatLng latLngR;
+    LatLng latLngC;
+
     public DetailOrderPageAdapter(FragmentManager fm, Context context, Order order) {
         super(fm);
         this.context = context;
         this.order = order;
+        latLngR = new LatLng(order.restaurant.latitude, order.restaurant.longitude);
+        latLngC = new LatLng(order.latitude, order.longitude);
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        switch(position) {
+        switch (position) {
             case 0:
                 UserInformationFragment uiFrag = new UserInformationFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("client", order.client);
+                bundle.putParcelable("restaurant", order.restaurant);
+                bundle.putString("address", order.delivery);
                 uiFrag.setArguments(bundle);
                 return uiFrag;
             case 1:
@@ -41,20 +49,12 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
                 doFrag.setArguments(doBundle);
                 return doFrag;
             case 2:
-                RestaurantInformationFragment resFrag = new RestaurantInformationFragment();
-                Bundle rbundle = new Bundle();
-                rbundle.putParcelable("restaurant", order.restaurant);
-                resFrag.setArguments(rbundle);
-                return resFrag;
-            case 3:
-            MapViewFragment mapFrag = new MapViewFragment();
-            Bundle bnd = new Bundle();
-            LatLng latLngR = new LatLng(order.restaurant.latitude,order.restaurant.longitude);
-            LatLng latLngC = new LatLng(order.latitude,order.longitude);
+                MapViewFragment mapFrag = new MapViewFragment();
+                Bundle bnd = new Bundle();
                 bnd.putParcelable("restaurant", latLngR);
                 bnd.putParcelable("client", latLngC);
                 mapFrag.setArguments(bnd);
-            return mapFrag;
+                return mapFrag;
             default:
                 return null;
         }
@@ -63,14 +63,13 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
-        switch(position) {
+        switch (position) {
             case 0:
                 return context.getString(R.string.user_info_order);
             case 1:
                 return context.getString(R.string.detail_order_info);
+
             case 2:
-                return context.getString(R.string.detail_restaurant_info);
-            case 3:
                 return context.getString(R.string.user_map_info);
             default:
                 return null;
@@ -79,7 +78,7 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 }
 

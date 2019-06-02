@@ -62,19 +62,20 @@ public class PendingOrdersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        BikerDatabase.getInstance().getPendingOrders(new FirebaseCallback() {
+        BikerDatabase.getInstance().getPendingOrders( new FirebaseCallback() {
             @Override
             public void onCallbak(List<Order> list) {
                 if(list.isEmpty())
                     showEmptyFolder();
                 else {
+                    orders.clear();
+                    ordersAdapter.notifyDataSetChanged();
                     orders.addAll(list);
                     //ordersAdapter.orders = orders;
                     ordersAdapter.notifyDataSetChanged();
                 }
             }
-        });        recyclerView.getAdapter().notifyDataSetChanged();
-        //showEmptyFolder();
+        });
     }
 
     @Override

@@ -39,12 +39,11 @@ import org.joda.time.format.DateTimeFormatter;
 public class CompletingOrderActivity extends AppCompatActivity implements  ListDialog.ListDialogListener {
     private Toolbar myToolBar;
     private Order modifiedOrder;
-    private DateTime oldDateTime;
-    private EditText adminNotes;
-    CardView cvDeliveryOptions, cvAdminNotes, cvChangeStatus;
+    CardView cvDeliveryOptions;
     TextView requestedDeliveryTime, currentStatus, newStatus;
+    TextView deliveryDone;
 
-    Button btnAdd, btnChangeStatus;
+    Button btnChangeStatus;
     private Order order;
     private AlertDialog confirmOrderDialog;
     private FirebaseAuth mAuth;
@@ -58,62 +57,15 @@ public class CompletingOrderActivity extends AppCompatActivity implements  ListD
         order = getIntent().getParcelableExtra("order");
         modifiedOrder = new Order(order);
         mAuth = FirebaseAuth.getInstance();
-        setTitle(getResources().getString(R.string.completing_order) + " " + modifiedOrder.id);
+        setTitle(getResources().getString(R.string.order) + " from " + order.client.name + " " +order.client.lastName.substring(0, 1) + ".");
         requestedDeliveryTime = findViewById(R.id.tv_delivery_options_sentence);
-        btnAdd = findViewById(R.id.delivery_admin_notes);
-        currentStatus = findViewById(R.id.tv_current_statusValue);
-        newStatus = findViewById(R.id.tv_new_status);
-        String newStatusAsString = ListDialog.getStatusAsList(modifiedOrder.status).get(0);
-        newStatus.setText(newStatusAsString);
-        newStatus.setTextColor(getColor(OrderStatus.valueOf(newStatusAsString)));
+        deliveryDone = findViewById(R.id.tv_delivery_done);
+
         requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(new DateTime(modifiedOrder.orderFor))));
-        currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
-        currentStatus.setTextColor(getColor(modifiedOrder.status));
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
-        cvAdminNotes = findViewById(R.id.cv_admin_notes);
-        cvChangeStatus = findViewById(R.id.cv_status_change);
-        adminNotes = findViewById(R.id.et_admin_notes);
-        if (order.bikerNotes != null && !order.bikerNotes.equals(""))
-            adminNotes.setText(order.bikerNotes);
-        btnChangeStatus = findViewById(R.id.btn_change_status);
-        LayoutTransition adminNotesLt = cvAdminNotes.getLayoutTransition();
-        adminNotesLt.setDuration(500);
-        adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
+        deliveryDone.setText(getResources().getString(R.string.delivery_done, MyDateFormat.parse(new DateTime())));
 
-        if (order.status.equals(OrderStatus.preparing) || order.status.equals(OrderStatus.ready) || order.status.equals(OrderStatus.pending))
-            cvChangeStatus.setVisibility(View.GONE);
-        else
-            cvChangeStatus.setVisibility(View.VISIBLE);
-
-        LayoutTransition deliveryLt = cvDeliveryOptions.getLayoutTransition();
-        deliveryLt.setDuration(500);
-        deliveryLt.enableTransitionType(LayoutTransition.CHANGING);
-
-        LayoutTransition changeStatusLt = cvChangeStatus.getLayoutTransition();
-        changeStatusLt.setDuration(500);
-        changeStatusLt.enableTransitionType(LayoutTransition.CHANGING);
-
-        oldDateTime = new DateTime(modifiedOrder.orderFor);
         confirmOrderDialog = createDialog(R.string.completing_order_title_dialog, R.string.completing_order_message_dialog);
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btnAdd.setVisibility(View.GONE);
-                adminNotes.setVisibility(View.VISIBLE);
-            }
-        });
-
-        btnChangeStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment newFragment = new ListDialog();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("currentStatus", modifiedOrder.status);
-                newFragment.setArguments(bundle);
-                newFragment.show(getSupportFragmentManager(), "listStatus");
-            }
-        });
 
     }
 
@@ -139,14 +91,16 @@ public class CompletingOrderActivity extends AppCompatActivity implements  ListD
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.order_completing_menu, menu);
+        if(order.status.equals(OrderStatus.completed)) {
+            getMenuInflater().inflate(R.menu.order_detail_menu, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.send_order:
+            case R.id.save_order_option:
                 confirmOrderDialog.show();
                 return true;
             default:
@@ -192,8 +146,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements  ListD
                 //modifiedOrder.bikerId =order.bikerId;
                 modifiedOrder.bikerId = order.bikerId;
                 modifiedOrder.restaurantId = order.restaurantId;
-                modifiedOrder.bikerNotes = adminNotes.getText().toString();
-                modifiedOrder.status = OrderStatus.valueOf(newStatus.getText().toString());
+                modifiedOrder.status = OrderStatus.delivered;
                 Log.d("MADAPP", "selected status: " + modifiedOrder.status.toString());
                 order = modifiedOrder;
                 BikerDatabase.getInstance().update(order);
