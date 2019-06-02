@@ -80,6 +80,7 @@
         <item name="android:textColor">@color/colorTextIcon</item>
         <item name="android:textAlignment">center</item>
         <item name="android:padding">8dp</item>
+        <item name="elevation">0dp</item>
     </style>
     <style name="AppTheme.RatingBar" parent="android:style/Widget.Material.RatingBar.Small">
         <item name="colorControlNormal">@color/colorDivider</item>

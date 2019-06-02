@@ -2,6 +2,9 @@ package com.mad.delivery.consumerApp.search;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -11,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -21,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,23 +37,28 @@ import com.mad.delivery.consumerApp.search.Order.BasketActivity;
 import com.mad.delivery.consumerApp.search.Order.OnProductListener;
 import com.mad.delivery.consumerApp.search.Order.ProductsAdapter;
 import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Product;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class RestaurantInfoActivity extends AppCompatActivity implements MenuItemAdapter.OnItemSelected, OnProductListener {
     private ViewPager mPager;
     private PagerAdapter pagerAdapter;
     private TabLayout tabLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    private AppBarLayout appBarLayout;
     private Restaurant restaurant;
     private FrameLayout redCircle;
     private TextView countTextView;
@@ -65,6 +75,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
 
     // dialog items
     TextView deliveryFee, totalPrice;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +85,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
         setSupportActionBar(toolbar);
         myOrder = new HashMap<>();
-
+        appBarLayout = findViewById(R.id.app_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mPager = findViewById(R.id.restaurant_pager);
         tabLayout = findViewById(R.id.tab_restaurant_header);
@@ -123,12 +134,12 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         });
         return super.onPrepareOptionsMenu(menu);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_restaurant_info, menu);
         return true;
     }
-
 
 
     @Override
@@ -167,7 +178,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
     public void itemAdded(MenuItemRest item) {
         itemsNumber++;
         updateShoppingCartIcon(itemsNumber);
-        if(myOrder.containsKey(item.id)) {
+        if (myOrder.containsKey(item.id)) {
             Product p = myOrder.get(item.id);
             p.addProduct(item, 1);
         } else {
@@ -178,25 +189,25 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
     @Override
     public void itemRemoved(MenuItemRest item) {
         itemsNumber--;
-        if(itemsNumber < 0) itemsNumber = 0;
+        if (itemsNumber < 0) itemsNumber = 0;
         updateShoppingCartIcon(itemsNumber);
-        if(myOrder.containsKey(item.id)) {
+        if (myOrder.containsKey(item.id)) {
             Product p = myOrder.get(item.id);
             p.delProduct(item, 1);
-            if(p.quantity == 0) myOrder.remove(p);
+            if (p.quantity == 0) myOrder.remove(p);
         }
     }
 
     public void openShoppingCartPreview() {
-        if(myOrder.size() == 0) {
+        if (myOrder.size() == 0) {
             AlertDialog.Builder emptyBuilder = new AlertDialog.Builder(this);
             emptyBuilder.setMessage(R.string.dialog_shopping_cart_empty)
                     .setTitle(R.string.dialog_shopping_cart_preview)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
             AlertDialog emptyCartDialog = emptyBuilder.create();
             emptyCartDialog.show();
             return;
@@ -209,7 +220,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         Button btnLogin = convertView.findViewById(R.id.btn_login);
         btnNext = convertView.findViewById(R.id.btn_next);
         Button btnBack = convertView.findViewById(R.id.btn_back);
-        if(user == null) {
+        if (user == null) {
             btnLogin.setVisibility(View.VISIBLE);
             btnNext.setVisibility(View.GONE);
         } else {
@@ -227,10 +238,20 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
                 });
 
                 btnNext.setOnClickListener(v -> {
-                    Intent intent = new Intent(RestaurantInfoActivity.this, BasketActivity.class);
-                    intent.putExtra("myOrder", (Serializable) myOrder);
-                    intent.putExtra("restaurant", (Parcelable) restaurant);
-                    startActivity(intent);
+                    if (user.name == null && user.lastName == null && user.phoneNumber == null) {
+                        dialog.dismiss();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RestaurantInfoActivity.this);
+                        builder.setTitle("Error")
+                                .setMessage("Your profile is incomplete. Please go to My Account -> Profile. ")
+                                .setPositiveButton("I understand", (dialogInterface1, i) -> {
+                                    dialogInterface1.dismiss();
+                                }).create().show();
+                    } else {
+                        Intent intent = new Intent(RestaurantInfoActivity.this, BasketActivity.class);
+                        intent.putExtra("myOrder", (Serializable) myOrder);
+                        intent.putExtra("restaurant", (Parcelable) restaurant);
+                        startActivity(intent);
+                    }
                 });
                 btnLogin.setOnClickListener(v -> {
                     Intent intent = new Intent(RestaurantInfoActivity.this, LoginActivity.class);
@@ -257,18 +278,18 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         computeTotalPrice();
         itemsNumber -= p.quantity;
         updateShoppingCartIcon(itemsNumber);
-        if(myOrder.size() == 0) {
+        if (myOrder.size() == 0) {
             dialog.dismiss();
             loadRestaurantInfo(true);
         }
     }
 
     public void computeTotalPrice() {
-        deliveryFee.setText("€ "+restaurant.previewInfo.deliveryCost);
+        deliveryFee.setText("€ " + restaurant.previewInfo.deliveryCost);
         double tp = 0.0;
         tp = myOrder.entrySet().stream().mapToDouble(i -> i.getValue().price).sum() + restaurant.previewInfo.deliveryCost;
 
-        if(restaurant.previewInfo.minOrderCost > tp) {
+        if (restaurant.previewInfo.minOrderCost > tp) {
             double remainder = restaurant.previewInfo.minOrderCost - tp;
             tp += remainder;
         }
@@ -279,6 +300,37 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
     private void loadRestaurantInfo(boolean restaurantMenu) {
         ConsumerDatabase.getInstance().getRestaurantInfo(previewInfo, (rest) -> {
             restaurant = rest;
+            if (restaurant.previewInfo.imageName == null || restaurant.previewInfo.imageName.equals("")) {
+                appBarLayout.setBackground(getDrawable(R.drawable.restaurant_default));
+            } else {
+                ConsumerDatabase.getInstance().downloadImage(restaurant.previewInfo.id, "profile", restaurant.previewInfo.imageName, new OnImageDownloaded() {
+                    @Override
+                    public void onReceived(Uri imageUri) {
+                        if (imageUri == null || imageUri == Uri.EMPTY) {
+                            appBarLayout.setBackground(getDrawable(R.drawable.restaurant_default));
+                        } else {
+                            Target target = new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                    ImageView imageView = new ImageView(getApplicationContext());
+                                    imageView.setImageBitmap(bitmap);
+                                    Drawable image = imageView.getDrawable();
+                                    appBarLayout.setBackground(image);
+                                }
+
+                                @Override
+                                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                                }
+
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                            };
+                            Picasso.get().load(imageUri).into(target);
+
+                        }
+                    }
+                });
+            }
 
             pagerAdapter = new RestaurantInfoPageAdapter(getSupportFragmentManager(), this, restaurant);
             mPager.setAdapter(pagerAdapter);
@@ -286,7 +338,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
             // Give the TabLayout the ViewPager
 
             tabLayout.setupWithViewPager(mPager);
-            if(restaurantMenu) {
+            if (restaurantMenu) {
                 tabLayout.selectTab(tabLayout.getTabAt(1));
             }
         });

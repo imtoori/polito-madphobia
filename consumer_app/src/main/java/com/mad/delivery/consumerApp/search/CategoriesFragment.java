@@ -2,6 +2,7 @@ package com.mad.delivery.consumerApp.search;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,14 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.GridRecyclerView;
+import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.RestaurantCategory;
 
 import java.util.ArrayList;
@@ -39,6 +43,7 @@ public class CategoriesFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
     private FirebaseDatabase db;
+    private ProgressBar pgBar;
 
     public CategoriesFragment() {
         // Required empty public constructor
@@ -54,21 +59,21 @@ public class CategoriesFragment extends Fragment {
                     + " must implement OnCategorySelected");
         }
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
-        Log.i("MADAPP", "CategoriesFragment: onCREATED!");
         myRef = db.getReference("categories");
-        categories = new ArrayList<>();
-        Log.i("MADAPP", "categories->"+categories);
-        categoriesAdapter = new CategoriesAdapter(categories, mListener);
 
     }
 
@@ -76,12 +81,14 @@ public class CategoriesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_categories, container, false);
+        View view = inflater.inflate(R.layout.fragment_categories, container, false);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.grid_layout_animation_from_bottom);
-
+        categories = new ArrayList<>();
+        categoriesAdapter = new CategoriesAdapter(categories, mListener, getContext());
+        pgBar = view.findViewById(R.id.pg_bar);
         recyclerView = view.findViewById(R.id.category_rv);
         recyclerView.hasFixedSize();
-        GridLayoutManager gridLayoutManager =  new GridLayoutManager(getContext(), 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(categoriesAdapter);
         recyclerView.setLayoutAnimation(animation);
@@ -91,36 +98,26 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //categories.clear();
-        ConsumerDatabase.getInstance().getRestaurantCategories(categories,new ConsumerDatabase.onRestaurantCategoryReceived() {
-            @Override
-            public void childAdded(RestaurantCategory rc) {
-                categories.add(rc);
-                categoriesAdapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void childChanged(RestaurantCategory rc) {
-                categories.stream().filter(c -> c.name.equals(rc.name)).map(c -> c = rc );
+        ConsumerDatabase.getInstance().getRestaurantCategories(categories, item -> {
+            if (item != null) {
+                categories.add(item);
                 categoriesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void childMoved(RestaurantCategory rc) {
-            }
-
-            @Override
-            public void childDeleted(RestaurantCategory rc) {
-                categories.removeIf(c -> rc.name.equals(c.name));
-                categoriesAdapter.notifyDataSetChanged();
+                //mListener.closeFilters();
+                pgBar.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+            } else {
+                Log.d("MADAPP", "No categories..");
             }
         });
     }
+
 
     public interface OnCategorySelected {
         void openCategory(List<String> chosen, String address, boolean m, boolean d);
         boolean getMinOrderCostParam();
         boolean getDeliveryCostParam();
+        void closeFilters();
 
     }
 

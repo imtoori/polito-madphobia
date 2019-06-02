@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -15,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.MainActivity;
+import com.mad.delivery.restaurant_app.OnFirebaseData;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
@@ -26,12 +29,14 @@ import com.github.mikephil.charting.charts.BarChart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 public class PopularSettingActivity extends AppCompatActivity {
     Toolbar myToolbar;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     TextView first, second, third, first_q, second_q, third_q;
+    ImageView first_img, second_img, third_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,118 +49,92 @@ public class PopularSettingActivity extends AppCompatActivity {
         first= findViewById(R.id.tv_first_place);
         second=findViewById(R.id.tv_second_place);
         third=findViewById(R.id.tv_third_place);
-        first.setText("Pasta al sugo");
-        second.setText("Parmigiana");
-        third.setText("Polpette");
-        //TODO: SETTARE IL NOME PIATTO IN FIRST, SECOND , THIRD
         first_q=findViewById(R.id.first_quantity);
         second_q=findViewById(R.id.second_quantity);
         third_q=findViewById(R.id.third_quantity);
-        first_q.setText("12");
-        second_q.setText("44");
-        third_q.setText("120");
-        //TODO: SETTARE IN FIRST_Q, SECOND_Q , THIRD_Q LE QIANTITà VENDUTE DEI RISPETTIVI PIATTI
-        findViewById(R.id.cv_daily_order).setVisibility(View.GONE);
-/*
-        BarChart chart  = (BarChart) findViewById(R.id.barchart);
+        first_img =findViewById(R.id.img_first_place);
+        second_img =findViewById(R.id.img_second_place);
+        third_img =findViewById(R.id.img_third_place);
 
-        List<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 30f));
-        entries.add(new BarEntry(1, 80f));
-        entries.add(new BarEntry(2, 60f));
-        entries.add(new BarEntry(3, 50f));
-        entries.add(new BarEntry(4, 50f));
-        entries.add(new BarEntry(5, 70f));
-        entries.add(new BarEntry(6, 60f));
-
-        final ArrayList<String> xLabel = new ArrayList<>();
-        xLabel.add("L");
-        xLabel.add("M");
-        xLabel.add("M");
-        xLabel.add("G");
-        xLabel.add("V");
-        xLabel.add("S");
-        xLabel.add("D");
-
-
-        BarDataSet set = new BarDataSet(entries, "");
-        set.setStackLabels(new String[]{"L", "M","L", "M","L", "M","L"});
-        set.setColors(Color.RED);
-
-        BarData data = new BarData(set);
-        data.setBarWidth(0.9f); // set custom bar width
-        chart.setData(data);
-        chart.setFitBars(true); // make the x-axis fit exactly all bars
-        chart.invalidate(); // refresh
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setGranularity(1f); // only intervals of 1 day
-        xAxis.setLabelCount(7);
-        xAxis.setValueFormatter(new ValueFormatter() {
+        RestaurantDatabase.getInstance().getPopularDish(new OnFirebaseData<TreeMap<String, Integer>>() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public void onReceived(TreeMap<String, Integer> item) {
+                List<String> listKeys = new ArrayList<String>(item.keySet());
+                List<Integer> listValues = new ArrayList<Integer>(item.values());
+                if(listKeys.size()>=1&&listValues.size()>=1){
+                    first.setText(listKeys.get(0));
+                    first_q.setText(listValues.get(0).toString());
 
-                Log.i("MADAPP", "data X" + xLabel);
-                return xLabel.get((int) value );
+                }
+                else {
+                    first.setVisibility(View.INVISIBLE);
+                    first_q.setVisibility(View.INVISIBLE);
+                    first_img.setVisibility(View.INVISIBLE);
+                }
+                if(listKeys.size()>=2&&listValues.size()>=2){
+                    second.setText(listKeys.get(1));
+                    second_q.setText(listValues.get(1).toString());
+
+                }
+                else {
+                    second.setVisibility(View.INVISIBLE);
+                    second_q.setVisibility(View.INVISIBLE);
+                    second_img.setVisibility(View.INVISIBLE);
+
+                }
+                if(listKeys.size()>=3&&listValues.size()>=3){
+                    third.setText(listKeys.get(2));
+                    third_q.setText(listValues.get(2).toString());
+
+                }
+                else {
+                    third.setVisibility(View.INVISIBLE);
+                    third_q.setVisibility(View.INVISIBLE);
+                    third_img.setVisibility(View.INVISIBLE);
+
+                }
+            }
+        });
+
+        findViewById(R.id.cv_daily_order).setVisibility(View.GONE);
+
+        BarChart chart_timing = (BarChart) findViewById(R.id.barchart_timing);
+        RestaurantDatabase.getInstance().getPopularTiming(new OnFirebaseData<List<BarEntry>>() {
+            @Override
+            public void onReceived(List<BarEntry> item) {
+                List<BarEntry> timing = new ArrayList<>();
+                timing.addAll(item);
+                BarDataSet set_timing = new BarDataSet(timing, "Number of Order");
+                set_timing.setColors(Color.RED);
+                BarData data_timing = new BarData(set_timing);
+                data_timing.setBarWidth(0.9f); // set custom bar width
+                chart_timing.setData(data_timing);
+                chart_timing.setFitBars(true); // make the x-axis fit exactly all bars
+                chart_timing.invalidate(); // refresh
+                chart_timing.setDrawBarShadow(false);
+                chart_timing.setDrawValueAboveBar(true); //visualizza valore sopra
+
+                XAxis xAxis_timing = chart_timing.getXAxis();
+                xAxis_timing.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis_timing.setDrawGridLines(false);
+                xAxis_timing.setGranularity(1f);
+                xAxis_timing.setLabelCount(12);
+
+
+                YAxis leftAxis_timing = chart_timing.getAxisLeft();
+                leftAxis_timing.setLabelCount(8, false);
+                leftAxis_timing.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+                leftAxis_timing.setSpaceTop(15f);
+                leftAxis_timing.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+                chart_timing.getAxisRight().setEnabled(false);
+                chart_timing.getLegend().setEnabled(false);
+                chart_timing.getDescription().setEnabled(false);
             }
         });
 
 
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setLabelCount(8, false);
-        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setSpaceTop(15f);
-        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-
-        chart.getAxisRight().setEnabled(false);
-        chart.getLegend().setEnabled(false);
-        chart.getDescription().setEnabled(false);
-
-*/
-        //---------------------------------------
-
-        BarChart chart_timing = (BarChart) findViewById(R.id.barchart_timing);
-
-        //TODO: INSERIRE IN TIMING COPPIE (ORA, VALORE) !!VUOLE DEI FLOAT
-        List<BarEntry> timing = new ArrayList<>();
-        timing.add(new BarEntry(0f, 30f));
-        timing.add(new BarEntry(1f, 75f));
-        timing.add(new BarEntry(8f, 60f));
-        timing.add(new BarEntry(12f, 50f));
-        timing.add(new BarEntry(15f, 50f));
-        timing.add(new BarEntry(18f, 70f));
-        timing.add(new BarEntry(23f, 60f));
-
-
-        BarDataSet set_timing = new BarDataSet(timing, "Number of Order");
-        set_timing.setColors(Color.RED);
-        BarData data_timing = new BarData(set_timing);
-        data_timing.setBarWidth(0.9f); // set custom bar width
-        chart_timing.setData(data_timing);
-        chart_timing.setFitBars(true); // make the x-axis fit exactly all bars
-        chart_timing.invalidate(); // refresh
-        chart_timing.setDrawBarShadow(false);
-        chart_timing.setDrawValueAboveBar(true); //visualizza valore sopra
-
-        XAxis xAxis_timing = chart_timing.getXAxis();
-        xAxis_timing.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis_timing.setDrawGridLines(false);
-        xAxis_timing.setGranularity(1f);
-        xAxis_timing.setLabelCount(12);
-
-
-        YAxis leftAxis_timing = chart_timing.getAxisLeft();
-        leftAxis_timing.setLabelCount(8, false);
-        leftAxis_timing.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis_timing.setSpaceTop(15f);
-        leftAxis_timing.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
-        chart_timing.getAxisRight().setEnabled(false);
-        chart_timing.getLegend().setEnabled(false);
-        chart_timing.getDescription().setEnabled(false);
 
 
     }

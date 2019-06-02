@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +32,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.consumerApp.BuildConfig;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
@@ -43,6 +46,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -75,6 +81,7 @@ public class EditProfileActivity extends AppCompatActivity {
     final int CAMERA_CODE = 2;
     private Uri imageLink;
     FirebaseUser currentUser;
+    ImageView getposition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +104,40 @@ public class EditProfileActivity extends AppCompatActivity {
         houseNumber = findViewById(R.id.editprofile_housenumber);
         doorPhone = findViewById(R.id.editprofile_doorphone);
         postCode = findViewById(R.id.editprofile_postalcode);
+
         city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
         btnCamera = findViewById(R.id.editprofile_btncamera);
+        getposition = findViewById(R.id.img_position);
+        getposition.setOnClickListener( v -> {
+            GPSTracker gps = new GPSTracker(this);
+            if (gps.isGPSEnabled) {
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<>();
+                geocoder = new Geocoder(this, Locale.getDefault());
+
+                try {
+                    Double latitude = gps.getLatitude();
+                    Double longitude = gps.getLongitude();
+
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (addresses.size() > 0) {
+                    city.setText(addresses.get(0).getLocality());
+                    road.setText(addresses.get(0).getThoroughfare());
+                    houseNumber.setText(addresses.get(0).getFeatureName());
+                    //String country = addresses.get(0).getCountryCode();
+                    postCode.setText(addresses.get(0).getPostalCode());
+
+                } else {
+                    Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Your gps is disabled", Toast.LENGTH_SHORT).show();
+            }
+        });
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

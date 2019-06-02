@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp.search;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +18,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.OnRestaurantSelectedF;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.ViewHolder> {
@@ -30,17 +34,20 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     private View view;
     private final RestaurantsFragment.OnRestaurantSelected mListener;
     private final OnRestaurantSelectedF Listener;
+    private Drawable defaultImage;
 
-   public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, RestaurantsFragment.OnRestaurantSelected listener) {
+    public RestaurantsAdapter(List<PreviewInfo> items,List<String> likes, RestaurantsFragment.OnRestaurantSelected listener, Drawable defaultImage) {
         restaurants = items;
         mListener = listener;
+        this.defaultImage = defaultImage;
         Listener=null;
         this.likes=likes;
         Log.i("MADAPP", "costruttore 1");
     }
-    public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, OnRestaurantSelectedF listener) {
+    public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, OnRestaurantSelectedF listener, Drawable defaultImage) {
         restaurants = items;
         Listener = listener;
+        this.defaultImage = defaultImage;
         mListener=null;
         this.likes=likes;
         Log.i("MADAPP", "costruttore 2");
@@ -59,11 +66,26 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         holder.nameRestaurant.setText(holder.restaurant.name);
         holder.descRestaurant.setText(holder.restaurant.description);
         holder.rbRestaurant.setRating(holder.restaurant.scoreValue.floatValue());
-        if(holder.restaurant.imageName != null)
-        //    holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.imageURL));
-//        Picasso.get().load(holder.restaurant.imageDownload).into( holder.imgRestaurant);
+        if(holder.restaurant.imageName != null) {
+            ConsumerDatabase.getInstance().downloadImage(holder.restaurant.id, "profile", holder.restaurant.imageName, new OnImageDownloaded() {
+                @Override
+                public void onReceived(Uri imageUri) {
+                    Log.d("MADAPP", imageUri.toString());
+                    if (imageUri == null || imageUri == Uri.EMPTY) {
+                        holder.imgRestaurant.setImageDrawable(defaultImage);
+                    } else {
+                        Picasso.get().load(imageUri).into(holder.imgRestaurant);
+                    }
+
+                }
+            });
+        } else {
+            holder.imgRestaurant.setImageDrawable(defaultImage);
+        }
+
         if(likes!=null && likes.contains(holder.restaurant.id))
             holder.favorite.setChecked(true);
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

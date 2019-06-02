@@ -19,6 +19,7 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.DistanceBiker;
 import com.mad.delivery.resources.Feedback;
@@ -47,6 +49,7 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class FeedBackFragment extends DialogFragment {
+    private WalletFragment.OnOrderSelected mListener;
     private Order order;
     private ImageView btn_close;
     private Button saveFeedback;
@@ -67,6 +70,12 @@ public class FeedBackFragment extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+        if (context instanceof WalletFragment.OnOrderSelected) {
+            mListener = (WalletFragment.OnOrderSelected) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement onRestaurantSelected");
+        }
     }
 
     @Override
@@ -98,26 +107,31 @@ public class FeedBackFragment extends DialogFragment {
         etRestaurantComment = rootView.findViewById(R.id.et_feedback_restaurant);
         etBikerComment = rootView.findViewById(R.id.et_feedback_biker);
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         btn_close.setOnClickListener(v -> {
             dismiss();
         });
 
-            saveFeedback.setOnClickListener(v -> {
+        saveFeedback.setOnClickListener(v -> {
             feedback = new Feedback(order.clientId, order.restaurantId, order.id, (double) rateFood.getRating(),
-                        (double) rateBiker.getRating(), (double) rateRestaurant.getRating());
+                    (double) rateBiker.getRating(), (double) rateRestaurant.getRating());
             feedback.restaurantFeedback = etRestaurantComment.getText().toString();
             feedback.bikerFeedback = etBikerComment.getText().toString();
-                ConsumerDatabase.getInstance().saveFeedback(order, feedback, value -> {
-                    if(value)
-                        Toast.makeText(context, "Your feedback has been saved!", Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(context, "An error occurred while saving your feedback.", Toast.LENGTH_SHORT).show();
-                });
+            ConsumerDatabase.getInstance().saveFeedback(order, feedback, value -> {
+                if(value) {
+                    Toast.makeText(context, "Your feedback has been saved!", Toast.LENGTH_SHORT).show();
+                    mListener.loadOrders(feedback.clientID);
+
+                } else {
+                    Toast.makeText(context, "An error occurred while saving your feedback.", Toast.LENGTH_SHORT).show();
+                }
+            });
             dismiss();
         });
-
-        return rootView;
     }
-
-
 }

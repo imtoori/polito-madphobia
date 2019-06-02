@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.consumerApp.search.CategoriesFragment;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Customer;
+import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
@@ -40,6 +42,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -53,28 +56,21 @@ import androidx.viewpager.widget.ViewPager;
  * A simple {@link Fragment} subclass.
  */
 public class WalletFragment extends Fragment {
-    private WalletFragment.OnOrderSelected mListener;
+    public WalletFragment.OnOrderSelected mListener;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private CardView cvNoLogin, cvCredit;
-    private Button btnLogin;
-    OrdersAdapter ordersAdapter;
-    List<Order> orders;
-    RecyclerView recyclerView;
+    private Button btnLogin, btnUse;
+    public OrdersAdapter ordersAdapter;
+    public List<Order> orders;
+    public RecyclerView recyclerView;
     TextView totalCredit, textView;
     EditText Creditcode;
+    public ProgressBar pgBar;
+    public TextView noOrder;
 
     public WalletFragment() {
-        setHasOptionsMenu(true);
         // Required empty public constructor
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-
-
     }
 
     @Override
@@ -86,6 +82,7 @@ public class WalletFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.d("MADAPP", "WalletFragment onAttach");
         if (context instanceof WalletFragment.OnOrderSelected) {
             mListener = (WalletFragment.OnOrderSelected) context;
         } else {
@@ -97,86 +94,35 @@ public class WalletFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d("MADAPP", "WalletFragment onDetach");
+
         mListener = null;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_wallet, container, false);
-        setHasOptionsMenu(true);
-
-        currentUser = mAuth.getCurrentUser();
-        recyclerView = v.findViewById(R.id.orders_rv);
-        recyclerView.hasFixedSize();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        textView = v.findViewById(R.id.textView4);
-        cvCredit = v.findViewById(R.id.cv_credit);
-        totalCredit = v.findViewById(R.id.total_credit);
-        btnLogin = v.findViewById(R.id.btn_login);
-        orders = new ArrayList<>();
-        ordersAdapter = new OrdersAdapter(orders, mListener);
-
-        recyclerView.setAdapter(ordersAdapter);
-        if (currentUser == null) {
-            cvNoLogin = v.findViewById(R.id.no_login_cv);
-            cvNoLogin.setVisibility(View.VISIBLE);
-
-        } else {
-            ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
-                @Override
-                public void onSuccess(User user) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    cvCredit.setVisibility(View.VISIBLE);
-                    textView.setVisibility(View.VISIBLE);
-                    Creditcode = v.findViewById(R.id.credit_code);
-
-                    checkCredit();
-
-                    ConsumerDatabase.getInstance().getAllCostumerOrders(user.id, o -> {
-                        orders.add(o);
-                        ordersAdapter.notifyDataSetChanged();
-                    });
-                }
-
-                @Override
-                public void onFailure() {
-                    cvNoLogin = v.findViewById(R.id.no_login_cv);
-                    cvNoLogin.setVisibility(View.VISIBLE);
-                }
-            });
-
-
-
-
-        }
-        v.findViewById(R.id.done_code).setOnClickListener(new View.OnClickListener() {
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("MADAPP", "WalletFragment onViewCreated");
+        btnUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConsumerDatabase.getInstance().checkCreditCode(Creditcode.getText().toString(), new firebaseCallback<CreditCode>() {
-                    @Override
-                    public void onCallBack(CreditCode item) {
-                        Double val = item.value;
-                        Log.i("MADD","val->"+val);
-                        ConsumerDatabase.getInstance().updateCreditCustomer(item.value, new firebaseCallback<Boolean>() {
-                            @Override
-                            public void onCallBack(Boolean item) {
-                                if (item) {
-                                    Log.d("MADD", "Il tuo conto è stato aumentato di " + val);
-                                    checkCredit();
-                                    Toast.makeText(getContext(), getString(R.string.IncreasedCredit) + " " + val, Toast.LENGTH_LONG).show();
-                                } else {
-                                    Log.d("MADD", "ti devi registre");
-                                    Toast.makeText(getContext(), getString(R.string.ErrorCredit), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-
+                ConsumerDatabase.getInstance().checkCoupon(Creditcode.getText().toString(), item -> {
+                    if(item == null) {
+                        Creditcode.setError("Your coupon is not valid.");
+                        return;
                     }
+                    ConsumerDatabase.getInstance().updateCreditCustomer(item.value, status -> {
+                        if (status) {
+                            checkCredit();
+                            Toast.makeText(getContext(), getString(R.string.IncreasedCredit) + " " + item.value, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.ErrorCredit), Toast.LENGTH_LONG).show();
+                        }
+                    });
                 });
             }
         });
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,14 +132,75 @@ public class WalletFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("MADAPP", "WalletFragment onStart");
+        if (currentUser == null) {
+            cvNoLogin.setVisibility(View.VISIBLE);
+        } else {
+            ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    cvCredit.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.VISIBLE);
+                    orders = new ArrayList<>();
+                    ordersAdapter = new OrdersAdapter(orders, mListener);
+                    recyclerView.setAdapter(ordersAdapter);
+                    checkCredit();
+                    Log.d("MADAPP", "going to load orders..  check null values");
+                    Log.d("MADAPP", "orders size=" + orders.size());
+                    mListener.loadOrders(user.id);
+                }
+
+                @Override
+                public void onFailure() {
+
+                    cvNoLogin.setVisibility(View.VISIBLE);
+                    pgBar.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("MADAPP", "WalletFragment onResume");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_wallet, container, false);
+        Log.d("MADAPP", "WalletFragment onCreateView");
+        setHasOptionsMenu(true);
+        noOrder = v.findViewById(R.id.tv_no_orders);
+        currentUser = mAuth.getCurrentUser();
+        pgBar = v.findViewById(R.id.pg_bar);
+        recyclerView = v.findViewById(R.id.orders_rv);
+        recyclerView.hasFixedSize();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        cvNoLogin = v.findViewById(R.id.no_login_cv);
+
+
+        textView = v.findViewById(R.id.textView4);
+        cvCredit = v.findViewById(R.id.cv_credit);
+        totalCredit = v.findViewById(R.id.total_credit);
+        btnLogin = v.findViewById(R.id.btn_login);
+        Creditcode = v.findViewById(R.id.credit_code);
+        cvNoLogin = v.findViewById(R.id.no_login_cv);
+        btnUse = v.findViewById(R.id.done_code);
         return v;
-
-
     }
 
     public interface OnOrderSelected {
-        void openOrder();
+        void openOrder(Order o);
         void openFeedbackDialog(Order o);
+        void loadOrders(String id);
     }
 
     public void checkCredit() {

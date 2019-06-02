@@ -33,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.resources.GPSTracker;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.BuildConfig;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
@@ -78,7 +80,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ChipGroup chipGroup;
     private CompoundButton.OnCheckedChangeListener filterChipListener;
     private Uri imageLink;
-
+    ImageView getposition;
 
 
     @Override
@@ -109,7 +111,36 @@ public class EditProfileActivity extends AppCompatActivity {
         chipGroup = findViewById(R.id.chip_group);
         deliveryCost = findViewById(R.id.et_delivery_fee);
         minOrder = findViewById(R.id.et_min_order);
+        getposition = findViewById(R.id.img_position);
+        getposition.setOnClickListener( v -> {
+            GPSTracker gps = new GPSTracker(this);
+            if (gps.isGPSEnabled) {
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<>();
+                geocoder = new Geocoder(this, Locale.getDefault());
 
+                try {
+                    Double latitude = gps.getLatitude();
+                    Double longitude = gps.getLongitude();
+
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (addresses.size() > 0) {
+                    city.setText(addresses.get(0).getLocality());
+                    road.setText(addresses.get(0).getThoroughfare());
+                    houseNumber.setText(addresses.get(0).getFeatureName());
+                    //String country = addresses.get(0).getCountryCode();
+                    postCode.setText(addresses.get(0).getPostalCode());
+
+                } else {
+                    Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Your gps is disabled", Toast.LENGTH_SHORT).show();
+            }
+        });
         btnCamera.setOnClickListener(view -> {
             selectImage(EditProfileActivity.this);
         });
