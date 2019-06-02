@@ -6,6 +6,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.github.mikephil.charting.data.BarEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +20,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.Feedback;
 import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.MenuOffer;
@@ -26,13 +31,18 @@ import com.mad.delivery.restaurant_app.auth.OnLogin;
 import com.mad.delivery.restaurant_app.menu.OnMenuReceived;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 final public class RestaurantDatabase {
     private static RestaurantDatabase instance;
@@ -109,6 +119,7 @@ final public class RestaurantDatabase {
     }
 
     void updateToken(String id, String token) {
+        Log.d("MADAPP", "id=" + id  +" , token=" + token);
         restaurantRef.child(id).child("token").setValue(token);
     }
 
@@ -568,7 +579,84 @@ final public class RestaurantDatabase {
             }
         });
     }
+    public void getReviews(String restaurantID, OnFirebaseData< Feedback> cb) {
+        myRef.child("feedbacks").orderByChild("restaurantID").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Feedback o = issue.getValue(Feedback.class);
+                        if(o != null) {
+                            Log.d("MADAPP", o.toString());
+                            cb.onReceived(o);
+                        }
 
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void getPopularTiming(OnFirebaseData<List<BarEntry>> cb){
+        myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer hour [] = new Integer [24];
+                Arrays.fill(hour,0);
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                            hour[DateTime.parse(o.orderFor).getHourOfDay()]++;
+
+                    }
+                    List <BarEntry> list = new ArrayList<>();
+                    for (Integer i=0;i<hour.length;i++){
+                        list.add(new BarEntry((float)i,(float)hour[i]));
+                    }
+                    cb.onReceived(list);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void getPopularDish(OnFirebaseData<TreeMap<String,Integer>> callBack){
+        TreeMap<String,Integer> treeMap  = new TreeMap<>();
+        myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Order o = issue.getValue(Order.class);
+                        o.products.forEach(product -> {
+                            if(treeMap.containsKey(product.name))
+                                treeMap.replace(product.name,treeMap.get(product.name)+product.quantity);
+                            else
+                                treeMap.put(product.name,product.quantity);
+                        });
+                    }
+
+                    callBack.onReceived(treeMap);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        }
 
 }
 

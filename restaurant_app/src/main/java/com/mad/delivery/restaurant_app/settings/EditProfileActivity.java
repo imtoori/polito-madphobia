@@ -17,8 +17,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,8 +30,10 @@ import android.widget.Toast;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mad.delivery.resources.GPSTracker;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.BuildConfig;
@@ -46,14 +51,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
+import org.joda.time.DateTime;
 
 public class EditProfileActivity extends AppCompatActivity {
     Menu menu;
@@ -71,18 +80,22 @@ public class EditProfileActivity extends AppCompatActivity {
     private ChipGroup chipGroup;
     private CompoundButton.OnCheckedChangeListener filterChipListener;
     private Uri imageLink;
+    ImageView getposition;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageProfileLocalUri = Uri.EMPTY;
         setContentView(R.layout.activity_editprofile);
+
         myToolbar = findViewById(R.id.editProfileToolbar);
         setTitle(getResources().getString(R.string.editprofile_toolbar));
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         mAuth = FirebaseAuth.getInstance();
+
         name = findViewById(R.id.editprofile_name);
         phoneNumber = findViewById(R.id.editprofile_phone);
         emailAddress = findViewById(R.id.editprofile_email);
@@ -98,7 +111,36 @@ public class EditProfileActivity extends AppCompatActivity {
         chipGroup = findViewById(R.id.chip_group);
         deliveryCost = findViewById(R.id.et_delivery_fee);
         minOrder = findViewById(R.id.et_min_order);
+        getposition = findViewById(R.id.img_position);
+        getposition.setOnClickListener( v -> {
+            GPSTracker gps = new GPSTracker(this);
+            if (gps.isGPSEnabled) {
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<>();
+                geocoder = new Geocoder(this, Locale.getDefault());
 
+                try {
+                    Double latitude = gps.getLatitude();
+                    Double longitude = gps.getLongitude();
+
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (addresses.size() > 0) {
+                    city.setText(addresses.get(0).getLocality());
+                    road.setText(addresses.get(0).getThoroughfare());
+                    houseNumber.setText(addresses.get(0).getFeatureName());
+                    //String country = addresses.get(0).getCountryCode();
+                    postCode.setText(addresses.get(0).getPostalCode());
+
+                } else {
+                    Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Your gps is disabled", Toast.LENGTH_SHORT).show();
+            }
+        });
         btnCamera.setOnClickListener(view -> {
             selectImage(EditProfileActivity.this);
         });
@@ -158,12 +200,12 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         getProfileData();
-
-        if (ContextCompat.checkSelfPermission(EditProfileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(EditProfileActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_CODE);
+        if(!checkPermissions()) {
+            requestPermissions();
         }
+
     }
+
 
 
     @Override
@@ -505,6 +547,50 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return result;
     }
+
+    private boolean checkPermissions() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA}, CAMERA_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case CAMERA_CODE:
+                boolean camera = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if(!camera) {
+                    showMessageOKCancel();
+                }
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    private void showMessageOKCancel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
+        View root = getLayoutInflater().inflate(R.layout.dialog_ok_cancel, null);
+        builder.setView(root);
+        Button btnUnderstand = root.findViewById(R.id.btn_continue);
+        Button btnChange = root.findViewById(R.id.btn_grant);
+        AlertDialog dialog = builder.create();
+        btnUnderstand.setOnClickListener( v -> {
+            btnCamera.setVisibility(View.GONE);
+            dialog.dismiss();
+        });
+        btnChange.setOnClickListener( v -> {
+            requestPermissions();
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+
+
 
 
 }

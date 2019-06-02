@@ -2,6 +2,7 @@ package com.mad.delivery.bikerApp.orders;
 
 
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -34,18 +35,16 @@ public class DetailOrderFragment extends Fragment {
     public static final String DETAIL_ORDER_FRAGMENT_TAG = "detail_order_fragment";
     View view;
 
+    TextView orderSent;
     TextView requested;
-    TextView restAdd;
-    TextView custAdd;
     TextView status;
     TextView totalPrice;
-    TextView Pmethod;
-    TextView clientNotes;
+    TextView paymentMethod;
+    TextView bikerNotes;
     TextView restNotes;
     ImageView statusIcon;
-    CardView cvAdminNotes;
-    TextView serverNotes;
     List<Product> products;
+    Order order;
     int price;
     private RecyclerView recyclerView;
     public DetailOrderFragment() {
@@ -58,45 +57,47 @@ public class DetailOrderFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_detail_order, container, false);
-        requested = view.findViewById(R.id.detail_requested);
+        orderSent = view.findViewById(R.id.order_sent);
+        requested = view.findViewById(R.id.order_requested);
         status = view.findViewById(R.id.detail_status);
         statusIcon = view.findViewById(R.id.status_icon);
-        clientNotes = view.findViewById(R.id.client_notes_tv);
+        bikerNotes = view.findViewById(R.id.client_notes_tv);
         restNotes = view.findViewById(R.id.restaurant_notes_tv);
-        restAdd=view.findViewById(R.id.detail_restaurantadd);
-        custAdd=view.findViewById(R.id.detail_customeradd);
-        Order order = (Order) getArguments().get("order");
+        paymentMethod = view.findViewById(R.id.order_payment_method);
+        totalPrice = view.findViewById(R.id.order_price);
+        order = (Order) getArguments().get("order");
+
+        orderSent.setText(MyDateFormat.parse(new DateTime(order.orderDate)));
         requested.setText(MyDateFormat.parse(new DateTime(order.orderFor)));
-        restAdd.setText(order.restaurant.road + " " + order.restaurant.houseNumber + ", " + order.restaurant.postCode + " " + order.restaurant.city + "(door " + order.restaurant.doorPhone+ ")");
-        custAdd.setText(order.delivery );
+
         status.setText(order.status.toString().toLowerCase());
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
-        totalPrice=view.findViewById(R.id.payment_import);
         price = 0;
         order.products.stream().forEach(p -> price += p.price);
-        totalPrice.setText(getString(R.string.payment_import)+" "+ price +"€");
-        Pmethod=view.findViewById(R.id.payment_method);
-        if(order.paymentMethod.equals("credit"))
-            Pmethod.setText(getString(R.string.payment_method)+" credit" );
-        else
-            Pmethod.setText(getString(R.string.payment_method)+" cash" );
+        totalPrice.setText("€ "+ price);
+        paymentMethod.setText(order.paymentMethod);
 
-        clientNotes.setText(order.clientNotes);
-        restNotes.setText(order.serverNotes);
+
+        bikerNotes.setText(order.bikerNotes);
+
         products = order.products;
         recyclerView = view.findViewById(R.id.rl_products);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new ProductRecyclerViewAdapter(products));
         recyclerView.setNestedScrollingEnabled(false);
 
-        cvAdminNotes = view.findViewById(R.id.cv_admin_notes_detail);
-        serverNotes = view.findViewById(R.id.admin_notes_tv);
         if(order.serverNotes != null) {
-            cvAdminNotes.setVisibility(View.VISIBLE);
-            serverNotes.setText(order.bikerNotes);
+            restNotes.setText(order.serverNotes);
         } else {
-            cvAdminNotes.setVisibility(View.GONE);
+            restNotes.setText("No note added for the restaurant.");
+            restNotes.setTypeface(null, Typeface.ITALIC);
+        }
+        if(order.bikerNotes != null) {
+            bikerNotes.setText(order.bikerNotes);
+        } else {
+            bikerNotes.setText("No note added for biker.");
+            bikerNotes.setTypeface(null, Typeface.ITALIC);
         }
         return view;
     }

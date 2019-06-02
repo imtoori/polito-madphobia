@@ -166,6 +166,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/img_position"
+                android:layout_width="30dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/location_hint"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:focusable="true"
+                android:clickable="true"
+                android:tint="@color/colorDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_myloc" />
+
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="0dp"

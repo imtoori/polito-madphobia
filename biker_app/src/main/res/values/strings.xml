@@ -78,10 +78,6 @@
     <string name="check_password_repeat">Repeat same password</string>
     <string name="check_current_password">Invalid current password</string>
 
-    <!-- Navigation -->
-    <string name="nav_menu">Menu</string>
-    <string name="nav_orders">Orders</string>
-    <string name="nav_settings">Settings</string>
 
     <!-- Orders Fragment -->
     <string name="pending_orders">Pending</string>
@@ -89,14 +85,14 @@
     <string name="completed_orders">Completed</string>
     <string name="order_number">Order </string>
     <string name="order_requested_at">Delivery: </string>
-    <string name="order_from">From: </string>
+    <string name="order_from">Customer: </string>
     <string name="order_pieces_count">Items: </string>
     <string name="order_list">List: </string>
     <string name="order_status">Status: </string>
 
     <!-- Detail Order Fragment -->
-    <string name="user_info_order">Customer</string>
-    <string name="detail_order_info">Order Info</string>
+    <string name="user_info_order">Stakeholders</string>
+    <string name="detail_order_info">Details</string>
     <string name="arrived_at">Arrived:</string>
     <string name="requested_at">Requested for:</string>
     <string name="client_note">Client Notes</string>
@@ -180,7 +176,7 @@
     <string name="total_earnings">Total earnings:</string>
     <string name="Orders">Orders:</string>
     <string name="Status">Status</string>
-    <string name="nav_statistics">My Page</string>
+    <string name="nav_statistics">Dashboard</string>
     <string name="title_activity_maps" translatable="false">Map</string>
 
     <string name="maps">Position</string>

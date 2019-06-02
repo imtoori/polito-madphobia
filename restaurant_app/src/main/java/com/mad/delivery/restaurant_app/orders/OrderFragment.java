@@ -19,10 +19,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.restaurant_app.OnFirebaseData;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
+
+import java.util.List;
 
 
 /**
@@ -69,7 +72,9 @@ public class OrderFragment extends Fragment {
         if (currentUser == null) {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
+            return;
         }
+
 
         RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
             @Override

@@ -26,6 +26,8 @@ import com.mad.delivery.restaurant_app.orders.OrderFragment;
 import com.mad.delivery.restaurant_app.orders.PendingOrdersFragment;
 import com.mad.delivery.restaurant_app.settings.SettingFragment;
 
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements PendingOrdersFragment.OnPendingOrderListener {
     Toolbar myToolBar;
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                 public void onSuccess(Restaurant user) {
                     Log.d("MADAPP", "User "+ user.previewInfo.id + " have logged in.");
                     restaurant = user;
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(currentUser.getUid(), instanceIdResult.getToken()));
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> RestaurantDatabase.getInstance().updateToken(user.previewInfo.id, instanceIdResult.getToken()));
                     FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
                 }
 
@@ -141,6 +143,12 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
             });
 
         }
+
+
+
+
+
+
     }
 
     @Override

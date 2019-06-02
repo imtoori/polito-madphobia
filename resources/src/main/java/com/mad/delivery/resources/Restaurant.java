@@ -51,7 +51,7 @@ public class Restaurant implements Serializable, Parcelable {
         previewInfo.id = id;
         previewInfo.name = name;
         previewInfo.description =description;
-        previewInfo.scoreValue = 0;
+        previewInfo.scoreValue = 0.0;
         previewInfo.imageName = "";
         previewInfo.deliveryCost = 0.0;
         previewInfo.minOrderCost = 0.0;

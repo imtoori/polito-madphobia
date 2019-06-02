@@ -66,7 +66,6 @@ public class PendingOrdersFragment extends Fragment {
             showEmptyFolder();
             ordersAdapter.notifyDataSetChanged();
         });
-        //showEmptyFolder();
     }
 
     @Override

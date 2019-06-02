@@ -9,6 +9,5 @@ public enum OrderStatus implements Serializable {
     preparing,
     ready,
     completed,
-    OrderStatus,
     delivered;
 }

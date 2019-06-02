@@ -25,7 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.resources.CreditCode;
+import com.mad.delivery.resources.Feedback;
 import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.OnFirebaseData;
@@ -53,7 +55,6 @@ public class ConsumerDatabase {
     private StorageReference storageRef;
     private HashMap<MenuItemRest, Integer> itemSelected;
     private String resturantId;
-    private Order order;
     public Restaurant restaurant;
     FirebaseAuth mAuth;
     Boolean flag = true;
@@ -62,18 +63,10 @@ public class ConsumerDatabase {
     public void setResturantId(String resturantId) {
         this.resturantId = resturantId;
     }
-
     public String getResturantId() {
         return resturantId;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
 
     private ConsumerDatabase() {
         db = FirebaseDatabase.getInstance();
@@ -331,13 +324,16 @@ public class ConsumerDatabase {
         return restaurantIds;
     }
 
+
     public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d, Double latitude, Double longitude, final onPreviewRestaurantsReceived firebaseCallback) {
         getRestaurantsIds(chosen, list -> {
             if (list.isEmpty()) {
                 // show empty icon
+                firebaseCallback.onCallback(null);
             } else {
                 // ask for restaurants
                 for (String restName : list) {
+
                     myRef.child("users").child("restaurants").child(restName).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -359,13 +355,14 @@ public class ConsumerDatabase {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            firebaseCallback.onCallback(null);
                         }
                     });
                 }
             }
         });
     }
+
 
     public void getRestaurantCategories(List<RestaurantCategory> categories, final onRestaurantCategoryReceived cb) {
         myRef.child("categories").addChildEventListener(new ChildEventListener() {
@@ -380,6 +377,8 @@ public class ConsumerDatabase {
                     if (flag) {
                         cb.childAdded(category);
                     }
+                } else {
+                    cb.onReceived(null);
                 }
             }
 
@@ -403,7 +402,7 @@ public class ConsumerDatabase {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                cb.onReceived(null);
             }
         });
     }
@@ -504,7 +503,7 @@ public class ConsumerDatabase {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
 
-                            // item.id = snapshot.getKey();
+                        // item.id = snapshot.getKey();
 
                         bikerIds.add(snapshot.getKey());
 
@@ -529,7 +528,6 @@ public class ConsumerDatabase {
     }
 
     public void getImage(String imageName, String path, firebaseCallback<Uri> firebaseCallback) {
-
         if (imageName == null || !imageName.equals("")) {
             // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
@@ -593,33 +591,31 @@ public class ConsumerDatabase {
         return completed;
     }
 
-    public void getAllCostumerOrders(firebaseCallback<List<Order>> firebaseCallback) {
-
-        myRef.child("orders").orderByChild("clientId").equalTo(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+    public void getAllCostumerOrders(String clientID, OnFirebaseData<Order> cb) {
+        myRef.child("orders").orderByChild("clientId").equalTo(clientID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Order> completed = new ArrayList<>();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
                         o.id = issue.getKey();
-                        completed.add(o);
-
+                        cb.onReceived(o);
                     }
-                }
-                try {
-                    firebaseCallback.onCallBack(completed);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else {
+                    cb.onReceived(null);
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(null);
             }
         });
+
+    }
+
+    public void checkCoupon(String code, OnFirebaseData<CreditCode> cb) {
     }
 
     public void checkCreditCode(String code, firebaseCallback<CreditCode> firebaseCallback) {
@@ -627,25 +623,23 @@ public class ConsumerDatabase {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // dataSnapshot is the "issue" node with all children with id 0
+                    CreditCode cc = null;
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         CreditCode o = issue.getValue(CreditCode.class);
                         if (o.code.equals(code)) {
-                            try {
-                                firebaseCallback.onCallBack(o);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
+                            cc = o;
+                            break;
                         }
                     }
+                    cb.onReceived(cc);
+                } else {
+                    cb.onReceived(null);
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("MADDAPP", "Funzione credit code fail");
+                cb.onReceived(null);
             }
         });
     }
@@ -743,6 +737,53 @@ public class ConsumerDatabase {
         myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").setValue(i);
     }
 
+    public void saveFeedback(Order o, Feedback feedback, OnFirebaseData<Boolean> cb) {
+        myRef.child("orders").child(o.id).child("feedbackIsPossible").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    cb.onReceived(false);
+                    return;
+                }
+                Boolean value = dataSnapshot.getValue(Boolean.class);
+                if (!value) {
+                    cb.onReceived(false);
+                    return;
+                }
+                getRestourant(o.restaurantId, r -> {
+                    if (r != null) {
+                        if (r.previewInfo.scoreValue == null) {
+                            r.previewInfo.scoreValue = (feedback.serviceRestaurantVote + feedback.foodVote) / 2;
+                            r.previewInfo.scoreCount = 1;
+                        } else {
+                            if (r.previewInfo.scoreCount == null) r.previewInfo.scoreCount = 0;
+                            r.previewInfo.scoreValue = (r.previewInfo.scoreValue * r.previewInfo.scoreCount) + ((feedback.serviceRestaurantVote + feedback.foodVote) / 2);
+                            r.previewInfo.scoreCount++;
+                            r.previewInfo.scoreValue = r.previewInfo.scoreValue / r.previewInfo.scoreCount;
+                        }
+                        myRef.child("users").child("restaurants").child(r.previewInfo.id).child("previewInfo").child("scoreValue").setValue(r.previewInfo.scoreValue);
+                        myRef.child("users").child("restaurants").child(r.previewInfo.id).child("previewInfo").child("scoreCount").setValue(r.previewInfo.scoreCount);
+                    }
+                    myRef.child("orders").child(o.id).child("feedbackIsPossible").setValue(false, (dErr, db) -> {
+                        String id = myRef.child("feedbacks").push().getKey();
+                        feedback.id = id;
+                        myRef.child("feedbacks").child(feedback.id).setValue(feedback, (databaseError, databaseReference) -> {
+                            cb.onReceived(true);
+                        });
+                    });
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(false);
+            }
+        });
+
+
+    }
+
 
     public void getUserProfile(String id, OnFirebaseData<User> cb) {
         myRef.child("users").child("customers").child(id).addValueEventListener(new ValueEventListener() {
@@ -795,6 +836,27 @@ public class ConsumerDatabase {
         uploadImage(r.id, image, "profile", image.getLastPathSegment(), () -> {
             r.imageName = image.getLastPathSegment();
             myRef.child("users").child("customers").child(r.id).setValue(r);
+        });
+    }
+
+    public void getReviews(String restaurantID, OnFirebaseData<Feedback> cb) {
+        myRef.child("feedbacks").orderByChild("restaurantID").equalTo(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Feedback o = issue.getValue(Feedback.class);
+                        if (o != null) {
+                            cb.onReceived(o);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
     }
 

@@ -31,6 +31,8 @@ public class Order implements Parcelable, Comparable<Order> {
     public String delivery;
     public Double latitude;
     public Double longitude;
+    public Boolean feedbackIsPossible;
+    public String feedbackID;
     public Double distanceRide;
 
 
@@ -52,6 +54,7 @@ public class Order implements Parcelable, Comparable<Order> {
         totalPrice+=restaurant.previewInfo.deliveryCost;
         this.latitude = 0.0;
         this.longitude = 0.0;
+        this.feedbackIsPossible = false;
         this.distanceRide = 0.0;
     }
 
@@ -74,6 +77,8 @@ public class Order implements Parcelable, Comparable<Order> {
         this.latitude = other.latitude;
         this.longitude = other.longitude;
         this.bikerId = other.bikerId;
+        this.feedbackIsPossible = other.feedbackIsPossible;
+        this.feedbackID = other.feedbackID;
         this.distanceRide = other.distanceRide;
     }
 
@@ -109,6 +114,9 @@ public class Order implements Parcelable, Comparable<Order> {
         } else {
             longitude = in.readDouble();
         }
+        byte tmpFeedback = in.readByte();
+        feedbackIsPossible = tmpFeedback == 0 ? null : tmpFeedback == 1;
+        feedbackID = in.readString();
         if (in.readByte() == 0) {
             distanceRide = null;
         } else {
@@ -152,6 +160,8 @@ public class Order implements Parcelable, Comparable<Order> {
             dest.writeByte((byte) 1);
             dest.writeDouble(longitude);
         }
+        dest.writeByte((byte) (feedbackIsPossible == null ? 0 : feedbackIsPossible ? 1 : 2));
+        dest.writeString(feedbackID);
         if (distanceRide == null) {
             dest.writeByte((byte) 0);
         } else {
@@ -208,9 +218,15 @@ public class Order implements Parcelable, Comparable<Order> {
         serverNotes = other.serverNotes;
         bikerNotes= other.bikerNotes;
         delivery=other.delivery;
+        paymentMethod = other.paymentMethod;
+        totalPrice = other.totalPrice;
         restaurantId = other.restaurantId;
+        bikerId = other.bikerId;
+        clientId = other.clientId;
         latitude = other.latitude;
         longitude = other.longitude;
+        feedbackIsPossible = other.feedbackIsPossible;
+        feedbackID = other.feedbackID;
         distanceRide = other.distanceRide;
     }
 
@@ -391,6 +407,21 @@ public class Order implements Parcelable, Comparable<Order> {
                 ", bikerId='" + bikerId + '\'' +
                 ", clientId='" + clientId + '\'' +
                 '}';
+    }
+    public Boolean getFeedbackIsPossible() {
+        return feedbackIsPossible;
+    }
+
+    public void setFeedbackIsPossible(Boolean feedbackIsPossible) {
+        this.feedbackIsPossible = feedbackIsPossible;
+    }
+
+    public String getFeedbackID() {
+        return feedbackID;
+    }
+
+    public void setFeedbackID(String feedbackID) {
+        this.feedbackID = feedbackID;
     }
 
     @Override

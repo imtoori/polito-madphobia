@@ -1,6 +1,8 @@
 package com.mad.delivery.consumerApp.search;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +13,10 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.RestaurantCategory;
 import com.squareup.picasso.Picasso;
@@ -22,10 +26,16 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     private List<RestaurantCategory> categories;
     private View view;
     private final CategoriesFragment.OnCategorySelected mListener;
+    DisplayMetrics metrics;
+    int width;
+    int height;
 
-    public CategoriesAdapter(List<RestaurantCategory> items, CategoriesFragment.OnCategorySelected listener) {
+    public CategoriesAdapter(List<RestaurantCategory> items, CategoriesFragment.OnCategorySelected listener, Context context) {
         categories = items;
         mListener = listener;
+        this.metrics = context.getResources().getDisplayMetrics();
+        this.width = metrics.widthPixels;
+        this.height = metrics.heightPixels;
     }
 
     @Override
@@ -38,19 +48,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.category = categories.get(position);
         holder.nameCategory.setText(holder.category.name);
-        Log.i("MADAPP","Sono qui "+holder.category.name );
-        Picasso.get().load(holder.category.imageURL).into(holder.imageCategory);
-        holder.cvCategory.setBackground(holder.imageCategory.getDrawable());
+        Picasso.get().load(holder.category.imageURL).resize(width/2, 500).into(holder.imageCategory);
         List<String> categories = new ArrayList<>();
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    categories.add(holder.category.name.toLowerCase());
-                    mListener.openCategory(categories, "", false, false);
-                }
+        holder.mView.setOnClickListener(v -> {
+            if (null != mListener) {
+                categories.add(holder.category.name.toLowerCase());
+                mListener.openCategory(categories, "", false, false);
             }
         });
     }

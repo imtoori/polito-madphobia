@@ -123,11 +123,9 @@ public class StartFragment extends Fragment {
     public void setStatus(boolean st) {
         if(st) {
             getActivity().startService(new Intent(getActivity(), LocationTracker.class));
-
             status.setText("Stop");
         } else {
             getActivity().stopService(new Intent(getActivity(), LocationTracker.class));
-
             status.setText("Start");
 
         }

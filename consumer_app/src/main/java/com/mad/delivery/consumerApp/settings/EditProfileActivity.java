@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.consumerApp.BuildConfig;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.firebaseCallback;
@@ -42,7 +46,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -73,6 +81,7 @@ public class EditProfileActivity extends AppCompatActivity {
     final int CAMERA_CODE = 2;
     private Uri imageLink;
     FirebaseUser currentUser;
+    ImageView getposition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +104,40 @@ public class EditProfileActivity extends AppCompatActivity {
         houseNumber = findViewById(R.id.editprofile_housenumber);
         doorPhone = findViewById(R.id.editprofile_doorphone);
         postCode = findViewById(R.id.editprofile_postalcode);
+
         city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
         btnCamera = findViewById(R.id.editprofile_btncamera);
+        getposition = findViewById(R.id.img_position);
+        getposition.setOnClickListener( v -> {
+            GPSTracker gps = new GPSTracker(this);
+            if (gps.isGPSEnabled) {
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<>();
+                geocoder = new Geocoder(this, Locale.getDefault());
+
+                try {
+                    Double latitude = gps.getLatitude();
+                    Double longitude = gps.getLongitude();
+
+                    addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (addresses.size() > 0) {
+                    city.setText(addresses.get(0).getLocality());
+                    road.setText(addresses.get(0).getThoroughfare());
+                    houseNumber.setText(addresses.get(0).getFeatureName());
+                    //String country = addresses.get(0).getCountryCode();
+                    postCode.setText(addresses.get(0).getPostalCode());
+
+                } else {
+                    Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Your gps is disabled", Toast.LENGTH_SHORT).show();
+            }
+        });
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,9 +174,8 @@ public class EditProfileActivity extends AppCompatActivity {
         Log.d("MADAPP", user.toString());
         getProfileData();
 
-        if (ContextCompat.checkSelfPermission(EditProfileActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(EditProfileActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_CODE);
+        if(!checkPermissions()) {
+            requestPermissions();
         }
     }
 
@@ -452,4 +491,46 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         return result;
     }
+    private boolean checkPermissions() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.CAMERA}, CAMERA_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode) {
+            case CAMERA_CODE:
+                boolean camera = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if(!camera) {
+                    showMessageOKCancel();
+                }
+                break;
+            default:
+                break;
+
+        }
+
+    }
+
+    private void showMessageOKCancel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
+        View root = getLayoutInflater().inflate(R.layout.dialog_ok_cancel, null);
+        builder.setView(root);
+        Button btnUnderstand = root.findViewById(R.id.btn_continue);
+        Button btnChange = root.findViewById(R.id.btn_grant);
+        AlertDialog dialog = builder.create();
+        btnUnderstand.setOnClickListener( v -> {
+            btnCamera.setVisibility(View.GONE);
+            dialog.dismiss();
+        });
+        btnChange.setOnClickListener( v -> {
+            requestPermissions();
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+
 }

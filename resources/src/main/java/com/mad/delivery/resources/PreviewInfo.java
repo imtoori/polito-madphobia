@@ -7,10 +7,11 @@ public class PreviewInfo implements Parcelable {
     public String id;
     public String name;
     public String description;
-    public Integer scoreValue;
+    public Double scoreValue;
     public String imageName;
     public Double deliveryCost;
     public Double minOrderCost;
+    public Integer scoreCount;
 
     public PreviewInfo() {}
 
@@ -22,7 +23,7 @@ public class PreviewInfo implements Parcelable {
         if (in.readByte() == 0) {
             scoreValue = null;
         } else {
-            scoreValue = in.readInt();
+            scoreValue = in.readDouble();
         }
         imageName = in.readString();
         if (in.readByte() == 0) {
@@ -35,6 +36,11 @@ public class PreviewInfo implements Parcelable {
         } else {
             minOrderCost = in.readDouble();
         }
+        if (in.readByte() == 0) {
+            scoreCount = null;
+        } else {
+            scoreCount = in.readInt();
+        }
     }
 
     @Override
@@ -46,7 +52,7 @@ public class PreviewInfo implements Parcelable {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(scoreValue);
+            dest.writeDouble(scoreValue);
         }
         dest.writeString(imageName);
         if (deliveryCost == null) {
@@ -60,6 +66,12 @@ public class PreviewInfo implements Parcelable {
         } else {
             dest.writeByte((byte) 1);
             dest.writeDouble(minOrderCost);
+        }
+        if (scoreCount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(scoreCount);
         }
     }
 
@@ -104,11 +116,11 @@ public class PreviewInfo implements Parcelable {
         this.description = description;
     }
 
-    public Integer getScoreValue() {
+    public Double getScoreValue() {
         return scoreValue;
     }
 
-    public void setScoreValue(Integer scoreValue) {
+    public void setScoreValue(Double scoreValue) {
         this.scoreValue = scoreValue;
     }
 
@@ -138,5 +150,13 @@ public class PreviewInfo implements Parcelable {
 
     public static Creator<PreviewInfo> getCREATOR() {
         return CREATOR;
+    }
+
+    public Integer getScoreCount() {
+        return scoreCount;
+    }
+
+    public void setScoreCount(Integer scoreCount) {
+        this.scoreCount = scoreCount;
     }
 }

@@ -86,11 +86,14 @@
     <string name="check_current_password">Invalid current password</string>
 
     <!-- Navigation -->
-    <string name="nav_menu">Menu</string>
+    <string name="nav_menu">Dashboard</string>
     <string name="nav_orders">Orders</string>
-    <string name="nav_settings">Settings</string>
+    <string name="nav_settings">My Account</string>
 
     <!-- Orders Fragment -->
+    <string name="waiting">Waiting</string>
+    <string name="assigned">Assigned</string>
+    <string name="delivered">Delivered</string>
     <string name="pending_orders">Pending</string>
     <string name="preparing_orders">Preparing</string>
     <string name="completed_orders">Completed</string>
@@ -100,6 +103,7 @@
     <string name="order_pieces_count">Items: </string>
     <string name="order_list">List: </string>
     <string name="order_status">Status: </string>
+    <string name="restaurant">Restaurant: </string>
 
     <!-- Detail Order Fragment -->
     <string name="user_info_order">Customer</string>
@@ -239,6 +243,7 @@
     <string name="no_offers">Currently there is no offer.</string>
     <string name="ok">OK</string>
     <string name="setting_general">General</string>
+    <string name="setting_my_reviews">Reviews</string>
     <string name="visible">Visible</string>
     <string name="visible_desc">By enabling this option, your restaurant will be public. It means that you user will be able to look at your menu and other options profile. In order to make your restaurant visible, you must complete your profile first and add some dishes to your menu.</string>
     <string name="profile_status">Profile Status:</string>
@@ -251,7 +256,31 @@
     <string name="back">Back</string>
     <string name="dialog_shopping_cart_preview">My Order Preview</string>
     <string name="dialog_shopping_cart_empty">Your shopping cart is empty.</string>
-    <string name="user_map_info">Map</string>
+    <string name="user_map_info">Location</string>
     <string name="available_bikers">Available Bikers</string>
     <string name="select_biker">Select biker</string>
+    <string name="customer">Customer</string>
+<string name="order_sent">Order sent at:</string>
+    <string name="customer_notes">Notes for Biker</string>
+    <string name="restaurant_notes">Notes for Restaurant</string>
+    <!-- Feedback dialog -->
+    <string name="feedback_dialog_title">Give a feedback!</string>
+    <string name="feedback_dialog_desc">After your order is delivered you can rate both the restaurant and the biker!</string>
+    <string name="feedback_food">Overall, how was the food?</string>
+    <string name="feedback_biker">Rate the biker </string>
+    <string name="feedback_restaurant">Rate the restaurant</string>
+    <string name="feedback_restaurant_comment">Add a feedback for the restaurant (it will be public)</string>
+    <string name="feedback_biker_comment">Add a feedback for the biker (it will be public)</string>
+    <string name="comment">Enter your comment here</string>
+    <string name="no_comment">The comment has not been added.</string>
+    <string name="save_feedback">Send your feedback</string>
+    <string name="delivery_done">You are going to deliver this order %1$s. If you want to confirm that, click the top-right button.</string>
+
+    <string name="delivery_warning">Careful: you can\'t undo this operation.</string>
+    <string name="food_rate">Food:</string>
+    <string name="service_rate">Services:</string>
+    <string name="stat_reviews_title">Reviews received:</string>
+    <string name="total_reviews">Total:</string>
+    <string name="monthly_reviews">Last Month:</string>
+    <string name="weekly_reviews">Last Week:</string>
 </resources>

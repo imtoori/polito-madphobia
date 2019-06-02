@@ -22,21 +22,20 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="@string/order_number"
+            android:text="@string/restaurant"
             android:textStyle="bold"
             android:textSize="@dimen/normalText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/orderCode"
+            android:id="@+id/restaurantName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
 
             android:layout_marginBottom="8dp"
-            android:text="@string/order_number"
             android:textSize="@dimen/description"
             app:layout_constraintBottom_toTopOf="@+id/tv_orderFrom"
             app:layout_constraintStart_toEndOf="@+id/tv_orderNumber"

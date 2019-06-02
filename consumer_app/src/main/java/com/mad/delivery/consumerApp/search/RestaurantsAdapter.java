@@ -1,33 +1,56 @@
 package com.mad.delivery.consumerApp.search;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.OnRestaurantSelectedF;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.firebaseCallback;
+import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.ViewHolder> {
 
     private List<PreviewInfo> restaurants;
+    private List<String> likes;
     private View view;
     private final RestaurantsFragment.OnRestaurantSelected mListener;
+    private final OnRestaurantSelectedF Listener;
+    private Drawable defaultImage;
 
-    public RestaurantsAdapter(List<PreviewInfo> items, RestaurantsFragment.OnRestaurantSelected listener) {
+    public RestaurantsAdapter(List<PreviewInfo> items,List<String> likes, RestaurantsFragment.OnRestaurantSelected listener, Drawable defaultImage) {
         restaurants = items;
         mListener = listener;
+        this.defaultImage = defaultImage;
+        Listener=null;
+        this.likes=likes;
+        Log.i("MADAPP", "costruttore 1");
+    }
+    public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, OnRestaurantSelectedF listener, Drawable defaultImage) {
+        restaurants = items;
+        Listener = listener;
+        this.defaultImage = defaultImage;
+        mListener=null;
+        this.likes=likes;
+        Log.i("MADAPP", "costruttore 2");
     }
 
     @Override
@@ -42,10 +65,27 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         ConsumerDatabase.getInstance().setResturantId(holder.restaurant.id);
         holder.nameRestaurant.setText(holder.restaurant.name);
         holder.descRestaurant.setText(holder.restaurant.description);
-        holder.rbRestaurant.setRating(holder.restaurant.scoreValue);
-        if(holder.restaurant.imageName != null)
-        //    holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.imageURL));
-//        Picasso.get().load(holder.restaurant.imageDownload).into( holder.imgRestaurant);
+        holder.rbRestaurant.setRating(holder.restaurant.scoreValue.floatValue());
+        if(holder.restaurant.imageName != null) {
+            ConsumerDatabase.getInstance().downloadImage(holder.restaurant.id, "profile", holder.restaurant.imageName, new OnImageDownloaded() {
+                @Override
+                public void onReceived(Uri imageUri) {
+                    Log.d("MADAPP", imageUri.toString());
+                    if (imageUri == null || imageUri == Uri.EMPTY) {
+                        holder.imgRestaurant.setImageDrawable(defaultImage);
+                    } else {
+                        Picasso.get().load(imageUri).into(holder.imgRestaurant);
+                    }
+
+                }
+            });
+        } else {
+            holder.imgRestaurant.setImageDrawable(defaultImage);
+        }
+
+        if(likes!=null && likes.contains(holder.restaurant.id))
+            holder.favorite.setChecked(true);
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +94,24 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.openRestaurant(holder.restaurant);
+                }
+                else if (null != Listener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+
+                    Listener.openRestaurantF(holder.restaurant);
+                }
+
+            }
+        });
+        holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO: inserire o rimuovere il ristorante dalla lista dei preferiti
+                if (isChecked) {
+                   Log.i("MADAPP", "favorite->enabled");
+                } else {
+
+                    Log.i("MADAPP", "favorite->disabled");
                 }
             }
         });
@@ -71,6 +129,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         public final ImageView imgRestaurant;
         public final RatingBar rbRestaurant;
         public PreviewInfo restaurant;
+        ToggleButton favorite;
 
         public ViewHolder(View view) {
             super(view);
@@ -79,6 +138,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             descRestaurant = mView.findViewById(R.id.descRestaurant);
             imgRestaurant = mView.findViewById(R.id.imgRestaurant);
             rbRestaurant = mView.findViewById(R.id.rateRestaurant);
+            favorite = (ToggleButton) mView.findViewById(R.id.button_favorite);
+
 
         }
 

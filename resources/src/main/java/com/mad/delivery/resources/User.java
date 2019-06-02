@@ -25,6 +25,7 @@ public class User implements Serializable, Parcelable {
     public String imageName;
     public Double credit;
 
+
     public User(String name, String lastName, String phoneNumber, String emailAddress, String description, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri, String imageName) {
         this.name = name;
         this.lastName = lastName;
@@ -40,6 +41,7 @@ public class User implements Serializable, Parcelable {
         this.registrationDate = new DateTime().toString();
         this.imageName = imageName;
         this.credit = 10.00;
+
     }
 
     public User() {
@@ -60,6 +62,7 @@ public class User implements Serializable, Parcelable {
         this.imageUri = u.imageUri;
         this.imageName = u.imageName;
         this.credit = u.credit;
+
     }
 
 
@@ -83,6 +86,8 @@ public class User implements Serializable, Parcelable {
         } else {
             credit = in.readDouble();
         }
+
+
     }
 
     @Override
@@ -107,6 +112,8 @@ public class User implements Serializable, Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(credit);
         }
+
+
     }
 
     @Override
@@ -270,4 +277,6 @@ public class User implements Serializable, Parcelable {
     public static Creator<User> getCREATOR() {
         return CREATOR;
     }
+
+
 }

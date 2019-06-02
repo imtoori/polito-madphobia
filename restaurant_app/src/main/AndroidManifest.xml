@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mad.delivery.restaurant_app">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -29,7 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".settings.ReviewsActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -41,9 +40,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="defaultchannel" />
@@ -75,12 +71,15 @@
         </provider>
 
         <activity android:name=".orders.CompletingOrderActivity" />
+        <activity android:name=".settings.PopularSettingActivity" />
+        <activity android:name=".settings.GeneralSettingActivity" />
+
         <activity
             android:name=".settings.PhotoZoomActivity"
-            android:parentActivityName=".settings.ProfileActivity"/>
+            android:parentActivityName=".settings.ProfileActivity" />
         <activity
             android:name=".settings.EditProfileActivity"
-            android:parentActivityName=".settings.ProfileActivity"/>
+            android:parentActivityName=".settings.ProfileActivity" />
         <activity android:name=".settings.ProfileActivity" />
         <activity android:name=".settings.PasswordActivity" />
         <activity android:name=".settings.LanguageActivity" />
@@ -88,7 +87,7 @@
         <activity android:name=".menu.NewMenuItemActivity" />
         <activity
             android:name=".orders.DetailOrderActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -101,7 +100,6 @@
         <activity
             android:name=".auth.LoginActivity"
             android:label="@string/app_name" />
-
     </application>
 
 </manifest>

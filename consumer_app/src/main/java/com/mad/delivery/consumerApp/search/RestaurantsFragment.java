@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 
 import com.google.android.material.chip.Chip;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
@@ -39,12 +40,14 @@ public class RestaurantsFragment extends Fragment {
     private RestaurantsFragment.OnRestaurantSelected mListener;
     private List<PreviewInfo> previews;
     private CardView emptyFolder;
-    private boolean freeDelivery = false, minOrderCost = false;
+    private boolean freeDelivery = false, minOrderCost = false, reviewFlag=false;
     private Set<String> chosenCategories;
     private String address = "";
+    private ProgressBar pgBar;
     private Double latitude;
     private Double longitude;
-    public RestaurantsFragment() {
+
+  public RestaurantsFragment() {
         // Required empty public constructor
     }
 
@@ -79,8 +82,16 @@ public class RestaurantsFragment extends Fragment {
         Log.i("MADAPP", "restaurantsFragment onCreateView");
         recyclerView = view.findViewById(R.id.restaurant_rv);
         emptyFolder = view.findViewById(R.id.emptyfolder_cv);
+        pgBar = view.findViewById(R.id.pg_bar);
         previews = new ArrayList<>();
-        restaurantAdapter = new RestaurantsAdapter(previews, mListener);
+        previews.sort(( z1, z2) -> (Double.compare(z1.scoreValue,z2.scoreValue)));
+
+
+        //TODO: inserire in favorite l'interrogazione al db
+        List <String> favorite= new ArrayList<String>();
+        favorite.add("Ik57NIUC0CVrkznG0GxpczGwlOp1");
+
+        restaurantAdapter = new RestaurantsAdapter(previews, favorite,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(restaurantAdapter);
@@ -95,6 +106,7 @@ public class RestaurantsFragment extends Fragment {
             Log.i("MADAPP", "restaurantffragment->"+chosenCategories);
             address = getArguments().getString("address");
             freeDelivery = getArguments().getBoolean("freeDelivery");
+            reviewFlag=getArguments().getBoolean("orderByReviews");
             minOrderCost = getArguments().getBoolean("minOrderCost");
 
 
@@ -112,11 +124,16 @@ public class RestaurantsFragment extends Fragment {
         ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery,latitude,longitude, preview -> {
             previews.add(preview);
             restaurantAdapter.notifyDataSetChanged();
+            pgBar.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+
             if(previews.size() == 0) {
                 // show empty viewcard
                 emptyFolder.setVisibility(View.VISIBLE);
             } else {
                 emptyFolder.setVisibility(View.GONE);
+                if(reviewFlag==true)
+                    previews.sort(( z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
             }
         });
 
