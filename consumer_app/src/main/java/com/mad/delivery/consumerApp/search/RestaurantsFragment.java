@@ -79,7 +79,13 @@ public class RestaurantsFragment extends Fragment {
         emptyFolder = view.findViewById(R.id.emptyfolder_cv);
         previews = new ArrayList<>();
         previews.sort(( z1, z2) -> (Double.compare(z1.scoreValue,z2.scoreValue)));
-        restaurantAdapter = new RestaurantsAdapter(previews, mListener);
+
+
+        //TODO: inserire in favorite l'interrogazione al db
+        List <String> favorite= new ArrayList<String>();
+        favorite.add("Ik57NIUC0CVrkznG0GxpczGwlOp1");
+
+        restaurantAdapter = new RestaurantsAdapter(previews, favorite,  mListener);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(restaurantAdapter);

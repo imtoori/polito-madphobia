@@ -1,17 +1,21 @@
 package com.mad.delivery.consumerApp.search;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.OnRestaurantSelectedF;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
@@ -22,12 +26,24 @@ import java.util.List;
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.ViewHolder> {
 
     private List<PreviewInfo> restaurants;
+    private List<String> likes;
     private View view;
     private final RestaurantsFragment.OnRestaurantSelected mListener;
+    private final OnRestaurantSelectedF Listener;
 
-    public RestaurantsAdapter(List<PreviewInfo> items, RestaurantsFragment.OnRestaurantSelected listener) {
+   public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, RestaurantsFragment.OnRestaurantSelected listener) {
         restaurants = items;
         mListener = listener;
+        Listener=null;
+        this.likes=likes;
+        Log.i("MADAPP", "costruttore 1");
+    }
+    public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, OnRestaurantSelectedF listener) {
+        restaurants = items;
+        Listener = listener;
+        mListener=null;
+        this.likes=likes;
+        Log.i("MADAPP", "costruttore 2");
     }
 
     @Override
@@ -46,6 +62,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         if(holder.restaurant.imageName != null)
         //    holder.imgRestaurant.setImageURI(Uri.parse(holder.restaurant.imageURL));
 //        Picasso.get().load(holder.restaurant.imageDownload).into( holder.imgRestaurant);
+        if(likes!=null && likes.contains(holder.restaurant.id))
+            holder.favorite.setChecked(true);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +72,24 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.openRestaurant(holder.restaurant);
+                }
+                else if (null != Listener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+
+                    Listener.openRestaurantF(holder.restaurant);
+                }
+
+            }
+        });
+        holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //TODO: inserire o rimuovere il ristorante dalla lista dei preferiti
+                if (isChecked) {
+                   Log.i("MADAPP", "favorite->enabled");
+                } else {
+
+                    Log.i("MADAPP", "favorite->disabled");
                 }
             }
         });
@@ -71,6 +107,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         public final ImageView imgRestaurant;
         public final RatingBar rbRestaurant;
         public PreviewInfo restaurant;
+        ToggleButton favorite;
 
         public ViewHolder(View view) {
             super(view);
@@ -79,6 +116,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             descRestaurant = mView.findViewById(R.id.descRestaurant);
             imgRestaurant = mView.findViewById(R.id.imgRestaurant);
             rbRestaurant = mView.findViewById(R.id.rateRestaurant);
+            favorite = (ToggleButton) mView.findViewById(R.id.button_favorite);
+
 
         }
 

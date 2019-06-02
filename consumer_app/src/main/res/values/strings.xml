@@ -83,5 +83,6 @@
     <string name="euro">Euro</string>
     <string name="use">USE</string>
     <string name="order_by">Order by</string>
+    <string name="favourite_list">Favourite list</string>
 
 </resources>

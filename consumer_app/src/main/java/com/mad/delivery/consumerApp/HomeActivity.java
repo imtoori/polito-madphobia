@@ -27,6 +27,7 @@ import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
+import com.mad.delivery.consumerApp.settings.PasswordActivity;
 import com.mad.delivery.consumerApp.settings.SettingsFragment;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.Order;
@@ -160,12 +161,18 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (mUser == null) {
-            getMenuInflater().inflate(R.menu.home_menu, menu);
+            getMenuInflater().inflate(R.menu.home_menu_login, menu);
             return true;
         } else {
-            return super.onCreateOptionsMenu(menu);
+            getMenuInflater().inflate(R.menu.home_menu, menu);
+            return true;
+
         }
     }
+
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -174,6 +181,13 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
                 Log.d("MADAPP", "Opening Login Activity");
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+                return true;
+            case R.id.nav_favorite:
+                Log.d("MADAPP", "Opening Login Activity");
+                Intent i = new Intent(getApplicationContext(), FavouriteActivity.class);
+                startActivity(i);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
                 return true;
