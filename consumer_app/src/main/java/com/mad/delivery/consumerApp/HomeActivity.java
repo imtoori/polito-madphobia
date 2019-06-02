@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
@@ -128,6 +129,10 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         }
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 124);
+
+        String topic = mAuth.getUid() + ".order.status";
+        Log.d("FCM", "subscribe to " + topic);
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
     }
 
     @Override

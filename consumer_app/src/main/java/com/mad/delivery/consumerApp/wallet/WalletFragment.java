@@ -150,8 +150,6 @@ public class WalletFragment extends Fragment {
                     ordersAdapter = new OrdersAdapter(orders, mListener);
                     recyclerView.setAdapter(ordersAdapter);
                     checkCredit();
-                    Log.d("MADAPP", "going to load orders..  check null values");
-                    Log.d("MADAPP", "orders size=" + orders.size());
                     mListener.loadOrders(user.id);
                 }
 

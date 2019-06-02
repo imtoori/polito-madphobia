@@ -81,7 +81,24 @@ public class StartFragment extends Fragment {
                     cvStats.setVisibility(View.GONE);
                     visibleFolder.setVisibility(View.VISIBLE);
                 }
-
+                BikerDatabase.getInstance().getCashBiker(new FirebaseCallbackItem<Double>() {
+                    @Override
+                    public void onCallback(Double Item) {
+                        earning.setText(Item.toString());
+                    }
+                });
+                BikerDatabase.getInstance().getDistanceRide(new FirebaseCallbackItem<Double>() {
+                    @Override
+                    public void onCallback(Double Item) {
+                        kilometers.setText(Item.toString());
+                    }
+                });
+                BikerDatabase.getInstance().getOrdersTaken(new FirebaseCallbackItem<Integer>() {
+                    @Override
+                    public void onCallback(Integer Item) {
+                        ordersTaken.setText(Item.toString());
+                    }
+                });
                 //ordersTaken.setText(biker.order_count.toString());
                 //earning.setText(biker.earning.toString());
                 //kilometers.setText(biker.km.toString());

@@ -1,5 +1,6 @@
 package com.mad.delivery.consumerApp.search;
 import android.content.res.ColorStateList;
+import android.graphics.LinearGradient;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -54,8 +55,10 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private EditText deliveryAddress;
     private Set<String> chosen;
     private Map<String, Chip> chipMap;
-
     private boolean freeDelivery, minOrderCost, reviewFlag;
+    private Double latitude;
+    private Double longitude;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -148,10 +151,9 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     geocoder = new Geocoder(getContext(), Locale.getDefault());
 
                     try {
-                        Double latitude = gps.getLatitude();
-                        Double longitude = gps.getLongitude();
-                        Log.d("latitude: ", latitude.toString());
-                        Log.d("longitude: ", longitude.toString());
+
+                         latitude = gps.getLatitude();
+                         longitude = gps.getLongitude();
 
                         addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                     } catch (IOException e) {
@@ -232,7 +234,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
         bundle.putBoolean("orderByReviews", r);
-        Log.i("MADAPP", "order by review->"+ r);
+
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
@@ -267,6 +269,11 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
         bundle.putBoolean("orderByReviews", reviewFlag);
+
+        if(latitude!=null)
+        bundle.putDouble("latitude",latitude);
+        if(longitude!=null)
+        bundle.putDouble("longitude",longitude);
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);

@@ -44,7 +44,10 @@ public class RestaurantsFragment extends Fragment {
     private Set<String> chosenCategories;
     private String address = "";
     private ProgressBar pgBar;
-    public RestaurantsFragment() {
+    private Double latitude;
+    private Double longitude;
+
+  public RestaurantsFragment() {
         // Required empty public constructor
     }
 
@@ -93,7 +96,8 @@ public class RestaurantsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(restaurantAdapter);
         chosenCategories = new HashSet<>();
-
+        latitude = getArguments().getDouble("latitude");
+        longitude = getArguments().getDouble("longitude");
         List<String> categories = new ArrayList<>();
 
         try {
@@ -104,6 +108,8 @@ public class RestaurantsFragment extends Fragment {
             freeDelivery = getArguments().getBoolean("freeDelivery");
             reviewFlag=getArguments().getBoolean("orderByReviews");
             minOrderCost = getArguments().getBoolean("minOrderCost");
+
+
         } catch(NullPointerException e) {
             // do nothing
             Log.i("MADAPP", "restaurantffragment->no argument");
@@ -115,13 +121,12 @@ public class RestaurantsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery, preview -> {
-            if(preview != null) {
-                previews.add(preview);
-                restaurantAdapter.notifyDataSetChanged();
-            }
+        ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery,latitude,longitude, preview -> {
+            previews.add(preview);
+            restaurantAdapter.notifyDataSetChanged();
             pgBar.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
+
             if(previews.size() == 0) {
                 // show empty viewcard
                 emptyFolder.setVisibility(View.VISIBLE);

@@ -76,14 +76,10 @@ public class PreparingOrdersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RestaurantDatabase.getInstance().getPreparingAndReadyOrders(restaurant.previewInfo.id, list -> {
-            if(list.isEmpty())
-                showEmptyFolder();
-            else {
-                orders.clear();
-                orders.addAll(list);
-                Log.d("MADAPP", "orderlist updated"  + orders.size());
-                ordersAdapter.notifyDataSetChanged();
-            }
+            orders.clear();
+            orders.addAll(list);
+            showEmptyFolder();
+            ordersAdapter.notifyDataSetChanged();
         });
     }
 

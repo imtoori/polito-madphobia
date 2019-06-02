@@ -28,13 +28,13 @@ import com.google.firebase.storage.UploadTask;
 import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Feedback;
+import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
 import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.OnImageUploaded;
 import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
-import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.RestaurantCategory;
@@ -49,6 +49,7 @@ import java.util.Set;
 
 public class ConsumerDatabase {
     public static ConsumerDatabase instance = new ConsumerDatabase();
+    private final Double DISTANCE_CUSTOMER_RESTOURANT = 2.0;
     private FirebaseDatabase db;
     private DatabaseReference myRef;
     private StorageReference storageRef;
@@ -62,10 +63,10 @@ public class ConsumerDatabase {
     public void setResturantId(String resturantId) {
         this.resturantId = resturantId;
     }
-
     public String getResturantId() {
         return resturantId;
     }
+
 
     private ConsumerDatabase() {
         db = FirebaseDatabase.getInstance();
@@ -323,7 +324,8 @@ public class ConsumerDatabase {
         return restaurantIds;
     }
 
-    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d, final onPreviewRestaurantsReceived firebaseCallback) {
+
+    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d, Double latitude, Double longitude, final onPreviewRestaurantsReceived firebaseCallback) {
         getRestaurantsIds(chosen, list -> {
             if (list.isEmpty()) {
                 // show empty icon
@@ -331,20 +333,23 @@ public class ConsumerDatabase {
             } else {
                 // ask for restaurants
                 for (String restName : list) {
-                    myRef.child("users").child("restaurants").child(restName).child("previewInfo").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    myRef.child("users").child("restaurants").child(restName).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            PreviewInfo restaurantPreview = dataSnapshot.getValue(PreviewInfo.class);
-                            if (restaurantPreview != null) {
-                                if (m && restaurantPreview.minOrderCost != 0) {
-                                    firebaseCallback.onCallback(null);
+                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                            Haversine h = new Haversine();
+
+                            if (restaurant != null) {
+                                if (m && restaurant.previewInfo.minOrderCost != 0) {
                                     return;
                                 }
-                                if (d && restaurantPreview.deliveryCost != 0) {
-                                    firebaseCallback.onCallback(null);
+                                if (d && restaurant.previewInfo.deliveryCost != 0) {
                                     return;
                                 }
-                                firebaseCallback.onCallback(restaurantPreview);
+                                if(latitude!=null&&longitude!=null&&latitude!=0.0&&longitude!=0.0&&h.distance(latitude,longitude,restaurant.latitude,restaurant.longitude)>DISTANCE_CUSTOMER_RESTOURANT)
+                                    return;
+                                firebaseCallback.onCallback(restaurant.previewInfo);
                             }
                         }
 
@@ -358,18 +363,41 @@ public class ConsumerDatabase {
         });
     }
 
-    public void getRestaurantCategories(List<RestaurantCategory> categories, final OnFirebaseData<RestaurantCategory> cb) {
-        myRef.child("categories").addValueEventListener(new ValueEventListener() {
+
+    public void getRestaurantCategories(List<RestaurantCategory> categories, final onRestaurantCategoryReceived cb) {
+        myRef.child("categories").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        RestaurantCategory restCategory = issue.getValue(RestaurantCategory.class);
-                        if(restCategory != null) cb.onReceived(restCategory);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                RestaurantCategory category = dataSnapshot.getValue(RestaurantCategory.class);
+                if (category != null) {
+                    flag = true;
+                    categories.forEach(x -> {
+                        if (x.name.equals(category.name)) flag = false;
+                    });
+                    if (flag) {
+                        cb.childAdded(category);
                     }
                 } else {
                     cb.onReceived(null);
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                RestaurantCategory category = dataSnapshot.getValue(RestaurantCategory.class);
+                if (category != null) cb.childChanged(category);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                RestaurantCategory category = dataSnapshot.getValue(RestaurantCategory.class);
+                if (category != null) cb.childDeleted(category);
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                RestaurantCategory category = dataSnapshot.getValue(RestaurantCategory.class);
+                if (category != null) cb.childMoved(category);
             }
 
             @Override
@@ -587,30 +615,10 @@ public class ConsumerDatabase {
 
     }
 
-/*    public void getAllCostumerOrders(String clientID, OnFirebaseData<Order> cb) {
-        myRef.child("orders").orderByChild("clientId").equalTo(clientID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // dataSnapshot is the "issue" node with all children with id 0
-                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
-                        Order o = issue.getValue(Order.class);
-                        o.id = issue.getKey();
-                        cb.onReceived(o);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }*/
-
     public void checkCoupon(String code, OnFirebaseData<CreditCode> cb) {
+    }
+
+    public void checkCreditCode(String code, firebaseCallback<CreditCode> firebaseCallback) {
         myRef.child("creditsCode").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -662,7 +670,7 @@ public class ConsumerDatabase {
 
     public void getUserId(firebaseCallback<User> firebaseCallbackUser) {
         Log.d("TAG:", "mauth:  " + mAuth.getUid());
-        myRef.child("users").child("customers").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("customers").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -842,7 +850,6 @@ public class ConsumerDatabase {
                         if (o != null) {
                             cb.onReceived(o);
                         }
-
                     }
                 }
             }

@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.DistanceMatrixApi;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Restaurant;
@@ -47,7 +48,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.Random;
 
-public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener, OnBikerChanged {
+public class CompletingOrderActivity extends AppCompatActivity implements TimePickerFragment.TimePickedListener, ListDialog.ListDialogListener, OnBikerChanged,DistanceMatrixApi.Geo {
     private Toolbar myToolBar;
     private FirebaseDatabase db;
     private DatabaseReference myRef;
@@ -342,11 +343,32 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         mapFragment.dismiss();
         selectedBiker = biker;
         modifiedOrder.bikerId = selectedBiker.id;
+        String key = "AIzaSyBUAsYY4Sosso-lm46xE6ZpfQnpGc_VlLQ";
+        String str_from = selectedBiker.latitude+","+selectedBiker.longitude;
+        String str_to = modifiedOrder.restaurant.latitude+","+modifiedOrder.restaurant.longitude;
+        String url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=walking&key="+key;
+        new DistanceMatrixApi(this).execute(url);
+        str_from = modifiedOrder.restaurant.latitude+","+modifiedOrder.restaurant.longitude;
+        str_to = modifiedOrder.latitude+","+modifiedOrder.longitude;
+         url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=walking&key="+key;
+        new DistanceMatrixApi(this).execute(url);
+
         Log.d("MADAPP", selectedBiker.toString());
         selectedBikerTv.setText(selectedBiker.name + " " + selectedBiker.lastname);
         if(selectedBiker != null) {
             bikerIsSelected = true;
             errorBiker.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void setDouble(String result) {
+        String res[]=result.split(",");
+        Double min=Double.parseDouble(res[0])/60;
+        Double dist=Double.parseDouble(res[1])/1000;
+        modifiedOrder.distanceRide+=dist;
+
+
+
     }
 }

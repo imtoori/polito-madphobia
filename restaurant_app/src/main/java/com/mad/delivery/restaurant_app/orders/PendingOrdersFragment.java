@@ -3,13 +3,6 @@ package com.mad.delivery.restaurant_app.orders;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Restaurant;
-import com.mad.delivery.restaurant_app.RestaurantDatabase;
-import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,17 +66,11 @@ public class PendingOrdersFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RestaurantDatabase.getInstance().getPendingOrders(restaurant.previewInfo.id, list -> {
-            if(list.isEmpty())
-                showEmptyFolder();
-            else {
-                orders = list;
-                ordersAdapter.orders = orders;
-                ordersAdapter.notifyDataSetChanged();
-            }
+            orders.clear();
+            orders.addAll(list);
+            showEmptyFolder();
+            ordersAdapter.notifyDataSetChanged();
         });
-
-
-
     }
 
     @Override
@@ -104,7 +96,7 @@ public class PendingOrdersFragment extends Fragment {
     }
 
     private void showEmptyFolder() {
-        if(orders.size() == 0) {
+        if (orders.size() == 0) {
             noOrderImg.setVisibility(View.VISIBLE);
             noOrderTv.setVisibility(View.VISIBLE);
         } else {
@@ -112,7 +104,6 @@ public class PendingOrdersFragment extends Fragment {
             noOrderTv.setVisibility(View.GONE);
         }
     }
-
 
 
 }

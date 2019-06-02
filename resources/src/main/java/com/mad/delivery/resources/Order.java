@@ -33,6 +33,7 @@ public class Order implements Parcelable, Comparable<Order> {
     public Double longitude;
     public Boolean feedbackIsPossible;
     public String feedbackID;
+    public Double distanceRide;
 
 
     public Order(){}
@@ -54,7 +55,7 @@ public class Order implements Parcelable, Comparable<Order> {
         this.latitude = 0.0;
         this.longitude = 0.0;
         this.feedbackIsPossible = false;
-
+        this.distanceRide = 0.0;
     }
 
     public Order(Order other) {
@@ -78,6 +79,7 @@ public class Order implements Parcelable, Comparable<Order> {
         this.bikerId = other.bikerId;
         this.feedbackIsPossible = other.feedbackIsPossible;
         this.feedbackID = other.feedbackID;
+        this.distanceRide = other.distanceRide;
     }
 
     protected Order(Parcel in) {
@@ -115,6 +117,11 @@ public class Order implements Parcelable, Comparable<Order> {
         byte tmpFeedback = in.readByte();
         feedbackIsPossible = tmpFeedback == 0 ? null : tmpFeedback == 1;
         feedbackID = in.readString();
+        if (in.readByte() == 0) {
+            distanceRide = null;
+        } else {
+            distanceRide = in.readDouble();
+        }
     }
 
     @Override
@@ -155,6 +162,12 @@ public class Order implements Parcelable, Comparable<Order> {
         }
         dest.writeByte((byte) (feedbackIsPossible == null ? 0 : feedbackIsPossible ? 1 : 2));
         dest.writeString(feedbackID);
+        if (distanceRide == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(distanceRide);
+        }
     }
 
     @Override
@@ -214,6 +227,7 @@ public class Order implements Parcelable, Comparable<Order> {
         longitude = other.longitude;
         feedbackIsPossible = other.feedbackIsPossible;
         feedbackID = other.feedbackID;
+        distanceRide = other.distanceRide;
     }
 
     public String getId() {

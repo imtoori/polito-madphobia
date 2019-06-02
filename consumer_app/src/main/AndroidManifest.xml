@@ -82,6 +82,8 @@
         <activity android:name=".OrderInfoActivity"/>
         <activity android:name=".search.Order.BasketActivity"/>
         <activity android:name=".settings.PasswordActivity" />
-         </application>
+
+        <service android:name=".MyFirebaseMessagingService" />
+    </application>
 
 </manifest>
