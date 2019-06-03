@@ -31,7 +31,7 @@
         android:textColor="@color/colorDivider"
         android:textSize="@dimen/bigTitle"
         android:visibility="gone"
-        android:text="@string/no_orders"
+        android:text="@string/orders_empty"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

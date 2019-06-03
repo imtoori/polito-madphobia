@@ -131,6 +131,8 @@
     <string name="confirmed_order">%1$s</string>
     <string name="undo_confirm_order">Undo</string>
     <string name="no_orders">The menu is empty.</string>
+    <string name="orders_empty">There is no order.</string>
+
     <string name="change_status_button">Change Status</string>
     <string name="delivery_confirm_error">Confirm or change the delivery time!</string>
     no_completed_orders
