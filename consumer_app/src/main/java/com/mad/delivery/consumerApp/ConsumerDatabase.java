@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ConsumerDatabase {
@@ -54,6 +55,7 @@ public class ConsumerDatabase {
     private DatabaseReference myRef;
     private StorageReference storageRef;
     private HashMap<MenuItemRest, Integer> itemSelected;
+
     private String resturantId;
     public Restaurant restaurant;
     FirebaseAuth mAuth;
@@ -882,6 +884,39 @@ public class ConsumerDatabase {
         });
     }
 
+    public void addFavouriteRestaurant(String restaurantId){
+        myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").child(restaurantId).setValue(true);
+    }
 
+    public void removeFavouriteRestaurant(String resturantId){
+        myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").child(resturantId).setValue(false);
+
+    }
+
+    public void getFavouriteRestaurants(OnFirebaseData<List<String>> callback){
+        myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    List<String> list = new ArrayList<>();
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        Boolean o = issue.getValue(Boolean.class);
+                        if (o != null&&o!=false) {
+                            list.add(issue.getKey().toString());
+                        }
+                    }
+                    callback.onReceived(list);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 }
 

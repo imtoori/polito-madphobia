@@ -109,9 +109,12 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                 //TODO: inserire o rimuovere il ristorante dalla lista dei preferiti
                 if (isChecked) {
                    Log.i("MADAPP", "favorite->enabled");
+                   ConsumerDatabase.getInstance().addFavouriteRestaurant(holder.restaurant.id);
                 } else {
 
                     Log.i("MADAPP", "favorite->disabled");
+                    ConsumerDatabase.getInstance().removeFavouriteRestaurant(holder.restaurant.id);
+
                 }
             }
         });

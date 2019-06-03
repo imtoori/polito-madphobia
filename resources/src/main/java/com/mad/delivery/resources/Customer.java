@@ -4,6 +4,9 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Customer implements Parcelable {
     public String name;
     public String lastName;
@@ -17,6 +20,7 @@ public class Customer implements Parcelable {
     public String city;
     public Integer credit;
     public Uri imageUri;
+    public Map<String, Boolean> favourite;
 
     public Customer(String name, String lastName, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, Uri imageUri) {
         this.name = name;
@@ -31,6 +35,7 @@ public class Customer implements Parcelable {
         this.city = city;
         this.imageUri = imageUri;
         this.credit = 0;
+        this.favourite = new HashMap<>();
     }
     public Customer(Customer other) {
         this.name = other.name;
@@ -45,6 +50,7 @@ public class Customer implements Parcelable {
         this.city = other.city;
         this.imageUri = other.imageUri;
         this.credit = 0;
+        this.favourite = other.favourite;
     }
 
     public Customer(String name) {
@@ -71,6 +77,8 @@ public class Customer implements Parcelable {
         parcel.writeString(postCode);
         parcel.writeString(city);
         parcel.writeParcelable(imageUri, i);
+        parcel.writeMap(favourite);
+
     }
     public Customer(Parcel in) {
         name = in.readString();
@@ -84,6 +92,8 @@ public class Customer implements Parcelable {
         postCode = in.readString();
         city  = in.readString();
         imageUri = in.readParcelable(Uri.class.getClassLoader());
+        favourite = in.readHashMap(Boolean.class.getClassLoader());
+
 
     }
 
