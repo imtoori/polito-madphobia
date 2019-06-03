@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,8 @@ public class CompletedOrdersFragment extends Fragment {
     private TextView noOrderTv;
     private List<Order> orders;
     private MyOrderRecyclerViewAdapter ordersAdapter;
+    private ProgressBar progressBar;
+
 
     public CompletedOrdersFragment() {
         // Required empty public constructor
@@ -58,6 +61,7 @@ public class CompletedOrdersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_completed_orders, container, false);
         recyclerView = view.findViewById(R.id.rl_completing);
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
+        progressBar = view.findViewById(R.id.pg_bar);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         Log.d("MADAPP", "Completed: onCreateView called");
         orders = new ArrayList<>();
@@ -83,6 +87,8 @@ public class CompletedOrdersFragment extends Fragment {
             orders.addAll(list);
             showEmptyFolder();
             ordersAdapter.notifyDataSetChanged();
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         });
         //   showEmptyFolder();
     }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class PendingOrdersFragment extends Fragment {
 
     private OnPendingOrderListener mListener;
     private RecyclerView recyclerView;
+    private ProgressBar progressBar;
     private ImageView noOrderImg;
     private TextView noOrderTv;
     List<Order> orders;
@@ -47,6 +49,7 @@ public class PendingOrdersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pending_orders, container, false);
         recyclerView = view.findViewById(R.id.rl_pending);
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
+        progressBar = view.findViewById(R.id.pg_bar);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
         orders = new ArrayList<>();
         //   showEmptyFolder();
@@ -65,6 +68,8 @@ public class PendingOrdersFragment extends Fragment {
             orders.addAll(list);
             showEmptyFolder();
             ordersAdapter.notifyDataSetChanged();
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         });
     }
 

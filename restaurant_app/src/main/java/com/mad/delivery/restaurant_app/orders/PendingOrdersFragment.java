@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ public class PendingOrdersFragment extends Fragment {
     List<Order> orders;
     private Restaurant restaurant;
     MyOrderRecyclerViewAdapter ordersAdapter;
+    private ProgressBar progressBar;
 
     public PendingOrdersFragment() {
         // Required empty public constructor
@@ -51,6 +53,7 @@ public class PendingOrdersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rl_pending);
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
+        progressBar = view.findViewById(R.id.pg_bar);
         Log.d("MADAPP", "Pending: onCreateView called");
         orders = new ArrayList<>();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
@@ -70,6 +73,8 @@ public class PendingOrdersFragment extends Fragment {
             orders.addAll(list);
             showEmptyFolder();
             ordersAdapter.notifyDataSetChanged();
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         });
     }
 

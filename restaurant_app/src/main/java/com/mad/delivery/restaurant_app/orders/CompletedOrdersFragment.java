@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class CompletedOrdersFragment extends Fragment {
     private List<Order> orders;
     Restaurant restaurant;
     private MyOrderRecyclerViewAdapter ordersAdapter;
+    private ProgressBar progressBar;
 
     public CompletedOrdersFragment() {
         // Required empty public constructor
@@ -60,6 +62,7 @@ public class CompletedOrdersFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rl_completing);
         noOrderImg = view.findViewById(R.id.img_no_completed_orders);
         noOrderTv = view.findViewById(R.id.tv_no_completed_orders);
+        progressBar = view.findViewById(R.id.pg_bar);
         orders = new ArrayList<>();
         //  showEmptyFolder();
         ordersAdapter = new MyOrderRecyclerViewAdapter(orders, mListener);
@@ -80,6 +83,8 @@ public class CompletedOrdersFragment extends Fragment {
             orders.addAll(list);
             showEmptyFolder();
             ordersAdapter.notifyDataSetChanged();
+            recyclerView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         });
     }
 

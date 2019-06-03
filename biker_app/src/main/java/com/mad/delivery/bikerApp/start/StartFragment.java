@@ -37,6 +37,7 @@ public class StartFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private CardView cvStats;
+    private TextView tvGreetings;
     private LinearLayout visibleFolder;
     private Biker biker;
 
@@ -65,6 +66,7 @@ public class StartFragment extends Fragment {
         cvStats = view.findViewById(R.id.cardView3);
         hours= view.findViewById(R.id.hours);
         kilometers = view.findViewById(R.id.kilometers);
+        tvGreetings = view.findViewById(R.id.tv_greets);
         visibleFolder = view.findViewById(R.id.ll_not_visible);
         status = view.findViewById(R.id.status);
 
@@ -76,29 +78,33 @@ public class StartFragment extends Fragment {
                     status.setVisibility(View.VISIBLE);
                     cvStats.setVisibility(View.VISIBLE);
                     visibleFolder.setVisibility(View.GONE);
+                    tvGreetings.setText("Hello, " + biker.name + "!");
+                    tvGreetings.setVisibility(View.VISIBLE);
+                    BikerDatabase.getInstance().getCashBiker(new FirebaseCallbackItem<Double>() {
+                        @Override
+                        public void onCallback(Double Item) {
+                            earning.setText(Item.toString());
+                        }
+                    });
+                    BikerDatabase.getInstance().getDistanceRide(new FirebaseCallbackItem<Double>() {
+                        @Override
+                        public void onCallback(Double Item) {
+                            kilometers.setText(Item.toString());
+                        }
+                    });
+                    BikerDatabase.getInstance().getOrdersTaken(new FirebaseCallbackItem<Integer>() {
+                        @Override
+                        public void onCallback(Integer Item) {
+                            ordersTaken.setText(Item.toString());
+                        }
+                    });
                 } else {
                     status.setVisibility(View.GONE);
                     cvStats.setVisibility(View.GONE);
                     visibleFolder.setVisibility(View.VISIBLE);
+                    tvGreetings.setVisibility(View.GONE);
                 }
-                BikerDatabase.getInstance().getCashBiker(new FirebaseCallbackItem<Double>() {
-                    @Override
-                    public void onCallback(Double Item) {
-                        earning.setText(Item.toString());
-                    }
-                });
-                BikerDatabase.getInstance().getDistanceRide(new FirebaseCallbackItem<Double>() {
-                    @Override
-                    public void onCallback(Double Item) {
-                        kilometers.setText(Item.toString());
-                    }
-                });
-                BikerDatabase.getInstance().getOrdersTaken(new FirebaseCallbackItem<Integer>() {
-                    @Override
-                    public void onCallback(Integer Item) {
-                        ordersTaken.setText(Item.toString());
-                    }
-                });
+
                 //ordersTaken.setText(biker.order_count.toString());
                 //earning.setText(biker.earning.toString());
                 //kilometers.setText(biker.km.toString());

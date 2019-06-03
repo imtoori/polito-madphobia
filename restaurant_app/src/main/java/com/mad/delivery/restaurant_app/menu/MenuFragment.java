@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +63,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
     private OffersListAdapter myOffersListAdapter;
     private OfferAdapter myOfferAdapter;
     private AlertDialog dialog, errorDialog;
+    private ProgressBar progressBarOffers, progressBarMenu;
     private static boolean offerMode = false;
     public MenuFragment() {
     }
@@ -71,6 +73,9 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_menu, container, false);
+        progressBarOffers = v.findViewById(R.id.pg_bar_offers);
+        progressBarMenu = v.findViewById(R.id.pg_bar_menu);
+
         setHasOptionsMenu(true);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -91,7 +96,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         btnCancelOffer = v.findViewById(R.id.btn_cancel_offer);
         tvEmptyMenu = v.findViewById(R.id.tv_no_menuitems);
         tvNoOffer = v.findViewById(R.id.tv_no_offer);
-
 
         // offer is used to keep track of the offer you want to add
         offer = new ArrayList<>();
@@ -171,6 +175,8 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         RestaurantDatabase.getInstance().getOffers(currentUser.getUid(), item -> {
                 myOffers.addAll(item);
                 myOffersListAdapter.notifyDataSetChanged();
+                progressBarOffers.setVisibility(View.GONE);
+                offersRecyclerView.setVisibility(View.VISIBLE);
                 if(myOffers.size() == 0) {
                     tvNoOffer.setVisibility(View.VISIBLE);
                 } else {
@@ -337,13 +343,17 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                 MenuFragment.this.menu.putAll(menu);
                 MenuFragment.this.categories.addAll(categories);
                 adapter.notifyDataSetChanged();
+                progressBarMenu.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 if(menu.size() != 0) {
                     tvEmptyMenu.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
+
                 } else {
                     tvEmptyMenu.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
                 }
+
             }
 
             @Override

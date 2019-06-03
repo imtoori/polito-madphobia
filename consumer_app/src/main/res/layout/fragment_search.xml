@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         tools:context=".search.SearchFragment">
 
-
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_search"
             android:layout_width="match_parent"
@@ -156,7 +155,6 @@
                     app:layout_constraintStart_toStartOf="@+id/filtertv"
                     app:layout_constraintTop_toBottomOf="@+id/filtertv"
                     app:rippleColor="@color/colorPrimaryDark" />
-
 
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chip_group"
