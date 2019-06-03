@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import com.google.android.material.chip.Chip;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
 
@@ -87,9 +88,14 @@ public class RestaurantsFragment extends Fragment {
         previews.sort(( z1, z2) -> (Double.compare(z1.scoreValue,z2.scoreValue)));
 
 
-        //TODO: inserire in favorite l'interrogazione al db
         List <String> favorite= new ArrayList<String>();
-        favorite.add("Ik57NIUC0CVrkznG0GxpczGwlOp1");
+        ConsumerDatabase.getInstance().getFavouriteRestaurants(new OnFirebaseData<List<String>>() {
+            @Override
+            public void onReceived(List<String> item) {
+                favorite.addAll(item);
+
+            }
+        });
 
         restaurantAdapter = new RestaurantsAdapter(previews, favorite,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
         recyclerView.hasFixedSize();

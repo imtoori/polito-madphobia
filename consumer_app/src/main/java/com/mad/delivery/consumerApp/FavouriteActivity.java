@@ -10,6 +10,7 @@ import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsAdapter;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
+import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.PreviewInfo;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,11 +48,14 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
         recyclerView = findViewById(R.id.restaurant_rv);
         restaurant = new ArrayList<>();
 
-        //TODO: inserire in favorite l'interrogazione al db
         favorite= new ArrayList<String>();
-        favorite.add("Ik57NIUC0CVrkznG0GxpczGwlOp1");
+        ConsumerDatabase.getInstance().getFavouriteRestaurants(new OnFirebaseData<List<String>>() {
+            @Override
+            public void onReceived(List<String> item) {
+                favorite.addAll(item);
 
-
+            }
+        });
         restaurantsAdapter = new RestaurantsAdapter(restaurant, favorite,  this, getResources().getDrawable(R.drawable.restaurant_default, null));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(restaurantsAdapter);
