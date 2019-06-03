@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,7 @@ public class MapViewFragment extends Fragment {
 
     MapView mMapView;
     GoogleMap mMap;
+    Button btnGoToCustomer, btnGoToRestaurant;
     private static final int LOCATION_REQUEST = 500;
     ArrayList<LatLng> listPoints;
     LatLng r;
@@ -59,7 +61,8 @@ public class MapViewFragment extends Fragment {
         listPoints = new ArrayList<>();
         r = getArguments().getParcelable("restaurant");
         c = getArguments().getParcelable("client");
-
+        btnGoToCustomer = rootView.findViewById(R.id.btn_to_customer);
+        btnGoToRestaurant = rootView.findViewById(R.id.btn_to_restaurant);
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -131,6 +134,14 @@ public class MapViewFragment extends Fragment {
                 });
 
             }
+        });
+
+        btnGoToCustomer.setOnClickListener(view -> {
+            // TODO: here you can add code for directions biker->customer
+        });
+
+        btnGoToRestaurant.setOnClickListener(view -> {
+            // TODO: here you can add code for directions biker->restaurant
         });
 
         return rootView;
