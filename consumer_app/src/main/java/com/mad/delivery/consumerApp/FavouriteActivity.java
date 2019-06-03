@@ -36,7 +36,7 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
         myToolbar = (Toolbar) findViewById(R.id.favourite_toolbar);
-        setTitle(getResources().getString(R.string.favourite_list));
+        setTitle("Favourites");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -70,7 +70,7 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
         }
 
 
-        ConsumerDatabase.getInstance().getRestaurants(new HashSet<>(), "", false, false, preview -> {
+        ConsumerDatabase.getInstance().getRestaurants(new HashSet<>(), "", false, false, null, null,  preview -> {
             if(favorite.contains(preview.id)){
             restaurant.add(preview);
             restaurantsAdapter.notifyDataSetChanged();

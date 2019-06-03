@@ -99,17 +99,70 @@ public class CategoriesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ConsumerDatabase.getInstance().getRestaurantCategories(categories, item -> {
-            if (item != null) {
-                categories.add(item);
-                categoriesAdapter.notifyDataSetChanged();
-                //mListener.closeFilters();
-                pgBar.setVisibility(View.INVISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-            } else {
-                Log.d("MADAPP", "No categories..");
+        ConsumerDatabase.getInstance().getRestaurantCategories(categories, new ConsumerDatabase.onRestaurantCategoryReceived() {
+            @Override
+            public void childAdded(RestaurantCategory rc) {
+                if (rc != null) {
+                    categories.add(rc);
+                    categoriesAdapter.notifyDataSetChanged();
+                    //mListener.closeFilters();
+                    pgBar.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d("MADAPP", "No categories..");
+                }
+            }
+
+            @Override
+            public void childChanged(RestaurantCategory rc) {
+                if (rc != null) {
+                    for(RestaurantCategory rItem : categories) {
+                        if(rItem.name.equals(rc.name)) {
+                            rItem = rc;
+                            categoriesAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                    //mListener.closeFilters();
+                    pgBar.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d("MADAPP", "No categories..");
+                }
+            }
+
+            @Override
+            public void childMoved(RestaurantCategory rc) {
+                if (rc != null) {
+                    for(RestaurantCategory rItem : categories) {
+                        if(rItem.name.equals(rc.name)) {
+                            rItem = rc;
+                            categoriesAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                    }
+                    //mListener.closeFilters();
+                    pgBar.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d("MADAPP", "No categories..");
+                }
+            }
+
+            @Override
+            public void childDeleted(RestaurantCategory rc) {
+                if (rc != null) {
+                    categories.removeIf(r -> r.name.equals(rc.name));
+                    categoriesAdapter.notifyDataSetChanged();
+                    //mListener.closeFilters();
+                    pgBar.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    Log.d("MADAPP", "No categories..");
+                }
             }
         });
+
     }
 
 

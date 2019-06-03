@@ -63,6 +63,7 @@ public class ConsumerDatabase {
     public void setResturantId(String resturantId) {
         this.resturantId = resturantId;
     }
+
     public String getResturantId() {
         return resturantId;
     }
@@ -126,11 +127,8 @@ public class ConsumerDatabase {
 
     public interface onRestaurantCategoryReceived {
         void childAdded(RestaurantCategory rc);
-
         void childChanged(RestaurantCategory rc);
-
         void childMoved(RestaurantCategory rc);
-
         void childDeleted(RestaurantCategory rc);
     }
 
@@ -347,7 +345,7 @@ public class ConsumerDatabase {
                                 if (d && restaurant.previewInfo.deliveryCost != 0) {
                                     return;
                                 }
-                                if(latitude!=null&&longitude!=null&&latitude!=0.0&&longitude!=0.0&&h.distance(latitude,longitude,restaurant.latitude,restaurant.longitude)>DISTANCE_CUSTOMER_RESTOURANT)
+                                if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0 && h.distance(latitude, longitude, restaurant.latitude, restaurant.longitude) > DISTANCE_CUSTOMER_RESTOURANT)
                                     return;
                                 firebaseCallback.onCallback(restaurant.previewInfo);
                             }
@@ -377,8 +375,6 @@ public class ConsumerDatabase {
                     if (flag) {
                         cb.childAdded(category);
                     }
-                } else {
-                    cb.onReceived(null);
                 }
             }
 
@@ -402,7 +398,6 @@ public class ConsumerDatabase {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                cb.onReceived(null);
             }
         });
     }
@@ -616,30 +611,57 @@ public class ConsumerDatabase {
     }
 
     public void checkCoupon(String code, OnFirebaseData<CreditCode> cb) {
+        myRef.child("creditsCode").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    CreditCode o = dataSnapshot.getValue(CreditCode.class);
+                    if (o != null) {
+                        if (o.code.equals(code)) {
+                            cb.onReceived(o);
+                        }
+                    } else {
+                        cb.onReceived(null);
+                    }
+
+                } else {
+                    cb.onReceived(null);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("MADDAPP", "Funzione credit code fail");
+            }
+        });
     }
+
 
     public void checkCreditCode(String code, firebaseCallback<CreditCode> firebaseCallback) {
         myRef.child("creditsCode").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    CreditCode cc = null;
+                    // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         CreditCode o = issue.getValue(CreditCode.class);
                         if (o.code.equals(code)) {
-                            cc = o;
-                            break;
+                            try {
+                                firebaseCallback.onCallBack(o);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }
-                    cb.onReceived(cc);
-                } else {
-                    cb.onReceived(null);
                 }
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                cb.onReceived(null);
+                Log.d("MADDAPP", "Funzione credit code fail");
             }
         });
     }
