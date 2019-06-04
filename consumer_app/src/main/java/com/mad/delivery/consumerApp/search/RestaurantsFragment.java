@@ -128,19 +128,17 @@ public class RestaurantsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery,latitude,longitude, preview -> {
-            previews.add(preview);
-            restaurantAdapter.notifyDataSetChanged();
-            pgBar.setVisibility(View.INVISIBLE);
-            recyclerView.setVisibility(View.VISIBLE);
-
-            if(previews.size() == 0) {
-                // show empty viewcard
-                emptyFolder.setVisibility(View.VISIBLE);
-            } else {
+            if(preview != null) {
+                previews.add(preview);
+                restaurantAdapter.notifyDataSetChanged();
                 emptyFolder.setVisibility(View.GONE);
                 if(reviewFlag==true)
                     previews.sort(( z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
+            } else {
+                emptyFolder.setVisibility(View.VISIBLE);
             }
+            pgBar.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
         });
 
     }

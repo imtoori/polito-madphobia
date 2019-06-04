@@ -66,15 +66,12 @@ public class CategoriesFragment extends Fragment {
         mListener = null;
     }
 
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         myRef = db.getReference("categories");
-
     }
 
     @Override
@@ -100,6 +97,12 @@ public class CategoriesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ConsumerDatabase.getInstance().getRestaurantCategories(categories, new ConsumerDatabase.onRestaurantCategoryReceived() {
+            @Override
+            public void isEmpty() {
+                pgBar.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
             @Override
             public void childAdded(RestaurantCategory rc) {
                 if (rc != null) {

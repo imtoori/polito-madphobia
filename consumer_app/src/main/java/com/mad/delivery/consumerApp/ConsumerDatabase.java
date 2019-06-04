@@ -132,6 +132,7 @@ public class ConsumerDatabase {
         void childChanged(RestaurantCategory rc);
         void childMoved(RestaurantCategory rc);
         void childDeleted(RestaurantCategory rc);
+        void isEmpty();
     }
 
     public interface onRestaurantInfoReceived {
@@ -337,19 +338,24 @@ public class ConsumerDatabase {
                     myRef.child("users").child("restaurants").child(restName).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                            Haversine h = new Haversine();
+                            if(dataSnapshot.exists()) {
+                                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                                Haversine h = new Haversine();
 
-                            if (restaurant != null) {
-                                if (m && restaurant.previewInfo.minOrderCost != 0) {
-                                    return;
+                                if (restaurant != null) {
+                                    if (m && restaurant.previewInfo.minOrderCost != 0) {
+                                        return;
+                                    }
+                                    if (d && restaurant.previewInfo.deliveryCost != 0) {
+                                        return;
+                                    }
+                                    if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0 && h.distance(latitude, longitude, restaurant.latitude, restaurant.longitude) > DISTANCE_CUSTOMER_RESTOURANT)
+                                        return;
+                                    firebaseCallback.onCallback(restaurant.previewInfo);
                                 }
-                                if (d && restaurant.previewInfo.deliveryCost != 0) {
-                                    return;
-                                }
-                                if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0 && h.distance(latitude, longitude, restaurant.latitude, restaurant.longitude) > DISTANCE_CUSTOMER_RESTOURANT)
-                                    return;
-                                firebaseCallback.onCallback(restaurant.previewInfo);
+                            } else {
+                                Log.d("MADAPP", "no restaurants found");
+                                firebaseCallback.onCallback(null);
                             }
                         }
 
@@ -365,6 +371,25 @@ public class ConsumerDatabase {
 
 
     public void getRestaurantCategories(List<RestaurantCategory> categories, final onRestaurantCategoryReceived cb) {
+
+        myRef.child("categories").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists()) {
+                    cb.isEmpty();
+                    Log.d("MADAPP", "datasnaphop is empty");
+                } else {
+                    Log.d("MADAPP", "datasnaphop is NOT empty");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.isEmpty();
+            }
+        });
+
         myRef.child("categories").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -400,6 +425,7 @@ public class ConsumerDatabase {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.isEmpty();
             }
         });
     }
