@@ -15,7 +15,7 @@ import com.mad.delivery.restaurant_app.R;
 
 public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     private Context context;
-    private Order order;
+    public Order order;
     public DetailOrderPageAdapter(FragmentManager fm, Context context, Order order) {
         super(fm);
         this.context = context;
@@ -25,6 +25,7 @@ public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        if (order == null) return null;
         switch(position) {
             case 0:
                 DetailOrderFragment doFrag = new DetailOrderFragment();

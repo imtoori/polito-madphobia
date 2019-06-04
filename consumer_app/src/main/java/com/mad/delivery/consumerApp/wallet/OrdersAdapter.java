@@ -1,7 +1,5 @@
 package com.mad.delivery.consumerApp.wallet;
 
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +11,10 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.resources.MyDateFormat;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
-import com.mad.delivery.resources.Restaurant;
-import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
 

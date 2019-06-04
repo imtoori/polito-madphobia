@@ -14,7 +14,7 @@ import com.mad.delivery.resources.Product;
 
 public class SummaryOrdersAdapter extends RecyclerView.Adapter<com.mad.delivery.consumerApp.SummaryOrdersAdapter.ViewHolder> {
 
-    private List<Product> products;
+    List<Product> products;
     private View view;
 
     public SummaryOrdersAdapter(List<Product> items) {

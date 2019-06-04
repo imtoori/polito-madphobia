@@ -83,11 +83,15 @@
         <activity android:name=".settings.ProfileActivity" />
         <activity android:name=".settings.PasswordActivity" />
         <activity android:name=".settings.LanguageActivity" />
-        <activity android:name=".settings.GeneralSettingActivity" />
         <activity android:name=".menu.NewMenuItemActivity" />
         <activity
             android:name=".orders.DetailOrderActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="open_order" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

@@ -79,7 +79,12 @@
         <activity android:name=".settings.ProfileActivity" />
         <activity android:name=".FavouriteActivity"/>
         <activity android:name=".auth.LoginActivity" />
-        <activity android:name=".OrderInfoActivity"/>
+        <activity android:name=".OrderInfoActivity">
+            <intent-filter>
+                <action android:name="open_order"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".search.Order.BasketActivity"/>
         <activity android:name=".settings.PasswordActivity" />
 

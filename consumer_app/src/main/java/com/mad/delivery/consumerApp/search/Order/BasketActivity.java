@@ -20,13 +20,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,11 +35,7 @@ import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.consumerApp.TimePickerFragment;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
-import com.mad.delivery.consumerApp.firebaseCallback;
-import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
-import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.Product;

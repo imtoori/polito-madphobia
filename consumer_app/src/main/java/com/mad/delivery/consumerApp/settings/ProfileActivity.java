@@ -1,8 +1,6 @@
 package com.mad.delivery.consumerApp.settings;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +21,7 @@ import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
-import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.resources.OnLogin;
-import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
 import com.squareup.picasso.Picasso;
 

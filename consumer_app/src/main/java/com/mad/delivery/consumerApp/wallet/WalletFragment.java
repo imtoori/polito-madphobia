@@ -3,7 +3,6 @@ package com.mad.delivery.consumerApp.wallet;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,33 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.auth.LoginActivity;
-import com.mad.delivery.consumerApp.firebaseCallback;
-import com.mad.delivery.consumerApp.search.CategoriesFragment;
-import com.mad.delivery.resources.CreditCode;
-import com.mad.delivery.resources.Customer;
-import com.mad.delivery.resources.OnFirebaseData;
+import com.mad.delivery.consumerApp.FirebaseCallback;
 import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
-import com.mad.delivery.resources.OrderStatus;
-import com.mad.delivery.resources.Product;
-import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.User;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +33,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 
 /**
@@ -202,7 +185,7 @@ public class WalletFragment extends Fragment {
     }
 
     public void checkCredit() {
-        ConsumerDatabase.getInstance().getUserId(new firebaseCallback<User>() {
+        ConsumerDatabase.getInstance().getUserId(new FirebaseCallback<User>() {
             @Override
             public void onCallBack(User user) {
                 if (user != null && user.credit!=null)

@@ -19,16 +19,19 @@ import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.restaurant_app.FireBaseCallBack;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
 
+import java.util.List;
+
 public class DetailOrderActivity extends AppCompatActivity {
     Toolbar myToolBar;
     private ViewPager mPager;
-    private PagerAdapter pagerAdapter;
+    private DetailOrderPageAdapter pagerAdapter;
     private TabLayout tabLayout;
     private Order order;
     private FirebaseAuth mAuth;
@@ -40,16 +43,43 @@ public class DetailOrderActivity extends AppCompatActivity {
         setSupportActionBar(myToolBar);
         mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
-        order  = bundle.getParcelable("order");
-        setTitle(getResources().getString(R.string.order_from_title) + " " + order.client.name + " " + order.client.lastName);
-        // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.detail_order_pager);
-        pagerAdapter = new DetailOrderPageAdapter(getSupportFragmentManager(), this, order);
-        mPager.setAdapter(pagerAdapter);
-        // Give the TabLayout the ViewPager
         tabLayout = findViewById(R.id.detail_header);
         tabLayout.setupWithViewPager(mPager);
 
+        order  = bundle.getParcelable("order");
+
+        if (order == null) {
+            String orderId = bundle.getString("extra");
+            if (orderId != null) {
+                RestaurantDatabase.getInstance().getOrderById(orderId, new FireBaseCallBack<Order>() {
+                    @Override
+                    public void onCallback(Order order) {
+                        DetailOrderActivity.this.order = order;
+                        loadOrder(order);
+                    }
+
+                    @Override
+                    public void onCallbackList(List<Order> list) { }
+                });
+                return;
+            }
+        }
+
+        loadOrder(order);
+        // Instantiate a ViewPager and a PagerAdapter.
+        // Give the TabLayout the ViewPager
+
+    }
+
+    void loadOrder(Order order) {
+        if (pagerAdapter == null) {
+            pagerAdapter = new DetailOrderPageAdapter(getSupportFragmentManager(), this, order);
+            mPager.setAdapter(pagerAdapter);
+        }
+        pagerAdapter.order = order;
+        pagerAdapter.notifyDataSetChanged();
+        setTitle(getResources().getString(R.string.order_from_title) + " " + order.client.name + " " + order.client.lastName);
     }
 
     @Override

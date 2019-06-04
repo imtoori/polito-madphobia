@@ -14,17 +14,13 @@ import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.OnRestaurantSelectedF;
 import com.mad.delivery.consumerApp.R;
-import com.mad.delivery.consumerApp.firebaseCallback;
 import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.PreviewInfo;
-import com.mad.delivery.resources.Restaurant;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.List;
 
 public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.ViewHolder> {

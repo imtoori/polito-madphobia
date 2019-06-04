@@ -1,12 +1,10 @@
 package com.mad.delivery.consumerApp;
 
-import android.content.Intent;
-import android.hardware.usb.UsbRequest;
+import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.util.Log;
-import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Feedback;
 import com.mad.delivery.resources.Haversine;
@@ -45,7 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class ConsumerDatabase {
@@ -129,8 +125,11 @@ public class ConsumerDatabase {
 
     public interface onRestaurantCategoryReceived {
         void childAdded(RestaurantCategory rc);
+
         void childChanged(RestaurantCategory rc);
+
         void childMoved(RestaurantCategory rc);
+
         void childDeleted(RestaurantCategory rc);
         void isEmpty();
     }
@@ -153,7 +152,7 @@ public class ConsumerDatabase {
         return itemSelected;
     }
 
-    public void putOrder(Order o, Context context, firebaseCallback<Boolean> firebaseCallback2) throws IOException {
+    public void putOrder(Order o, Context context, FirebaseCallback<Boolean> firebaseCallback2) throws IOException {
         Geocoder geocoder = new Geocoder(context);
         List<Address> addresses;
         addresses = geocoder.getFromLocationName(o.delivery, 1);
@@ -186,7 +185,7 @@ public class ConsumerDatabase {
                                     Log.d("TRANS", "credito " + d.toString() + " tot: " + o.totalPrice);
 
                                     if (d > o.totalPrice) {
-                                        getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
+                                        getMenuItems(o, new FirebaseCallback<List<MenuItemRest>>() {
                                             @Override
                                             public void onCallBack(List<MenuItemRest> item) throws IOException {
                                                 item.forEach(i -> {
@@ -229,7 +228,7 @@ public class ConsumerDatabase {
                             }
                         });
                     } else if (o.paymentMethod.matches("cash")) {
-                        getMenuItems(o, new firebaseCallback<List<MenuItemRest>>() {
+                        getMenuItems(o, new FirebaseCallback<List<MenuItemRest>>() {
                             @Override
                             public void onCallBack(List<MenuItemRest> item) throws IOException {
                                 item.forEach(i -> {
@@ -273,7 +272,7 @@ public class ConsumerDatabase {
 
     }
 
-    public void getRestourant(String resturantId, firebaseCallback<Restaurant> firebaseCallback) {
+    public void getRestourant(String resturantId, FirebaseCallback<Restaurant> firebaseCallback) {
         myRef.child("users").child("restaurants").child(resturantId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -480,7 +479,7 @@ public class ConsumerDatabase {
         });
     }
 
-    public void getMenuItems(Order o, firebaseCallback<List<MenuItemRest>> firebaseCallback) {
+    public void getMenuItems(Order o, FirebaseCallback<List<MenuItemRest>> firebaseCallback) {
         myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -516,7 +515,7 @@ public class ConsumerDatabase {
 
     }
 
-    public void getBikerId(firebaseCallback<List<String>> firebaseCallback) {
+    public void getBikerId(FirebaseCallback<List<String>> firebaseCallback) {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -550,7 +549,7 @@ public class ConsumerDatabase {
 
     }
 
-    public void getImage(String imageName, String path, firebaseCallback<Uri> firebaseCallback) {
+    public void getImage(String imageName, String path, FirebaseCallback<Uri> firebaseCallback) {
         if (imageName == null || !imageName.equals("")) {
             // Uri tmp = Uri.parse(imageName);
             StorageReference profileRefStore = storageRef.child(path + imageName);
@@ -581,7 +580,26 @@ public class ConsumerDatabase {
         }
     }
 
-    public List<Order> getCompletedOrders(firebaseCallback<List<Order>> firebaseCallback) {
+    public void getOrderById(String id, FirebaseCallback<Order> firebaseCallback) {
+        myRef.child("orders").child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    Order order = dataSnapshot.getValue(Order.class);
+                    order.id = id;
+                    firebaseCallback.onCallBack(order);
+                } catch (IOException e) {
+                    Log.e("DATABASE", e.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public List<Order> getCompletedOrders(FirebaseCallback<List<Order>> firebaseCallback) {
 
         List<Order> completed = new ArrayList<>();
         myRef.child("order").orderByChild("clientId").equalTo(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -666,7 +684,7 @@ public class ConsumerDatabase {
     }
 
 
-    public void checkCreditCode(String code, firebaseCallback<CreditCode> firebaseCallback) {
+    public void checkCreditCode(String code, FirebaseCallback<CreditCode> firebaseCallback) {
         myRef.child("creditsCode").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -718,7 +736,7 @@ public class ConsumerDatabase {
 
     }
 
-    public void getUserId(firebaseCallback<User> firebaseCallbackUser) {
+    public void getUserId(FirebaseCallback<User> firebaseCallbackUser) {
         Log.d("TAG:", "mauth:  " + mAuth.getUid());
         myRef.child("users").child("customers").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -750,7 +768,7 @@ public class ConsumerDatabase {
     }
 
 
-    public void updateCreditCustomer(Double i, firebaseCallback<Boolean> firebaseCallback) {
+    public void updateCreditCustomer(Double i, FirebaseCallback<Boolean> firebaseCallback) {
         myRef.child("users").child("customers").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
 
 
@@ -910,16 +928,16 @@ public class ConsumerDatabase {
         });
     }
 
-    public void addFavouriteRestaurant(String restaurantId){
+    public void addFavouriteRestaurant(String restaurantId) {
         myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").child(restaurantId).setValue(true);
     }
 
-    public void removeFavouriteRestaurant(String resturantId){
+    public void removeFavouriteRestaurant(String resturantId) {
         myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").child(resturantId).setValue(false);
 
     }
 
-    public void getFavouriteRestaurants(OnFirebaseData<List<String>> callback){
+    public void getFavouriteRestaurants(OnFirebaseData<List<String>> callback) {
         myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -928,7 +946,7 @@ public class ConsumerDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Boolean o = issue.getValue(Boolean.class);
-                        if (o != null&&o!=false) {
+                        if (o != null && o != false) {
                             list.add(issue.getKey().toString());
                         }
                     }
