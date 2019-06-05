@@ -43,14 +43,14 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         Log.i("MADAPP", "costruttore 1");
         this.uLoggedListener = uLoggedListener;
     }
-    public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, OnRestaurantSelectedF listener, Drawable defaultImage) {
+    public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, OnRestaurantSelectedF listener, Drawable defaultImage, OnUserLoggedCheck uLoggedListener) {
         restaurants = items;
         Listener = listener;
         this.defaultImage = defaultImage;
         mListener=null;
         this.likes=likes;
         Log.i("MADAPP", "costruttore 2");
-        this.uLoggedListener = null;
+        this.uLoggedListener = uLoggedListener;
     }
 
     @Override
@@ -106,7 +106,6 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         });
         holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //TODO: inserire o rimuovere il ristorante dalla lista dei preferiti
                 uLoggedListener.success(isChecked, holder.restaurant.id);
             }
         });

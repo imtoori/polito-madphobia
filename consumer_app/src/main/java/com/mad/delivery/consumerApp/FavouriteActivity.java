@@ -11,7 +11,10 @@ import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsAdapter;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.resources.OnFirebaseData;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.PreviewInfo;
+import com.mad.delivery.resources.User;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +25,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FavouriteActivity extends AppCompatActivity implements OnRestaurantSelectedF{
+public class FavouriteActivity extends AppCompatActivity implements OnRestaurantSelectedF, OnUserLoggedCheck{
     Toolbar myToolbar;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -41,14 +44,13 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mAuth = FirebaseAuth.getInstance();
 
         emptyFolder = findViewById(R.id.emptyfolder_cv);
-
-
         recyclerView = findViewById(R.id.restaurant_rv);
         restaurant = new ArrayList<>();
 
-        favorite= new ArrayList<String>();
+        favorite= new ArrayList<>();
         ConsumerDatabase.getInstance().getFavouriteRestaurants(new OnFirebaseData<List<String>>() {
             @Override
             public void onReceived(List<String> item) {
@@ -56,7 +58,7 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
 
             }
         });
-        restaurantsAdapter = new RestaurantsAdapter(restaurant, favorite,  this, getResources().getDrawable(R.drawable.restaurant_default, null));
+        restaurantsAdapter = new RestaurantsAdapter(restaurant, favorite,  this, getResources().getDrawable(R.drawable.restaurant_default, null), (OnUserLoggedCheck) this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(restaurantsAdapter);
     }
@@ -71,6 +73,20 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return;
+        }
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+                @Override
+                public void onSuccess(User u) {
+
+                }
+
+                @Override
+                public void onFailure() {
+                    currentUser = null;
+                }
+            });
         }
 
 
@@ -118,5 +134,24 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
         intent.putExtra("restaurant", previewInfo);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void success(boolean checked, String restaurantID) {
+        if(currentUser != null) {
+            if (checked) {
+                Log.i("MADAPP", "favorite->enabled");
+                ConsumerDatabase.getInstance().addFavouriteRestaurant(restaurantID);
+            } else {
+
+                Log.i("MADAPP", "favorite->disabled");
+                ConsumerDatabase.getInstance().removeFavouriteRestaurant(restaurantID);
+                favorite.removeIf(item -> item.equals(restaurantID));
+                restaurant.removeIf(p -> p.id.equals(restaurantID));
+                restaurantsAdapter.notifyDataSetChanged();
+
+
+            }
+        }
     }
 }
