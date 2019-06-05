@@ -69,7 +69,7 @@
     <string name="datatime_secect">Click here to select delivery time!</string>
     <string name="hint_client_note">Insert here your notes!</string>
     <string name="order_info_toolbar">Order info</string>
-    <string name="IncreasedCredit">Rechange:</string>
+    <string name="IncreasedCredit">Charged:</string>
     <string name="one_value">x1</string>
     <string name="ErrorCredit">Error Credit</string>
     <string name="check_address">Insert Address</string>

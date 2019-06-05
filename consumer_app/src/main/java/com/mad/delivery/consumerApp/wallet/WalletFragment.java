@@ -94,6 +94,7 @@ public class WalletFragment extends Fragment {
                         Creditcode.setError("Your coupon is not valid.");
                         return;
                     }
+
                     ConsumerDatabase.getInstance().updateCreditCustomer(item.value, status -> {
                         if (status) {
                             checkCredit();

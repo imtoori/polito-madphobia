@@ -75,16 +75,17 @@ public class FavouriteActivity extends AppCompatActivity implements OnRestaurant
 
 
         ConsumerDatabase.getInstance().getRestaurants(new HashSet<>(), "", false, false, null, null,  preview -> {
-            if(favorite.contains(preview.id)){
-            restaurant.add(preview);
-            restaurantsAdapter.notifyDataSetChanged();
-            if(restaurant.size() == 0) {
-                // show empty viewcard
-                emptyFolder.setVisibility(View.VISIBLE);
-            } else {
-                emptyFolder.setVisibility(View.GONE);
-
+            if(preview != null) {
+            if(favorite.contains(preview.id)) {
+                restaurant.add(preview);
+                restaurantsAdapter.notifyDataSetChanged();
             }
+                if (restaurant.size() == 0) {
+                    // show empty viewcard
+                    emptyFolder.setVisibility(View.VISIBLE);
+                } else {
+                    emptyFolder.setVisibility(View.GONE);
+                }
         }});
 
     }

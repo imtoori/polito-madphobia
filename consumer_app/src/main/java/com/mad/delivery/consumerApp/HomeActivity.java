@@ -280,7 +280,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
 
     private void startInstalledAppDetailsActivity() {
         Intent i = new Intent();
-
         i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         i.addCategory(Intent.CATEGORY_DEFAULT);
         i.setData(Uri.parse("package:" + getPackageName()));

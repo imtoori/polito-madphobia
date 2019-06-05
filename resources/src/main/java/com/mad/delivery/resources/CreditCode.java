@@ -12,4 +12,12 @@ public class CreditCode {
 
     public CreditCode() {
     }
+
+    @Override
+    public String toString() {
+        return "CreditCode{" +
+                "code='" + code + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }

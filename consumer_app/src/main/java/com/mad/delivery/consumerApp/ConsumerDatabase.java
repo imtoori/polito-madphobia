@@ -661,18 +661,20 @@ public class ConsumerDatabase {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    CreditCode o = dataSnapshot.getValue(CreditCode.class);
-                    if (o != null) {
-                        if (o.code.equals(code)) {
-                            cb.onReceived(o);
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        CreditCode o = issue.getValue(CreditCode.class);
+                        Log.d("MADAPP", "creditcode=" + o.toString());
+                        if (o != null) {
+                            if (o.code != null && o.code.equals(code)) {
+                                cb.onReceived(o);
+                            }
+                        } else {
+                            cb.onReceived(null);
                         }
-                    } else {
-                        cb.onReceived(null);
                     }
-
-                } else {
-                    cb.onReceived(null);
-                }
+                }  else{
+                cb.onReceived(null);
+            }
 
             }
 
