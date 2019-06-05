@@ -113,6 +113,8 @@ public class CategoriesFragment extends Fragment {
                     recyclerView.setVisibility(View.VISIBLE);
                 } else {
                     Log.d("MADAPP", "No categories..");
+                    pgBar.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -127,11 +129,12 @@ public class CategoriesFragment extends Fragment {
                         }
                     }
                     //mListener.closeFilters();
-                    pgBar.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
+
                 } else {
                     Log.d("MADAPP", "No categories..");
                 }
+                pgBar.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -145,11 +148,12 @@ public class CategoriesFragment extends Fragment {
                         }
                     }
                     //mListener.closeFilters();
-                    pgBar.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
+
                 } else {
                     Log.d("MADAPP", "No categories..");
                 }
+                pgBar.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -158,11 +162,11 @@ public class CategoriesFragment extends Fragment {
                     categories.removeIf(r -> r.name.equals(rc.name));
                     categoriesAdapter.notifyDataSetChanged();
                     //mListener.closeFilters();
-                    pgBar.setVisibility(View.INVISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
                 } else {
                     Log.d("MADAPP", "No categories..");
                 }
+                pgBar.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
         });
 
