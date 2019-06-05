@@ -151,23 +151,26 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
+        else {
 
 
-        BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
-            @Override
-            public void onSuccess(Biker user) {
-                // do nothing
-                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> BikerDatabase.getInstance().updateToken(mAuth.getCurrentUser().getUid(), instanceIdResult.getToken()));
-                FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
-            }
+            BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
+                @Override
+                public void onSuccess(Biker user) {
+                    // do nothing
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> BikerDatabase.getInstance().updateToken(mAuth.getCurrentUser().getUid(), instanceIdResult.getToken()));
+                    FirebaseMessaging.getInstance().subscribeToTopic(mAuth.getUid() + ".order.new");
+                }
 
-            @Override
-            public void onFailure() {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+                @Override
+                public void onFailure() {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
 
