@@ -157,8 +157,9 @@ public class RestaurantsFragment extends Fragment {
                         ConsumerDatabase.getInstance().getFavouriteRestaurants(new OnFirebaseData<List<String>>() {
                             @Override
                             public void onReceived(List<String> item) {
+                                favorite.clear();
                                 favorite.addAll(item);
-
+                                restaurantAdapter.notifyDataSetChanged();
                             }
                         });
                     }
