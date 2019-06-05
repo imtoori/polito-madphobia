@@ -33,12 +33,16 @@ import com.mad.delivery.consumerApp.settings.PasswordActivity;
 import com.mad.delivery.consumerApp.settings.SettingsFragment;
 import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
+import com.mad.delivery.resources.OnFirebaseData;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.PreviewInfo;
+import com.mad.delivery.resources.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
+public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected, OnUserLoggedCheck {
     Toolbar myToolbar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     FragmentManager fm;
@@ -61,6 +65,19 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         db = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+        if (mUser != null) {
+            ConsumerDatabase.getInstance().checkLogin(mUser.getUid(), new OnLogin<User>() {
+                @Override
+                public void onSuccess(User u) {
+
+                }
+
+                @Override
+                public void onFailure() {
+                    mUser = null;
+                }
+            });
+        }
         myRef = db.getReference();
         setContentView(R.layout.activity_home);
         myToolbar = findViewById(R.id.mainActivityToolbar);
@@ -272,4 +289,18 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     }
 
 
+    @Override
+    public void success(boolean checked, String restaurantID) {
+        if(mUser != null) {
+            if (checked) {
+                Log.i("MADAPP", "favorite->enabled");
+                ConsumerDatabase.getInstance().addFavouriteRestaurant(restaurantID);
+            } else {
+
+                Log.i("MADAPP", "favorite->disabled");
+                ConsumerDatabase.getInstance().removeFavouriteRestaurant(restaurantID);
+
+            }
+        }
+    }
 }

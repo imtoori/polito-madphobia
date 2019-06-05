@@ -2,6 +2,7 @@ package com.mad.delivery.consumerApp.search;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 
@@ -20,11 +21,17 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 
 import com.google.android.material.chip.Chip;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.OnUserLoggedCheck;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.resources.OnFirebaseData;
+import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.Restaurant;
+import com.mad.delivery.resources.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,6 +54,10 @@ public class RestaurantsFragment extends Fragment {
     private ProgressBar pgBar;
     private Double latitude;
     private Double longitude;
+    List <String> favorite;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private OnUserLoggedCheck uLoggedListener;
 
   public RestaurantsFragment() {
         // Required empty public constructor
@@ -61,11 +72,14 @@ public class RestaurantsFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement onRestaurantSelected");
         }
+
+        uLoggedListener = (OnUserLoggedCheck) context;
     }
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        uLoggedListener = null;
     }
 
     @Override
@@ -86,18 +100,12 @@ public class RestaurantsFragment extends Fragment {
         pgBar = view.findViewById(R.id.pg_bar);
         previews = new ArrayList<>();
         previews.sort(( z1, z2) -> (Double.compare(z1.scoreValue,z2.scoreValue)));
+        favorite= new ArrayList<>();
+        mAuth = FirebaseAuth.getInstance();
 
 
-        List <String> favorite= new ArrayList<String>();
-        ConsumerDatabase.getInstance().getFavouriteRestaurants(new OnFirebaseData<List<String>>() {
-            @Override
-            public void onReceived(List<String> item) {
-                favorite.addAll(item);
 
-            }
-        });
-
-        restaurantAdapter = new RestaurantsAdapter(previews, favorite,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
+        restaurantAdapter = new RestaurantsAdapter(previews, favorite,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null), uLoggedListener);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(restaurantAdapter);
@@ -139,9 +147,32 @@ public class RestaurantsFragment extends Fragment {
             }
             pgBar.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
+
+            // check if user is logged
+            currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+                    @Override
+                    public void onSuccess(User u) {
+                        ConsumerDatabase.getInstance().getFavouriteRestaurants(new OnFirebaseData<List<String>>() {
+                            @Override
+                            public void onReceived(List<String> item) {
+                                favorite.addAll(item);
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure() {
+                    }
+                });
+            }
         });
 
+
     }
+
 
     public interface OnRestaurantSelected {
         void openRestaurant(PreviewInfo previewInfo);

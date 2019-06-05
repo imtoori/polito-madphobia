@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.OnRestaurantSelectedF;
+import com.mad.delivery.consumerApp.OnUserLoggedCheck;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.PreviewInfo;
@@ -31,14 +32,16 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     private final RestaurantsFragment.OnRestaurantSelected mListener;
     private final OnRestaurantSelectedF Listener;
     private Drawable defaultImage;
+    private final OnUserLoggedCheck uLoggedListener;
 
-    public RestaurantsAdapter(List<PreviewInfo> items,List<String> likes, RestaurantsFragment.OnRestaurantSelected listener, Drawable defaultImage) {
+    public RestaurantsAdapter(List<PreviewInfo> items,List<String> likes, RestaurantsFragment.OnRestaurantSelected listener, Drawable defaultImage, OnUserLoggedCheck uLoggedListener) {
         restaurants = items;
         mListener = listener;
         this.defaultImage = defaultImage;
         Listener=null;
         this.likes=likes;
         Log.i("MADAPP", "costruttore 1");
+        this.uLoggedListener = uLoggedListener;
     }
     public RestaurantsAdapter(List<PreviewInfo> items, List<String> likes, OnRestaurantSelectedF listener, Drawable defaultImage) {
         restaurants = items;
@@ -47,6 +50,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         mListener=null;
         this.likes=likes;
         Log.i("MADAPP", "costruttore 2");
+        this.uLoggedListener = null;
     }
 
     @Override
@@ -103,15 +107,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //TODO: inserire o rimuovere il ristorante dalla lista dei preferiti
-                if (isChecked) {
-                   Log.i("MADAPP", "favorite->enabled");
-                   ConsumerDatabase.getInstance().addFavouriteRestaurant(holder.restaurant.id);
-                } else {
-
-                    Log.i("MADAPP", "favorite->disabled");
-                    ConsumerDatabase.getInstance().removeFavouriteRestaurant(holder.restaurant.id);
-
-                }
+                uLoggedListener.success(isChecked, holder.restaurant.id);
             }
         });
     }
