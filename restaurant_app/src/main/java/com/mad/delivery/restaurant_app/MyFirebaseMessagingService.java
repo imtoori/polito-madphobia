@@ -16,7 +16,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
     @Override
     public void onNewToken(String s) {
-        RestaurantDatabase.getInstance().updateToken(id, s);
+
     }
 
     @Override
