@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.ToggleButton;
 
 import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,10 +55,8 @@ public class RestaurantsFragment extends Fragment {
     private ProgressBar pgBar;
     private Double latitude;
     private Double longitude;
-    List <String> favorite;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private OnUserLoggedCheck uLoggedListener;
 
   public RestaurantsFragment() {
         // Required empty public constructor
@@ -73,13 +72,11 @@ public class RestaurantsFragment extends Fragment {
                     + " must implement onRestaurantSelected");
         }
 
-        uLoggedListener = (OnUserLoggedCheck) context;
     }
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        uLoggedListener = null;
     }
 
     @Override
@@ -94,20 +91,17 @@ public class RestaurantsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurants, container, false);
-        Log.i("MADAPP", "restaurantsFragment onCreateView");
+        mAuth = FirebaseAuth.getInstance();
         recyclerView = view.findViewById(R.id.restaurant_rv);
         emptyFolder = view.findViewById(R.id.emptyfolder_cv);
         pgBar = view.findViewById(R.id.pg_bar);
         previews = new ArrayList<>();
         previews.sort(( z1, z2) -> (Double.compare(z1.scoreValue,z2.scoreValue)));
-        favorite= new ArrayList<>();
-        mAuth = FirebaseAuth.getInstance();
 
-
-
-        restaurantAdapter = new RestaurantsAdapter(previews, favorite,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null), uLoggedListener);
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        restaurantAdapter = new RestaurantsAdapter(previews,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
+
         recyclerView.setAdapter(restaurantAdapter);
         chosenCategories = new HashSet<>();
         latitude = getArguments().getDouble("latitude");
@@ -140,7 +134,7 @@ public class RestaurantsFragment extends Fragment {
                 previews.add(preview);
                 restaurantAdapter.notifyDataSetChanged();
                 emptyFolder.setVisibility(View.GONE);
-                if(reviewFlag==true)
+                if(reviewFlag)
                     previews.sort(( z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
             } else {
                 emptyFolder.setVisibility(View.VISIBLE);
@@ -154,14 +148,6 @@ public class RestaurantsFragment extends Fragment {
                 ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
                     @Override
                     public void onSuccess(User u) {
-                        ConsumerDatabase.getInstance().getFavouriteRestaurants(new OnFirebaseData<List<String>>() {
-                            @Override
-                            public void onReceived(List<String> item) {
-                                favorite.clear();
-                                favorite.addAll(item);
-                                restaurantAdapter.notifyDataSetChanged();
-                            }
-                        });
                     }
 
                     @Override
@@ -177,9 +163,9 @@ public class RestaurantsFragment extends Fragment {
 
     public interface OnRestaurantSelected {
         void openRestaurant(PreviewInfo previewInfo);
+        void isFavourited(PreviewInfo previewInfo, ToggleButton toggleButton);
+        void changeFavourite(PreviewInfo previewInfo, boolean added);
     }
-
-
 
 
 }

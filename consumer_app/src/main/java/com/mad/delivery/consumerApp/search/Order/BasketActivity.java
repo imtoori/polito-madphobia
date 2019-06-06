@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.Text;
 
 import androidx.appcompat.widget.Toolbar;
 
@@ -50,7 +51,7 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class BasketActivity extends AppCompatActivity implements OnProductListener  {
+public class BasketActivity extends AppCompatActivity implements OnProductListener {
     private FirebaseAuth mAuth;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
@@ -64,7 +65,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     private ImageView deliveryAddressButton;
     TextView deliveryFee, minOrder, totalCost, minOrderTitle;
     AutoCompleteTextView where;
-    EditText when;
+    TextView when;
     Chip cash, credit, checkedChip;
     EditText notes;
     Button btnCompleteOrder;
@@ -80,7 +81,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         sharedPref = getSharedPreferences("basket", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         toolbar = findViewById(R.id.myToolbar);
-        deliveryAddressButton =findViewById(R.id.imageView_get_location);
+        deliveryAddressButton = findViewById(R.id.imageView_get_location);
         setTitle(getResources().getString(R.string.Basket_toolbar));
         setSupportActionBar(toolbar);
         chipGroup = findViewById(R.id.chip_group);
@@ -96,27 +97,22 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         notes = findViewById(R.id.notes);
         btnCompleteOrder = findViewById(R.id.button_complete_order);
 
-        when.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(b) {
-                    Calendar mcurrentTime = Calendar.getInstance();
-                    int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    int minute = mcurrentTime.get(Calendar.MINUTE);
-                    TimePickerDialog mTimePicker;
-                    mTimePicker = new TimePickerDialog(BasketActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            when.setText( selectedHour + ":" + selectedMinute);
-                            orderFor = new DateTime();
-                            orderFor = orderFor.hourOfDay().setCopy(selectedHour);
-                            orderFor = orderFor.minuteOfHour().setCopy(selectedMinute);
-                        }
-                    }, hour, minute, true);//Yes 24 hour time
-                    mTimePicker.setTitle("Select Delivery Time");
-                    mTimePicker.show();
+        when.setOnClickListener(v -> {
+            Calendar mcurrentTime = Calendar.getInstance();
+            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            int minute = mcurrentTime.get(Calendar.MINUTE);
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(BasketActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                    when.setText(selectedHour + ":" + selectedMinute);
+                    orderFor = new DateTime();
+                    orderFor = orderFor.hourOfDay().setCopy(selectedHour);
+                    orderFor = orderFor.minuteOfHour().setCopy(selectedMinute);
                 }
-            }
+            }, hour, minute, true);//Yes 24 hour time
+            mTimePicker.setTitle("Select Delivery Time");
+            mTimePicker.show();
         });
 
         try {
@@ -138,7 +134,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Chip chip = (Chip) buttonView;
-                if(isChecked) {
+                if (isChecked) {
                     chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
                     chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
@@ -155,15 +151,17 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
 
         btnCompleteOrder.setOnClickListener(v -> {
             boolean valid = checkConstraints();
-            if(valid) {
+            if (valid) {
 
                 String paymentMethod = "";
-                if(checkedChip.getText().toString().equals(getString(R.string.pay_cash))) paymentMethod = "cash";
-                else if(checkedChip.getText().toString().equals(getString(R.string.pay_credit))) paymentMethod = "credit";
+                if (checkedChip.getText().toString().equals(getString(R.string.pay_cash)))
+                    paymentMethod = "cash";
+                else if (checkedChip.getText().toString().equals(getString(R.string.pay_credit)))
+                    paymentMethod = "credit";
                 else paymentMethod = "cash";
 
                 Order order = new Order(user, restaurant, myOrder, orderFor.toString(), paymentMethod, where.getText().toString());
-                order.clientNotes=notes.getText().toString();
+                order.clientNotes = notes.getText().toString();
                 sendingFragment = CompletingOrderDialogFragment.newInstance(order);
                 sendingFragment.show(getSupportFragmentManager(), "sendingFragment");
             } else {
@@ -171,9 +169,9 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
             }
         });
 
-        deliveryAddressButton.setOnClickListener(v->{
+        deliveryAddressButton.setOnClickListener(v -> {
             GPSTracker gps = new GPSTracker(BasketActivity.this);
-            if(gps.isGPSEnabled){
+            if (gps.isGPSEnabled) {
                 Geocoder geocoder;
                 List<Address> addresses = new ArrayList<>();
                 geocoder = new Geocoder(BasketActivity.this, Locale.getDefault());
@@ -181,14 +179,14 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                 try {
                     Double latitude = gps.getLatitude();
                     Double longitude = gps.getLongitude();
-                    Log.d("latitude: ",latitude.toString());
-                    Log.d("longitude: ",longitude.toString());
+                    Log.d("latitude: ", latitude.toString());
+                    Log.d("longitude: ", longitude.toString());
 
                     addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (addresses.size()>0) {
+                if (addresses.size() > 0) {
                     String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                     String city = addresses.get(0).getLocality();
                     String state = addresses.get(0).getAdminArea();
@@ -197,13 +195,11 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                     String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
                     Log.d("ADDRESS:", address + " " + city + " " + state + " " + country + " " + postalCode + " " + knownName);
                     where.setText(address);
-                }
-                else {
+                } else {
                     Toast.makeText(this, "Your address isn't found", Toast.LENGTH_SHORT).show();
 
                 }
-            }
-            else {
+            } else {
                 Toast.makeText(this, "Your gps is disabled", Toast.LENGTH_SHORT).show();
 
             }
@@ -266,7 +262,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         myOrder.removeIf(item -> item.idItem.equals(p.idItem));
         myOrderAdapter.notifyDataSetChanged();
         computeTotalPrice();
-        if(myOrder.size() == 0) {
+        if (myOrder.size() == 0) {
             Intent intent = new Intent(this, HomeActivity.class);
             intent.putExtra("user", 1);
             startActivity(intent);
@@ -275,14 +271,14 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     }
 
     public void computeTotalPrice() {
-        deliveryFee.setText("€ "+restaurant.previewInfo.deliveryCost);
+        deliveryFee.setText("€ " + restaurant.previewInfo.deliveryCost);
         double tp = 0.0;
         tp = myOrder.stream().mapToDouble(i -> i.price).sum() + restaurant.previewInfo.deliveryCost;
 
-        if(restaurant.previewInfo.minOrderCost > tp) {
+        if (restaurant.previewInfo.minOrderCost > tp) {
             double remainder = restaurant.previewInfo.minOrderCost - tp;
             tp += remainder;
-            minOrder.setText("+" +remainder);
+            minOrder.setText("+" + remainder);
             minOrder.setVisibility(View.VISIBLE);
             minOrderTitle.setVisibility(View.VISIBLE);
         } else {
@@ -294,21 +290,21 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     }
 
     private boolean checkConstraints() {
-        if(myOrder.size() == 0) {
+        if (myOrder.size() == 0) {
             return false;
         }
-        if(where.getText().toString().equals("")) {
+        if (where.getText().toString().equals("")) {
             where.setError(getResources().getString(R.string.invalid_address));
             return false;
         }
-        if(when.getText().toString().equals("")) {
+        if (when.getText().toString().equals("")) {
             when.setError(getResources().getString(R.string.invalid_time));
             return false;
         }
-        if(checkedChip == null) {
+        if (checkedChip == null) {
             return false;
         }
-        if(user.name==null || user.phoneNumber==null){
+        if (user.name == null || user.phoneNumber == null) {
             return false;
         }
         return true;

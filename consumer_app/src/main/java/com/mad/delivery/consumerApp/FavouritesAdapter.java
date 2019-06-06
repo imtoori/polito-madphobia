@@ -1,4 +1,4 @@
-package com.mad.delivery.consumerApp.search;
+package com.mad.delivery.consumerApp;
 
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,27 +14,25 @@ import android.widget.ToggleButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mad.delivery.consumerApp.ConsumerDatabase;
-import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.consumerApp.search.RestaurantsFragment;
+import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.PreviewInfo;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.ViewHolder> {
+public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.ViewHolder> {
 
-    private List<PreviewInfo> restaurants;
-    private List<String> likes;
+    private List<PreviewInfo> favourites;
     private View view;
-    private final RestaurantsFragment.OnRestaurantSelected mListener;
     private Drawable defaultImage;
-    private String userID;
+    private OnFavouriteChange listener;
 
-    public RestaurantsAdapter(List<PreviewInfo> items, RestaurantsFragment.OnRestaurantSelected listener, Drawable defaultImage) {
-        restaurants = items;
-        mListener = listener;
+    public FavouritesAdapter(List<PreviewInfo> favourites, Drawable defaultImage, OnFavouriteChange listener) {
         this.defaultImage = defaultImage;
+        this.favourites = favourites;
+        this.listener = listener;
     }
 
     @Override
@@ -45,13 +43,19 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.restaurant = restaurants.get(position);
-        ConsumerDatabase.getInstance().setResturantId(holder.restaurant.id);
-        holder.nameRestaurant.setText(holder.restaurant.name);
-        holder.descRestaurant.setText(holder.restaurant.description);
-        holder.rbRestaurant.setRating(holder.restaurant.scoreValue.floatValue());
-        if(holder.restaurant.imageName != null) {
-            ConsumerDatabase.getInstance().downloadImage(holder.restaurant.id, "profile", holder.restaurant.imageName, new OnImageDownloaded() {
+        holder.favourite = favourites.get(position);
+        holder.nameRestaurant.setText(holder.favourite.name);
+        holder.descRestaurant.setText(holder.favourite.description);
+        holder.rbRestaurant.setRating(holder.favourite.scoreValue.floatValue());
+        holder.mView.setOnClickListener(v -> {
+            listener.onOpen(holder.favourite);
+        });
+        holder.favouriteButton.setChecked(true);
+        holder.favouriteButton.setOnClickListener(v -> {
+            listener.onRemoved(holder.favourite.id);
+        });
+        if (holder.favourite.imageName != null) {
+            ConsumerDatabase.getInstance().downloadImage(holder.favourite.id, "profile", holder.favourite.imageName, new OnImageDownloaded() {
                 @Override
                 public void onReceived(Uri imageUri) {
                     Log.d("MADAPP", imageUri.toString());
@@ -66,31 +70,11 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         } else {
             holder.imgRestaurant.setImageDrawable(defaultImage);
         }
-
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.openRestaurant(holder.restaurant);
-                }
-            }
-        });
-        mListener.isFavourited(holder.restaurant, holder.favorite);
-
-            holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mListener.changeFavourite(holder.restaurant, isChecked);
-                }
-            });
-
     }
 
     @Override
     public int getItemCount() {
-        return restaurants.size();
+        return favourites.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -99,8 +83,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         public final TextView descRestaurant;
         public final ImageView imgRestaurant;
         public final RatingBar rbRestaurant;
-        public PreviewInfo restaurant;
-        ToggleButton favorite;
+        public PreviewInfo favourite;
+        ToggleButton favouriteButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -109,15 +93,12 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             descRestaurant = mView.findViewById(R.id.descRestaurant);
             imgRestaurant = mView.findViewById(R.id.imgRestaurant);
             rbRestaurant = mView.findViewById(R.id.rateRestaurant);
-            favorite = (ToggleButton) mView.findViewById(R.id.button_favorite);
-
-
+            favouriteButton = mView.findViewById(R.id.button_favorite);
         }
 
         @Override
         public String toString() {
-            return "ViewHolder{" +
-                    "name=" + restaurant.name;
+            return "ViewHolder";
         }
     }
 }

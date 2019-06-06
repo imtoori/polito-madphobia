@@ -215,13 +215,14 @@
                         app:layout_constraintTop_toBottomOf="@+id/img_delivery"
                         app:srcCompat="@drawable/ic_clock" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/actv_time_delivery"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="16dp"
-                        android:inputType="time"
+                        android:paddingStart="4dp"
+                        android:textSize="@dimen/subtitle"
                         android:hint="@string/Delivery_time"
                         app:layout_constraintBottom_toBottomOf="@+id/img_time_delivery"
                         app:layout_constraintEnd_toEndOf="parent"

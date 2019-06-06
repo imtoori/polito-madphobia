@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +43,7 @@ import com.mad.delivery.resources.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected, OnUserLoggedCheck {
+public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected{
     Toolbar myToolbar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     FragmentManager fm;
@@ -191,6 +192,8 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
+
+
     @Override
     public void openOrder(Order o) {
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
@@ -213,8 +216,8 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
                 walletFragment.noOrder.setVisibility(View.VISIBLE);
                 walletFragment.recyclerView.setVisibility(View.INVISIBLE);
             } else {
-                walletFragment.orders.clear();
-                walletFragment.ordersAdapter.notifyDataSetChanged();
+                //walletFragment.orders.clear();
+                //walletFragment.ordersAdapter.notifyDataSetChanged();
                 walletFragment.orders.add(o);
                 walletFragment.ordersAdapter.notifyDataSetChanged();
                 walletFragment.noOrder.setVisibility(View.INVISIBLE);
@@ -287,19 +290,29 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         startActivity(i);
     }
 
-
     @Override
-    public void success(boolean checked, String restaurantID) {
+    public void changeFavourite(PreviewInfo previewInfo, boolean added) {
         if(mUser != null) {
-            if (checked) {
-                Log.i("MADAPP", "favorite->enabled");
-                ConsumerDatabase.getInstance().addFavouriteRestaurant(restaurantID);
+            if (added) {
+                ConsumerDatabase.getInstance().addFavouriteRestaurant(previewInfo.id, mUser.getUid());
             } else {
-
-                Log.i("MADAPP", "favorite->disabled");
-                ConsumerDatabase.getInstance().removeFavouriteRestaurant(restaurantID);
-
+                ConsumerDatabase.getInstance().removeFavouriteRestaurant(previewInfo.id, mUser.getUid(), value -> {});
             }
         }
+    }
+
+    @Override
+    public void isFavourited(PreviewInfo previewInfo, ToggleButton toggleButton) {
+        if(mUser == null) {
+            toggleButton.setVisibility(View.GONE);
+            return;
+        }
+        ConsumerDatabase.getInstance().getIsFavourite(previewInfo.id, mUser.getUid(), new OnFirebaseData<Boolean>() {
+            @Override
+            public void onReceived(Boolean item) {
+                if(item) toggleButton.setChecked(true);
+                else toggleButton.setChecked(false);
+            }
+        });
     }
 }

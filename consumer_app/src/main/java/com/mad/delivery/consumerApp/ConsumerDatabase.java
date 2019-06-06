@@ -131,6 +131,7 @@ public class ConsumerDatabase {
         void childMoved(RestaurantCategory rc);
 
         void childDeleted(RestaurantCategory rc);
+
         void isEmpty();
     }
 
@@ -333,24 +334,24 @@ public class ConsumerDatabase {
             } else {
                 // ask for restaurants
                 for (String restName : list) {
-
                     myRef.child("users").child("restaurants").child(restName).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()) {
+                            if (dataSnapshot.exists()) {
                                 Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                Haversine h = new Haversine();
-
                                 if (restaurant != null) {
-                                    if (m && restaurant.previewInfo.minOrderCost != 0) {
-                                        return;
+                                    if (restaurant.visible != null && restaurant.visible) {
+                                        Haversine h = new Haversine();
+                                        if (m && restaurant.previewInfo.minOrderCost != 0) {
+                                            return;
+                                        }
+                                        if (d && restaurant.previewInfo.deliveryCost != 0) {
+                                            return;
+                                        }
+                                        if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0 && h.distance(latitude, longitude, restaurant.latitude, restaurant.longitude) > DISTANCE_CUSTOMER_RESTOURANT)
+                                            return;
+                                        firebaseCallback.onCallback(restaurant.previewInfo);
                                     }
-                                    if (d && restaurant.previewInfo.deliveryCost != 0) {
-                                        return;
-                                    }
-                                    if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0 && h.distance(latitude, longitude, restaurant.latitude, restaurant.longitude) > DISTANCE_CUSTOMER_RESTOURANT)
-                                        return;
-                                    firebaseCallback.onCallback(restaurant.previewInfo);
                                 }
                             } else {
                                 Log.d("MADAPP", "no restaurants found");
@@ -374,7 +375,7 @@ public class ConsumerDatabase {
         myRef.child("categories").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()) {
+                if (!dataSnapshot.exists()) {
                     cb.isEmpty();
                     Log.d("MADAPP", "datasnaphop is empty");
                 } else {
@@ -672,9 +673,9 @@ public class ConsumerDatabase {
                             cb.onReceived(null);
                         }
                     }
-                }  else{
-                cb.onReceived(null);
-            }
+                } else {
+                    cb.onReceived(null);
+                }
 
             }
 
@@ -930,28 +931,89 @@ public class ConsumerDatabase {
         });
     }
 
-    public void addFavouriteRestaurant(String restaurantId) {
-        myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").child(restaurantId).setValue(true);
+    public void getIsFavourite(String restaurantID, String userID, OnFirebaseData<Boolean> cb) {
+        myRef.child("users").child("customers").child(userID).child("favourite").child(restaurantID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) cb.onReceived(true);
+                else cb.onReceived(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(false);
+            }
+        });
     }
 
-    public void removeFavouriteRestaurant(String resturantId) {
-        myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").child(resturantId).setValue(false);
-
+    public void addFavouriteRestaurant(String restaurantID, String userID) {
+        myRef.child("users").child("customers").child(userID).child("favourite").child(restaurantID).setValue(true);
     }
 
-    public void getFavouriteRestaurants(OnFirebaseData<List<String>> callback) {
-        myRef.child("users").child("customers").child(mAuth.getUid()).child("favourite").addValueEventListener(new ValueEventListener() {
+    public void removeFavouriteRestaurant(String restaurantID, String userID, OnFirebaseData<Boolean> cb) {
+        myRef.child("users").child("customers").child(userID).child("favourite").child(restaurantID).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                cb.onReceived(true);
+            }
+        });
+    }
+
+    public void getRestaurant(String id, OnFirebaseData<PreviewInfo> cb) {
+        myRef.child("users").child("restaurants").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    List<String> list = new ArrayList<>();
+                    Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                    if(restaurant != null && restaurant.visible) {
+                        if (restaurant != null) {
+                            cb.onReceived(restaurant.previewInfo);
+                        } else {
+                            cb.onReceived(null);
+                        }
+                    } else {
+                        cb.onReceived(null);
+                    }
+                } else {
+                    cb.onReceived(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(null);
+            }
+        });
+    }
+
+    public void getFavouriteRestaurants(String userID, OnFirebaseData<PreviewInfo> cb) {
+        List<PreviewInfo> previews = new ArrayList<>();
+        getFavouriteRestaurantsIDs(userID, ids -> {
+            Log.d("MADAPP", "IDs" + ids.toString());
+            for (String id : ids) {
+                getRestaurant(id, preview -> {
+                        cb.onReceived(preview);
+                });
+            }
+
+        });
+    }
+
+    public void getFavouriteRestaurantsIDs(String id, OnFirebaseData<List<String>> callback) {
+        myRef.child("users").child("customers").child(id).child("favourite").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> list = new ArrayList<>();
+                if (dataSnapshot.exists()) {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Boolean o = issue.getValue(Boolean.class);
                         if (o != null && o != false) {
-                            list.add(issue.getKey().toString());
+                            list.add(issue.getKey());
                         }
                     }
+                    callback.onReceived(list);
+                } else {
                     callback.onReceived(list);
                 }
 
