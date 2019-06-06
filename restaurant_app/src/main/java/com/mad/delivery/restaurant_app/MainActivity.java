@@ -37,6 +37,11 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private Restaurant restaurant;
+
+    MenuFragment menuFragment = new MenuFragment();
+    OrderFragment orderFragment = new OrderFragment();
+    SettingFragment settingFragment = new SettingFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,32 +69,29 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
                 FragmentTransaction ft;
                 switch (item.getItemId()) {
                     case R.id.nav_menu:
+                        open = 0;
                         setTitle(getString(R.string.nav_menu));
-                        MenuFragment menuFragment = new MenuFragment();
                         ft = fm.beginTransaction();
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, menuFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_orders:
+                        open = 1;
                         setTitle(getString(R.string.nav_orders));
-                        OrderFragment orderFragment = new OrderFragment();
                         ft = fm.beginTransaction();
                         Bundle bundle = new Bundle();
                         if (orderToBeUpdated != null)
                             bundle.putParcelable("orderToBeUpdated", orderToBeUpdated);
                         orderFragment.setArguments(bundle);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, orderFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_settings:
+                        open = 2;
                         setTitle(getString(R.string.nav_settings));
-                        SettingFragment settingFragment = new SettingFragment();
                         ft = fm.beginTransaction();
-                        ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.frag_container, settingFragment);
                         ft.commit();

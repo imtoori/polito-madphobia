@@ -35,6 +35,11 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
+    OrderFragment orderFragment;
+    SettingFragment settingFragment;
+    StartFragment statisticsFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +58,11 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
             Bundle bundle = getIntent().getExtras();
             orderToBeUpdated = bundle.getParcelable("orderToBeUpdated");
         }
+
+        orderFragment = new OrderFragment();
+        settingFragment = new SettingFragment();
+        statisticsFragment = new StartFragment();
+
         myToolBar = findViewById(R.id.mainActivityToolbar);
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.app_name));
@@ -64,31 +74,28 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
                 FragmentTransaction ft;
                 switch (item.getItemId()) {
                     case R.id.nav_orders:
+                        open = 1;
                         setTitle(getString(R.string.nav_orders));
-                        OrderFragment orderFragment = new OrderFragment();
                         ft = fm.beginTransaction();
                         Bundle bundle = new Bundle();
                         if(orderToBeUpdated != null) bundle.putParcelable("orderToBeUpdated", orderToBeUpdated);
                         orderFragment.setArguments(bundle);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.addToBackStack(null);
                         ft.replace(R.id.frag_container, orderFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_settings:
+                        open = 2;
                         setTitle(getString(R.string.nav_settings));
-                        SettingFragment settingFragment = new SettingFragment();
                         ft = fm.beginTransaction();
-                        ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.frag_container, settingFragment);
                         ft.commit();
                         return true;
                     case R.id.nav_statistics:
+                        open = 0;
                         setTitle(getString(R.string.nav_statistics));
-                        StartFragment statisticsFragment = new StartFragment();
                         ft = fm.beginTransaction();
-                        ft.addToBackStack(null);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                         ft.replace(R.id.frag_container, statisticsFragment);
                         ft.commit();
