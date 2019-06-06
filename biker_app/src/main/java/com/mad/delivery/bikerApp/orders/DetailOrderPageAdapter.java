@@ -18,7 +18,7 @@ import com.mad.delivery.resources.Order;
 
 public class DetailOrderPageAdapter extends FragmentPagerAdapter {
     private Context context;
-    private Order order;
+    public Order order;
     LatLng latLngR;
     LatLng latLngC;
 

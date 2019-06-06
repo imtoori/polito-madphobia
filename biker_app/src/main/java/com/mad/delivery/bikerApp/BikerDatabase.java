@@ -63,6 +63,21 @@ final public class BikerDatabase {
         myRef = database.getReference();
     }
 
+    public void getOrderById(String id, FirebaseCallbackItem<Order> firebaseCallback) {
+        myRef.child("orders").child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Order order = dataSnapshot.getValue(Order.class);
+                order.id = id;
+                firebaseCallback.onCallback(order);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void checkLogin(String id, OnLogin<Biker> cb) {
         if (id == null || id.equals("")) {
             Log.d("MADAPP", "checkLogin: id null or empty");

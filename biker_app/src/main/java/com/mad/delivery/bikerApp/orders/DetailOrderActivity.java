@@ -17,6 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BikerDatabase;
+import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.HomeActivity;
 import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
@@ -26,7 +27,7 @@ import com.mad.delivery.resources.OrderStatus;
 public class DetailOrderActivity extends AppCompatActivity {
     Toolbar myToolBar;
     private ViewPager mPager;
-    private PagerAdapter pagerAdapter;
+    private DetailOrderPageAdapter pagerAdapter;
     private TabLayout tabLayout;
     private Order order;
     private FirebaseAuth mAuth;
@@ -38,15 +39,32 @@ public class DetailOrderActivity extends AppCompatActivity {
         setSupportActionBar(myToolBar);
         mAuth = FirebaseAuth.getInstance();
         Bundle bundle = getIntent().getExtras();
-        order  = bundle.getParcelable("order");
-        setTitle(getResources().getString(R.string.order) + " from " + order.client.name + " " +order.client.lastName.substring(0, 1) + ".");
-        // Instantiate a ViewPager and a PagerAdapter.
         mPager = findViewById(R.id.detail_order_pager);
-        pagerAdapter = new DetailOrderPageAdapter(getSupportFragmentManager(), this, order);
-        mPager.setAdapter(pagerAdapter);
-        // Give the TabLayout the ViewPager
-        tabLayout = findViewById(R.id.detail_header);
-        tabLayout.setupWithViewPager(mPager);
+
+        order  = bundle.getParcelable("order");
+
+        if (order == null) {
+            String orderId = bundle.getString("extra");
+            if (orderId != null) {
+                BikerDatabase.getInstance().getOrderById(orderId, order -> {
+                    DetailOrderActivity.this.order = order;
+                    loadOrder(order);
+                });
+                return;
+            }
+        }
+
+        loadOrder(order);
+    }
+
+    void loadOrder(Order order) {
+        if (pagerAdapter == null) {
+            pagerAdapter = new DetailOrderPageAdapter(getSupportFragmentManager(), this, order);
+            mPager.setAdapter(pagerAdapter);
+        }
+        pagerAdapter.order = order;
+        pagerAdapter.notifyDataSetChanged();
+        setTitle(getResources().getString(R.string.order_from_title) + " " + order.client.name + " " + order.client.lastName);
     }
 
     @Override
