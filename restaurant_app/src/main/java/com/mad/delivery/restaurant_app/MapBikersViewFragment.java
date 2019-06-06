@@ -34,11 +34,16 @@ import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.resources.SortByClosestDistance;
 
 import java.lang.reflect.Array;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
+
+import static java.lang.Math.round;
 
 public class MapBikersViewFragment extends DialogFragment {
 
@@ -125,10 +130,11 @@ public class MapBikersViewFragment extends DialogFragment {
                             MarkerOptions markerOptions = new MarkerOptions();
                             LatLng p = new LatLng(b.latitude,b.longitude);
                             Log.d("BIKER :",d.toString()+" "+p.toString());
-                            markerOptions.position(p).title(b.email).snippet("Distanza: "+d.toString()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+
+                            markerOptions.position(p).title(b.email).snippet("Distanza: "+d).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                             Marker m =mMap.addMarker(markerOptions);
                             m.showInfoWindow();
-                            bikers.add(new DistanceBiker(b, (double) Math.round(d)));
+                            bikers.add(new DistanceBiker(b,  d));
                             bikers.sort(new SortByClosestDistance());
                             bikersAdapter.notifyDataSetChanged();
                         });

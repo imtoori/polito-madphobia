@@ -29,6 +29,8 @@ import com.mad.delivery.restaurant_app.menu.OnMenuReceived;
 
 import org.joda.time.DateTime;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -136,6 +138,7 @@ final public class RestaurantDatabase {
     public void update(Order o) {
         ordersRef.child(o.id).setValue(o);
     }
+
 
     class MyDateComparator implements Comparator<Order> {
         @Override
@@ -494,9 +497,14 @@ final public class RestaurantDatabase {
                 if (dataSnapshot.exists()) {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if (snapshot.getValue(Biker.class).status = true) {
+                        if (snapshot.getValue(Biker.class).status == true) {
                             Log.d("TAG:", restaurant.toString());
-                            bikerIdDistance.put(Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude), snapshot.getValue(Biker.class));
+                            Double distance = Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude);
+                            if (distance<=5.0) {
+                                DecimalFormat df = new DecimalFormat("#.#");
+                                df.setRoundingMode(RoundingMode.CEILING);
+                                bikerIdDistance.put(Double.parseDouble(df.format(distance)), snapshot.getValue(Biker.class));
+                            }
                         }
                     }
                 }
@@ -549,7 +557,7 @@ final public class RestaurantDatabase {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Biker b = dataSnapshot.getValue(Biker.class);
-                    cb.onReceived(b);
+                        cb.onReceived(b);
                 } else {
                     Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists.");
                     cb.onReceived(null);

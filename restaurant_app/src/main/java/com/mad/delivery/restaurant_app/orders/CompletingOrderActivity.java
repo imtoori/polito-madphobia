@@ -363,12 +363,13 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void setDouble(String result) {
+
         String res[]=result.split(",");
         Double min=Double.parseDouble(res[0])/60;
         Double dist=Double.parseDouble(res[1])/1000;
+        Log.e("MADAPP: ",modifiedOrder.distanceRide.toString());
+
         modifiedOrder.distanceRide+=dist;
-
-
 
     }
 }
