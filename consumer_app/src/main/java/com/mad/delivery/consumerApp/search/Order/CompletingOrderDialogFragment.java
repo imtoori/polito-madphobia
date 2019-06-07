@@ -80,6 +80,7 @@ public class CompletingOrderDialogFragment extends DialogFragment {
                 btnClose.setVisibility(View.VISIBLE);
                 pgBar.setVisibility(View.GONE);
                 if(success) {
+
                     imgDone.setVisibility(View.VISIBLE);
                     imgErr.setVisibility(View.GONE);
                     desc.setTextColor(getResources().getColor(R.color.colorGreen, null));

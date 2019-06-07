@@ -139,6 +139,7 @@ final public class BikerDatabase {
             old.update(o);
         }*/
         o.bikerId = mAuth.getUid();
+        if(o.status.equals(OrderStatus.delivered)) o.feedbackIsPossible = true;
         ordersRef.child(o.id).setValue(o);
 
     }

@@ -21,10 +21,11 @@ import com.mad.delivery.resources.Restaurant;
  */
 public class RestaurantDescriptionFragment extends Fragment {
     private Restaurant restaurant;
-    private TextView description, openingHours, reviewCount, ratingNumber;
+    private TextView address, description, openingHours, reviewCount, ratingNumber, email, phoneNumber;
     private RatingBar ratingBar;
     private ReviewsDialogFragment dialogFragment;
     private CardView cvRating;
+
 
     public RestaurantDescriptionFragment() {
         // Required empty public constructor
@@ -45,7 +46,14 @@ public class RestaurantDescriptionFragment extends Fragment {
         description.setText(restaurant.previewInfo.description);
         openingHours.setText(restaurant.openingHours);
         cvRating = view.findViewById(R.id.cv_rating);
+        address = view.findViewById(R.id.rest_address);
+        email = view.findViewById(R.id.mainprofile_phone);
+        phoneNumber = view.findViewById(R.id.main_email);
         ratingBar.setRating(restaurant.previewInfo.scoreValue.floatValue());
+        address.setText(restaurant.road + " " + restaurant.houseNumber + ", " + restaurant.postCode + ", " + restaurant.city);
+        email.setText(restaurant.email);
+        phoneNumber.setText(restaurant.phoneNumber);
+
         if(restaurant.previewInfo.scoreCount == null) {
             reviewCount.setText("No reviews");
             ratingNumber.setVisibility(View.GONE);
