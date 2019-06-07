@@ -315,7 +315,7 @@ public class ConsumerDatabase {
                             if (chosen.contains(restCategory.name.toLowerCase()) || chosen.size() == 0)
                                 if (restCategory.restaurants != null && restCategory.restaurants.size() != 0) {
                                     restaurantIds.addAll(restCategory.restaurants.keySet());
-                                    Log.d("MADDAP: ", "In categoria -- " + restCategory.name + "-- " + restaurantIds.toString());
+                                    //Log.d("MADDAP: ", "In categoria -- " + restCategory.name + "-- " + restaurantIds.toString());
                                 }
                         }
                     }
@@ -343,7 +343,7 @@ public class ConsumerDatabase {
                 }
             } else {
                 // ask for restaurants
-                Log.d("MADDAPP:", "--" + list.toString());
+                //Log.d("MADDAPP:", "--" + list.toString());
                 HashMap< PreviewInfo,Double> map = new HashMap<PreviewInfo, Double>();
                 myRef.child("users").child("restaurants").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -354,7 +354,6 @@ public class ConsumerDatabase {
                                     Restaurant restaurant = issue.getValue(Restaurant.class);
                                     if (restaurant != null) {
                                         if (restaurant.visible != null && restaurant.visible) {
-                                            Haversine h = new Haversine();
                                             if ((m && restaurant.previewInfo.minOrderCost != 0) || (d && restaurant.previewInfo.deliveryCost != 0)) {
 
                                             } else if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {

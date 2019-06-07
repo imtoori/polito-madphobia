@@ -132,7 +132,7 @@ public class RestaurantsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery, latitude, longitude, preview -> {
-            if (preview != null) {
+            if (preview != null&&!preview.isEmpty()) {
                 if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
                     TreeMap<Double,PreviewInfo> treeMap = new TreeMap<>();
                     preview.forEach((p, v) -> {
