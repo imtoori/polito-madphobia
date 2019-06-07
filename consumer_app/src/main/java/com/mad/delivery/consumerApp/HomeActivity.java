@@ -198,33 +198,10 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     public void openOrder(Order o) {
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
         intent.putExtra("order", o);
+        Log.d("MADAPP", "order = " + o.toString());
+        intent.putExtra("orderID", o.id);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-    @Override
-    public void openFeedbackDialog(Order o) {
-        feedbackFragment = FeedBackFragment.newInstance(o);
-        feedbackFragment.show(getSupportFragmentManager(), "feedbackFragment");
-    }
-
-    @Override
-    public void loadOrders(String id) {
-        ConsumerDatabase.getInstance().getAllCostumerOrders(id, o -> {
-
-            if(o == null) {
-                walletFragment.noOrder.setVisibility(View.VISIBLE);
-                walletFragment.recyclerView.setVisibility(View.INVISIBLE);
-            } else {
-                //walletFragment.orders.clear();
-                //walletFragment.ordersAdapter.notifyDataSetChanged();
-                walletFragment.orders.add(o);
-                walletFragment.ordersAdapter.notifyDataSetChanged();
-                walletFragment.noOrder.setVisibility(View.INVISIBLE);
-                walletFragment.recyclerView.setVisibility(View.VISIBLE);
-            }
-            walletFragment.pgBar.setVisibility(View.INVISIBLE);
-        });
     }
 
     @Override

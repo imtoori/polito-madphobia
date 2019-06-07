@@ -205,7 +205,8 @@ public class ConsumerDatabase {
                                                     item.forEach(i -> {
                                                         myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
                                                     });
-                                                    myRef.child("orders").push().setValue(o);
+                                                    o.id = myRef.child("orders").push().getKey();
+                                                    myRef.child("orders").child(o.id).setValue(o);
                                                     myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").setValue(d - o.totalPrice);
                                                 }
 
@@ -633,7 +634,8 @@ public class ConsumerDatabase {
         return completed;
     }
 
-    public void getAllCostumerOrders(String clientID, OnFirebaseData<Order> cb) {
+    public void getAllCostumerOrders(String clientID, OnFirebaseData<List<Order>> cb) {
+        List<Order> orders = new ArrayList<>();
         myRef.child("orders").orderByChild("clientId").equalTo(clientID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -641,17 +643,17 @@ public class ConsumerDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        o.id = issue.getKey();
-                        cb.onReceived(o);
+                        if(o != null)
+                            orders.add(o);
                     }
-                } else {
-                    cb.onReceived(null);
                 }
+                cb.onReceived(orders);
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                cb.onReceived(null);
+                cb.onReceived(new ArrayList<>());
             }
         });
 

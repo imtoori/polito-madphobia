@@ -285,4 +285,7 @@
     <string name="total_reviews">Total:</string>
     <string name="monthly_reviews">Last Month:</string>
     <string name="weekly_reviews">Last Week:</string>
+
+    <string name="leave_feedback">Please rate your order. It costs one minute and could be very helpful for you and for other customers!</string>
+    <string name="leave_feedback_button">Rate now!</string>
 </resources>

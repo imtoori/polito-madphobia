@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,8 +14,12 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mad.delivery.consumerApp.search.RestaurantsFragment;
+import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.MyDateFormat;
 import com.mad.delivery.resources.Order;
+import com.mad.delivery.resources.OrderStatus;
+import com.mad.delivery.resources.PreviewInfo;
 
 import org.joda.time.DateTime;
 
@@ -21,9 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class OrderInfoActivity extends AppCompatActivity {
+public class OrderInfoActivity extends AppCompatActivity  {
     Order order;
-    TextView order_code;
     TextView subtot;
     TextView del_fee;
     TextView tot;
@@ -34,20 +39,19 @@ public class OrderInfoActivity extends AppCompatActivity {
     TextView biker_note;
     TextView client_note;
     Toolbar toolbar;
-    CardView cv_biker_note, cv_rest_note, cv_client_note;
+    CardView cv_biker_note, cv_rest_note, cv_client_note, cvFeedback;
+    FeedBackFragment feedbackFragment;
+    Button btnFeedback;
     SummaryOrdersAdapter summaryordersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        order = getIntent().getParcelableExtra("order");
-
         setContentView(R.layout.activity_order_info);
         setTitle(getResources().getString(R.string.order_info_toolbar));
         toolbar = findViewById(R.id.Toolbar);
         setSupportActionBar(toolbar);
-        order_code = findViewById(R.id.order_code);
         subtot = findViewById(R.id.subtotal_price);
         del_fee = findViewById(R.id.delivery_fee);
         tot = findViewById(R.id.total);
@@ -60,55 +64,62 @@ public class OrderInfoActivity extends AppCompatActivity {
         cv_biker_note = findViewById(R.id.cv_biker_note);
         cv_rest_note = findViewById(R.id.cv_restaurant_note);
         cv_client_note = findViewById(R.id.cv_client_note);
+        cvFeedback = findViewById(R.id.cv_feedback);
+        btnFeedback = findViewById(R.id.btn_feedback);
         RecyclerView recyclerView = findViewById(R.id.rv_orders);
         summaryordersAdapter = new SummaryOrdersAdapter(new ArrayList<>());
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryordersAdapter);
-
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        if (extras != null) {
-            String orderId = extras.getString("extra");
-            if (orderId != null) {
-                ConsumerDatabase.getInstance().getOrderById(orderId, item -> {
-                    order = item;
-                    loadOrder(item);
+        String orderId = extras.getString("orderID");
+        Log.d("MADAPP", "order = " + orderId);
+        if (orderId != null) {
+            ConsumerDatabase.getInstance().getOrderById(orderId, item -> {
+                order = item;
+                loadOrder(item);
+                btnFeedback.setOnClickListener(v -> {
+                    openFeedbackDialog(order);
+
                 });
-                return;
-            }
+            });
         }
 
-        loadOrder(order);
     }
 
     private void loadOrder(Order order) {
-        order_code.setText(order.id);
-        Double sub = order.totalPrice - order.restaurant.previewInfo.deliveryCost;
-        subtot.setText(sub.toString());
-        del_fee.setText(order.restaurant.previewInfo.deliveryCost.toString());
-        tot.setText(order.totalPrice.toString());
+        double sub = order.totalPrice - order.restaurant.previewInfo.deliveryCost;
+        subtot.setText("€ " + sub);
+        del_fee.setText("€ " + order.restaurant.previewInfo.deliveryCost.toString());
+        tot.setText("€ " + order.totalPrice.toString());
         address.setText(order.delivery);
         pay_meth.setText(order.paymentMethod);
         data.setText(MyDateFormat.parse(new DateTime(order.orderFor)));
 
-        if (order.serverNotes != "" && order.serverNotes != null) {
+        if (order.serverNotes != null && !order.serverNotes.equals("")) {
             rest_note.setText(order.serverNotes);
             cv_rest_note.setVisibility(View.VISIBLE);
         } else
             cv_rest_note.setVisibility(View.GONE);
 
-        if (order.bikerNotes != "" && order.bikerNotes != null) {
+        if (order.bikerNotes != null && !order.bikerNotes.equals("")) {
             biker_note.setText(order.bikerNotes);
             cv_biker_note.setVisibility(View.VISIBLE);
         } else
             cv_biker_note.setVisibility(View.GONE);
 
-        if (order.clientNotes != "" && order.clientNotes != null) {
+        if (order.clientNotes != null && !order.clientNotes.equals("")) {
             client_note.setText(order.clientNotes);
             cv_client_note.setVisibility(View.VISIBLE);
         } else
             cv_client_note.setVisibility(View.GONE);
+
+        if (order.status.equals(OrderStatus.delivered) && order.feedbackIsPossible) {
+            cvFeedback.setVisibility(View.VISIBLE);
+        } else {
+            cvFeedback.setVisibility(View.GONE);
+        }
 
         summaryordersAdapter.products = order.products;
         summaryordersAdapter.notifyDataSetChanged();
@@ -135,6 +146,12 @@ public class OrderInfoActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    public void openFeedbackDialog(Order o) {
+        feedbackFragment = FeedBackFragment.newInstance(o);
+        feedbackFragment.show(getSupportFragmentManager(), "feedbackFragment");
+    }
+
 
 
 }

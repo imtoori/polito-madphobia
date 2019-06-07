@@ -49,7 +49,6 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class FeedBackFragment extends DialogFragment {
-    private WalletFragment.OnOrderSelected mListener;
     private Order order;
     private ImageView btn_close;
     private Button saveFeedback;
@@ -70,12 +69,7 @@ public class FeedBackFragment extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
-        if (context instanceof WalletFragment.OnOrderSelected) {
-            mListener = (WalletFragment.OnOrderSelected) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement onRestaurantSelected");
-        }
+
     }
 
     @Override
@@ -125,7 +119,6 @@ public class FeedBackFragment extends DialogFragment {
             ConsumerDatabase.getInstance().saveFeedback(order, feedback, value -> {
                 if(value) {
                     Toast.makeText(context, "Your feedback has been saved!", Toast.LENGTH_SHORT).show();
-                    mListener.loadOrders(feedback.clientID);
 
                 } else {
                     Toast.makeText(context, "An error occurred while saving your feedback.", Toast.LENGTH_SHORT).show();

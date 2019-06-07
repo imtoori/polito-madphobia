@@ -43,14 +43,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             holder.price.setText(holder.order.totalPrice.toString()+"€");
             holder.data.setText(MyDateFormat.parse(new DateTime(holder.order.orderFor)));
             holder.status.setText(holder.order.status.toString());
-            if(holder.order.status.equals(OrderStatus.delivered) && holder.order.feedbackIsPossible) {
-                holder.imgFeedback.setVisibility(View.VISIBLE);
-                holder.imgFeedback.setOnClickListener( v -> {
-                    mListener.openFeedbackDialog(holder.order);
-                });
-            } else {
-                holder.imgFeedback.setVisibility(View.GONE);
-            }
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -76,7 +68,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             public final TextView data;
             public final TextView status;
             public final ImageView imgRestaurant;
-            public final ImageView imgFeedback;
 
             public Order order;
 
@@ -88,8 +79,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
                 data = mView.findViewById(R.id.data);
                 status=mView.findViewById(R.id.status);
                 imgRestaurant = mView.findViewById(R.id.imgRestaurant);
-                imgFeedback = mView.findViewById(R.id.image_feedback);
-
 
             }
 

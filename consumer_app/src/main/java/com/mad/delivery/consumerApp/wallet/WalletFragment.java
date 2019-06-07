@@ -39,19 +39,19 @@ import androidx.recyclerview.widget.RecyclerView;
  * A simple {@link Fragment} subclass.
  */
 public class WalletFragment extends Fragment {
-    public WalletFragment.OnOrderSelected mListener;
+    private WalletFragment.OnOrderSelected mListener;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private CardView cvNoLogin, cvCredit;
     private Button btnLogin, btnUse;
-    public OrdersAdapter ordersAdapter;
-    public List<Order> orders;
-    public RecyclerView recyclerView;
-    TextView totalCredit, textView, o_tv;
-    EditText Creditcode;
-    View separator;
-    public ProgressBar pgBar;
-    public TextView noOrder;
+    private OrdersAdapter ordersAdapter;
+    private List<Order> orders;
+    private RecyclerView recyclerView;
+    private TextView totalCredit, orderTitleTv;
+    private EditText creditCode;
+    private View separator;
+    private ProgressBar pgBar;
+    private TextView noOrder;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -64,7 +64,7 @@ public class WalletFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Log.d("MADAPP", "WalletFragment onAttach");
         if (context instanceof WalletFragment.OnOrderSelected) {
@@ -84,15 +84,77 @@ public class WalletFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_wallet, container, false);
+        setHasOptionsMenu(true);
+        noOrder = v.findViewById(R.id.tv_no_orders);
+        currentUser = mAuth.getCurrentUser();
+        pgBar = v.findViewById(R.id.pg_bar);
+        recyclerView = v.findViewById(R.id.orders_rv);
+        orders = new ArrayList<>();
+        ordersAdapter = new OrdersAdapter(orders, mListener);
+        recyclerView.hasFixedSize();
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(ordersAdapter);
+
+        cvNoLogin = v.findViewById(R.id.no_login_cv);
+        orderTitleTv = v.findViewById(R.id.textView4);
+        separator=v.findViewById(R.id.separator);
+        cvCredit = v.findViewById(R.id.cv_credit);
+        totalCredit = v.findViewById(R.id.total_credit);
+        btnLogin = v.findViewById(R.id.btn_login);
+        creditCode = v.findViewById(R.id.credit_code);
+        cvNoLogin = v.findViewById(R.id.no_login_cv);
+        btnUse = v.findViewById(R.id.done_code);
+        return v;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d("MADAPP", "WalletFragment onViewCreated");
+        if (currentUser == null) {
+            cvNoLogin.setVisibility(View.VISIBLE);
+        } else {
+            ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
+                @Override
+                public void onSuccess(User user) {
+                    cvCredit.setVisibility(View.VISIBLE);
+                    orderTitleTv.setVisibility(View.VISIBLE);
+                    separator.setVisibility(View.VISIBLE);
+                    checkCredit();
+                    ConsumerDatabase.getInstance().getAllCostumerOrders(user.id, ords -> {
+                        if(ords == null || ords.size() == 0) {
+                            noOrder.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.INVISIBLE);
+                        } else {
+                            orders.clear();
+                            ordersAdapter.notifyDataSetChanged();
+                            orders.addAll(ords);
+                            ordersAdapter.notifyDataSetChanged();
+                            noOrder.setVisibility(View.INVISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }
+                        pgBar.setVisibility(View.GONE);
+                    });
+                }
+
+                @Override
+                public void onFailure() {
+
+                    cvNoLogin.setVisibility(View.VISIBLE);
+                    pgBar.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+
         btnUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ConsumerDatabase.getInstance().checkCoupon(Creditcode.getText().toString(), item -> {
+                ConsumerDatabase.getInstance().checkCoupon(creditCode.getText().toString(), item -> {
                     if(item == null) {
-                        Creditcode.setError("Your coupon is not valid.");
+                        creditCode.setError("Your coupon is not valid.");
                         return;
                     }
 
@@ -119,36 +181,6 @@ public class WalletFragment extends Fragment {
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d("MADAPP", "WalletFragment onStart");
-        if (currentUser == null) {
-            cvNoLogin.setVisibility(View.VISIBLE);
-        } else {
-            ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
-                @Override
-                public void onSuccess(User user) {
-                    cvCredit.setVisibility(View.VISIBLE);
-                    textView.setVisibility(View.VISIBLE);
-                    o_tv.setVisibility(View.VISIBLE);
-                    separator.setVisibility(View.VISIBLE);
-                    orders = new ArrayList<>();
-                    ordersAdapter = new OrdersAdapter(orders, mListener);
-                    recyclerView.setAdapter(ordersAdapter);
-                    checkCredit();
-                    mListener.loadOrders(user.id);
-                }
-
-                @Override
-                public void onFailure() {
-
-                    cvNoLogin.setVisibility(View.VISIBLE);
-                    pgBar.setVisibility(View.INVISIBLE);
-                }
-            });
-        }
-    }
 
     @Override
     public void onResume() {
@@ -156,37 +188,8 @@ public class WalletFragment extends Fragment {
         Log.d("MADAPP", "WalletFragment onResume");
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_wallet, container, false);
-        Log.d("MADAPP", "WalletFragment onCreateView");
-        setHasOptionsMenu(true);
-        noOrder = v.findViewById(R.id.tv_no_orders);
-        currentUser = mAuth.getCurrentUser();
-        pgBar = v.findViewById(R.id.pg_bar);
-        recyclerView = v.findViewById(R.id.orders_rv);
-        recyclerView.hasFixedSize();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        cvNoLogin = v.findViewById(R.id.no_login_cv);
-        o_tv= v.findViewById(R.id.textView4);
-        separator=v.findViewById(R.id.separator);
-
-        textView = v.findViewById(R.id.textView4);
-        cvCredit = v.findViewById(R.id.cv_credit);
-        totalCredit = v.findViewById(R.id.total_credit);
-        btnLogin = v.findViewById(R.id.btn_login);
-        Creditcode = v.findViewById(R.id.credit_code);
-        cvNoLogin = v.findViewById(R.id.no_login_cv);
-        btnUse = v.findViewById(R.id.done_code);
-        return v;
-    }
-
     public interface OnOrderSelected {
         void openOrder(Order o);
-        void openFeedbackDialog(Order o);
-        void loadOrders(String id);
     }
 
     public void checkCredit() {
