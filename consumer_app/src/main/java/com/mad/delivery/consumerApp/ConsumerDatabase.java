@@ -318,7 +318,7 @@ public class ConsumerDatabase {
 
                                 if (restCategory.restaurants != null && restCategory.restaurants.size() != 0) {
                                     restaurantIds.addAll(restCategory.restaurants.keySet());
-                                    Log.d("MADDAP: ", "In categoria -- " + restCategory.name + "-- " + restaurantIds.toString());
+                                    //Log.d("MADDAP: ", "In categoria -- " + restCategory.name + "-- " + restaurantIds.toString());
                                 }
                             }
                         }
@@ -344,8 +344,6 @@ public class ConsumerDatabase {
                 firebaseCallback.onReceived(map);
             } else {
                 // ask for restaurants
-                Log.d("MADAPP", "received ids=" + list.toString());
-
                 myRef.child("users").child("restaurants").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -362,12 +360,13 @@ public class ConsumerDatabase {
                                             if ((d && restaurant.previewInfo.deliveryCost != 0)) {
                                                 continue;
                                             }
-                                            if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
+
+                                            } else if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
                                                 map.put(restaurant.previewInfo, Haversine.distance(latitude, longitude, restaurant.latitude, restaurant.longitude));
                                             } else {
                                                 map.put(restaurant.previewInfo, 0.0);
                                             }
-                                        }
+
                                     }
                                 }
                             }
