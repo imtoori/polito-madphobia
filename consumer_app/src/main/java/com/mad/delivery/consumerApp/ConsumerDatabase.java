@@ -521,7 +521,7 @@ public class ConsumerDatabase {
     }
 
     public void getMenuItems(Order o, FirebaseCallback<List<MenuItemRest>> firebaseCallback) {
-        myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<MenuItemRest> MenuItems = new ArrayList<>();

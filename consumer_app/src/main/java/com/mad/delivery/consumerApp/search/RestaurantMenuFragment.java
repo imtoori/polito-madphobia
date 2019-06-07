@@ -34,6 +34,7 @@ public class RestaurantMenuFragment extends Fragment {
     private Restaurant restaurant;
     private List<MenuCategory> categories;
     private TextView minOrder, deliveryCost;
+
     public RestaurantMenuFragment() {
         // Required empty public constructor
     }
@@ -42,20 +43,22 @@ public class RestaurantMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_restaurant_menu, container, false);
+        View view = inflater.inflate(R.layout.fragment_restaurant_menu, container, false);
         minOrder = view.findViewById(R.id.rest_menu_minorder_cost);
         deliveryCost = view.findViewById(R.id.rest_menu_delivery_cost);
 
         restaurant = (Restaurant) getArguments().get("restaurant");
         categories = new ArrayList<>();
         Map<String, List<MenuItemRest>> menus = new HashMap<>();
-        if(restaurant.menu != null) {
+        if (restaurant.menu != null) {
             restaurant.menu.values().stream().forEach(item -> {
-                menus.putIfAbsent(item.category, new ArrayList<>());
-                List<MenuItemRest> menuList = menus.get(item.category);
-                menuList.add(item);
-                MenuCategory mc = new MenuCategory(item.category, menuList);
-                categories.add(mc);
+                if (item.availability > 0) {
+                    menus.putIfAbsent(item.category, new ArrayList<>());
+                    List<MenuItemRest> menuList = menus.get(item.category);
+                    menuList.add(item);
+                    MenuCategory mc = new MenuCategory(item.category, menuList);
+                    categories.add(mc);
+                }
             });
         }
 
@@ -63,7 +66,7 @@ public class RestaurantMenuFragment extends Fragment {
         deliveryCost.setText(getResources().getString(R.string.delivery_cost, String.valueOf(restaurant.previewInfo.deliveryCost)));
         mAdapter = new MenuCategoriesAdapter(categories, (MenuItemAdapter.OnItemSelected) getActivity());
 
-        recyclerView =  view.findViewById(R.id.restaurant_menu_rv);
+        recyclerView = view.findViewById(R.id.restaurant_menu_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mAdapter);
 
