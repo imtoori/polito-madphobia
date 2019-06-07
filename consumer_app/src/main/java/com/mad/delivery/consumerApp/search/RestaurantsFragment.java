@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,7 +50,7 @@ public class RestaurantsFragment extends Fragment {
     private RestaurantsFragment.OnRestaurantSelected mListener;
     private List<PreviewInfo> previews;
     private CardView emptyFolder;
-    private boolean freeDelivery = false, minOrderCost = false, reviewFlag=false;
+    private boolean freeDelivery = false, minOrderCost = false, reviewFlag = false;
     private Set<String> chosenCategories;
     private String address = "";
     private ProgressBar pgBar;
@@ -58,7 +59,7 @@ public class RestaurantsFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
-  public RestaurantsFragment() {
+    public RestaurantsFragment() {
         // Required empty public constructor
     }
 
@@ -73,6 +74,7 @@ public class RestaurantsFragment extends Fragment {
         }
 
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -96,11 +98,11 @@ public class RestaurantsFragment extends Fragment {
         emptyFolder = view.findViewById(R.id.emptyfolder_cv);
         pgBar = view.findViewById(R.id.pg_bar);
         previews = new ArrayList<>();
-        previews.sort(( z1, z2) -> (Double.compare(z1.scoreValue,z2.scoreValue)));
+        previews.sort((z1, z2) -> (Double.compare(z1.scoreValue, z2.scoreValue)));
 
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        restaurantAdapter = new RestaurantsAdapter(previews,  mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
+        restaurantAdapter = new RestaurantsAdapter(previews, mListener, getResources().getDrawable(R.drawable.restaurant_default, null));
 
         recyclerView.setAdapter(restaurantAdapter);
         chosenCategories = new HashSet<>();
@@ -111,14 +113,14 @@ public class RestaurantsFragment extends Fragment {
         try {
             categories = getArguments().getStringArrayList("categories");
             chosenCategories.addAll(categories);
-            Log.i("MADAPP", "restaurantffragment->"+chosenCategories);
+            Log.i("MADAPP", "restaurantffragment->" + chosenCategories);
             address = getArguments().getString("address");
             freeDelivery = getArguments().getBoolean("freeDelivery");
-            reviewFlag=getArguments().getBoolean("orderByReviews");
+            reviewFlag = getArguments().getBoolean("orderByReviews");
             minOrderCost = getArguments().getBoolean("minOrderCost");
 
 
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             // do nothing
             Log.i("MADAPP", "restaurantffragment->no argument");
         }
@@ -129,13 +131,41 @@ public class RestaurantsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery,latitude,longitude, preview -> {
-            if(preview != null) {
-                previews.add(preview);
-                restaurantAdapter.notifyDataSetChanged();
-                emptyFolder.setVisibility(View.GONE);
-                if(reviewFlag)
-                    previews.sort(( z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
+        ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery, latitude, longitude, preview -> {
+            if (preview != null) {
+                if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
+                    TreeMap<Double,PreviewInfo> treeMap = new TreeMap<>();
+                    preview.forEach((p, v) -> {
+                        if (p != null) {
+                            treeMap.put(v,p);
+                        }
+                    });
+                    treeMap.forEach((p,v)-> {
+                        if (p != null) {
+                            Log.d("MADDAPP: ", v.name + " distance: " + p.toString());
+                            previews.add(v);
+                            restaurantAdapter.notifyDataSetChanged();
+                            emptyFolder.setVisibility(View.GONE);
+                            if (reviewFlag)
+                                previews.sort((z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
+
+                        }
+                    });
+                }
+                else {
+                    preview.forEach((p, v) -> {
+                        if (p != null) {
+                            Log.d("MADDAPP: ", p.name + " distance: " + v.toString());
+                            previews.add(p);
+                            restaurantAdapter.notifyDataSetChanged();
+                            emptyFolder.setVisibility(View.GONE);
+                            if (reviewFlag)
+                                previews.sort((z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
+
+                        }
+                    });
+                }
+
             } else {
                 emptyFolder.setVisibility(View.VISIBLE);
             }
@@ -163,7 +193,9 @@ public class RestaurantsFragment extends Fragment {
 
     public interface OnRestaurantSelected {
         void openRestaurant(PreviewInfo previewInfo);
+
         void isFavourited(PreviewInfo previewInfo, ToggleButton toggleButton);
+
         void changeFavourite(PreviewInfo previewInfo, boolean added);
     }
 
