@@ -42,7 +42,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class ConsumerDatabase {
     public static ConsumerDatabase instance = new ConsumerDatabase();
@@ -309,8 +312,10 @@ public class ConsumerDatabase {
                         RestaurantCategory restCategory = issue.getValue(RestaurantCategory.class);
                         if (restCategory != null) {
                             if (chosen.contains(restCategory.name.toLowerCase()) || chosen.size() == 0)
-                                if (restCategory.restaurants != null && restCategory.restaurants.size() != 0)
+                                if (restCategory.restaurants != null && restCategory.restaurants.size() != 0) {
                                     restaurantIds.addAll(restCategory.restaurants.keySet());
+                                    Log.d("MADDAP: ", "In categoria -- " + restCategory.name + "-- " + restaurantIds.toString());
+                                }
                         }
                     }
                 }
@@ -326,45 +331,80 @@ public class ConsumerDatabase {
     }
 
 
-    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d, Double latitude, Double longitude, final onPreviewRestaurantsReceived firebaseCallback) {
+    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d, Double latitude, Double longitude, final FirebaseCallback<HashMap<PreviewInfo,Double>> firebaseCallback) {
         getRestaurantsIds(chosen, list -> {
             if (list.isEmpty()) {
                 // show empty icon
-                firebaseCallback.onCallback(null);
+                try {
+                    firebaseCallback.onCallBack(null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
                 // ask for restaurants
-                for (String restName : list) {
-                    myRef.child("users").child("restaurants").child(restName).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                if (restaurant != null) {
-                                    if (restaurant.visible != null && restaurant.visible) {
-                                        Haversine h = new Haversine();
-                                        if (m && restaurant.previewInfo.minOrderCost != 0) {
-                                            return;
+                Log.d("MADDAPP:", "--" + list.toString());
+                HashMap< PreviewInfo,Double> map = new HashMap<PreviewInfo, Double>();
+                myRef.child("users").child("restaurants").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                                if (list.contains(issue.getKey())) {
+                                    Restaurant restaurant = issue.getValue(Restaurant.class);
+                                    if (restaurant != null) {
+                                        if (restaurant.visible != null && restaurant.visible) {
+                                            Haversine h = new Haversine();
+                                            if ((m && restaurant.previewInfo.minOrderCost != 0) || (d && restaurant.previewInfo.deliveryCost != 0)) {
+
+                                            } else if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
+                                                map.put(restaurant.previewInfo, Haversine.distance(latitude, longitude, restaurant.latitude, restaurant.longitude));
+                                            } else {
+                                                map.put(restaurant.previewInfo,0.0);
+                                            }
                                         }
-                                        if (d && restaurant.previewInfo.deliveryCost != 0) {
-                                            return;
-                                        }
-                                        if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0 && h.distance(latitude, longitude, restaurant.latitude, restaurant.longitude) > DISTANCE_CUSTOMER_RESTOURANT)
-                                            return;
-                                        firebaseCallback.onCallback(restaurant.previewInfo);
                                     }
+
                                 }
-                            } else {
-                                Log.d("MADAPP", "no restaurants found");
-                                firebaseCallback.onCallback(null);
+
+                            }
+                            if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
+
+
+                                try {
+                                    firebaseCallback.onCallBack(map);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else {
+                                try {
+                                    firebaseCallback.onCallBack(map);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else {
+                            Log.d("MADAPP", "no restaurants found");
+                            try {
+                                firebaseCallback.onCallBack(null);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            firebaseCallback.onCallback(null);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        try {
+                            firebaseCallback.onCallBack(null);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    });
-                }
+                    }
+                });
+
+
             }
         });
     }
@@ -965,7 +1005,7 @@ public class ConsumerDatabase {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                    if(restaurant != null && restaurant.visible) {
+                    if (restaurant != null && restaurant.visible) {
                         if (restaurant != null) {
                             cb.onReceived(restaurant.previewInfo);
                         } else {
@@ -992,7 +1032,7 @@ public class ConsumerDatabase {
             Log.d("MADAPP", "IDs" + ids.toString());
             for (String id : ids) {
                 getRestaurant(id, preview -> {
-                        cb.onReceived(preview);
+                    cb.onReceived(preview);
                 });
             }
 

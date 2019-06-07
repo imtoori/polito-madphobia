@@ -269,7 +269,10 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
         bundle.putBoolean("orderByReviews", reviewFlag);
-
+        if(deliveryAddress.getText().toString().length()==0){
+            longitude=null;
+            latitude=null;
+        }
         if(latitude!=null)
         bundle.putDouble("latitude",latitude);
         if(longitude!=null)
