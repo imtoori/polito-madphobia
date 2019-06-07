@@ -116,7 +116,8 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.order_detail_menu, menu);
+        if(!(order.status.equals(OrderStatus.delivered) || order.status.equals(OrderStatus.completed) || order.status.equals(OrderStatus.canceled)))
+            getMenuInflater().inflate(R.menu.order_detail_menu, menu);
         return true;
 
     }

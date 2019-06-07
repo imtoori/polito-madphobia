@@ -3,6 +3,8 @@ package com.mad.delivery.resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 public class PreviewInfo implements Parcelable {
     public String id;
     public String name;
@@ -12,6 +14,8 @@ public class PreviewInfo implements Parcelable {
     public Double deliveryCost;
     public Double minOrderCost;
     public Integer scoreCount;
+    @Exclude
+    public Double distance;
 
     public PreviewInfo() {}
 

@@ -99,5 +99,17 @@
             app:layout_constraintStart_toStartOf="@+id/nameRestaurant"
             app:layout_constraintTop_toBottomOf="@+id/nameRestaurant" />
 
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="5.0 km"
+            android:textColor="@color/colorWhite"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@+id/rateRestaurant"
+            app:layout_constraintStart_toStartOf="@+id/rateRestaurant"
+            app:layout_constraintTop_toBottomOf="@+id/rateRestaurant" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

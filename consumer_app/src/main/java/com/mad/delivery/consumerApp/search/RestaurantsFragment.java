@@ -132,23 +132,22 @@ public class RestaurantsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery, latitude, longitude, preview -> {
-            if (preview != null) {
+            if (preview != null && preview.size() != 0) {
+                emptyFolder.setVisibility(View.GONE);
                 if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
                     TreeMap<Double,PreviewInfo> treeMap = new TreeMap<>();
                     preview.forEach((p, v) -> {
                         if (p != null) {
+                            p.distance = v;
                             treeMap.put(v,p);
                         }
                     });
                     treeMap.forEach((p,v)-> {
                         if (p != null) {
-                            Log.d("MADDAPP: ", v.name + " distance: " + p.toString());
                             previews.add(v);
                             restaurantAdapter.notifyDataSetChanged();
-                            emptyFolder.setVisibility(View.GONE);
                             if (reviewFlag)
                                 previews.sort((z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
-
                         }
                     });
                 }
@@ -156,12 +155,11 @@ public class RestaurantsFragment extends Fragment {
                     preview.forEach((p, v) -> {
                         if (p != null) {
                             Log.d("MADDAPP: ", p.name + " distance: " + v.toString());
+                            p.distance = v;
                             previews.add(p);
                             restaurantAdapter.notifyDataSetChanged();
-                            emptyFolder.setVisibility(View.GONE);
                             if (reviewFlag)
                                 previews.sort((z1, z2) -> (Double.compare(z2.scoreValue, z1.scoreValue)));
-
                         }
                     });
                 }
@@ -171,20 +169,6 @@ public class RestaurantsFragment extends Fragment {
             }
             pgBar.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
-
-            // check if user is logged
-            currentUser = mAuth.getCurrentUser();
-            if (currentUser != null) {
-                ConsumerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<User>() {
-                    @Override
-                    public void onSuccess(User u) {
-                    }
-
-                    @Override
-                    public void onFailure() {
-                    }
-                });
-            }
         });
 
 

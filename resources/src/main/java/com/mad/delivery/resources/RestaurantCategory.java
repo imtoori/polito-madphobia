@@ -12,6 +12,8 @@ public class RestaurantCategory {
     public int count;
     @Exclude
     public Drawable imageDrawable;
+    @Exclude
+    public boolean selected = false;
     public Map<String, Boolean> restaurants;
 
     public  RestaurantCategory() {

@@ -50,7 +50,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         holder.nameRestaurant.setText(holder.restaurant.name);
         holder.descRestaurant.setText(holder.restaurant.description);
         holder.rbRestaurant.setRating(holder.restaurant.scoreValue.floatValue());
-        if(holder.restaurant.imageName != null) {
+        if (holder.restaurant.imageName != null) {
             ConsumerDatabase.getInstance().downloadImage(holder.restaurant.id, "profile", holder.restaurant.imageName, new OnImageDownloaded() {
                 @Override
                 public void onReceived(Uri imageUri) {
@@ -80,11 +80,17 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         });
         mListener.isFavourited(holder.restaurant, holder.favorite);
 
-            holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mListener.changeFavourite(holder.restaurant, isChecked);
-                }
-            });
+        holder.favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mListener.changeFavourite(holder.restaurant, isChecked);
+            }
+        });
+        if(holder.restaurant.distance != null) {
+            holder.tvDistance.setText(Math.round(holder.restaurant.distance) + " km");
+        } else {
+            holder.tvDistance.setVisibility(View.GONE);
+        }
+
 
     }
 
@@ -99,6 +105,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
         public final TextView descRestaurant;
         public final ImageView imgRestaurant;
         public final RatingBar rbRestaurant;
+        public final TextView tvDistance;
         public PreviewInfo restaurant;
         ToggleButton favorite;
 
@@ -110,7 +117,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             imgRestaurant = mView.findViewById(R.id.imgRestaurant);
             rbRestaurant = mView.findViewById(R.id.rateRestaurant);
             favorite = (ToggleButton) mView.findViewById(R.id.button_favorite);
-
+            tvDistance = mView.findViewById(R.id.tv_distance);
 
         }
 

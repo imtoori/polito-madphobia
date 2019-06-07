@@ -304,7 +304,6 @@ public class ConsumerDatabase {
     public Set<String> getRestaurantsIds(final Set<String> chosen, final onRestaurantsIdReceived firebaseCallback) {
         final Set<String> restaurantIds = new HashSet<>();
         // if chosen.size = 0, search for all restaurants
-        Log.d("MADAPP", "in database --> " + chosen.toString());
         myRef.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -312,11 +311,16 @@ public class ConsumerDatabase {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         RestaurantCategory restCategory = issue.getValue(RestaurantCategory.class);
                         if (restCategory != null) {
-                            if (chosen.contains(restCategory.name.toLowerCase()) || chosen.size() == 0)
+                            if (chosen.contains(restCategory.name.toLowerCase()) || chosen.size() == 0) {
+                                if (restCategory.restaurants != null)
+                                    Log.d("MADAPP", "Trying to filter: chosen=" + chosen.toString() + ", item=" + restCategory.name.toLowerCase()
+                                            + ", itemsize=" + restCategory.restaurants.size());
+
                                 if (restCategory.restaurants != null && restCategory.restaurants.size() != 0) {
                                     restaurantIds.addAll(restCategory.restaurants.keySet());
                                     Log.d("MADDAP: ", "In categoria -- " + restCategory.name + "-- " + restaurantIds.toString());
                                 }
+                            }
                         }
                     }
                 }
@@ -332,19 +336,16 @@ public class ConsumerDatabase {
     }
 
 
-    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d, Double latitude, Double longitude, final FirebaseCallback<HashMap<PreviewInfo,Double>> firebaseCallback) {
+    public void getRestaurants(Set<String> chosen, String address, boolean m, boolean d, Double latitude, Double longitude, final OnFirebaseData<HashMap<PreviewInfo, Double>> firebaseCallback) {
+        HashMap<PreviewInfo, Double> map = new HashMap<>();
         getRestaurantsIds(chosen, list -> {
             if (list.isEmpty()) {
-                // show empty icon
-                try {
-                    firebaseCallback.onCallBack(null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                firebaseCallback.onReceived(map);
             } else {
                 // ask for restaurants
-                Log.d("MADDAPP:", "--" + list.toString());
-                HashMap< PreviewInfo,Double> map = new HashMap<PreviewInfo, Double>();
+                Log.d("MADAPP", "received ids=" + list.toString());
+
                 myRef.child("users").child("restaurants").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -353,59 +354,58 @@ public class ConsumerDatabase {
                                 if (list.contains(issue.getKey())) {
                                     Restaurant restaurant = issue.getValue(Restaurant.class);
                                     if (restaurant != null) {
+                                        Log.d("MADAPP", "restuanrat freed=" + restaurant.previewInfo.deliveryCost);
                                         if (restaurant.visible != null && restaurant.visible) {
-                                            Haversine h = new Haversine();
-                                            if ((m && restaurant.previewInfo.minOrderCost != 0) || (d && restaurant.previewInfo.deliveryCost != 0)) {
-
-                                            } else if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
+                                            if ((m && restaurant.previewInfo.minOrderCost != 0)) {
+                                                continue;
+                                            }
+                                            if ((d && restaurant.previewInfo.deliveryCost != 0)) {
+                                                continue;
+                                            }
+                                            if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
                                                 map.put(restaurant.previewInfo, Haversine.distance(latitude, longitude, restaurant.latitude, restaurant.longitude));
                                             } else {
-                                                map.put(restaurant.previewInfo,0.0);
+                                                map.put(restaurant.previewInfo, 0.0);
                                             }
                                         }
                                     }
-
                                 }
-
-                            }
-                            if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
-
-
-                                try {
-                                    firebaseCallback.onCallBack(map);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            else {
-                                try {
-                                    firebaseCallback.onCallBack(map);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        } else {
-                            Log.d("MADAPP", "no restaurants found");
-                            try {
-                                firebaseCallback.onCallBack(null);
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
                         }
+                        firebaseCallback.onReceived(map);
 
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        try {
-                            firebaseCallback.onCallBack(null);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        firebaseCallback.onReceived(null);
+
                     }
                 });
 
 
+            }
+        });
+    }
+
+    public void getAllRestaurantCategories(OnFirebaseData<List<RestaurantCategory>> cb) {
+        List<RestaurantCategory> list = new ArrayList<>();
+        myRef.child("categories").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        RestaurantCategory rc = issue.getValue(RestaurantCategory.class);
+                        if (rc != null)
+                            list.add(rc);
+                    }
+                }
+                cb.onReceived(list);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(new ArrayList<>());
             }
         });
     }
@@ -683,7 +683,7 @@ public class ConsumerDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
-                        if(o != null)
+                        if (o != null)
                             orders.add(o);
                     }
                 }

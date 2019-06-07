@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -54,6 +57,7 @@ public class MapBikersViewFragment extends DialogFragment {
     RecyclerView bikerRecyclerView;
     BikerAdapter bikersAdapter;
     List<DistanceBiker> bikers;
+    ProgressBar progressBar;
 
     public static MapBikersViewFragment newInstance(LatLng param) {
         MapBikersViewFragment mapFragment = new MapBikersViewFragment();
@@ -81,6 +85,7 @@ public class MapBikersViewFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.location_fragment2, container, false);
         r = getArguments().getParcelable("restaurant");
         bikerRecyclerView = rootView.findViewById(R.id.recyclerView);
+        progressBar = rootView.findViewById(R.id.pg_bar);
         bikers = new LinkedList<>();
         bikersAdapter = new BikerAdapter(bikers, (OnBikerChanged) getActivity());
         getDialog().setTitle("Select a Biker");
@@ -91,57 +96,7 @@ public class MapBikersViewFragment extends DialogFragment {
         bikerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         bikerRecyclerView.hasFixedSize();
         bikerRecyclerView.setAdapter(bikersAdapter);
-        mMapView = (MapView) rootView.findViewById(R.id.mapView2);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume(); // needed to get the map to display immediately
 
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap2) {
-                mMap = googleMap2;
-                mMap.getUiSettings().setZoomControlsEnabled(true);
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
-                    return;
-
-                }
-                mMap.setMyLocationEnabled(true);
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(r).zoom(12).build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(r).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ristorante");
-                Marker m = mMap.addMarker(markerOptions);
-                m.showInfoWindow();
-                RestaurantDatabase.getInstance().getBikersClosest(new FireBaseCallBack<TreeMap<Double,Biker>>() {
-
-                    @Override
-                    public void onCallbackList(List<TreeMap< Double,Biker>> list) {
-
-                    }
-
-                    @Override
-                    public void onCallback(TreeMap<Double,Biker> user) {
-                        user.forEach((d,b)->{
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            LatLng p = new LatLng(b.latitude,b.longitude);
-                            Log.d("BIKER :",d.toString()+" "+p.toString());
-
-                            markerOptions.position(p).title(b.email).snippet("Distanza: "+d).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                            Marker m =mMap.addMarker(markerOptions);
-                            m.showInfoWindow();
-                            bikers.add(new DistanceBiker(b,  d));
-                            bikers.sort(new SortByClosestDistance());
-                            bikersAdapter.notifyDataSetChanged();
-                        });
-                    }
-                });
-            }
-        });
         return rootView;
     }
 
@@ -169,6 +124,60 @@ public class MapBikersViewFragment extends DialogFragment {
         mMapView.onLowMemory();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mMapView = (MapView) view.findViewById(R.id.mapView2);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume(); // needed to get the map to display immediately
 
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap2) {
+                mMap = googleMap2;
+                mMap.getUiSettings().setZoomControlsEnabled(true);
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
+                    return;
 
+                }
+                mMap.setMyLocationEnabled(true);
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(r).zoom(12).build();
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(r).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ristorante");
+                Marker m = mMap.addMarker(markerOptions);
+                m.showInfoWindow();
+                RestaurantDatabase.getInstance().getBikersClosest(new FireBaseCallBack<TreeMap<Double,Biker>>() {
+                    @Override
+                    public void onCallbackList(List<TreeMap< Double,Biker>> list) {
+
+                    }
+
+                    @Override
+                    public void onCallback(TreeMap<Double,Biker> user) {
+                        user.forEach((d,b)->{
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            LatLng p = new LatLng(b.latitude,b.longitude);
+                            Log.d("BIKER :",d.toString()+" "+p.toString());
+
+                            markerOptions.position(p).title(b.email).snippet("Distanza: "+d).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                            Marker m =mMap.addMarker(markerOptions);
+                            m.showInfoWindow();
+                            bikers.add(new DistanceBiker(b,  d));
+                            bikers.sort(new SortByClosestDistance());
+                            bikersAdapter.notifyDataSetChanged();
+                        });
+                        progressBar.setVisibility(View.GONE);
+                        bikerRecyclerView.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+    }
 }

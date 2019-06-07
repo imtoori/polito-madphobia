@@ -11,6 +11,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.R;
+import com.mad.delivery.resources.RestaurantCategory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +44,7 @@ import java.util.Set;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements CategoriesFragment.OnCategorySelected {
+public class SearchFragment extends Fragment implements CategoriesFragment.OnCategorySelected, OnFilterChanged {
     private FragmentManager fm;
     private FragmentTransaction ft;
     private ImageButton search;
@@ -50,14 +53,15 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private RestaurantsFragment restaurantsFragment;
     private CardView filter;
     private Chip delivery, minorder, review;
-    private ChipGroup chipGroup;
     private String address = "";
     private EditText deliveryAddress;
     private Set<String> chosen;
-    private Map<String, Chip> chipMap;
     private boolean freeDelivery, minOrderCost, reviewFlag;
     private Double latitude;
     private Double longitude;
+    private RecyclerView chipRecyclerView;
+    private ChipFilterAdapter chipFilterAdapter;
+    private List<RestaurantCategory> chips;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -74,10 +78,15 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         delivery = view.findViewById(R.id.deliverychip);
         minorder = view.findViewById(R.id.minorderchip);
         review=view.findViewById(R.id.order_review);
-        chipGroup = view.findViewById(R.id.chip_group);
         location = view.findViewById(R.id.location_img);
         deliveryAddress = view.findViewById(R.id.delivery_address_et);
-        chipMap = new HashMap<>();
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        chipRecyclerView = view.findViewById(R.id.chip_recycler_view);
+        chipRecyclerView.hasFixedSize();
+        chipRecyclerView.setLayoutManager(horizontalLayoutManager);
+        chips = new ArrayList<>();
+        chipFilterAdapter = new ChipFilterAdapter(chips, this);
+        chipRecyclerView.setAdapter(chipFilterAdapter);
         chosen = new HashSet<>();
         freeDelivery = false;
         minOrderCost = false;
@@ -151,7 +160,6 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     geocoder = new Geocoder(getContext(), Locale.getDefault());
 
                     try {
-
                          latitude = gps.getLatitude();
                          longitude = gps.getLongitude();
 
@@ -175,42 +183,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
 
             }
         });
-        CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Chip chip = (Chip) buttonView;
 
-                if (isChecked) {
-                    chosen.add(chip.getText().toString().toLowerCase());
-                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                    chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
-                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                } else {
-                    chosen.removeIf(c -> c.equals(chip.getText().toString().toLowerCase()));
-                    chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                    chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                    chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                }
-                applyFilters(minOrderCost, freeDelivery, reviewFlag);
-            }
-        };
-        ConsumerDatabase.getInstance().getCategories(set -> {
-            set.forEach(n -> {
-                Chip chip = new Chip(view.getContext());
-                chip.setText(n);
-                chipMap.put(n, chip);
-                chip.setChipBackgroundColorResource(R.color.colorWhite);
-                chip.setChipStrokeWidth((float) 0.1);
-                chip.setChipStrokeColorResource(R.color.colorPrimary);
-                chip.setCheckable(true);
-                chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
-                chip.setRippleColorResource(R.color.colorPrimaryDark);
-                chip.setCheckedIconVisible(false);
-                chip.setChipIconTintResource(R.color.colorPrimary);
-                chip.setOnCheckedChangeListener(filterChipListener);
-                chipGroup.addView(chip);
-            });
-        });
         return view;
     }
 
@@ -224,11 +197,18 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.childfrag_container, catFragment);
         ft.commit();
+        ConsumerDatabase.getInstance().getAllRestaurantCategories( list -> {
+            chips.clear();
+            chipFilterAdapter.notifyDataSetChanged();
+            chips.addAll(list);
+            chipFilterAdapter.notifyDataSetChanged();
+        });
     }
 
     public void applyFilters(boolean m, boolean d, boolean r) {
         restaurantsFragment = new RestaurantsFragment();
         Bundle bundle = new Bundle();
+        Log.d("MADAPP", chosen.toString());
         bundle.putStringArrayList("categories", new ArrayList<>(chosen));
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
@@ -254,10 +234,12 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         }
         if(chosenList != null) {
             for (String s : chosenList) {
-                Chip selectedChip = chipMap.get(s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase());
-                if (selectedChip != null) {
-                    selectedChip.setChecked(true);
-                }
+                chips.stream().forEach(item -> {
+                    Log.d("MADAPP", "chosen=" + s + ", but item:" + item.name);
+                    if(item.name.equalsIgnoreCase(s)) item.selected = true;
+                    chosen.add(s);
+                });
+                chipFilterAdapter.notifyDataSetChanged();
             }
         }
         filter.setVisibility(View.VISIBLE);
@@ -298,5 +280,22 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     @Override
     public void closeFilters() {
         filter.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void changed(Chip chip, boolean checked) {
+        if (checked) {
+            chosen.add(chip.getText().toString().toLowerCase());
+            chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark, null)));
+            chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
+            chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+
+        } else {
+            chosen.removeIf(c -> c.equals(chip.getText().toString().toLowerCase()));
+            chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
+            chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
+            chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark, null)));
+        }
+        applyFilters(minOrderCost, freeDelivery, reviewFlag);
     }
 }
