@@ -47,8 +47,9 @@ public class WalletFragment extends Fragment {
     public OrdersAdapter ordersAdapter;
     public List<Order> orders;
     public RecyclerView recyclerView;
-    TextView totalCredit, textView;
+    TextView totalCredit, textView, o_tv;
     EditText Creditcode;
+    View separator;
     public ProgressBar pgBar;
     public TextView noOrder;
 
@@ -130,6 +131,8 @@ public class WalletFragment extends Fragment {
                 public void onSuccess(User user) {
                     cvCredit.setVisibility(View.VISIBLE);
                     textView.setVisibility(View.VISIBLE);
+                    o_tv.setVisibility(View.VISIBLE);
+                    separator.setVisibility(View.VISIBLE);
                     orders = new ArrayList<>();
                     ordersAdapter = new OrdersAdapter(orders, mListener);
                     recyclerView.setAdapter(ordersAdapter);
@@ -167,7 +170,8 @@ public class WalletFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         cvNoLogin = v.findViewById(R.id.no_login_cv);
-
+        o_tv= v.findViewById(R.id.textView4);
+        separator=v.findViewById(R.id.separator);
 
         textView = v.findViewById(R.id.textView4);
         cvCredit = v.findViewById(R.id.cv_credit);

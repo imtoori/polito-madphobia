@@ -15,20 +15,22 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:src="@drawable/ic_menu_item_default_image"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_menuitem_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="prova"
         android:textSize="@dimen/normalText"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tv_price_title"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,9 +38,11 @@
         android:id="@+id/tv_menuitem_desc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:text="prova"
         android:textSize="@dimen/description"
-        app:layout_constraintStart_toStartOf="@+id/tv_menuitem_name"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/tv_menuitem_name" />
 
     <ImageButton
@@ -48,6 +52,7 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/transparent_rounded"
         android:src="@drawable/ic_plus"
+        android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/tv_menuitem_qty"
         app:layout_constraintEnd_toStartOf="@+id/tv_menuitem_qty"
         app:layout_constraintTop_toTopOf="@+id/tv_menuitem_qty" />
@@ -55,13 +60,13 @@
     <TextView
         android:id="@+id/tv_menuitem_qty"
         android:layout_width="40dp"
-        android:textAlignment="center"
-        android:background="@drawable/transparent_rounded"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/transparent_rounded"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:text="0"
+        android:textAlignment="center"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/btn_rem_item"
@@ -76,8 +81,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/transparent_rounded"
-        android:tint="@color/colorPrimary"
         android:src="@drawable/ic_minus"
+        android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_menuitem_desc" />
@@ -95,8 +100,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:textSize="@dimen/normalText"
         android:text="Price: "
+        android:textSize="@dimen/description"
         app:layout_constraintEnd_toStartOf="@+id/tv_price"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -106,8 +111,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
-        android:textSize="@dimen/normalText"
         android:text="price: "
+        android:textSize="@dimen/normalText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -116,8 +121,8 @@
         android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@color/colorPrimaryWithAlpha"
         android:alpha="0.5"
+        android:background="@color/colorPrimaryWithAlpha"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
