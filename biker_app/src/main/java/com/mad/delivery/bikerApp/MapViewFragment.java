@@ -50,17 +50,23 @@ public class MapViewFragment extends Fragment {
     Button btnGoToCustomer, btnGoToRestaurant;
     private static final int LOCATION_REQUEST = 500;
     ArrayList<LatLng> listPoints;
+    PolylineOptions polylineOptions;
     LatLng r;
     LatLng c;
     LatLng b;
-
-
+    String url2;
+    String url ;
+    MarkerOptions markerOptionsR;
+    MarkerOptions markerOptionsC;
+    MarkerOptions markerOptionsB;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.location_fragment, container, false);
+        View rootView = inflater.inflate(
+                R.layout.location_fragment, container, false);
         listPoints = new ArrayList<>();
         r = getArguments().getParcelable("restaurant");
         c = getArguments().getParcelable("client");
+
         btnGoToCustomer = rootView.findViewById(R.id.btn_to_customer);
         btnGoToRestaurant = rootView.findViewById(R.id.btn_to_restaurant);
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -78,7 +84,6 @@ public class MapViewFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap2) {
                 mMap = googleMap2;
-
                 // For showing a move to my location button
                //mMap.setMyLocationEnabled(true);
 
@@ -87,49 +92,32 @@ public class MapViewFragment extends Fragment {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
                     return;
-
                 }
                 mMap.setMyLocationEnabled(true);
-
-
-                MarkerOptions markerOptionsR = new MarkerOptions();
+                markerOptionsR = new MarkerOptions();
                 markerOptionsR.position(r);
                 markerOptionsR.title("Restaurant").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                MarkerOptions markerOptionsC = new MarkerOptions();
+                 markerOptionsC = new MarkerOptions();
                 markerOptionsC.position(c);
                 markerOptionsC.title("Customer").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
                 mMap.addMarker(markerOptionsC);
                 mMap.addMarker(markerOptionsR);
-                String url = getRequestUrl(r, c);
                 TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                taskRequestDirections.execute(url);
                 TaskRequestDirections taskRequestDirections2 = new TaskRequestDirections();
-                MarkerOptions markerOptionsB = new MarkerOptions();
-
+                 markerOptionsB = new MarkerOptions();
                 BikerDatabase.getInstance().getBikerPosition(new OnFirebaseData<LatLng>() {
                     @Override
                     public void onReceived(LatLng item) {
-
                         b=item;
+                        url2 = getRequestUrl(b, r);
+                        url = getRequestUrl(b, c);
                         markerOptionsB.position(b).title("Biker").snippet("Marker Description").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-
-                        String url2 = getRequestUrl(b, r);
                         mMap.clear();
                         mMap.addMarker(markerOptionsC);
                         mMap.addMarker(markerOptionsR);
                         mMap.addMarker(markerOptionsB);
-                        new TaskRequestDirections().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,url2);
-                        new TaskRequestDirections().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,url);
-                        // For dropping a marker at a point on the Map
-
-
-                        // For zooming automatically to the location of the marker
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(b).zoom(12).build();
-
                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-
                     }
                 });
 
@@ -138,10 +126,13 @@ public class MapViewFragment extends Fragment {
 
         btnGoToCustomer.setOnClickListener(view -> {
             // TODO: here you can add code for directions biker->customer
+            new TaskRequestDirections().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,url2);
         });
 
         btnGoToRestaurant.setOnClickListener(view -> {
             // TODO: here you can add code for directions biker->restaurant
+            new TaskRequestDirections().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,url);
+
         });
 
         return rootView;
@@ -281,9 +272,10 @@ public class MapViewFragment extends Fragment {
             //Get list route and display it into the map
 
             ArrayList points = null;
-
-            PolylineOptions polylineOptions = null;
-
+            mMap.clear();
+            mMap.addMarker(markerOptionsC);
+            mMap.addMarker(markerOptionsR);
+            mMap.addMarker(markerOptionsB);            polylineOptions = null;
             for (List<HashMap<String, String>> path : lists) {
                 points = new ArrayList();
                 polylineOptions = new PolylineOptions();
@@ -294,7 +286,6 @@ public class MapViewFragment extends Fragment {
 
                     points.add(new LatLng(lat, lon));
                 }
-
                 polylineOptions.addAll(points);
                 polylineOptions.width(15);
                 polylineOptions.color(Color.BLUE);
