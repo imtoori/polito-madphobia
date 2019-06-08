@@ -74,12 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
         deliveryCost = findViewById(R.id.tv_delivery_fee);
         minOrderCost = findViewById(R.id.tv_min_order);
         categories = new HashSet<>();
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -90,6 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Restaurant user) {
                 restaurant = user;
+                Log.d("MADAPP", "getting Profile data..");
                 getProfileData(currentUser.getUid());
             }
 
@@ -99,6 +95,12 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
     }
 
     @Override

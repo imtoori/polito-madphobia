@@ -172,7 +172,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
 
         loadRestaurantMenu();
 
-        RestaurantDatabase.getInstance().getOffers(currentUser.getUid(), item -> {
+        /*RestaurantDatabase.getInstance().getOffers(currentUser.getUid(), item -> {
                 myOffers.addAll(item);
                 myOffersListAdapter.notifyDataSetChanged();
                 progressBarOffers.setVisibility(View.GONE);
@@ -182,7 +182,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                 } else {
                     tvNoOffer.setVisibility(View.GONE);
                 }
-        });
+        });*/
 
         return v;
     }

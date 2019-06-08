@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.MenuCategory;
 import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.MenuOffer;
 import com.mad.delivery.resources.Restaurant;
 
 import java.util.ArrayList;
@@ -64,8 +65,8 @@ public class RestaurantMenuFragment extends Fragment {
                 MenuCategory mc = new MenuCategory(entry.getKey(), entry.getValue());
                 categories.add(mc);
             });
-
         }
+
 
         minOrder.setText(getResources().getString(R.string.min_order, String.valueOf(restaurant.previewInfo.minOrderCost)));
         deliveryCost.setText(getResources().getString(R.string.delivery_cost, String.valueOf(restaurant.previewInfo.deliveryCost)));
@@ -74,6 +75,7 @@ public class RestaurantMenuFragment extends Fragment {
         recyclerView = view.findViewById(R.id.restaurant_menu_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mAdapter);
+
 
         return view;
     }

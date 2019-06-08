@@ -221,7 +221,7 @@
 
     <!-- Restaurant APP -->
     <string name="opening_hours_full" > No opening hours added yet</string>
-    <string name="header_menu_description">Customize your menu here! You can either create a new Dish or a new Time-limited offer!</string>
+    <string name="header_menu_description">Customize your menu here! You can create a new Dish!</string>
     <string name="new_dish">New Dish</string>
     <string name="new_offer">New Offer</string>
     <string name="main_cv_dish">Main info</string>
