@@ -4,6 +4,7 @@ package com.mad.delivery.restaurant_app.orders;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +26,7 @@ import com.mad.delivery.restaurant_app.R;
 import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
+import com.mad.delivery.restaurant_app.settings.GeneralSettingActivity;
 
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class OrderFragment extends Fragment {
     private Restaurant restaurant;
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
+    private CardView cvChangeVisibility;
+    private Button btnChangeVisibility;
     public OrderFragment() {
         // Required empty public constructor
         setHasOptionsMenu(false);
@@ -49,6 +54,14 @@ public class OrderFragment extends Fragment {
                              Bundle savedInstanceState) {
         View inflator = inflater.inflate(R.layout.fragment_order, container, false);
         restaurant = (Restaurant) getArguments().get("restaurant");
+        cvChangeVisibility = inflator.findViewById(R.id.cv_not_visible);
+
+        btnChangeVisibility = inflator.findViewById(R.id.btn_change_visible);
+        btnChangeVisibility.setOnClickListener( view -> {
+            Intent intent = new Intent(getContext(), GeneralSettingActivity.class);
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
         return inflator;
     }
 
@@ -75,12 +88,13 @@ public class OrderFragment extends Fragment {
             return;
         }
 
-
         RestaurantDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Restaurant>() {
             @Override
             public void onSuccess(Restaurant user) {
                 Log.d("MADAPP", "User "+ user.previewInfo.id + " have logged in.");
                 restaurant = user;
+                if(restaurant.visible) cvChangeVisibility.setVisibility(View.GONE);
+                else cvChangeVisibility.setVisibility(View.VISIBLE);
                 pagerAdapter = new OrdersTabsPageAdapter(getChildFragmentManager(), getContext(), restaurant);
                 mPager.setAdapter(pagerAdapter);
             }

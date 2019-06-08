@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.android.libraries.places.api.Places;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -63,8 +62,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Places.initialize(getApplicationContext(), "AIzaSyDzUDoWpkcEZBI82h2KxMEkGOyLBKGiwmo");
         Log.d("MADAPP", "HomeActivity onCreate");
         db = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();

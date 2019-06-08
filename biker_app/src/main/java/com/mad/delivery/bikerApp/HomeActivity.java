@@ -119,8 +119,6 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
                 navigation.setSelectedItemId(R.id.nav_orders);
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
     }
 
     @Override
@@ -161,8 +159,6 @@ public class HomeActivity extends AppCompatActivity implements PendingOrdersFrag
             finish();
         }
         else {
-
-
             BikerDatabase.getInstance().checkLogin(currentUser.getUid(), new OnLogin<Biker>() {
                 @Override
                 public void onSuccess(Biker user) {
