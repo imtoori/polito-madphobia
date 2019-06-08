@@ -511,10 +511,12 @@ final public class RestaurantDatabase {
                         if(biker != null) {
                             if (biker.status) {
                                 Double distance = Haversine.distance(restaurant.latitude, restaurant.longitude, biker.latitude, biker.longitude);
+                                Log.d("MADAPP", "distance arrived = " + distance);
                                 if (distance <= 5.0) {
                                     DecimalFormat df = new DecimalFormat("##.00");
-                                    df.setRoundingMode(RoundingMode.CEILING);
-                                    bikerIdDistance.add(new DistanceBiker(biker, Double.parseDouble(df.format(distance))));
+                                    //df.setRoundingMode(RoundingMode.CEILING);
+                                    distance = Math.round(distance * 100.0) / 100.0;
+                                    bikerIdDistance.add(new DistanceBiker(biker, distance));
                                 }
                             }
                         }
