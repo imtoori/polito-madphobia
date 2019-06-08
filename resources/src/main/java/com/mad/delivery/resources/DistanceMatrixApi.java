@@ -47,8 +47,8 @@ public class DistanceMatrixApi extends AsyncTask<String, Void, String> {
         super.onPostExecute(aDouble);
 
             geo1.setDouble(aDouble);
+            Log.d("MADAPP", "aDouble=" + aDouble);
             pd.dismiss();
-
     }
 
     @Override

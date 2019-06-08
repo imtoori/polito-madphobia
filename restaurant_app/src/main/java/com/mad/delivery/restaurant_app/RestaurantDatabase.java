@@ -643,7 +643,7 @@ final public class RestaurantDatabase {
     }
 
     public void getPopularTiming(OnFirebaseData<List<BarEntry>> cb) {
-        myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer hour[] = new Integer[24];

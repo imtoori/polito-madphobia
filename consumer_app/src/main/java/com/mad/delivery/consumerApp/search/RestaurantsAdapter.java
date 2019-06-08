@@ -60,7 +60,6 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                     } else {
                         Picasso.get().load(imageUri).into(holder.imgRestaurant);
                     }
-
                 }
             });
         } else {
@@ -85,7 +84,8 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
                 mListener.changeFavourite(holder.restaurant, isChecked);
             }
         });
-        if(holder.restaurant.distance != null) {
+        if(holder.restaurant.distance != null && holder.restaurant.distance != - 1.00) {
+            Log.d("MADAPP", "distance="+ holder.restaurant.distance);
             holder.tvDistance.setText(Math.round(holder.restaurant.distance) + " km");
         } else {
             holder.tvDistance.setVisibility(View.GONE);

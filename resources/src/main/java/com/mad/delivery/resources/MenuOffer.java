@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class MenuOffer implements Parcelable {
     public String id;
+
     public List<MenuItemRest> items;
     public Double price;
     public String restaurantID;
