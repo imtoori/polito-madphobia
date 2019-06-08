@@ -246,7 +246,8 @@ public class ConsumerDatabase {
                                     item.forEach(i -> {
                                         myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
                                     });
-                                    myRef.child("orders").push().setValue(o);
+                                    o.id = myRef.child("orders").push().getKey();
+                                    myRef.child("orders").child(o.id).setValue(o);
                                 }
 
                                 firebaseCallback2.onCallBack(flag);
