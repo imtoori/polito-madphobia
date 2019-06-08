@@ -507,14 +507,15 @@ final public class RestaurantDatabase {
                 if (dataSnapshot.exists()) {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
-                        if (snapshot.getValue(Biker.class).status == true) {
-                            Log.i("MADAPP", snapshot.getValue(Biker.class).toString());
-                            Double distance = Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude);
-                            Log.i("MADAPP", "distance->"+distance);
-                            if (distance <= 5.0) {
-                                DecimalFormat df = new DecimalFormat("#.#");
-                                df.setRoundingMode(RoundingMode.CEILING);
-                                bikerIdDistance.add(new DistanceBiker( snapshot.getValue(Biker.class), Double.parseDouble(df.format(distance))));
+                        Biker biker = snapshot.getValue(Biker.class);
+                        if(biker != null) {
+                            if (biker.status) {
+                                Double distance = Haversine.distance(restaurant.latitude, restaurant.longitude, biker.latitude, biker.longitude);
+                                if (distance <= 5.0) {
+                                    DecimalFormat df = new DecimalFormat("##.00");
+                                    df.setRoundingMode(RoundingMode.CEILING);
+                                    bikerIdDistance.add(new DistanceBiker(biker, Double.parseDouble(df.format(distance))));
+                                }
                             }
                         }
                     }
