@@ -703,10 +703,12 @@ public class ConsumerDatabase {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         CreditCode o = issue.getValue(CreditCode.class);
-                        Log.d("MADAPP", "creditcode=" + o.toString());
                         if (o != null) {
                             if (o.code != null && o.code.equals(code)) {
                                 cb.onReceived(o);
+                            }
+                            else {
+                                cb.onReceived(null);
                             }
                         } else {
                             cb.onReceived(null);
@@ -720,7 +722,7 @@ public class ConsumerDatabase {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("MADDAPP", "Funzione credit code fail");
+                Log.i("MADDAPP", "Funzione credit code fail");
             }
         });
     }
