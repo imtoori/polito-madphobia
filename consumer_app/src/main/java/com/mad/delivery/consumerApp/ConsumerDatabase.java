@@ -251,7 +251,7 @@ public class ConsumerDatabase {
 
                                 firebaseCallback2.onCallBack(flag);
                             }
-                        }, false);
+                        }, true);
                     }
 
                 }
