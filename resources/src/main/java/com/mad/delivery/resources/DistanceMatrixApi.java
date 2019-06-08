@@ -48,10 +48,14 @@ public class DistanceMatrixApi extends AsyncTask<String, Void, String> {
         if(aDouble!=null)
         {
             geo1.setDouble(aDouble);
+            Log.d("MADAPP", "aDouble=" + aDouble);
             pd.dismiss();
         }
         else
-            Toast.makeText(mContext, "Error4!Please Try Again wiht proper values", Toast.LENGTH_SHORT).show();
+        {
+            geo1.setDouble("0.0");
+            pd.dismiss();
+        }
     }
 
     @Override
