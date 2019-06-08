@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.DistanceMatrixApi;
+import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Restaurant;
@@ -364,13 +366,19 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
 
     @Override
     public void setDouble(String result) {
+        if(result!=null) {
+            String res[] = result.split(",");
+            Double min = Double.parseDouble(res[0]) / 60;
+            Double dist = Double.parseDouble(res[1]) / 1000;
+            Log.e("MADAPP: ", modifiedOrder.distanceRide.toString());
+            modifiedOrder.distanceRide += dist;
 
-        String res[]=result.split(",");
-        Double min=Double.parseDouble(res[0])/60;
-        Double dist=Double.parseDouble(res[1])/1000;
-        Log.e("MADAPP: ",modifiedOrder.distanceRide.toString());
+        }
+        else {
 
-        modifiedOrder.distanceRide+=dist;
+            modifiedOrder.distanceRide += Haversine.distance(order.latitude,order.longitude,selectedBiker.latitude,selectedBiker.longitude);
+
+        }
 
     }
 }

@@ -28,6 +28,7 @@ import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Feedback;
 import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
+import com.mad.delivery.resources.MenuOffer;
 import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnImageDownloaded;
 import com.mad.delivery.resources.OnImageUploaded;
@@ -297,6 +298,30 @@ public class ConsumerDatabase {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.d("MADAPP", "onCanceled: " + this.toString());
+            }
+        });
+    }
+    public void getOffers(String restaurantID, OnFirebaseData<List<MenuOffer>> cb) {
+        if (restaurantID == null) {
+            return;
+        }
+        myRef.child("users").child(restaurantID).child("offers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<MenuOffer> offers = new ArrayList<>();
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                for (DataSnapshot snapshot : iterator) {
+                    MenuOffer item = snapshot.getValue(MenuOffer.class);
+                    if (item != null) {
+                        offers.add(item);
+                    }
+                }
+                cb.onReceived(offers);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                cb.onReceived(new ArrayList<>());
             }
         });
     }

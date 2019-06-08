@@ -45,13 +45,10 @@ public class DistanceMatrixApi extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String aDouble) {
         super.onPostExecute(aDouble);
-        if(aDouble!=null)
-        {
+
             geo1.setDouble(aDouble);
             pd.dismiss();
-        }
-        else
-            Toast.makeText(mContext, "Error4!Please Try Again wiht proper values", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
