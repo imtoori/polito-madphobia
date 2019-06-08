@@ -68,7 +68,6 @@ public class CompletingOrderDialogFragment extends DialogFragment {
         desc = rootView.findViewById(R.id.tv_desc_activity);
         imgErr = rootView.findViewById(R.id.img_error);
 
-
         return rootView;
     }
 
@@ -80,7 +79,6 @@ public class CompletingOrderDialogFragment extends DialogFragment {
                 btnClose.setVisibility(View.VISIBLE);
                 pgBar.setVisibility(View.GONE);
                 if(success) {
-
                     imgDone.setVisibility(View.VISIBLE);
                     imgErr.setVisibility(View.GONE);
                     desc.setTextColor(getResources().getColor(R.color.colorGreen, null));

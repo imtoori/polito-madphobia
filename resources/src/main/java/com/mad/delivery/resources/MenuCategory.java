@@ -59,4 +59,12 @@ public class MenuCategory implements Parcelable {
     public void setItems(List<MenuItemRest> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "MenuCategory{" +
+                "name='" + name + '\'' +
+                ", items=" + items.toString() +
+                '}';
+    }
 }
