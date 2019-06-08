@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -153,10 +154,15 @@ public class ConsumerDatabase {
         return itemSelected;
     }
 
-    public void putOrder(Order o, Context context, FirebaseCallback<Boolean> firebaseCallback2) throws IOException {
+    public void putOrder(Order o, Context context, FirebaseCallback<Boolean> firebaseCallback2) {
         Geocoder geocoder = new Geocoder(context);
-        List<Address> addresses;
-        addresses = geocoder.getFromLocationName(o.delivery, 1);
+        List<Address> addresses = new ArrayList<>();
+        try {
+            Log.d("MADAPP", "o.delivery=" + o.delivery);
+            addresses = geocoder.getFromLocationName(o.delivery, 1);
+        } catch (IOException e) {
+            Toast.makeText(context, "Location not found", Toast.LENGTH_SHORT).show();
+        }
         if (addresses.size() > 0) {
             Double latitude = addresses.get(0).getLatitude();
             Double longitude = addresses.get(0).getLongitude();

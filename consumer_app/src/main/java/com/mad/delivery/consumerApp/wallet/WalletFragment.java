@@ -24,6 +24,7 @@ import com.mad.delivery.resources.OnLogin;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.User;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +53,8 @@ public class WalletFragment extends Fragment {
     private View separator;
     private ProgressBar pgBar;
     private TextView noOrder;
+    DecimalFormat dec;
+
 
     public WalletFragment() {
         // Required empty public constructor
@@ -61,6 +64,7 @@ public class WalletFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        dec = new DecimalFormat("##.00");
     }
 
     @Override
@@ -196,10 +200,9 @@ public class WalletFragment extends Fragment {
             @Override
             public void onCallBack(User user) {
                 if (user != null && user.credit!=null)
-                    totalCredit.setText(user.credit.toString());
+                    totalCredit.setText(""+dec.format(user.credit));
                 else
                     totalCredit.setText(R.string.null_value);
-
 
             }
         });

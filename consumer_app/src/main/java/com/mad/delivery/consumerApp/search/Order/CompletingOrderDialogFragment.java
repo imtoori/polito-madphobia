@@ -74,19 +74,18 @@ public class CompletingOrderDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        try {
             ConsumerDatabase.getInstance().putOrder(order, context, success -> {
                 btnClose.setVisibility(View.VISIBLE);
                 pgBar.setVisibility(View.GONE);
                 if(success) {
                     imgDone.setVisibility(View.VISIBLE);
                     imgErr.setVisibility(View.GONE);
-                    desc.setTextColor(getResources().getColor(R.color.colorGreen, null));
+                    desc.setTextColor(context.getResources().getColor(R.color.colorGreen, null));
                     desc.setText("Your order has been sent.");
                     btnClose.setText("Go to Home");
                     btnClose.setOnClickListener(v -> {
                         Intent intent = new Intent(getContext(), HomeActivity.class);
-                        startActivity(intent);
+                        context.startActivity(intent);
                         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     });
                 } else {
@@ -100,13 +99,5 @@ public class CompletingOrderDialogFragment extends DialogFragment {
                     });
                 }
             });
-        } catch (IOException e) {
-            btnClose.setVisibility(View.VISIBLE);
-            pgBar.setVisibility(View.GONE);
-            imgErr.setVisibility(View.VISIBLE);
-            imgDone.setVisibility(View.GONE);
-            desc.setTextColor(getResources().getColor(R.color.colorRed, null));
-            desc.setText("A fatal error occurred. Contact the administrator.");
-        }
     }
 }
