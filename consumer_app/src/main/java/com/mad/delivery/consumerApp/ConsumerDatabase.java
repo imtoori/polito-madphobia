@@ -158,10 +158,9 @@ public class ConsumerDatabase {
         Geocoder geocoder = new Geocoder(context);
         List<Address> addresses = new ArrayList<>();
         try {
-            Log.d("MADAPP", "o.delivery=" + o.delivery);
             addresses = geocoder.getFromLocationName(o.delivery, 1);
         } catch (IOException e) {
-            Toast.makeText(context, "Location not found", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Location not found", Toast.LENGTH_SHORT).show();
         }
         if (addresses.size() > 0) {
             Double latitude = addresses.get(0).getLatitude();
@@ -687,6 +686,7 @@ public class ConsumerDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
+                        Log.i("MADAPP", o.status.toString());
                         if (o != null)
                             orders.add(o);
                     }

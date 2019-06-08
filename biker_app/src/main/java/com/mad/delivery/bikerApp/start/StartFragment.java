@@ -22,6 +22,7 @@ import com.mad.delivery.bikerApp.auth.OnLogin;
 import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.Order;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ public class StartFragment extends Fragment {
     private TextView tvGreetings;
     private LinearLayout visibleFolder;
     private Biker biker;
+    private DecimalFormat dec;
 
     public StartFragment() {
         // Required empty public constructor
@@ -50,6 +52,7 @@ public class StartFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        dec = new DecimalFormat("##.00");
         if (currentUser == null) {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
@@ -58,8 +61,7 @@ public class StartFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_start, container, false);
         ordersTaken = view.findViewById(R.id.orders_taken);
         earning = view.findViewById(R.id.earnings);
@@ -83,13 +85,14 @@ public class StartFragment extends Fragment {
                     BikerDatabase.getInstance().getCashBiker(new FirebaseCallbackItem<Double>() {
                         @Override
                         public void onCallback(Double Item) {
-                            earning.setText(Item.toString());
+
+                            earning.setText(dec.format(Item));
                         }
                     });
                     BikerDatabase.getInstance().getDistanceRide(new FirebaseCallbackItem<Double>() {
                         @Override
                         public void onCallback(Double Item) {
-                            kilometers.setText(Item.toString());
+                            kilometers.setText(dec.format(Item));
                         }
                     });
                     BikerDatabase.getInstance().getOrdersTaken(new FirebaseCallbackItem<Integer>() {

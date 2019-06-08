@@ -93,14 +93,13 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         searchFragment = new SearchFragment();
         settingsFragment = new SettingsFragment();
         if(savedInstanceState != null) {
-            Log.d("MADAPP", "savedInstanceState is not null");
             open = savedInstanceState.getInt("open");
         }
+
         if(getIntent().hasExtra("open")) {
             open = getIntent().getIntExtra("open", 1);
-        } else {
-            Log.d("MADAPP", "NO open..");
         }
+
         mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

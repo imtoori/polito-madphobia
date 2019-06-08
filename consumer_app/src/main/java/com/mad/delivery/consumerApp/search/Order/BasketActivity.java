@@ -143,6 +143,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                     chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
                     chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
                     chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
+                    checkedChip = null;
                 }
             }
         };
@@ -152,7 +153,6 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         btnCompleteOrder.setOnClickListener(v -> {
             boolean valid = checkConstraints();
             if (valid) {
-
                 String paymentMethod = "";
                 if (checkedChip.getText().toString().equals(getString(R.string.pay_cash)))
                     paymentMethod = "cash";
@@ -163,6 +163,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                 Order order = new Order(user, restaurant, myOrder, orderFor.toString(), paymentMethod, where.getText().toString());
                 order.clientNotes = notes.getText().toString();
                 sendingFragment = CompletingOrderDialogFragment.newInstance(order);
+                Log.d("MADAPP", "sendingOrder called");
                 sendingFragment.show(getSupportFragmentManager(), "sendingFragment");
             } else {
                 Toast.makeText(this, "Please fill all fields with valid data", Toast.LENGTH_SHORT).show();
@@ -175,7 +176,6 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                 Geocoder geocoder;
                 List<Address> addresses = new ArrayList<>();
                 geocoder = new Geocoder(BasketActivity.this, Locale.getDefault());
-
                 try {
                     Double latitude = gps.getLatitude();
                     Double longitude = gps.getLongitude();

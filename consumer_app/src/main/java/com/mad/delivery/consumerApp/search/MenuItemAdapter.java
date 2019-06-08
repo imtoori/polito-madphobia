@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.resources.MenuItemRest;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,17 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
         holder.mItem = item;
         holder.name.setText(item.name);
         holder.price.setText("€ " + item.price);
-        //Log.i(TAG, "onBindViewHolder:" + holder.etQuantity);
+        if(holder.mItem.imageName != null) {
+            if(!holder.mItem.imageName.equals("")) {
+                ConsumerDatabase.getInstance().downloadImage(holder.mItem.restaurantId, "menu", holder.mItem.imageName, imageURI -> {
+                    Picasso.get().load(imageURI.toString()).into(holder.menuItemImage);
+                });
+            }  else {
+                holder.menuItemImage.setImageDrawable(view.getResources().getDrawable(R.drawable.ic_menu_item_default_image, null));
+            }
+        } else {
+            holder.menuItemImage.setImageDrawable(view.getResources().getDrawable(R.drawable.ic_menu_item_default_image, null));
+        }
 
     }
 
@@ -113,6 +124,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.ViewHo
                     }
                 }
             });
+
         }
 
         @Override

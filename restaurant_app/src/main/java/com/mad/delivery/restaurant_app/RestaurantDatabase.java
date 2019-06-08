@@ -17,6 +17,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mad.delivery.resources.Biker;
+import com.mad.delivery.resources.DistanceBiker;
 import com.mad.delivery.resources.Feedback;
 import com.mad.delivery.resources.Haversine;
 import com.mad.delivery.resources.MenuItemRest;
@@ -36,10 +37,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 final public class RestaurantDatabase {
     private static RestaurantDatabase instance;
@@ -495,25 +498,36 @@ final public class RestaurantDatabase {
 
     }
 
-    public void getBikersClosest(FireBaseCallBack<TreeMap<Double, Biker>> firebaseCallback) {
+    public void getBikersClosest(FireBaseCallBack<ArrayList<DistanceBiker>> firebaseCallback) {
         myRef.child("users").child("biker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                TreeMap<Double, Biker> bikerIdDistance = new TreeMap<>();
+                ArrayList<DistanceBiker> bikerIdDistance = new ArrayList<>();
                 if (dataSnapshot.exists()) {
                     Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
                     for (DataSnapshot snapshot : iterator) {
                         if (snapshot.getValue(Biker.class).status == true) {
-                            Log.d("TAG:", restaurant.toString());
+                            Log.i("MADAPP", snapshot.getValue(Biker.class).toString());
                             Double distance = Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude);
+                            Log.i("MADAPP", "distance->"+distance);
                             if (distance <= 5.0) {
                                 DecimalFormat df = new DecimalFormat("#.#");
                                 df.setRoundingMode(RoundingMode.CEILING);
-                                bikerIdDistance.put(Double.parseDouble(df.format(distance)), snapshot.getValue(Biker.class));
+                                bikerIdDistance.add(new DistanceBiker( snapshot.getValue(Biker.class), Double.parseDouble(df.format(distance))));
                             }
                         }
                     }
                 }
+                bikerIdDistance.sort(new Comparator<DistanceBiker>() {
+                    @Override
+                    public int compare(DistanceBiker o1, DistanceBiker o2) {
+                        if(o1.distance<o2.distance)
+                            return 0;
+                        else
+                            return 1;
+                    }
+                });
+                Log.i("MADAPP", "sorted->"+bikerIdDistance);
                 firebaseCallback.onCallback(bikerIdDistance);
             }
 
@@ -655,8 +669,8 @@ final public class RestaurantDatabase {
         });
     }
 
-    public void getPopularDish(OnFirebaseData<TreeMap<String, Integer>> callBack) {
-        TreeMap<String, Integer> treeMap = new TreeMap<>();
+    public void getPopularDish(OnFirebaseData<Map<String, Integer>> callBack) {
+        Map<String, Integer> treeMap = new TreeMap<>();
         myRef.child("orders").orderByChild("restaurantId").equalTo(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -665,14 +679,23 @@ final public class RestaurantDatabase {
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
                         o.products.forEach(product -> {
-                            if (treeMap.containsKey(product.name))
+                            if (treeMap.containsKey(product.name)) {
+                                Log.i("MADAPP", "db "+product.name+ "  prima->"+treeMap.get(product.name));
                                 treeMap.replace(product.name, treeMap.get(product.name) + product.quantity);
-                            else
+                                Log.i("MADAPP", "db "+product.name+ " dopo->"+treeMap.get(product.name));
+                            }
+                            else {
                                 treeMap.put(product.name, product.quantity);
+                                Log.i("MADAPP", "db  " + product.name + " new->" + treeMap.get(product.name));
+                            }
                         });
                     }
+                    final Map<String, Integer> sorted = treeMap.entrySet()
+                            .stream()
+                            .sorted((Map.Entry.<String, Integer>comparingByValue().reversed()))
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-                    callBack.onReceived(treeMap);
+                    callBack.onReceived(sorted);
                 }
 
             }

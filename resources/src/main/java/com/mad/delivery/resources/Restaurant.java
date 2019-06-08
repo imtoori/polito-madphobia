@@ -21,7 +21,6 @@ public class Restaurant implements Serializable, Parcelable {
     public String email;
     public String road;
     public String houseNumber;
-    public String doorPhone;
     public String postCode;
     public String city;
     public String openingHours;
@@ -34,12 +33,11 @@ public class Restaurant implements Serializable, Parcelable {
     public Boolean visible;
 
     public Restaurant() {}
-    public Restaurant(String id, String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String doorPhone, String postCode, String city, String imageUri, String imageName, String openingTime) {
+    public Restaurant(String id, String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String postCode, String city, String imageUri, String imageName, String openingTime) {
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;
         this.road = road;
         this.houseNumber = houseNumber;
-        this.doorPhone = doorPhone;
         this.postCode = postCode;
         this.city = city;
         this.openingHours=openingTime;
@@ -73,7 +71,6 @@ public class Restaurant implements Serializable, Parcelable {
         this.email = other.email;
         this.road = other.road;
         this.houseNumber = other.houseNumber;
-        this.doorPhone = other.doorPhone;
         this.postCode = other.postCode;
         this.city = other.city;
         this.openingHours = other.openingHours;
@@ -92,7 +89,6 @@ public class Restaurant implements Serializable, Parcelable {
         email = in.readString();
         road = in.readString();
         houseNumber = in.readString();
-        doorPhone = in.readString();
         postCode = in.readString();
         city = in.readString();
         openingHours = in.readString();
@@ -121,7 +117,6 @@ public class Restaurant implements Serializable, Parcelable {
         dest.writeString(email);
         dest.writeString(road);
         dest.writeString(houseNumber);
-        dest.writeString(doorPhone);
         dest.writeString(postCode);
         dest.writeString(city);
         dest.writeString(openingHours);
@@ -201,12 +196,6 @@ public class Restaurant implements Serializable, Parcelable {
         this.houseNumber = houseNumber;
     }
 
-    public String getDoorPhone() {
-        return doorPhone;
-    }
-    public void setDoorPhone(String doorPhone) {
-        this.doorPhone = doorPhone;
-    }
     public String getPostCode() {
         return postCode;
     }
@@ -287,7 +276,6 @@ public class Restaurant implements Serializable, Parcelable {
                 ", email='" + email + '\'' +
                 ", road='" + road + '\'' +
                 ", houseNumber='" + houseNumber + '\'' +
-                ", doorPhone='" + doorPhone + '\'' +
                 ", postCode='" + postCode + '\'' +
                 ", city='" + city + '\'' +
                 ", categories=" + categories +

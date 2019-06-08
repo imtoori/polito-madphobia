@@ -54,6 +54,10 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="40dp"
                     android:textSize="@dimen/description"
+                    android:textStyle="italic"
+                    android:textColor="@color/colorDivider"
+                    android:focusedByDefault="false"
+
                     app:layout_constraintBottom_toBottomOf="@+id/search_imgbtn"
                     app:layout_constraintEnd_toStartOf="@+id/search_imgbtn"
                     app:layout_constraintStart_toStartOf="parent"
