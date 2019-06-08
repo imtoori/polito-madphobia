@@ -154,7 +154,7 @@ public class ProfileActivity extends AppCompatActivity {
             if (r != null && r.previewInfo != null && r.previewInfo.name != null) {
                 restaurant = new Restaurant(r);
             } else {
-                restaurant = new Restaurant(id, "", r.email, "", "", "", "", "", "", "", "", "", "");
+                restaurant = new Restaurant(id, "", r.email, "", "", "", "", "", "", "", "", "");
             }
             RestaurantDatabase.getInstance().getCategories(innerSet -> {
                 innerSet.stream().forEach(n -> {
@@ -200,7 +200,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         if (!u.road.equals("")) {
-            road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city + " (citofono: " + u.doorPhone + ")");
+            road.setText(u.road + ", " + u.houseNumber + ", " + u.postCode + " " + u.city);
         }
 
         if (u.previewInfo != null && u.previewInfo.imageName != null && !u.previewInfo.imageName.equals("")) {

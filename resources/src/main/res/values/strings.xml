@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_restaurant_name">Restaurant app</string>
-    <string name="app_biker_name">Biker app</string>
-    <string name="app_customer_name">MAD Eat</string>
+    <string name="app_restaurant_name">Yummy Restaurants</string>
+    <string name="app_biker_name">Yummy Bikers</string>
+    <string name="app_customer_name">Yummy</string>
 
     <!-- Profile Data -->
     <string name="profile_toolbar">My Profile</string>
@@ -110,7 +110,7 @@
     <string name="detail_order_info">Order Info</string>
     <string name="arrived_at">Arrived:</string>
     <string name="requested_at">Requested for:</string>
-    <string name="client_note">Client Notes</string>
+    <string name="client_note">Notes</string>
     <string name="products">Products</string>
     <string name="additions">Additions:</string>
     <string name="prefix_products">This order contains</string>

@@ -52,15 +52,19 @@ public class RestaurantMenuFragment extends Fragment {
         Map<String, List<MenuItemRest>> menus = new HashMap<>();
         if (restaurant.menu != null) {
             restaurant.menu.values().stream().forEach(item -> {
+                Log.d("MADAPP", "Item from restaurant = " + item.toString());
                 if (item.availability > 0) {
                     menus.putIfAbsent(item.category, new ArrayList<>());
                     List<MenuItemRest> menuList = menus.get(item.category);
                     menuList.add(item);
-                    MenuCategory mc = new MenuCategory(item.category, menuList);
-                    categories.add(mc);
-                    Log.d("MADAPP", categories.toString());
                 }
             });
+
+            menus.entrySet().stream().forEach( entry -> {
+                MenuCategory mc = new MenuCategory(entry.getKey(), entry.getValue());
+                categories.add(mc);
+            });
+
         }
 
         minOrder.setText(getResources().getString(R.string.min_order, String.valueOf(restaurant.previewInfo.minOrderCost)));

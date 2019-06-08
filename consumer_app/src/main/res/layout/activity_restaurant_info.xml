@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
-        android:background="@drawable/restaurant_default"
         android:theme="@style/AppTheme.AppBarOverlay">
 
 
@@ -33,6 +32,13 @@
                 app:layout_collapseMode="pin"
                 android:elevation="5dp"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+            <ImageView
+                android:id="@+id/img_restaurant"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/restaurant_default"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

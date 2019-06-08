@@ -3,7 +3,9 @@ package com.mad.delivery.consumerApp.search.Order;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mad.delivery.consumerApp.ConsumerDatabase;
+import com.mad.delivery.consumerApp.FirebaseCallback;
 import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
 import com.mad.delivery.consumerApp.search.ReviewsAdapter;
@@ -74,30 +77,88 @@ public class CompletingOrderDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-            ConsumerDatabase.getInstance().putOrder(order, context, success -> {
-                btnClose.setVisibility(View.VISIBLE);
-                pgBar.setVisibility(View.GONE);
-                if(success) {
-                    imgDone.setVisibility(View.VISIBLE);
-                    imgErr.setVisibility(View.GONE);
-                    desc.setTextColor(context.getResources().getColor(R.color.colorGreen, null));
-                    desc.setText("Your order has been sent.");
-                    btnClose.setText("Go to Home");
-                    btnClose.setOnClickListener(v -> {
-                        Intent intent = new Intent(getContext(), HomeActivity.class);
-                        context.startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    });
-                } else {
-                    imgErr.setVisibility(View.VISIBLE);
-                    imgDone.setVisibility(View.GONE);
-                    desc.setTextColor(getResources().getColor(R.color.colorRed, null));
-                    desc.setText("Your order contains one or more items which are not available anymore. Please try with different items.");
-                    btnClose.setText("I got it");
-                    btnClose.setOnClickListener(v -> {
-                        dismiss();
-                    });
+        Log.d("MADAPP", "onViewCreated for CompletingDialog..");
+        new BackgroundTask().execute();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("MADAPP", "on started..");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
+
+    private class BackgroundTask extends AsyncTask<Void, Integer, Boolean>
+    {
+        boolean s = true;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d("MADAPP", "onPreExecute");
+        }
+        @Override
+        protected Boolean doInBackground(Void... arg0)
+        {
+
+
+      /*          try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+
+                }*/
+            return s;
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values)
+        {
+            super.onProgressUpdate(values);
+            Log.d("MADAPP", "onProgressUpdate");
+
+        }
+        @Override
+        protected void onPostExecute(Boolean result)
+        {
+            super.onPostExecute(result);
+            ConsumerDatabase.getInstance().putOrder(order, context, new FirebaseCallback<Boolean>() {
+                @Override
+                public void onCallBack(Boolean item) throws IOException {
+                    s = item;
+                    btnClose.setVisibility(View.VISIBLE);
+                    pgBar.setVisibility(View.GONE);
+                    if(item) {
+                        imgDone.setVisibility(View.VISIBLE);
+                        imgErr.setVisibility(View.GONE);
+                        desc.setVisibility(View.VISIBLE);
+                        desc.setTextColor(context.getResources().getColor(R.color.colorGreen, null));
+                        desc.setText("Your order has been sent.");
+                        btnClose.setText("Go to Home");
+                        btnClose.setOnClickListener(v -> {
+                            Intent intent = new Intent(getContext(), HomeActivity.class);
+                            context.startActivity(intent);
+                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        });
+                    } else {
+                        imgErr.setVisibility(View.VISIBLE);
+                        imgDone.setVisibility(View.GONE);
+                        desc.setVisibility(View.VISIBLE);
+                        desc.setTextColor(getResources().getColor(R.color.colorRed, null));
+                        desc.setText("Your order contains one or more items which are not available anymore. Please try with different items.");
+                        btnClose.setText("I got it");
+                        btnClose.setOnClickListener(v -> {
+                            dismiss();
+                        });
+                    }
                 }
             });
+
+            Log.d("MADAPP", "onPostExecute");
+        }
     }
 }

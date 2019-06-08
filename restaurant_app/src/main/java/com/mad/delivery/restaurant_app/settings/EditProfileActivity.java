@@ -68,7 +68,7 @@ public class EditProfileActivity extends AppCompatActivity {
     Menu menu;
     Restaurant restaurant;
     FloatingActionButton btnCamera;
-    EditText name, phoneNumber, emailAddress, description, road, houseNumber, doorPhone, postCode, city, openingTime;
+    EditText name, phoneNumber, emailAddress, description, road, houseNumber, postCode, city, openingTime;
     EditText deliveryCost, minOrder;
     ImageView imgProfile;
     Toolbar myToolbar;
@@ -102,7 +102,6 @@ public class EditProfileActivity extends AppCompatActivity {
         description = findViewById(R.id.editprofile_description);
         road = findViewById(R.id.editprofile_road);
         houseNumber = findViewById(R.id.editprofile_housenumber);
-        doorPhone = findViewById(R.id.editprofile_doorphone);
         postCode = findViewById(R.id.editprofile_postalcode);
         city = findViewById(R.id.editprofile_city);
         imgProfile = findViewById(R.id.editprofile_imgprofile);
@@ -263,7 +262,6 @@ public class EditProfileActivity extends AppCompatActivity {
         outState.putString("description", description.getText().toString());
         outState.putString("road", road.getText().toString());
         outState.putString("houseNumber", houseNumber.getText().toString());
-        outState.putString("doorPhone", doorPhone.getText().toString());
         outState.putString("postCode", postCode.getText().toString());
         outState.putString("city", city.getText().toString());
         outState.putString("openingTime", openingTime.getText().toString());
@@ -290,7 +288,6 @@ public class EditProfileActivity extends AppCompatActivity {
         restaurant.road = savedInstanceState.getString("road");
         restaurant.openingHours = savedInstanceState.getString("openingTime");
         restaurant.houseNumber = savedInstanceState.getString("houseNumber");
-        restaurant.doorPhone = savedInstanceState.getString("doorPhone");
         restaurant.postCode = savedInstanceState.getString("postCode");
         restaurant.city = savedInstanceState.getString("city");
         imageProfileLocalUri = Uri.parse(savedInstanceState.getString("imageUri"));
@@ -337,7 +334,6 @@ public class EditProfileActivity extends AppCompatActivity {
         restaurant.phoneNumber = phoneNumber.getText().toString();
         restaurant.road = road.getText().toString();
         restaurant.houseNumber = houseNumber.getText().toString();
-        restaurant.doorPhone = doorPhone.getText().toString();
         restaurant.postCode = postCode.getText().toString();
         restaurant.city = city.getText().toString();
         if (!imageProfileLocalUri.equals(Uri.EMPTY)) {
@@ -433,7 +429,6 @@ public class EditProfileActivity extends AppCompatActivity {
         road.setText(u.road);
         openingTime.setText(u.openingHours);
         houseNumber.setText(u.houseNumber);
-        doorPhone.setText(u.doorPhone);
         postCode.setText(String.valueOf(u.postCode));
         city.setText(u.city);
         deliveryCost.setText(String.valueOf(u.previewInfo.deliveryCost));
@@ -493,7 +488,6 @@ public class EditProfileActivity extends AppCompatActivity {
         String numberString = "[1-9][0-9]*";
         String roadString = "([A-Za-z0-9'-_\\s])+";
         String cityString = "([A-Za-z\'\\s-])+";
-        String doorPhoneString = "([A-Za-z0-9\'\\s-])+";
         String deliveryAndOrder = "[0-9.,]{1,5}";
 
         if (!deliveryCost.getText().toString().matches(deliveryAndOrder)) {
@@ -523,12 +517,6 @@ public class EditProfileActivity extends AppCompatActivity {
         if (!phoneNumber.getText().toString().matches(phoneNumberString)) {
             phoneNumber.setError(getResources().getString(R.string.check_phone));
             result = false;
-        }
-
-        if (!doorPhone.getText().toString().matches(doorPhoneString)) {
-            doorPhone.setError(getResources().getString(R.string.check_doorphone));
-            result = false;
-
         }
 
         if (!postCode.getText().toString().matches(postalCodeString)) {

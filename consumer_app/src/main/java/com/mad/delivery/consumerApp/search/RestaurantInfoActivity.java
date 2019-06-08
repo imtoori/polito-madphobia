@@ -20,6 +20,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
@@ -59,8 +60,8 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
     private TabLayout tabLayout;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
+    private ImageView imgRestaurant;
     private Restaurant restaurant;
-    private FrameLayout redCircle;
     private TextView countTextView;
     private int itemsNumber = 0;
     private FirebaseAuth mAuth;
@@ -86,6 +87,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         setSupportActionBar(toolbar);
         myOrder = new HashMap<>();
         appBarLayout = findViewById(R.id.app_bar);
+        imgRestaurant = findViewById(R.id.img_restaurant);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mPager = findViewById(R.id.restaurant_pager);
         tabLayout = findViewById(R.id.tab_restaurant_header);
@@ -116,8 +118,8 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
 
             @Override
             public void onFailure() {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                //startActivity(intent);
             }
         });
     }
@@ -125,9 +127,8 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         final MenuItem alertMenuItem = menu.findItem(R.id.option_shopping);
-        FrameLayout rootView = (FrameLayout) alertMenuItem.getActionView();
+        CardView rootView = (CardView) alertMenuItem.getActionView();
 
-        redCircle = (FrameLayout) rootView.findViewById(R.id.view_alert_red_circle);
         countTextView = (TextView) rootView.findViewById(R.id.view_alert_count_textview);
         rootView.setOnClickListener(v -> {
             openShoppingCartPreview();
@@ -144,7 +145,6 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
 
     @Override
     public boolean onSupportNavigateUp() {
-        Log.i("MADAPP", "onSupportNavigateUp");
         int fragments = getSupportFragmentManager().getBackStackEntryCount();
         if (fragments == 1) {
             finish();
@@ -171,7 +171,9 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
 
     private void updateShoppingCartIcon(int n) {
         countTextView.setText(String.valueOf(n));
-        redCircle.setVisibility((n > 0) ? View.VISIBLE : View.GONE);
+        if(n>0) countTextView.setVisibility(View.VISIBLE);
+        else
+            countTextView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -208,6 +210,7 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
                             dialog.dismiss();
                         }
                     });
+
             AlertDialog emptyCartDialog = emptyBuilder.create();
             emptyCartDialog.show();
             return;
@@ -301,13 +304,15 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
         ConsumerDatabase.getInstance().getRestaurantInfo(previewInfo, (rest) -> {
             restaurant = rest;
             if (restaurant.previewInfo.imageName == null || restaurant.previewInfo.imageName.equals("")) {
-                appBarLayout.setBackground(getDrawable(R.drawable.restaurant_default));
+                //appBarLayout.setBackground(getDrawable(R.drawable.restaurant_default));
+                imgRestaurant.setImageDrawable(getDrawable(R.drawable.restaurant_default));
             } else {
                 ConsumerDatabase.getInstance().downloadImage(restaurant.previewInfo.id, "profile", restaurant.previewInfo.imageName, new OnImageDownloaded() {
                     @Override
                     public void onReceived(Uri imageUri) {
                         if (imageUri == null || imageUri == Uri.EMPTY) {
-                            appBarLayout.setBackground(getDrawable(R.drawable.restaurant_default));
+                            //appBarLayout.setBackground(getDrawable(R.drawable.restaurant_default));
+                            imgRestaurant.setImageDrawable(getDrawable(R.drawable.restaurant_default));
                         } else {
                             Target target = new Target() {
                                 @Override
@@ -315,7 +320,9 @@ public class RestaurantInfoActivity extends AppCompatActivity implements MenuIte
                                     ImageView imageView = new ImageView(getApplicationContext());
                                     imageView.setImageBitmap(bitmap);
                                     Drawable image = imageView.getDrawable();
-                                    appBarLayout.setBackground(image);
+                                    //appBarLayout.setBackground(image);
+                                    imgRestaurant.setImageDrawable(image);
+
                                 }
 
                                 @Override
