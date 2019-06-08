@@ -149,7 +149,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             tvNoOffer.setVisibility(View.GONE);
 
             offerMode = true;
-            loadRestaurantMenu();
+//            loadRestaurantMenu();
         });
         btnCompleteOffer.setOnClickListener(view -> {
             if(offer.size() != 0) {
@@ -166,7 +166,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             offer.clear();
             myOfferAdapter.notifyDataSetChanged();
             offerMode = false;
-            loadRestaurantMenu();
+//            loadRestaurantMenu();
         });
 
 
@@ -267,7 +267,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
                 .setPositiveButton(R.string.save, null)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        loadRestaurantMenu();
+//                        loadRestaurantMenu();
 
                     }
                 });
@@ -327,7 +327,7 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         RestaurantDatabase.getInstance().updateOffer(restaurantID, menuOffer, item -> {
             myOffers.add(menuOffer);
             myOffersListAdapter.notifyDataSetChanged();
-            loadRestaurantMenu();
+//            loadRestaurantMenu();
             if(myOffers.size() == 0) {
                 tvNoOffer.setVisibility(View.VISIBLE);
             } else {
@@ -340,8 +340,10 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
         RestaurantDatabase.getInstance().getMenu(currentUser.getUid(), new OnMenuReceived() {
             @Override
             public void menuReceived(Map<String, List<MenuItemRest>> menu, List<String> categories) {
-                MenuFragment.this.menu.putAll(menu);
-                MenuFragment.this.categories.addAll(categories);
+                MenuFragment.this.menu = menu;
+                MenuFragment.this.categories = categories;
+                adapter.categories = categories;
+                adapter.menu = menu;
                 adapter.notifyDataSetChanged();
                 progressBarMenu.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
@@ -360,6 +362,6 @@ public class MenuFragment extends Fragment implements OnMenuChanged {
             public void itemRemoved(MenuItemRest item) {
                 // nothing happens
             }
-        });
+        }, false);
     }
 }

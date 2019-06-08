@@ -42,10 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 public class ConsumerDatabase {
     public static ConsumerDatabase instance = new ConsumerDatabase();
@@ -189,33 +186,30 @@ public class ConsumerDatabase {
                                     Log.d("TRANS", "credito " + d.toString() + " tot: " + o.totalPrice);
 
                                     if (d > o.totalPrice) {
-                                        getMenuItems(o, new FirebaseCallback<List<MenuItemRest>>() {
-                                            @Override
-                                            public void onCallBack(List<MenuItemRest> item) throws IOException {
-                                                item.forEach(i -> {
-                                                    o.products.forEach(p -> {
-                                                        Log.d("TRANS", "id menuItems " + i.id + " id prodotto " + p.idItem + " quantità prodotto: " + p.quantity + " quantità items " + i.availability);
-                                                        if (i.id.equals(p.idItem)) {
-                                                            if (p.quantity > i.availability)
-                                                                flag = false;
-                                                            else
-                                                                i.availability -= p.quantity;
-                                                        }
-                                                    });
-
+                                        getMenuItems(o, item -> {
+                                            item.forEach(i -> {
+                                                o.products.forEach(p -> {
+                                                    Log.d("TRANS", "id menuItems " + i.id + " id prodotto " + p.idItem + " quantità prodotto: " + p.quantity + " quantità items " + i.availability);
+                                                    if (i.id.equals(p.idItem)) {
+                                                        if (p.quantity > i.availability)
+                                                            flag = false;
+                                                        else
+                                                            i.availability -= p.quantity;
+                                                    }
                                                 });
-                                                if (flag) {
-                                                    item.forEach(i -> {
-                                                        myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
-                                                    });
-                                                    o.id = myRef.child("orders").push().getKey();
-                                                    myRef.child("orders").child(o.id).setValue(o);
-                                                    myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").setValue(d - o.totalPrice);
-                                                }
 
-                                                firebaseCallback2.onCallBack(flag);
+                                            });
+                                            if (flag) {
+                                                item.forEach(i -> {
+                                                    myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").child(i.id).setValue(i);
+                                                });
+                                                o.id = myRef.child("orders").push().getKey();
+                                                myRef.child("orders").child(o.id).setValue(o);
+                                                myRef.child("users").child("customers").child(mAuth.getUid()).child("credit").setValue(d - o.totalPrice);
                                             }
-                                        });
+
+                                            firebaseCallback2.onCallBack(flag);
+                                        }, true);
 
                                     } else {
                                         try {
@@ -257,7 +251,7 @@ public class ConsumerDatabase {
 
                                 firebaseCallback2.onCallBack(flag);
                             }
-                        });
+                        }, false);
                     }
 
                 }
@@ -360,11 +354,12 @@ public class ConsumerDatabase {
                                                 continue;
                                             }
 
-                                            } if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
-                                                map.put(restaurant.previewInfo, Haversine.distance(latitude, longitude, restaurant.latitude, restaurant.longitude));
-                                            } else {
-                                                map.put(restaurant.previewInfo, 0.0);
-                                            }
+                                        }
+                                        if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
+                                            map.put(restaurant.previewInfo, Haversine.distance(latitude, longitude, restaurant.latitude, restaurant.longitude));
+                                        } else {
+                                            map.put(restaurant.previewInfo, 0.0);
+                                        }
 
                                     }
                                 }
@@ -518,8 +513,8 @@ public class ConsumerDatabase {
         });
     }
 
-    public void getMenuItems(Order o, FirebaseCallback<List<MenuItemRest>> firebaseCallback) {
-        myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").addValueEventListener(new ValueEventListener() {
+    public void getMenuItems(Order o, FirebaseCallback<List<MenuItemRest>> firebaseCallback, boolean single) {
+        ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<MenuItemRest> MenuItems = new ArrayList<>();
@@ -550,7 +545,14 @@ public class ConsumerDatabase {
                 Log.d("DATABASE: ", "Dato cancellato");
 
             }
-        });
+        };
+
+        if (single) {
+            myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").addListenerForSingleValueEvent(eventListener);
+
+        } else {
+            myRef.child("users").child("restaurants").child(o.restaurantId).child("menu").addValueEventListener(eventListener);
+        }
 
     }
 
@@ -1029,7 +1031,7 @@ public class ConsumerDatabase {
 
     public void getFavouriteRestaurants(String userID, OnFirebaseData<PreviewInfo> cb) {
         getFavouriteRestaurantsIDs(userID, ids -> {
-            if(ids.size() == 0) {
+            if (ids.size() == 0) {
                 cb.onReceived(null);
                 return;
             }

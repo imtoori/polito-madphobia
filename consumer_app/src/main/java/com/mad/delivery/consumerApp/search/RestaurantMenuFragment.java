@@ -58,6 +58,7 @@ public class RestaurantMenuFragment extends Fragment {
                     menuList.add(item);
                     MenuCategory mc = new MenuCategory(item.category, menuList);
                     categories.add(mc);
+                    Log.d("MADAPP", categories.toString());
                 }
             });
         }

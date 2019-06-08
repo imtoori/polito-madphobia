@@ -79,7 +79,6 @@ public class WalletFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         Log.d("MADAPP", "WalletFragment onDetach");
-
         mListener = null;
     }
 

@@ -194,11 +194,11 @@ final public class RestaurantDatabase {
         });
     }
 
-    public void getMenu(String restaurantID, OnMenuReceived cb) {
+    public void getMenu(String restaurantID, OnMenuReceived cb, boolean single) {
         if (restaurantID == null) {
             return;
         }
-        restaurantRef.child(restaurantID).child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
+        ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> categories;
@@ -219,7 +219,13 @@ final public class RestaurantDatabase {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 cb.menuReceived(new HashMap<>(), new ArrayList<>());
             }
-        });
+        };
+
+        if (single) {
+            restaurantRef.child(restaurantID).child("menu").addListenerForSingleValueEvent(valueEventListener);
+        } else {
+            restaurantRef.child(restaurantID).child("menu").addValueEventListener(valueEventListener);
+        }
     }
 
 
@@ -359,7 +365,7 @@ final public class RestaurantDatabase {
             public void itemRemoved(MenuItemRest item) {
 
             }
-        });
+        }, true);
 
 
     }
@@ -500,7 +506,7 @@ final public class RestaurantDatabase {
                         if (snapshot.getValue(Biker.class).status == true) {
                             Log.d("TAG:", restaurant.toString());
                             Double distance = Haversine.distance(restaurant.latitude, restaurant.longitude, snapshot.getValue(Biker.class).latitude, snapshot.getValue(Biker.class).longitude);
-                            if (distance<=5.0) {
+                            if (distance <= 5.0) {
                                 DecimalFormat df = new DecimalFormat("#.#");
                                 df.setRoundingMode(RoundingMode.CEILING);
                                 bikerIdDistance.put(Double.parseDouble(df.format(distance)), snapshot.getValue(Biker.class));
@@ -557,7 +563,7 @@ final public class RestaurantDatabase {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Biker b = dataSnapshot.getValue(Biker.class);
-                        cb.onReceived(b);
+                    cb.onReceived(b);
                 } else {
                     Log.d("MADAPP", "checkLogin: dataSnapshop doesn't exists.");
                     cb.onReceived(null);
