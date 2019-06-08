@@ -90,7 +90,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         deliveryAddress = view.findViewById(R.id.delivery_address_et);
 
         deliveryAddress.setOnClickListener(v -> {
-            List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+            List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.LAT_LNG);
             Intent intent = new Autocomplete.IntentBuilder(
                     AutocompleteActivityMode.FULLSCREEN, fields)
                     .build(getActivity());
@@ -322,7 +322,9 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.i("PLACES", "Place: " + place.getName() + ", " + place.getId() + place.getLatLng().toString());
-                deliveryAddress.setText(place.getName());
+                deliveryAddress.setText(place.getAddress());
+                latitude =place.getLatLng().latitude;
+                longitude = place.getLatLng().longitude;
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
                 Log.i("PLACES", status.getStatusMessage());
