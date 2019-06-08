@@ -139,6 +139,7 @@ final public class RestaurantDatabase {
     }
 
     public void update(Order o) {
+        Log.d("MADAPP", "OnDatabase Update"  + o.toString());
         ordersRef.child(o.id).setValue(o);
     }
 

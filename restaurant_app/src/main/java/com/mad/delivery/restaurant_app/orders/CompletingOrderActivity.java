@@ -145,6 +145,7 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 confirmDeliveryTime();
             }
         });
+
         btnUndoDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

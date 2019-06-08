@@ -77,6 +77,7 @@ public class Order implements Parcelable, Comparable<Order> {
         this.latitude = other.latitude;
         this.longitude = other.longitude;
         this.bikerId = other.bikerId;
+        this.clientId = other.clientId;
         this.feedbackIsPossible = other.feedbackIsPossible;
         this.feedbackID = other.feedbackID;
         this.distanceRide = other.distanceRide;
