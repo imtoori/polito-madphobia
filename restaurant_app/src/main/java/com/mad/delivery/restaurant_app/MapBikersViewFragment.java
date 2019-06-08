@@ -153,23 +153,23 @@ public class MapBikersViewFragment extends DialogFragment {
                 markerOptions.position(r).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ristorante");
                 Marker m = mMap.addMarker(markerOptions);
                 m.showInfoWindow();
-                RestaurantDatabase.getInstance().getBikersClosest(new FireBaseCallBack<TreeMap<Double,Biker>>() {
+                RestaurantDatabase.getInstance().getBikersClosest(new FireBaseCallBack<ArrayList<DistanceBiker>>() {
                     @Override
-                    public void onCallbackList(List<TreeMap< Double,Biker>> list) {
+                    public void onCallbackList(List<ArrayList<DistanceBiker>> list) {
 
                     }
 
                     @Override
-                    public void onCallback(TreeMap<Double,Biker> user) {
-                        user.forEach((d,b)->{
+                    public void onCallback(ArrayList<DistanceBiker> user) {
+                        user.forEach(b->{
                             MarkerOptions markerOptions = new MarkerOptions();
-                            LatLng p = new LatLng(b.latitude,b.longitude);
-                            Log.d("BIKER :",d.toString()+" "+p.toString());
+                            LatLng p = new LatLng(b.biker.latitude,b.biker.longitude);
+                            Log.d("BIKER :",b.distance.toString()+" "+p.toString());
 
-                            markerOptions.position(p).title(b.email).snippet("Distanza: "+d).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                            markerOptions.position(p).title(b.biker.email).snippet("Distanza: "+b.distance).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                             Marker m =mMap.addMarker(markerOptions);
                             m.showInfoWindow();
-                            bikers.add(new DistanceBiker(b,  d));
+                            bikers.add(b);
                             bikers.sort(new SortByClosestDistance());
                             bikersAdapter.notifyDataSetChanged();
                         });

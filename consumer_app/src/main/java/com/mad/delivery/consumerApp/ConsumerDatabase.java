@@ -687,6 +687,7 @@ public class ConsumerDatabase {
                     // dataSnapshot is the "issue" node with all children with id 0
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         Order o = issue.getValue(Order.class);
+                        Log.i("MADAPP", o.status.toString());
                         if (o != null)
                             orders.add(o);
                     }
