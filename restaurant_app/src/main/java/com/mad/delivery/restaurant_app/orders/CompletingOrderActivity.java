@@ -99,7 +99,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         requestedDeliveryTime.setText(getResources().getString(R.string.delivery_opt_sentence, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
         currentStatus.setText(modifiedOrder.status.toString().toLowerCase());
         currentStatus.setTextColor(getColor(modifiedOrder.status));
-
         cvDeliveryOptions = findViewById(R.id.cv_delivery_options);
         cvSelectBiker = findViewById(R.id.cv_select_biker);
         cvAdminNotes  = findViewById(R.id.cv_admin_notes);
@@ -119,11 +118,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         LayoutTransition adminNotesLt =  cvAdminNotes.getLayoutTransition();
         adminNotesLt.setDuration(500);
         adminNotesLt.enableTransitionType(LayoutTransition.CHANGING);
-
         LayoutTransition deliveryLt =  cvDeliveryOptions.getLayoutTransition();
         deliveryLt.setDuration(500);
         deliveryLt.enableTransitionType(LayoutTransition.CHANGING);
-
         LayoutTransition changeStatusLt =  cvChangeStatus.getLayoutTransition();
         changeStatusLt.setDuration(500);
         changeStatusLt.enableTransitionType(LayoutTransition.CHANGING);
@@ -147,7 +144,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 confirmDeliveryTime();
             }
         });
-
         btnUndoDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,7 +153,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 btnConfirm.setVisibility(View.VISIBLE);
                 btnUndoDelivery.setVisibility(View.GONE);
                 orderIsConfirmed = false;
-
             }
         });
         btnDeliveryTimeChange.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +180,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             }
         });
     }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -209,7 +203,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             }
         });
     }
-
     @Override
     public boolean onSupportNavigateUp() {
         Intent intent = new Intent(getApplicationContext(), DetailOrderActivity.class);
@@ -218,13 +211,11 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         return super.onSupportNavigateUp();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.order_completing_menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -271,7 +262,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
                 return getResources().getColor(R.color.colorCanceledOrder, null);
         }
     }
-
     public void showTimePickerDialog(View v) {
         DialogFragment timeFragment = new TimePickerFragment();
         Bundle bundle = new Bundle();
@@ -279,7 +269,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         timeFragment.setArguments(bundle);
         timeFragment.show(getSupportFragmentManager(), "timePicker");
     }
-
     public void confirmDeliveryTime() {
         requestedDeliveryTime.setText(getResources().getString(R.string.confirmed_order, MyDateFormat.parse(DateTime.parse(modifiedOrder.orderFor))));
         btnDeliveryTimeChange.setVisibility(View.GONE);
@@ -289,7 +278,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         imageConfirmError.setVisibility(View.GONE);
         orderIsConfirmed = true;
     }
-
     @Override
     public void onTimePicked(int h, int m) {
         DateTime newDate = new DateTime(modifiedOrder.orderFor);
@@ -298,7 +286,6 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
         modifiedOrder.orderFor = newDate.toString();
         confirmDeliveryTime();
     }
-
     private AlertDialog createDialog(int titleResource, int messageResource) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(messageResource)
@@ -372,13 +359,9 @@ public class CompletingOrderActivity extends AppCompatActivity implements TimePi
             Double dist = Double.parseDouble(res[1]) / 1000;
             Log.e("MADAPP: ", modifiedOrder.distanceRide.toString());
             modifiedOrder.distanceRide += dist;
-
         }
         else {
-
             modifiedOrder.distanceRide += Haversine.distance(order.latitude,order.longitude,selectedBiker.latitude,selectedBiker.longitude);
-
         }
-
     }
 }
