@@ -387,7 +387,7 @@ public class ConsumerDatabase {
                                         if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
                                             map.put(restaurant.previewInfo, Haversine.distance(latitude, longitude, restaurant.latitude, restaurant.longitude));
                                         } else {
-                                            map.put(restaurant.previewInfo, 0.0);
+                                            map.put(restaurant.previewInfo, -1.0);
                                         }
 
                                     }
