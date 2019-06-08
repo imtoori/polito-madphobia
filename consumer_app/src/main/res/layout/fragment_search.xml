@@ -43,7 +43,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
+                <TextView
                     android:id="@+id/delivery_address_et"
                     style="@style/Widget.AppCompat.EditText"
                     android:layout_width="0dp"
@@ -51,11 +51,9 @@
                     android:layout_marginStart="16dp"
                     android:background="@drawable/edit_text_border"
                     android:hint="@string/location_hint"
-                    android:inputType="textPostalAddress"
                     android:paddingStart="16dp"
                     android:paddingEnd="40dp"
                     android:textSize="@dimen/description"
-                    android:focusedByDefault="false"
                     app:layout_constraintBottom_toBottomOf="@+id/search_imgbtn"
                     app:layout_constraintEnd_toStartOf="@+id/search_imgbtn"
                     app:layout_constraintStart_toStartOf="parent"
