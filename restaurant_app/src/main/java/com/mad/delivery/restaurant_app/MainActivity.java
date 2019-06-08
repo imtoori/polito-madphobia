@@ -62,43 +62,40 @@ public class MainActivity extends AppCompatActivity implements PendingOrdersFrag
         setSupportActionBar(myToolBar);
         setTitle(getResources().getString(R.string.app_name));
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft;
-                switch (item.getItemId()) {
-                    case R.id.nav_menu:
-                        open = 0;
-                        setTitle(getString(R.string.nav_menu));
-                        ft = fm.beginTransaction();
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.frag_container, menuFragment);
-                        ft.commit();
-                        return true;
-                    case R.id.nav_orders:
-                        open = 1;
-                        setTitle(getString(R.string.nav_orders));
-                        ft = fm.beginTransaction();
-                        Bundle bundle = new Bundle();
-                        if (orderToBeUpdated != null)
-                            bundle.putParcelable("orderToBeUpdated", orderToBeUpdated);
-                        orderFragment.setArguments(bundle);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.frag_container, orderFragment);
-                        ft.commit();
-                        return true;
-                    case R.id.nav_settings:
-                        open = 2;
-                        setTitle(getString(R.string.nav_settings));
-                        ft = fm.beginTransaction();
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        ft.replace(R.id.frag_container, settingFragment);
-                        ft.commit();
-                        return true;
-                }
-                return false;
+        mOnNavigationItemSelectedListener = item -> {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft;
+            switch (item.getItemId()) {
+                case R.id.nav_menu:
+                    open = 0;
+                    setTitle(getString(R.string.nav_menu));
+                    ft = fm.beginTransaction();
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.frag_container, menuFragment);
+                    ft.commit();
+                    return true;
+                case R.id.nav_orders:
+                    open = 1;
+                    setTitle(getString(R.string.nav_orders));
+                    ft = fm.beginTransaction();
+                    Bundle bundle = new Bundle();
+                    if (orderToBeUpdated != null)
+                        bundle.putParcelable("orderToBeUpdated", orderToBeUpdated);
+                    orderFragment.setArguments(bundle);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.frag_container, orderFragment);
+                    ft.commit();
+                    return true;
+                case R.id.nav_settings:
+                    open = 2;
+                    setTitle(getString(R.string.nav_settings));
+                    ft = fm.beginTransaction();
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.replace(R.id.frag_container, settingFragment);
+                    ft.commit();
+                    return true;
             }
+            return false;
         };
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         switch (open) {
