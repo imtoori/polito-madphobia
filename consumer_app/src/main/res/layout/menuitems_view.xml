@@ -46,12 +46,12 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_menuitem_name" />
 
     <ImageButton
-        android:id="@+id/btn_add_item"
+        android:id="@+id/btn_rem_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:background="@drawable/transparent_rounded"
-        android:src="@drawable/ic_plus"
+        android:src="@drawable/ic_minus"
         android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/tv_menuitem_qty"
         app:layout_constraintEnd_toStartOf="@+id/tv_menuitem_qty"
@@ -69,19 +69,19 @@
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_rem_item"
-        app:layout_constraintEnd_toStartOf="@+id/btn_rem_item"
-        app:layout_constraintTop_toTopOf="@+id/btn_rem_item" />
+        app:layout_constraintBottom_toBottomOf="@+id/btn_add_item"
+        app:layout_constraintEnd_toStartOf="@+id/btn_add_item"
+        app:layout_constraintTop_toTopOf="@+id/btn_add_item" />
 
     <ImageButton
-        android:id="@+id/btn_rem_item"
+        android:id="@+id/btn_add_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/transparent_rounded"
-        android:src="@drawable/ic_minus"
+        android:src="@drawable/ic_plus"
         android:tint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
