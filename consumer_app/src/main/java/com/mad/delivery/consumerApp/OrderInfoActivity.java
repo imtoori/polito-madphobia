@@ -71,9 +71,10 @@ public class OrderInfoActivity extends AppCompatActivity  {
         recyclerView.hasFixedSize();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryordersAdapter);
+
         Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        String orderId = extras.getString("orderID");
+        String orderId = intent.getStringExtra("id");
+
         Log.d("MADAPP", "order = " + orderId);
         if (orderId != null) {
             ConsumerDatabase.getInstance().getOrderById(orderId, item -> {
@@ -84,7 +85,10 @@ public class OrderInfoActivity extends AppCompatActivity  {
 
                 });
             });
+            return;
         }
+
+        loadOrder(order);
 
     }
 

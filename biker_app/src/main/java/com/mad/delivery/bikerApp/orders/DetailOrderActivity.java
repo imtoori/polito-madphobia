@@ -1,26 +1,22 @@
 package com.mad.delivery.bikerApp.orders;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mad.delivery.bikerApp.BikerDatabase;
-import com.mad.delivery.bikerApp.FirebaseCallbackItem;
 import com.mad.delivery.bikerApp.HomeActivity;
-import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.bikerApp.R;
+import com.mad.delivery.bikerApp.auth.LoginActivity;
 import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 
@@ -31,6 +27,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Order order;
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +38,16 @@ public class DetailOrderActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         mPager = findViewById(R.id.detail_order_pager);
 
-        order  = bundle.getParcelable("order");
+        order = bundle.getParcelable("order");
 
         if (order == null) {
-            String orderId = bundle.getString("extra");
+            Intent intent = getIntent();
+            String orderId = intent.getStringExtra("id");
             if (orderId != null) {
+                Log.d("firebase", orderId);
                 BikerDatabase.getInstance().getOrderById(orderId, order -> {
                     DetailOrderActivity.this.order = order;
-                    loadOrder(order);
+                    loadOrder(DetailOrderActivity.this.order);
                 });
                 return;
             }
@@ -89,7 +88,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(order.status.equals(OrderStatus.completed)) {
+        if (order != null && order.status.equals(OrderStatus.completed)) {
             getMenuInflater().inflate(R.menu.order_detail_menu, menu);
         }
         return true;
@@ -98,7 +97,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.save_order_option:
                 Log.d("MADAPP", "Save option selected");
                 item.setTitle("SEND");

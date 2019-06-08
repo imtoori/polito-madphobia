@@ -1,17 +1,16 @@
 package com.mad.delivery.restaurant_app.orders;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,9 +19,9 @@ import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.OrderStatus;
 import com.mad.delivery.resources.Restaurant;
 import com.mad.delivery.restaurant_app.FireBaseCallBack;
-import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.MainActivity;
 import com.mad.delivery.restaurant_app.R;
+import com.mad.delivery.restaurant_app.RestaurantDatabase;
 import com.mad.delivery.restaurant_app.auth.LoginActivity;
 import com.mad.delivery.restaurant_app.auth.OnLogin;
 
@@ -35,6 +34,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Order order;
     private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +47,11 @@ public class DetailOrderActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.detail_header);
         tabLayout.setupWithViewPager(mPager);
 
-        order  = bundle.getParcelable("order");
+        order = bundle.getParcelable("order");
 
         if (order == null) {
-            String orderId = bundle.getString("extra");
+            Intent intent = getIntent();
+            String orderId = intent.getStringExtra("extra");
             if (orderId != null) {
                 RestaurantDatabase.getInstance().getOrderById(orderId, new FireBaseCallBack<Order>() {
                     @Override
@@ -60,7 +61,8 @@ public class DetailOrderActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onCallbackList(List<Order> list) { }
+                    public void onCallbackList(List<Order> list) {
+                    }
                 });
                 return;
             }
@@ -116,7 +118,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(!(order.status.equals(OrderStatus.delivered) || order.status.equals(OrderStatus.completed) || order.status.equals(OrderStatus.canceled)))
+        if (!(order.status.equals(OrderStatus.delivered) || order.status.equals(OrderStatus.completed) || order.status.equals(OrderStatus.canceled)))
             getMenuInflater().inflate(R.menu.order_detail_menu, menu);
         return true;
 
@@ -125,14 +127,14 @@ public class DetailOrderActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.save_order_option:
                 Log.d("MADAPP", "Save option selected");
                 item.setTitle("SEND");
                 Intent intent = new Intent(getApplicationContext(), CompletingOrderActivity.class);
-                Log.d("ORDER: in detail1",order.toString());
+                Log.d("ORDER: in detail1", order.toString());
                 intent.putExtra("order", order);
-                Log.d("ORDER: in detail2",order.toString());
+                Log.d("ORDER: in detail2", order.toString());
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;

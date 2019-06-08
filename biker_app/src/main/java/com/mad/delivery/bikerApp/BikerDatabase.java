@@ -67,9 +67,12 @@ final public class BikerDatabase {
         myRef.child("orders").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("firebase", String.valueOf(dataSnapshot.exists()));
                 Order order = dataSnapshot.getValue(Order.class);
-                order.id = id;
-                firebaseCallback.onCallback(order);
+                if (order != null) {
+                    order.id = id;
+                    firebaseCallback.onCallback(order);
+                }
             }
 
             @Override

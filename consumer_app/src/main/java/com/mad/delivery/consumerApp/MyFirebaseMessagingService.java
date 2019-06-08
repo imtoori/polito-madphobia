@@ -31,7 +31,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         Log.d("NOTIFICATION", data.toString());
         Intent intent = new Intent(this, OrderInfoActivity.class);
-        intent.putExtra("extra", data.get("extra"));
+        intent.putExtra("id", data.get("extra"));
         createNotification("", data.get("title"), intent);
     }
 
