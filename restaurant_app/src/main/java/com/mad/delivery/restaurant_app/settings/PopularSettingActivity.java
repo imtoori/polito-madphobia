@@ -25,10 +25,13 @@ import com.mad.delivery.restaurant_app.auth.OnLogin;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+
 import com.github.mikephil.charting.charts.BarChart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class PopularSettingActivity extends AppCompatActivity {
@@ -37,6 +40,7 @@ public class PopularSettingActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     TextView first, second, third, first_q, second_q, third_q;
     ImageView first_img, second_img, third_img;
+    CardView first_cv, second_cv, third_cv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,9 @@ public class PopularSettingActivity extends AppCompatActivity {
         first= findViewById(R.id.tv_first_place);
         second=findViewById(R.id.tv_second_place);
         third=findViewById(R.id.tv_third_place);
+        first_cv=findViewById(R.id.first_place);
+        second_cv=findViewById(R.id.second_place);
+        third_cv=findViewById(R.id.third_place);
         first_q=findViewById(R.id.first_quantity);
         second_q=findViewById(R.id.second_quantity);
         third_q=findViewById(R.id.third_quantity);
@@ -56,44 +63,31 @@ public class PopularSettingActivity extends AppCompatActivity {
         second_img =findViewById(R.id.img_second_place);
         third_img =findViewById(R.id.img_third_place);
 
-        RestaurantDatabase.getInstance().getPopularDish(new OnFirebaseData<TreeMap<String, Integer>>() {
+        RestaurantDatabase.getInstance().getPopularDish(new OnFirebaseData<Map<String, Integer>>() {
             @Override
-            public void onReceived(TreeMap<String, Integer> item) {
+            public void onReceived(Map<String, Integer> item) {
                 List<String> listKeys = new ArrayList<String>(item.keySet());
                 List<Integer> listValues = new ArrayList<Integer>(item.values());
                 if(listKeys.size()>=1&&listValues.size()>=1){
                     first.setText(listKeys.get(0));
                     first_q.setText(listValues.get(0).toString());
+                    first_cv.setVisibility(View.VISIBLE);
 
                 }
-                else {
-                    first.setVisibility(View.INVISIBLE);
-                    first_q.setVisibility(View.INVISIBLE);
-                    first_img.setVisibility(View.INVISIBLE);
-                }
+
                 if(listKeys.size()>=2&&listValues.size()>=2){
                     second.setText(listKeys.get(1));
                     second_q.setText(listValues.get(1).toString());
+                    second_cv.setVisibility(View.VISIBLE);
 
                 }
-                else {
-                    second.setVisibility(View.INVISIBLE);
-                    second_q.setVisibility(View.INVISIBLE);
-                    second_img.setVisibility(View.INVISIBLE);
 
-                }
                 if(listKeys.size()>=3&&listValues.size()>=3){
                     third.setText(listKeys.get(2));
                     third_q.setText(listValues.get(2).toString());
-
+                    third_cv.setVisibility(View.VISIBLE);
                 }
-                else {
-                    third.setVisibility(View.INVISIBLE);
-                    third_q.setVisibility(View.INVISIBLE);
-                    third_img.setVisibility(View.INVISIBLE);
-
-                }
-            }
+                            }
         });
 
         findViewById(R.id.cv_daily_order).setVisibility(View.GONE);
@@ -103,9 +97,12 @@ public class PopularSettingActivity extends AppCompatActivity {
             @Override
             public void onReceived(List<BarEntry> item) {
                 List<BarEntry> timing = new ArrayList<>();
-                timing.addAll(item);
+                for(BarEntry b : item)
+                    if(b.getY()!=0)
+                       timing.add(b);
+                Log.i("MADAPP", "List->"+timing.toString());
                 BarDataSet set_timing = new BarDataSet(timing, "Number of Order");
-                set_timing.setColors(Color.RED);
+                set_timing.setColors(getColor(R.color.colorPrimary));
                 BarData data_timing = new BarData(set_timing);
                 data_timing.setBarWidth(0.9f); // set custom bar width
                 chart_timing.setData(data_timing);
@@ -113,6 +110,7 @@ public class PopularSettingActivity extends AppCompatActivity {
                 chart_timing.invalidate(); // refresh
                 chart_timing.setDrawBarShadow(false);
                 chart_timing.setDrawValueAboveBar(true); //visualizza valore sopra
+                chart_timing.animateY(2000);
 
                 XAxis xAxis_timing = chart_timing.getXAxis();
                 xAxis_timing.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -122,9 +120,9 @@ public class PopularSettingActivity extends AppCompatActivity {
 
 
                 YAxis leftAxis_timing = chart_timing.getAxisLeft();
-                leftAxis_timing.setLabelCount(8, false);
+                leftAxis_timing.setLabelCount(5, false);
                 leftAxis_timing.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-                leftAxis_timing.setSpaceTop(15f);
+                leftAxis_timing.setSpaceTop(5f);
                 leftAxis_timing.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
                 chart_timing.getAxisRight().setEnabled(false);
