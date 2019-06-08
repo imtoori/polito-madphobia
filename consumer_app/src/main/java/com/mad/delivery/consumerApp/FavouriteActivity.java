@@ -82,11 +82,17 @@ public class FavouriteActivity extends AppCompatActivity implements OnFavouriteC
                                     found = true; break;
                                 }
                             }
+
                             if(!found) {
                                 favourites.add(preview);
                                 favouritesAdapter.notifyDataSetChanged();
+                                if (favourites.size() == 0) {
+                                    emptyFolder.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyFolder.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                }
                             }
-
                         }
                         progressBar.setVisibility(View.GONE);
                         if (favourites.size() == 0) {

@@ -132,7 +132,6 @@ public class RestaurantsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ConsumerDatabase.getInstance().getRestaurants(chosenCategories, address, minOrderCost, freeDelivery, latitude, longitude, preview -> {
-
             if (preview != null && preview.size() != 0) {
                 emptyFolder.setVisibility(View.GONE);
                 if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
