@@ -1,9 +1,21 @@
 package com.mad.delivery.consumerApp.search;
+
+import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.LinearGradient;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,19 +26,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
-
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.GPSTracker;
 import com.mad.delivery.consumerApp.R;
@@ -34,12 +40,13 @@ import com.mad.delivery.resources.RestaurantCategory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +61,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private CardView filter;
     private Chip delivery, minorder, review;
     private String address = "";
-    private EditText deliveryAddress;
+    private TextView deliveryAddress;
     private Set<String> chosen;
     private boolean freeDelivery, minOrderCost, reviewFlag;
     private Double latitude;
@@ -62,6 +69,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private RecyclerView chipRecyclerView;
     private ChipFilterAdapter chipFilterAdapter;
     private List<RestaurantCategory> chips;
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -71,15 +79,24 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.grid_layout_animation_from_bottom);
         search = view.findViewById(R.id.search_imgbtn);
         filter = view.findViewById(R.id.cv_filters);
         delivery = view.findViewById(R.id.deliverychip);
         minorder = view.findViewById(R.id.minorderchip);
-        review=view.findViewById(R.id.order_review);
+        review = view.findViewById(R.id.order_review);
         location = view.findViewById(R.id.location_img);
         deliveryAddress = view.findViewById(R.id.delivery_address_et);
+
+        deliveryAddress.setOnClickListener(v -> {
+            List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(getActivity());
+            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+        });
+
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         chipRecyclerView = view.findViewById(R.id.chip_recycler_view);
         chipRecyclerView.hasFixedSize();
@@ -90,13 +107,13 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         chosen = new HashSet<>();
         freeDelivery = false;
         minOrderCost = false;
-        reviewFlag=false;
+        reviewFlag = false;
 
         delivery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 applyFilters(minOrderCost, b, reviewFlag);
-                if(b) {
+                if (b) {
                     delivery.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     delivery.setTextColor(getResources().getColor(R.color.colorWhite, null));
                     delivery.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
@@ -113,7 +130,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 applyFilters(b, freeDelivery, reviewFlag);
-                if(b) {
+                if (b) {
                     minOrderCost = true;
                     minorder.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     minorder.setTextColor(getResources().getColor(R.color.colorWhite, null));
@@ -130,7 +147,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 applyFilters(minOrderCost, freeDelivery, b);
-                if(b) {
+                if (b) {
                     reviewFlag = true;
                     review.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     review.setTextColor(getResources().getColor(R.color.colorWhite, null));
@@ -160,8 +177,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                     geocoder = new Geocoder(getContext(), Locale.getDefault());
 
                     try {
-                         latitude = gps.getLatitude();
-                         longitude = gps.getLongitude();
+                        latitude = gps.getLatitude();
+                        longitude = gps.getLongitude();
 
                         addresses = geocoder.getFromLocation(gps.getLatitude(), gps.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                     } catch (IOException e) {
@@ -197,7 +214,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.childfrag_container, catFragment);
         ft.commit();
-        ConsumerDatabase.getInstance().getAllRestaurantCategories( list -> {
+        ConsumerDatabase.getInstance().getAllRestaurantCategories(list -> {
             chips.clear();
             chipFilterAdapter.notifyDataSetChanged();
             chips.addAll(list);
@@ -232,11 +249,11 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             Log.d("MADAPP", "opening Category Fragment: Already present. Removing..");
             fm.beginTransaction().remove(fOpen).commit();
         }
-        if(chosenList != null) {
+        if (chosenList != null) {
             for (String s : chosenList) {
                 chips.stream().forEach(item -> {
                     Log.d("MADAPP", "chosen=" + s + ", but item:" + item.name);
-                    if(item.name.equalsIgnoreCase(s)) item.selected = true;
+                    if (item.name.equalsIgnoreCase(s)) item.selected = true;
                     chosen.add(s);
                 });
                 chipFilterAdapter.notifyDataSetChanged();
@@ -251,14 +268,14 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
         bundle.putBoolean("orderByReviews", reviewFlag);
-        if(deliveryAddress.getText().toString().length()==0){
-            longitude=null;
-            latitude=null;
+        if (deliveryAddress.getText().toString().length() == 0) {
+            longitude = null;
+            latitude = null;
         }
-        if(latitude!=null)
-        bundle.putDouble("latitude",latitude);
-        if(longitude!=null)
-        bundle.putDouble("longitude",longitude);
+        if (latitude != null)
+            bundle.putDouble("latitude", latitude);
+        if (longitude != null)
+            bundle.putDouble("longitude", longitude);
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
@@ -297,5 +314,19 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark, null)));
         }
         applyFilters(minOrderCost, freeDelivery, reviewFlag);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i("PLACES", "Place: " + place.getName() + ", " + place.getId());
+                deliveryAddress.setText(place.getName());
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i("PLACES", status.getStatusMessage());
+            }
+        }
     }
 }
