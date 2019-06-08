@@ -231,7 +231,14 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
         bundle.putBoolean("orderByReviews", r);
-
+        if (deliveryAddress.getText().toString().length() == 0) {
+            longitude = null;
+            latitude = null;
+        }
+        if (latitude != null)
+            bundle.putDouble("latitude", latitude);
+        if (longitude != null)
+            bundle.putDouble("longitude", longitude);
         restaurantsFragment.setArguments(bundle);
         ft = fm.beginTransaction();
         ft.addToBackStack(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
@@ -263,7 +270,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         restaurantsFragment = new RestaurantsFragment();
         Bundle bundle = new Bundle();
         this.address = address;
-        bundle.putStringArrayList("categories", (ArrayList<String>) chosenList);
+        bundle.putStringArrayList("categories", new ArrayList<>(chosen));
         bundle.putString("address", address);
         bundle.putBoolean("minOrderCost", m);
         bundle.putBoolean("freeDelivery", d);
@@ -303,6 +310,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     public void changed(Chip chip, boolean checked) {
         if (checked) {
             chosen.add(chip.getText().toString().toLowerCase());
+            Log.d("SCELTO: ",chosen.toString());
             chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimaryDark, null)));
             chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
             chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
