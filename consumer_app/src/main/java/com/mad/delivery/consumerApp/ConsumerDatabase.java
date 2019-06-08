@@ -352,7 +352,6 @@ public class ConsumerDatabase {
                                 if (list.contains(issue.getKey())) {
                                     Restaurant restaurant = issue.getValue(Restaurant.class);
                                     if (restaurant != null) {
-                                        Log.d("MADAPP", "restuanrat freed=" + restaurant.previewInfo.deliveryCost);
                                         if (restaurant.visible != null && restaurant.visible) {
                                             if ((m && restaurant.previewInfo.minOrderCost != 0)) {
                                                 continue;
@@ -361,7 +360,7 @@ public class ConsumerDatabase {
                                                 continue;
                                             }
 
-                                            } else if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
+                                            } if (latitude != null && longitude != null && latitude != 0.0 && longitude != 0.0) {
                                                 map.put(restaurant.previewInfo, Haversine.distance(latitude, longitude, restaurant.latitude, restaurant.longitude));
                                             } else {
                                                 map.put(restaurant.previewInfo, 0.0);
@@ -372,7 +371,6 @@ public class ConsumerDatabase {
                             }
                         }
                         firebaseCallback.onReceived(map);
-
                     }
 
                     @Override
@@ -1028,9 +1026,11 @@ public class ConsumerDatabase {
     }
 
     public void getFavouriteRestaurants(String userID, OnFirebaseData<PreviewInfo> cb) {
-        List<PreviewInfo> previews = new ArrayList<>();
         getFavouriteRestaurantsIDs(userID, ids -> {
-            Log.d("MADAPP", "IDs" + ids.toString());
+            if(ids.size() == 0) {
+                cb.onReceived(null);
+                return;
+            }
             for (String id : ids) {
                 getRestaurant(id, preview -> {
                     cb.onReceived(preview);
