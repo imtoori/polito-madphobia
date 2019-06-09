@@ -33,11 +33,12 @@ public class RestaurantInfoPageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                rdFragment.setArguments(bundle);
-                return rdFragment;
-            case 1:
                 rmFragment.setArguments(bundle);
                 return rmFragment;
+
+            case 1:
+                rdFragment.setArguments(bundle);
+                return rdFragment;
             default:
                 return null;
         }
@@ -48,9 +49,9 @@ public class RestaurantInfoPageAdapter extends FragmentPagerAdapter {
         // Generate title based on item position
         switch(position) {
             case 0:
-                return context.getString(R.string.restaurant_info);
-            case 1:
                 return context.getString(R.string.rest_menu);
+            case 1:
+                return context.getString(R.string.restaurant_info);
             default:
                 return null;
         }

@@ -350,7 +350,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:hint="@string/house_number"
-                android:inputType="number"
+                android:inputType="textShortMessage"
                 android:maxLength="5"
                 android:textColor="@color/colorText"
                 android:textSize="@dimen/normalText"

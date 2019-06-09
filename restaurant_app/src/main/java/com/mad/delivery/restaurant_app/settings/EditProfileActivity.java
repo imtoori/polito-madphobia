@@ -486,6 +486,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String phoneNumberString = "^\\+?(?:[0-9] ?){6,14}[0-9]$";
         String postalCodeString = "[0-9]{5}";
         String numberString = "[1-9][0-9]*";
+        String houseString = "([\0-9a-zA-Z])+";
         String roadString = "([A-Za-z0-9'-_\\s])+";
         String cityString = "([A-Za-z\'\\s-])+";
         String deliveryAndOrder = "[0-9.,]{1,5}";
@@ -524,7 +525,7 @@ public class EditProfileActivity extends AppCompatActivity {
             result = false;
         }
 
-        if (!houseNumber.getText().toString().matches(numberString)) {
+        if (!houseNumber.getText().toString().matches(houseString)) {
             houseNumber.setError(getResources().getString(R.string.house_number));
             result = false;
         }
