@@ -72,25 +72,23 @@ public class OrderInfoActivity extends AppCompatActivity  {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryordersAdapter);
 
-        order = getIntent().getParcelableExtra("order");
+        //order = getIntent().getParcelableExtra("order");
 
         Intent intent = getIntent();
         String orderId = intent.getStringExtra("id");
 
-        Log.d("MADAPP", "order = " + orderId);
         if (orderId != null) {
             ConsumerDatabase.getInstance().getOrderById(orderId, item -> {
                 order = item;
                 loadOrder(item);
                 btnFeedback.setOnClickListener(v -> {
                     openFeedbackDialog(order);
-
                 });
             });
             return;
         }
 
-        loadOrder(order);
+        //loadOrder(order);
 
     }
 
@@ -154,6 +152,7 @@ public class OrderInfoActivity extends AppCompatActivity  {
     }
 
     public void openFeedbackDialog(Order o) {
+        Log.d("MADAPP", "openFeedbackDialog");
         feedbackFragment = FeedBackFragment.newInstance(o);
         feedbackFragment.show(getSupportFragmentManager(), "feedbackFragment");
     }

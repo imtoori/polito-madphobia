@@ -921,12 +921,13 @@ public class ConsumerDatabase {
                 }
                 getBiker(o.bikerId, biker -> {
                     if(biker.score == null) {
-                        biker.score = feedback.bikerVote / 2;
+                        biker.score = feedback.bikerVote;
                         biker.scoreCount = 1;
                     } else {
-                        biker.score = (biker.score * biker.scoreCount) + (feedback.bikerVote / 2);
+                        // 5 * 1 + 3 = 8
+                        biker.score = (biker.score * biker.scoreCount) + (feedback.bikerVote);
                         biker.scoreCount++;
-                        biker.score = biker.score / biker.scoreCount;
+                        biker.score =   biker.score / (double) biker.scoreCount;
                     }
                     myRef.child("users").child("biker").child(biker.id).child("score").setValue(biker.score);
                     myRef.child("users").child("biker").child(biker.id).child("scoreCount").setValue(biker.scoreCount);
@@ -935,13 +936,13 @@ public class ConsumerDatabase {
                 getRestourant(o.restaurantId, r -> {
                     if (r != null) {
                         if (r.previewInfo.scoreValue == null) {
-                            r.previewInfo.scoreValue = (feedback.serviceRestaurantVote + feedback.foodVote) / 2;
+                            r.previewInfo.scoreValue = (feedback.serviceRestaurantVote + feedback.foodVote) / (double) 2;
                             r.previewInfo.scoreCount = 1;
                         } else {
                             if (r.previewInfo.scoreCount == null) r.previewInfo.scoreCount = 0;
-                            r.previewInfo.scoreValue = (r.previewInfo.scoreValue * r.previewInfo.scoreCount) + ((feedback.serviceRestaurantVote + feedback.foodVote) / 2);
+                            r.previewInfo.scoreValue = (r.previewInfo.scoreValue * r.previewInfo.scoreCount) + ((feedback.serviceRestaurantVote + feedback.foodVote) / (double) 2);
                             r.previewInfo.scoreCount++;
-                            r.previewInfo.scoreValue = r.previewInfo.scoreValue / r.previewInfo.scoreCount;
+                            r.previewInfo.scoreValue = r.previewInfo.scoreValue / (double) r.previewInfo.scoreCount;
                         }
                         myRef.child("users").child("restaurants").child(r.previewInfo.id).child("previewInfo").child("scoreValue").setValue(r.previewInfo.scoreValue);
                         myRef.child("users").child("restaurants").child(r.previewInfo.id).child("previewInfo").child("scoreCount").setValue(r.previewInfo.scoreCount);

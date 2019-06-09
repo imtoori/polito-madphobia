@@ -196,7 +196,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
         intent.putExtra("order", o);
         Log.d("MADAPP", "order = " + o.toString());
-        intent.putExtra("orderID", o.id);
+        intent.putExtra("id", o.id);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
