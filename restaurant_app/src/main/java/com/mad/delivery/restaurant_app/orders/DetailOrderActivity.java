@@ -51,7 +51,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
         if (order == null) {
             Intent intent = getIntent();
-            String orderId = intent.getStringExtra("extra");
+            String orderId = intent.getStringExtra("id");
             if (orderId != null) {
                 RestaurantDatabase.getInstance().getOrderById(orderId, new FireBaseCallBack<Order>() {
                     @Override
@@ -118,7 +118,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!(order.status.equals(OrderStatus.delivered) || order.status.equals(OrderStatus.completed) || order.status.equals(OrderStatus.canceled)))
+        if ( order != null && !(order.status.equals(OrderStatus.delivered) || order.status.equals(OrderStatus.completed) || order.status.equals(OrderStatus.canceled)))
             getMenuInflater().inflate(R.menu.order_detail_menu, menu);
         return true;
 
