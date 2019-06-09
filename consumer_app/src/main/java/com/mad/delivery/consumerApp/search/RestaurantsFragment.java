@@ -175,6 +175,7 @@ public class RestaurantsFragment extends Fragment {
     }
 
 
+
     public interface OnRestaurantSelected {
         void openRestaurant(PreviewInfo previewInfo);
 

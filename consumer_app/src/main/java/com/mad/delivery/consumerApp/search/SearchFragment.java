@@ -63,7 +63,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private Chip delivery, minorder, review;
     private String address = "";
     private TextView deliveryAddress;
-    private Set<String> chosen;
+    public Set<String> chosen;
     private boolean freeDelivery, minOrderCost, reviewFlag;
     private Double latitude;
     private Double longitude;
@@ -89,6 +89,11 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         review = view.findViewById(R.id.order_review);
         location = view.findViewById(R.id.location_img);
         deliveryAddress = view.findViewById(R.id.delivery_address_et);
+        chosen = new HashSet<>();
+        search.setOnClickListener(v -> {
+            Log.w("MADAPP", "search button clicked");
+                openCategory(null, "", minOrderCost, freeDelivery);
+            });
 
         deliveryAddress.setOnClickListener(v -> {
             List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.LAT_LNG);
@@ -105,7 +110,6 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         chips = new ArrayList<>();
         chipFilterAdapter = new ChipFilterAdapter(chips, this);
         chipRecyclerView.setAdapter(chipFilterAdapter);
-        chosen = new HashSet<>();
         freeDelivery = false;
         minOrderCost = false;
         reviewFlag = false;
@@ -161,12 +165,8 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
                 }
             }
         });
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openCategory(null, "", minOrderCost, freeDelivery);
-            }
-        });
+
+
 
         location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +205,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         return view;
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -224,6 +225,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
             }
         });
     }
+
 
     public void applyFilters(boolean m, boolean d, boolean r) {
         restaurantsFragment = new RestaurantsFragment();
@@ -252,17 +254,17 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
 
     @Override
     public void openCategory(List<String> chosenList, String address, boolean m, boolean d) {
-        // if present, close the RestaurantsFragment
-        Log.d("MADAPP", "opening Category Fragment");
+        Log.w("MADAPP", "opening Category Fragment");
+
         Fragment fOpen = fm.findFragmentByTag(RestaurantsFragment.RESTAURANT_FRAGMENT_TAG);
         if (fOpen != null) {
-            Log.d("MADAPP", "opening Category Fragment: Already present. Removing..");
+            Log.w("MADAPP", "opening Category Fragment: Already present. Removing..");
             fm.beginTransaction().remove(fOpen).commit();
         }
         if (chosenList != null) {
             for (String s : chosenList) {
-                chips.stream().forEach(item -> {
-                    Log.d("MADAPP", "chosen=" + s + ", but item:" + item.name);
+                chips.forEach(item -> {
+                    Log.w("MADAPP", "chosen=" + s + ", but item:" + item.name);
                     if (item.name.equalsIgnoreCase(s)) item.selected = true;
                     chosen.add(s);
                 });
@@ -292,6 +294,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.childfrag_container, restaurantsFragment);
         ft.commit();
+
     }
 
     @Override

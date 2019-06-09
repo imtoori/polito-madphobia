@@ -14,7 +14,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="android:windowSoftInputMode">stateHidden</item>
+        <item name="android:windowSoftInputMode">stateHidden|adjustResize</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowContentTransitions">true</item>

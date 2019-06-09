@@ -126,8 +126,9 @@ public class DetailOrderActivity extends AppCompatActivity {
     }
 
     void loadMenu() {
-        if ( order != null && !(order.status.equals(OrderStatus.delivered) || order.status.equals(OrderStatus.completed) || order.status.equals(OrderStatus.canceled)))
-            getMenuInflater().inflate(R.menu.order_detail_menu, menu);
+        if ( order != null && !(order.status.equals(OrderStatus.delivered) || order.status.equals(OrderStatus.completed) || order.status.equals(OrderStatus.canceled))) {
+            if (menu != null) getMenuInflater().inflate(R.menu.order_detail_menu, menu);
+        }
     }
 
     @Override
