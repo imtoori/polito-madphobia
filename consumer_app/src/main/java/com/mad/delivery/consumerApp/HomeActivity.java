@@ -1,12 +1,5 @@
 package com.mad.delivery.consumerApp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +13,13 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,9 +30,7 @@ import com.mad.delivery.consumerApp.auth.LoginActivity;
 import com.mad.delivery.consumerApp.search.RestaurantInfoActivity;
 import com.mad.delivery.consumerApp.search.RestaurantsFragment;
 import com.mad.delivery.consumerApp.search.SearchFragment;
-import com.mad.delivery.consumerApp.settings.PasswordActivity;
 import com.mad.delivery.consumerApp.settings.SettingsFragment;
-import com.mad.delivery.consumerApp.wallet.OrdersAdapter;
 import com.mad.delivery.consumerApp.wallet.WalletFragment;
 import com.mad.delivery.resources.OnFirebaseData;
 import com.mad.delivery.resources.OnLogin;
@@ -40,10 +38,7 @@ import com.mad.delivery.resources.Order;
 import com.mad.delivery.resources.PreviewInfo;
 import com.mad.delivery.resources.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected{
+public class HomeActivity extends AppCompatActivity implements RestaurantsFragment.OnRestaurantSelected, WalletFragment.OnOrderSelected {
     Toolbar myToolbar;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
     FragmentManager fm;
@@ -89,11 +84,11 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         walletFragment = new WalletFragment();
         searchFragment = new SearchFragment();
         settingsFragment = new SettingsFragment();
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             open = savedInstanceState.getInt("open");
         }
 
-        if(getIntent().hasExtra("open")) {
+        if (getIntent().hasExtra("open")) {
             open = getIntent().getIntExtra("open", 1);
         }
 
@@ -131,7 +126,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         };
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        switch(open) {
+        switch (open) {
             case 0:
                 navigation.setSelectedItemId(R.id.nav_menu);
                 break;
@@ -144,8 +139,8 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
             default:
                 navigation.setSelectedItemId(R.id.nav_search);
         }
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 123);
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, 124);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 124);
 
         String topic = mAuth.getUid() + ".order.status";
         Log.d("FCM", "subscribe to " + topic);
@@ -158,16 +153,18 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
         Log.d("MADAPP", "onBackPressed, fragments " + fragments);
 
         if (searchFragment != null && searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
-            searchFragment.getChildFragmentManager().popBackStack();
             searchFragment.closeFilters();
-            return;
-        }
-        if (fragments == 1) {
-            finish();
-        } else if (getFragmentManager().getBackStackEntryCount() > 1) {
-            getFragmentManager().popBackStack();
+            while (searchFragment.getChildFragmentManager().getBackStackEntryCount() > 1) {
+                searchFragment.getChildFragmentManager().popBackStackImmediate();
+            }
         } else {
-            super.onBackPressed();
+            if (fragments == 1) {
+                finish();
+            } else if (getFragmentManager().getBackStackEntryCount() > 1) {
+                getFragmentManager().popBackStack();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -192,7 +189,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     }
 
 
-
     @Override
     public void openOrder(Order o) {
         Intent intent = new Intent(getApplicationContext(), OrderInfoActivity.class);
@@ -214,9 +210,6 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
 
         }
     }
-
-
-
 
 
     @Override
@@ -248,7 +241,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted.
 
-               // doLocationAccessRelatedJob();
+                // doLocationAccessRelatedJob();
             } else {
                 // User refused to grant permission. You can add AlertDialog here
                 Toast.makeText(this, "You didn't give permission to access device location", Toast.LENGTH_LONG).show();
@@ -268,25 +261,26 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
 
     @Override
     public void changeFavourite(PreviewInfo previewInfo, boolean added) {
-        if(mUser != null) {
+        if (mUser != null) {
             if (added) {
                 ConsumerDatabase.getInstance().addFavouriteRestaurant(previewInfo.id, mUser.getUid());
             } else {
-                ConsumerDatabase.getInstance().removeFavouriteRestaurant(previewInfo.id, mUser.getUid(), value -> {});
+                ConsumerDatabase.getInstance().removeFavouriteRestaurant(previewInfo.id, mUser.getUid(), value -> {
+                });
             }
         }
     }
 
     @Override
     public void isFavourited(PreviewInfo previewInfo, ToggleButton toggleButton) {
-        if(mUser == null) {
+        if (mUser == null) {
             toggleButton.setVisibility(View.GONE);
             return;
         }
         ConsumerDatabase.getInstance().getIsFavourite(previewInfo.id, mUser.getUid(), new OnFirebaseData<Boolean>() {
             @Override
             public void onReceived(Boolean item) {
-                if(item) toggleButton.setChecked(true);
+                if (item) toggleButton.setChecked(true);
                 else toggleButton.setChecked(false);
             }
         });
