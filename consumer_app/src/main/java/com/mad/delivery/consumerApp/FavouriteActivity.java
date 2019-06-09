@@ -115,10 +115,7 @@ public class FavouriteActivity extends AppCompatActivity implements OnFavouriteC
 
     @Override
     public boolean onSupportNavigateUp() {
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.putExtra("open", 1);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
         return super.onSupportNavigateUp();
     }
 
