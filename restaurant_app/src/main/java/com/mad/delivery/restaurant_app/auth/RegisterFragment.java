@@ -161,6 +161,13 @@ public class RegisterFragment extends Fragment {
                             Restaurant registered = new Restaurant();
                             registered.previewInfo = new PreviewInfo();
                             registered.previewInfo.id = user.getUid();
+                            registered.previewInfo.scoreValue = 0.0;
+                            registered.previewInfo.imageName = "";
+                            registered.previewInfo.deliveryCost = 0.0;
+                            registered.previewInfo.minOrderCost = 0.0;
+                            registered.latitude = 0.0;
+                            registered.longitude = 0.0;
+                            registered.token ="";
                             registered.visible = false;
                             registered.email = emailAddress.getText().toString();
 
