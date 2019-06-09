@@ -144,6 +144,13 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         computeTotalPrice();
         chipGroup.setSingleSelection(true);
 
+        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                 checkedChip = group.findViewById(checkedId);
+            }
+        });
+
         CompoundButton.OnCheckedChangeListener filterChipListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -152,12 +159,10 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
                     chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
                     chip.setTextColor(getResources().getColor(R.color.colorWhite, null));
                     chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
-                    checkedChip = chip;
                 } else {
                     chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorWhite, null)));
                     chip.setTextColor(getResources().getColor(R.color.colorPrimary, null));
                     chip.setChipIconTint(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary, null)));
-                    checkedChip = null;
                 }
             }
         };
