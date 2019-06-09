@@ -64,7 +64,7 @@
         android:id="@+id/cardView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         card_view:cardBackgroundColor="@android:color/transparent"
         card_view:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +94,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="11.3"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/subtitle" />
@@ -129,7 +128,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="3"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/subtitle" />
@@ -165,7 +163,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="€ 12,50"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/subtitle" />
@@ -203,7 +200,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="4,30"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/subtitle" />
@@ -212,7 +208,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:text="Hours"
+                    android:text="Rating"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/normalText" />

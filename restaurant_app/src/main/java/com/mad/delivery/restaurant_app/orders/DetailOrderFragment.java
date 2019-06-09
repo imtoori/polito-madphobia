@@ -33,6 +33,7 @@ import java.util.List;
 public class DetailOrderFragment extends Fragment {
     public static final String DETAIL_ORDER_FRAGMENT_TAG = "detail_order_fragment";
     View view;
+    CardView cvNotes;
     TextView arrived;
     TextView requested;
     TextView status;
@@ -57,6 +58,7 @@ public class DetailOrderFragment extends Fragment {
         status = view.findViewById(R.id.detail_status);
         statusIcon = view.findViewById(R.id.status_icon);
         clientNotes = view.findViewById(R.id.client_notes_tv);
+        cvNotes = view.findViewById(R.id.cv_notes);
         Order order = getArguments().getParcelable("order");
         Log.d("ORDER: in openOrder1",order.toString());
 
@@ -70,9 +72,11 @@ public class DetailOrderFragment extends Fragment {
         status.setTextColor(getColor(order.status));
         statusIcon.setColorFilter(getColor(order.status), PorterDuff.Mode.SRC_ATOP);
         if(order.clientNotes == null || order.clientNotes.equals("")) {
+            cvNotes.setVisibility(View.GONE);
             clientNotes.setText("No notes");
         } else {
             clientNotes.setText(order.clientNotes);
+            cvNotes.setVisibility(View.VISIBLE);
         }
         products = order.products;
         recyclerView = view.findViewById(R.id.rl_products);

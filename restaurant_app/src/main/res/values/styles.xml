@@ -29,7 +29,7 @@
     <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/colorTextIcon</item>
         <item name="android:textStyle">bold</item>
-        <item name="elevation">5dp</item>
+        <item name="android:elevation">5dp</item>
         <item name="android:textSize">@dimen/description</item>
         <item name="android:textAllCaps">true</item>
     </style>

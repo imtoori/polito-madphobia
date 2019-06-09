@@ -67,14 +67,12 @@
         <item name="colorControlNormal">@color/colorPrimaryDark</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
-        <item name="android:letterSpacing">@dimen/spacing</item>
         <item name="android:textAlignment">center</item>
         <item name="android:padding">8dp</item>
     </style>
     <style name="AppTheme.Login.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textSize">@dimen/title</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:letterSpacing">@dimen/spacing</item>
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/edittextshape</item>
         <item name="android:textColor">@color/colorTextIcon</item>

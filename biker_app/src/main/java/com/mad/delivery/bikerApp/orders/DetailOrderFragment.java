@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,17 +39,17 @@ public class DetailOrderFragment extends Fragment {
     TextView status;
     TextView totalPrice;
     TextView paymentMethod;
-    TextView bikerNotes;
+    TextView clientNotes;
     TextView restNotes;
     ImageView statusIcon;
     List<Product> products;
+    CardView cvClientNotes, cvRestaurantNotes;
     Order order;
     int price;
     private RecyclerView recyclerView;
     public DetailOrderFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +60,9 @@ public class DetailOrderFragment extends Fragment {
         requested = view.findViewById(R.id.order_requested);
         status = view.findViewById(R.id.detail_status);
         statusIcon = view.findViewById(R.id.status_icon);
-        bikerNotes = view.findViewById(R.id.client_notes_tv);
+        clientNotes = view.findViewById(R.id.client_notes_tv);
+        cvClientNotes = view.findViewById(R.id.cv_client_notes);
+        cvRestaurantNotes = view.findViewById(R.id.cv_restaurant_notes);
         restNotes = view.findViewById(R.id.restaurant_notes_tv);
         paymentMethod = view.findViewById(R.id.order_payment_method);
         totalPrice = view.findViewById(R.id.order_price);
@@ -78,8 +79,19 @@ public class DetailOrderFragment extends Fragment {
         totalPrice.setText("€ "+ price);
         paymentMethod.setText(order.paymentMethod);
 
+        if(order.clientNotes == null || order.clientNotes.equals("")) {
+            cvClientNotes.setVisibility(View.GONE);
+        } else {
+            clientNotes.setText(order.clientNotes);
+            cvClientNotes.setVisibility(View.VISIBLE);
+        }
 
-        bikerNotes.setText(order.bikerNotes);
+        if(order.serverNotes == null || order.serverNotes.equals("")) {
+            cvRestaurantNotes.setVisibility(View.GONE);
+        } else {
+            restNotes.setText(order.serverNotes);
+            cvRestaurantNotes.setVisibility(View.VISIBLE);
+        }
 
         products = order.products;
         recyclerView = view.findViewById(R.id.rl_products);
@@ -87,18 +99,6 @@ public class DetailOrderFragment extends Fragment {
         recyclerView.setAdapter(new ProductRecyclerViewAdapter(products));
         recyclerView.setNestedScrollingEnabled(false);
 
-        if(order.serverNotes != null) {
-            restNotes.setText(order.serverNotes);
-        } else {
-            restNotes.setText("No note added for the restaurant.");
-            restNotes.setTypeface(null, Typeface.ITALIC);
-        }
-        if(order.bikerNotes != null) {
-            bikerNotes.setText(order.bikerNotes);
-        } else {
-            bikerNotes.setText("No note added for biker.");
-            bikerNotes.setTypeface(null, Typeface.ITALIC);
-        }
         return view;
     }
 

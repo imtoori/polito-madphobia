@@ -52,7 +52,7 @@ public class StartFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        dec = new DecimalFormat("##.00");
+        dec = new DecimalFormat("0.00");
         if (currentUser == null) {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
@@ -82,17 +82,18 @@ public class StartFragment extends Fragment {
                     visibleFolder.setVisibility(View.GONE);
                     tvGreetings.setText("Hello, " + biker.name + "!");
                     tvGreetings.setVisibility(View.VISIBLE);
+                    hours.setText(Math.round(biker.score) + "/5.0");
                     BikerDatabase.getInstance().getCashBiker(new FirebaseCallbackItem<Double>() {
                         @Override
                         public void onCallback(Double Item) {
-
-                            earning.setText(dec.format(Item));
+                            earning.setText("€ " + dec.format(Item));
                         }
                     });
                     BikerDatabase.getInstance().getDistanceRide(new FirebaseCallbackItem<Double>() {
                         @Override
                         public void onCallback(Double Item) {
-                            kilometers.setText(dec.format(Item));
+                            Double km = Item / 1000.0;
+                            kilometers.setText(dec.format(km));
                         }
                     });
                     BikerDatabase.getInstance().getOrdersTaken(new FirebaseCallbackItem<Integer>() {

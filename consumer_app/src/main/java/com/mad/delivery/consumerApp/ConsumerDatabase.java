@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mad.delivery.resources.Biker;
 import com.mad.delivery.resources.CreditCode;
 import com.mad.delivery.resources.Feedback;
 import com.mad.delivery.resources.Haversine;
@@ -301,6 +302,31 @@ public class ConsumerDatabase {
             }
         });
     }
+
+    public void getBiker(String bikerId, FirebaseCallback<Biker> firebaseCallback) {
+        myRef.child("users").child("biker").child(bikerId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Biker biker = dataSnapshot.getValue(Biker.class);
+                if (biker != null) {
+                    try {
+                        firebaseCallback.onCallBack(biker);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d("MADAPP", "restaurant is null");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("MADAPP", "onCanceled: " + this.toString());
+            }
+        });
+    }
+
+
     public void getOffers(String restaurantID, OnFirebaseData<List<MenuOffer>> cb) {
         if (restaurantID == null) {
             return;
@@ -893,6 +919,19 @@ public class ConsumerDatabase {
                     cb.onReceived(false);
                     return;
                 }
+                getBiker(o.bikerId, biker -> {
+                    if(biker.score == null) {
+                        biker.score = feedback.bikerVote / 2;
+                        biker.scoreCount = 1;
+                    } else {
+                        biker.score = (biker.score * biker.scoreCount) + (feedback.bikerVote / 2);
+                        biker.scoreCount++;
+                        biker.score = biker.score / biker.scoreCount;
+                    }
+                    myRef.child("users").child("biker").child(biker.id).child("score").setValue(biker.score);
+                    myRef.child("users").child("biker").child(biker.id).child("scoreCount").setValue(biker.scoreCount);
+
+                });
                 getRestourant(o.restaurantId, r -> {
                     if (r != null) {
                         if (r.previewInfo.scoreValue == null) {

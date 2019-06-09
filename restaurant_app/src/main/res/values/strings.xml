@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Restaurant app</string>
+    <string name="app_name">Yummy Restaurants</string>
 
     <!-- Profile Data -->
     <string name="profile_toolbar">My Profile</string>
@@ -79,7 +79,7 @@
     <string name="detail_order_info">Order Info</string>
     <string name="arrived_at">Arrived:</string>
     <string name="requested_at">Requested for:</string>
-    <string name="client_note">Client Notes</string>
+    <string name="client_note">Customer Notes</string>
     <string name="products">Products</string>
     <string name="additions">Additions:</string>
     <string name="prefix_products">This order contains</string>
@@ -91,7 +91,7 @@
     <string name="delivery_opt_sentence">The customer requested the order to be delivered on %1$s</string>
     <string name="confirm">Confirm</string>
     <string name="change">Change</string>
-    <string name="admin_notes">Admin Notes</string>
+    <string name="admin_notes">Restaurant Notes</string>
     <string name="add">Add</string>
     <string name="changing_status">Change Order Status</string>
     <string name="current_status">Current: </string>

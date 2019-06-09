@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -58,7 +59,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
     private ImageButton location;
     private CategoriesFragment catFragment;
     private RestaurantsFragment restaurantsFragment;
-    private CardView filter;
+    private ConstraintLayout filter;
     private Chip delivery, minorder, review;
     private String address = "";
     private TextView deliveryAddress;
@@ -82,7 +83,7 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), R.anim.grid_layout_animation_from_bottom);
         search = view.findViewById(R.id.search_imgbtn);
-        filter = view.findViewById(R.id.cv_filters);
+        filter = view.findViewById(R.id.cl_filters);
         delivery = view.findViewById(R.id.deliverychip);
         minorder = view.findViewById(R.id.minorderchip);
         review = view.findViewById(R.id.order_review);

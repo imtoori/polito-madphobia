@@ -162,6 +162,7 @@
 
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cv_client_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -206,6 +207,7 @@
 
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cv_restaurant_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"

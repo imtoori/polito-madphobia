@@ -14,7 +14,6 @@
     android:textColor="@color/colorPrimaryDark"
     app:checkedIconEnabled="false"
     app:chipBackgroundColor="@color/bg_chip_state_list"
-    app:chipIcon="@drawable/ic_category"
     app:chipIconTint="@color/text_chip_state_list"
     app:chipStrokeColor="@color/text_chip_state_list"
     app:chipStrokeWidth="0.1dp"

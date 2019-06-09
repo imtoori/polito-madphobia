@@ -85,7 +85,7 @@
 <string name="delivery_opt_sentence">Il cliente ha richiesto che l\'ordine sia consegnato %1$s</string>
 <string name="confirm">Conferma</string>
 <string name="change">Cambia</string>
-<string name="admin_notes">Note ristorante</string>
+<string name="admin_notes">Note del Ristorante</string>
 <string name="add">Aggiungi</string>
 <string name="changing_status">Cambia stato dell\'ordine</string>
 <string name="current_status">Attuale: </string>

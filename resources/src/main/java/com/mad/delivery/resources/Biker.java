@@ -22,6 +22,8 @@ public class Biker implements Serializable {
     public Double latitude;
     public Double longitude;
     public Boolean visible;
+    public Double score;
+    public int scoreCount;
    // public Integer order_count;
    // public Double km;
     //public Double earning;
@@ -43,6 +45,8 @@ public class Biker implements Serializable {
         //this.hours=0.00;
         this.latitude = 0.0;
         this.longitude = 0.0;
+        this.score = 0.0;
+        this.scoreCount = 0;
 
     }
 
@@ -66,6 +70,8 @@ public class Biker implements Serializable {
         //this.hours=u.hours;
         this.latitude = u.latitude;
         this.longitude = u.latitude;
+        this.score = u.score;
+        this.scoreCount = u.scoreCount;
     }
 
     public String getName() {
@@ -213,6 +219,14 @@ public class Biker implements Serializable {
         return true;
     }
 
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
     public Double getLatitude() {
         return latitude;
     }
@@ -227,5 +241,13 @@ public class Biker implements Serializable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public int getScoreCount() {
+        return scoreCount;
+    }
+
+    public void setScoreCount(int scoreCount) {
+        this.scoreCount = scoreCount;
     }
 }
