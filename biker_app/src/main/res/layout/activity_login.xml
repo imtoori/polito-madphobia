@@ -15,7 +15,6 @@ tools:context=".auth.LoginActivity">
         android:layout_marginTop="250dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/ic_biker"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,6 +23,7 @@ tools:context=".auth.LoginActivity">
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"

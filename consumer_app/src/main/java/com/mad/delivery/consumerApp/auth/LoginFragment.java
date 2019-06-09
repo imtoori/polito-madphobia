@@ -221,7 +221,7 @@ public class LoginFragment extends Fragment {
         error.animate().setDuration(1000).alpha(0).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                error.setVisibility(View.GONE);
+                error.setVisibility(View.INVISIBLE);
             }
         });
     }

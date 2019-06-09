@@ -57,7 +57,7 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
     <string name="no_account_yet">Don\'t you have an account yet?\nCreate one for free!</string>
-    <string name="already_account">Have you got an account already?</string>
+    <string name="already_account">Have you already got an account?</string>
     <string name="login_error_nodata">Email and/or Password must not be empty</string>
     <string name="login_error_password_not_equal">Password and Password confirm must be equal</string>
     <string name="login_error_fail">Email and/or password are not correct</string>

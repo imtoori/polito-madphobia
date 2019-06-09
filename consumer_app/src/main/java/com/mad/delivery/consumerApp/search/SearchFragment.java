@@ -216,10 +216,12 @@ public class SearchFragment extends Fragment implements CategoriesFragment.OnCat
         ft.replace(R.id.childfrag_container, catFragment);
         ft.commit();
         ConsumerDatabase.getInstance().getAllRestaurantCategories(list -> {
-            chips.clear();
-            chipFilterAdapter.notifyDataSetChanged();
+            if(list != null) {
+                chips.clear();
+                chipFilterAdapter.notifyDataSetChanged();
             chips.addAll(list);
             chipFilterAdapter.notifyDataSetChanged();
+            }
         });
     }
 

@@ -55,7 +55,6 @@ public class WalletFragment extends Fragment {
     private TextView noOrder;
     DecimalFormat dec;
 
-
     public WalletFragment() {
         // Required empty public constructor
     }
@@ -64,7 +63,7 @@ public class WalletFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        dec = new DecimalFormat("##.00");
+        dec = new DecimalFormat("0.00");
     }
 
     @Override

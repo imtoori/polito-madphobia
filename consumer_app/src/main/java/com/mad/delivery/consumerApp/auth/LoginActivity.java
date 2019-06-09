@@ -21,8 +21,8 @@ public class LoginActivity extends AppCompatActivity {
         imgLogo = findViewById(R.id.img_register_logo);
         container = findViewById(R.id.layout_container);
 
-        ObjectAnimator animation = ObjectAnimator.ofFloat(imgLogo, "translationY", -700f).setDuration(1000);
-        ObjectAnimator animation2 = ObjectAnimator.ofFloat(container, "translationY", -700f).setDuration(1000);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(imgLogo, "translationY", -650f).setDuration(1000);
+        ObjectAnimator animation2 = ObjectAnimator.ofFloat(container, "translationY", -650f).setDuration(1000);
         animation.start();
         animation2.start();
 
