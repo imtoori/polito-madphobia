@@ -32,7 +32,17 @@ public class Restaurant implements Serializable, Parcelable {
     public Double longitude;
     public Boolean visible;
 
-    public Restaurant() {}
+    public Restaurant() {
+        PreviewInfo previewInfo;
+        this.previewInfo.scoreValue = 0.0;
+        this.previewInfo.imageName = "";
+        this.previewInfo.deliveryCost = 0.0;
+        this.previewInfo.minOrderCost = 0.0;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+        this.token ="";
+        this.visible = false;
+    }
     public Restaurant(String id, String name, String emailAddress, String description, String phoneNumber, String road, String houseNumber, String postCode, String city, String imageUri, String imageName, String openingTime) {
         this.phoneNumber = phoneNumber;
         this.email = emailAddress;

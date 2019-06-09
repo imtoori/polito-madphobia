@@ -161,6 +161,7 @@ public class RegisterFragment extends Fragment {
                             Restaurant registered = new Restaurant();
                             registered.previewInfo = new PreviewInfo();
                             registered.previewInfo.id = user.getUid();
+                            registered.visible = false;
                             registered.email = emailAddress.getText().toString();
 
                             myRef.child("users").child("restaurants").child(user.getUid()).setValue(registered);
