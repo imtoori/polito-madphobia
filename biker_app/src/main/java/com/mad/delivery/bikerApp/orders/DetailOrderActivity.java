@@ -60,6 +60,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         if (pagerAdapter == null) {
             pagerAdapter = new DetailOrderPageAdapter(getSupportFragmentManager(), this, order);
             mPager.setAdapter(pagerAdapter);
+            loadMenu();
         }
         pagerAdapter.order = order;
         pagerAdapter.notifyDataSetChanged();
@@ -86,12 +87,18 @@ public class DetailOrderActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
+    Menu menu;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        loadMenu();
+        return true;
+    }
+
+    void loadMenu() {
         if (order != null && order.status.equals(OrderStatus.completed)) {
             getMenuInflater().inflate(R.menu.order_detail_menu, menu);
         }
-        return true;
     }
 
     @Override
