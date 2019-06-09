@@ -72,6 +72,8 @@ public class OrderInfoActivity extends AppCompatActivity  {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(summaryordersAdapter);
 
+        order = getIntent().getParcelableExtra("order");
+
         Intent intent = getIntent();
         String orderId = intent.getStringExtra("id");
 
