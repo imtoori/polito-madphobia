@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.libraries.places.api.Places;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,6 +58,7 @@ public class HomeActivity extends AppCompatActivity implements RestaurantsFragme
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Places.initialize(getApplicationContext(), "AIzaSyDzUDoWpkcEZBI82h2KxMEkGOyLBKGiwmo");
         Log.d("MADAPP", "HomeActivity onCreate");
         db = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
