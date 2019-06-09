@@ -32,7 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d("NOTIFICATION", data.toString());
         Intent intent = new Intent(this, OrderInfoActivity.class);
         intent.putExtra("id", data.get("extra"));
-        createNotification("", data.get("title"), intent);
+        createNotification(data.get("title"), data.get("message"), intent);
     }
 
     NotificationManager notifManager;
@@ -62,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder = new NotificationCompat.Builder(this, id);
 
             goToIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(this, 0, goToIntent, 0);
+            pendingIntent = PendingIntent.getActivity(this, NOTIFY_ID, goToIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             builder.setContentTitle(aTitle)  // required
                     .setContentText(aMessage)  // required
@@ -77,7 +77,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             builder = new NotificationCompat.Builder(this, id);
 
             goToIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(this, 0, goToIntent, 0);
+            pendingIntent = PendingIntent.getActivity(this, NOTIFY_ID, goToIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             builder.setContentTitle(aTitle)    // required
                     .setContentText(aMessage)  // required
