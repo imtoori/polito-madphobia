@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.BikerDatabase;
 import com.mad.delivery.bikerApp.HomeActivity;
@@ -94,6 +95,7 @@ public class SettingFragment extends Fragment {
         });
 
         cvLogout.setOnClickListener(v -> {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(mAuth.getUid() + ".order.new");
             mAuth.signOut();
             Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
             startActivity(intent);

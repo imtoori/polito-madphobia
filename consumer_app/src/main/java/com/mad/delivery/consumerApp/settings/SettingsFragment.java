@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mad.delivery.consumerApp.ConsumerDatabase;
 import com.mad.delivery.consumerApp.HomeActivity;
 import com.mad.delivery.consumerApp.R;
@@ -93,6 +94,7 @@ public class SettingsFragment extends Fragment {
         });
         cvLogout = view.findViewById(R.id.cv_logout);
         cvLogout.setOnClickListener(v -> {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(mAuth.getUid() + ".order.status");
             mAuth.signOut();
             Intent intent = new Intent(getActivity().getApplicationContext(), HomeActivity.class);
             startActivity(intent);
