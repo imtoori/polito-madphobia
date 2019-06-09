@@ -28,6 +28,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +50,7 @@ import com.mad.delivery.resources.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -72,6 +78,7 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
     ChipGroup chipGroup;
     private DateTime orderFor;
     CompletingOrderDialogFragment sendingFragment;
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,13 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         minOrderTitle = findViewById(R.id.tv_minorder);
         totalCost = findViewById(R.id.tv_totalcost_value);
         where = findViewById(R.id.actv_delivery_address);
+        where.setOnClickListener(v -> {
+            List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS,Place.Field.LAT_LNG);
+            Intent intent = new Autocomplete.IntentBuilder(
+                    AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(this);
+            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+        });
         when = findViewById(R.id.actv_time_delivery);
         cash = findViewById(R.id.chip_cash);
         credit = findViewById(R.id.chip_credit);
@@ -309,5 +323,21 @@ public class BasketActivity extends AppCompatActivity implements OnProductListen
         }
         return true;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i("PLACES", "Place: " + place.getName() + ", " + place.getId() + place.getLatLng().toString());
+                where.setText(place.getAddress());
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i("PLACES", status.getStatusMessage());
+            }
+        }
+    }
+
 
 }
